@@ -14,7 +14,7 @@ class TitleBar extends StatelessWidget {
       children: [
         SizedBox(
           width: 8,
-          height: 32,
+          height: 28,
         ),
         Text(
           "Tui",
