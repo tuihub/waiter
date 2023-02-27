@@ -1,7 +1,7 @@
 import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
-LibrarianSephirahServiceClient newGrpc(String host, int port) {
+LibrarianSephirahServiceClient newGrpc(String host, {int port = 443}) {
   final channel = ClientChannel(
     host,
     port: port,

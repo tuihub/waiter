@@ -17,3 +17,5 @@ class UserLoginEvent extends AppSettingEvent {
 }
 
 class UserLogoutEvent extends AppSettingEvent {}
+
+class CheckLocalSettingEvent extends AppSettingEvent {}

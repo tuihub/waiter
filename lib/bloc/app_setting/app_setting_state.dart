@@ -5,24 +5,60 @@ abstract class AppSettingState {}
 
 class AppSettingInitial extends AppSettingState {}
 
-class ServerConnectLoading extends AppSettingState {}
+class ServerConnectBase extends AppSettingState {
+  final String serverUrl;
 
-class ServerConnectFailed extends AppSettingState {
+  ServerConnectBase(this.serverUrl);
+}
+
+class ServerConnectLoading extends ServerConnectBase {
+  ServerConnectLoading(super.serverUrl);
+}
+
+class ServerConnectFailed extends ServerConnectBase {
   final int errorCode;
   final String message;
 
-  ServerConnectFailed(this.message, this.errorCode);
+  ServerConnectFailed(super.serverUrl, this.errorCode, this.message);
 }
 
-class ServerConnectDone extends AppSettingState {}
+class ServerConnectDone extends ServerConnectBase {
+  ServerConnectDone(super.serverUrl);
+}
 
-class UserLoginLoading extends ServerConnectDone {}
+class UserLoginBase extends ServerConnectDone {
+  final String username;
+  final String password;
 
-class UserLoginFailed extends ServerConnectDone {
+  UserLoginBase(this.username, this.password, super.serverUrl);
+}
+
+class UserLoginLoading extends UserLoginBase {
+  UserLoginLoading(super.username, super.password, super.serverUrl);
+}
+
+class UserLoginFailed extends UserLoginBase {
   final int errorCode;
   final String message;
 
-  UserLoginFailed(this.message, this.errorCode);
+  UserLoginFailed(
+    super.username,
+    super.password,
+    super.serverUrl,
+    this.errorCode,
+    this.message,
+  );
 }
 
-class UserLoginDone extends ServerConnectDone {}
+class UserLoginDone extends UserLoginBase {
+  final String acessToken;
+  final String refreshToken;
+
+  UserLoginDone(
+    super.username,
+    super.password,
+    super.serverUrl,
+    this.acessToken,
+    this.refreshToken,
+  );
+}
