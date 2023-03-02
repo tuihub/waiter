@@ -1,16 +1,22 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
-import 'package:waitress/core/const/color.dart';
+import 'package:waitress/common/const/color.dart';
 import 'package:waitress/view/page/frame_page.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
 class InitPage extends StatelessWidget {
+  const InitPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppSettingBloc, AppSettingState>(
       listener: (context, state) {},
       builder: (context, state) {
+        if (state is AppSettingInitial) {
+          context.read<AppSettingBloc>().add(CheckLocalSettingEvent());
+        }
         if (state is UserLoginDone) {
           return FramePage();
         }
@@ -29,20 +35,83 @@ class InitPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: state is ServerConnectDone
-                        ? LoginWidget()
-                        : ConnectWidget(),
+                        ? const LoginWidget()
+                        : const ConnectWidget(),
                   ),
                 ),
               ),
             ),
           ]),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              context.read<AppSettingBloc>().add(UserLogoutEvent());
+            },
+            icon: const Icon(Icons.arrow_back),
+            label: const Text("返回"),
+          ),
         );
       },
     );
   }
 }
 
+class WelComeWidget extends StatelessWidget {
+  const WelComeWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      // mainAxisSize: MainAxisSize.max,
+      children: [
+        const Text(
+          '#',
+          style: TextStyle(
+            fontSize: 80.0,
+            fontWeight: FontWeight.bold,
+            color: AppDefaultAccentColor,
+          ),
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        DefaultTextStyle(
+          style: const TextStyle(
+            fontSize: 80.0,
+            fontWeight: FontWeight.bold,
+          ),
+          child: AnimatedTextKit(
+            repeatForever: true,
+            pause: const Duration(milliseconds: 3000),
+            animatedTexts: [
+              TyperAnimatedText(
+                'Tiphereth',
+                speed: const Duration(
+                  milliseconds: 200,
+                ),
+                curve: Curves.easeOut,
+              ),
+              TyperAnimatedText(
+                'Gebura',
+                speed: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+              ),
+              TyperAnimatedText(
+                'Yesod',
+                speed: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ConnectWidget extends StatefulWidget {
+  const ConnectWidget({super.key});
+
   @override
   State<ConnectWidget> createState() => _ConnectWidgetState();
 }
@@ -111,21 +180,15 @@ class _ConnectWidgetState extends State<ConnectWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
+            const Expanded(
               child: Center(
-                child: Text(
-                  "🎉欢迎!",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
+                child: WelComeWidget(),
               ),
             ),
             TextField(
               decoration: const InputDecoration(
                 labelText: '服务器链接地址',
-                hintText: 'http:// | https://',
+                hintText: 'https://',
               ),
               controller: _controller,
               onSubmitted: (value) {
@@ -139,13 +202,11 @@ class _ConnectWidgetState extends State<ConnectWidget> {
               onPressed: () {
                 submitUrl();
               },
-              style: const ButtonStyle(
+              style: ButtonStyle(
                 fixedSize: MaterialStatePropertyAll(
-                  Size(476, 48),
+                  Size(476, 36),
                 ),
                 elevation: MaterialStatePropertyAll(0),
-                backgroundColor:
-                    MaterialStatePropertyAll(AppDefaultAccentColor),
               ),
               child: state is ServerConnectLoading
                   ? const SizedBox(
@@ -170,6 +231,8 @@ class _ConnectWidgetState extends State<ConnectWidget> {
 }
 
 class LoginWidget extends StatefulWidget {
+  const LoginWidget({super.key});
+
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
 }
@@ -292,14 +355,14 @@ class _LoginWidgetState extends State<LoginWidget> {
               onPressed: () {
                 submitUrl();
               },
-              style: const ButtonStyle(
-                fixedSize: MaterialStatePropertyAll(
-                  Size(476, 48),
-                ),
-                elevation: MaterialStatePropertyAll(0),
-                backgroundColor:
-                    MaterialStatePropertyAll(AppDefaultAccentColor),
-              ),
+              // style: const ButtonStyle(
+              //   fixedSize: MaterialStatePropertyAll(
+              //     Size(476, 48),
+              //   ),
+              //   elevation: MaterialStatePropertyAll(0),
+              //   backgroundColor:
+              //       MaterialStatePropertyAll(AppDefaultAccentColor),
+              // ),
               child: state is UserLoginLoading
                   ? const SizedBox(
                       height: 16,

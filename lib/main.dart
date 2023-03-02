@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:waitress/common/const/color.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 import 'package:waitress/view/page/init_page.dart';
 
@@ -60,14 +61,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          useMaterial3: true,
           brightness: Brightness.dark,
-          primarySwatch: Colors.amber,
+          // primarySwatch: Colors.amber,
+          colorSchemeSeed: AppDefaultAccentColor,
           // const Color.fromARGB(255, 54, 57, 63)
           // Color.fromARGB(255, 32, 34, 37),
           scaffoldBackgroundColor: const Color.fromARGB(255, 54, 57, 63),
           cardColor: const Color.fromARGB(255, 54, 57, 63),
         ),
-        home: InitPage(),
+        home: const InitPage(),
       ),
     );
   }

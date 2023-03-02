@@ -50,15 +50,11 @@ class UserLoginFailed extends UserLoginBase {
   );
 }
 
-class UserLoginDone extends UserLoginBase {
+class UserLoginDone extends ServerConnectDone {
   final String acessToken;
-  final String refreshToken;
 
   UserLoginDone(
-    super.username,
-    super.password,
     super.serverUrl,
     this.acessToken,
-    this.refreshToken,
   );
 }

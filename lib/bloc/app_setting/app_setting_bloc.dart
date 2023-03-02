@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
 part 'app_setting_event.dart';
@@ -13,62 +14,88 @@ class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
     on<AppSettingEvent>((event, emit) async {
       if (event is CheckLocalSettingEvent) {
         if (_dao.exsist(SettingKey.serverUrl)) {
-          final url = _dao.require<String>(SettingKey.serverUrl);
-          // if (_dao.exsist(SettingKey.acessToken)) {
-          //   // check token
-          // }
-          // if (_dao.exsist(SettingKey.refreshToken)) {
-          //   // check token
-          // }
+          final host = _dao.require<String>(SettingKey.serverUrl);
+          final client = clientFactory(host: host);
+          if (_dao.exsist(SettingKey.refreshToken)) {
+            // check token
+            final refreshToken = _dao.require(SettingKey.refreshToken);
+            try {
+              final resp = await client.refreshToken(RefreshTokenRequest(),
+                  options: withAuth(refreshToken));
+              emit(UserLoginDone(host, resp.accessToken));
+            } catch (e) {
+              debugPrint("login by refresh token fail");
+            }
+            return;
+          }
           if (_dao.exsist(SettingKey.username) &&
               _dao.exsist(SettingKey.password)) {
             // do login
             final username = _dao.require<String>(SettingKey.username);
             final password = _dao.require<String>(SettingKey.password);
-            GetTokenRequest(username: username, password: password);
-            UserLoginDone(
-              username,
-              password,
-              url,
-              "",
-              "",
-            );
+
+            try {
+              final resp = await client.getToken(
+                  GetTokenRequest(username: username, password: password));
+              UserLoginDone(
+                host,
+                resp.accessToken,
+              );
+            } catch (e) {
+              debugPrint("login by username password fail");
+            }
             return;
           }
-          emit(ServerConnectDone(url));
+          emit(ServerConnectDone(host));
         }
       }
       if (event is ConnectToServerEvent) {
         emit(ServerConnectLoading(event.url));
-        await Future.delayed(
-          Duration(seconds: 2),
-        );
+
+        // final grpcProvider = newGrpc("theam-grpc.gyx.moe", port: 443);
+        // final resp = await grpcProvider
+        //     .getToken(GetTokenRequest(username: "", password: ""));
         _dao.set(SettingKey.serverUrl, event.url);
         emit(ServerConnectDone(event.url));
       }
+      if (state is! ServerConnectDone) {
+        return;
+      }
+      final host = (state as ServerConnectDone).serverUrl;
+      final client = clientFactory(host: host);
+
       if (event is UserLoginEvent) {
-        if (state is! ServerConnectDone) {
-          throw UnsupportedError(
-              "user login event emit before server connection exsist");
-        }
         emit(UserLoginLoading(
-          (state as ServerConnectDone).serverUrl,
+          host,
           event.username,
           event.password,
         ));
-        await Future.delayed(
-          Duration(seconds: 2),
-        );
-        // emit(UserLoginFailed("test", 0));
-        emit(UserLoginDone(
-          event.username,
-          event.password,
-          (state as ServerConnectDone).serverUrl,
-          "",
-          "",
-        ));
+        try {
+          final resp = await client.getToken(
+            GetTokenRequest(username: event.username, password: event.password),
+          );
+          print(resp.toDebugString());
+          _dao.set(SettingKey.refreshToken, resp.refreshToken);
+          emit(UserLoginDone(
+            host,
+            resp.accessToken,
+          ));
+        } catch (e) {
+          debugPrint(e.toString());
+          emit(UserLoginFailed(
+            event.username,
+            event.password,
+            host,
+            10,
+            e.toString(),
+          ));
+        }
       }
       if (event is UserLogoutEvent) {
+        await _dao.pure(SettingKey.serverUrl);
+        await _dao.pure(SettingKey.username);
+        await _dao.pure(SettingKey.password);
+        await _dao.pure(SettingKey.refreshToken);
         emit(AppSettingInitial());
       }
     });
