@@ -13,6 +13,7 @@ class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
   AppSettingBloc(this._dao) : super(AppSettingInitial()) {
     on<AppSettingEvent>((event, emit) async {
       if (event is CheckLocalSettingEvent) {
+        emit(SettingLoading());
         if (_dao.exsist(SettingKey.serverUrl)) {
           final host = _dao.require<String>(SettingKey.serverUrl);
           final client = clientFactory(host: host);
@@ -37,10 +38,10 @@ class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
             try {
               final resp = await client.getToken(
                   GetTokenRequest(username: username, password: password));
-              UserLoginDone(
+              emit(UserLoginDone(
                 host,
                 resp.accessToken,
-              );
+              ));
             } catch (e) {
               debugPrint("login by username password fail");
             }
@@ -48,6 +49,7 @@ class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
           }
           emit(ServerConnectDone(host));
         }
+        // emit(SettingEmpty());
       }
       if (event is ConnectToServerEvent) {
         emit(ServerConnectLoading(event.url));

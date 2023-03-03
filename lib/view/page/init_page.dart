@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/common/const/color.dart';
+import 'package:waitress/common/const/string.dart';
 import 'package:waitress/view/page/frame_page.dart';
+import 'package:waitress/view/widget/connectivity.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
 class InitPage extends StatelessWidget {
@@ -12,7 +14,19 @@ class InitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppSettingBloc, AppSettingState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is UserLoginDone) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: AppBackgroudColor,
+              content: Text(
+                "欢迎回来 ${state.acessToken}",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         if (state is AppSettingInitial) {
           context.read<AppSettingBloc>().add(CheckLocalSettingEvent());
@@ -29,29 +43,80 @@ class InitPage extends StatelessWidget {
                   child: Container(
                     width: 540,
                     height: 320,
-                    padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
                       color: AppBackgroudColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: state is ServerConnectDone
-                        ? const LoginWidget()
-                        : const ConnectWidget(),
+                    child: getInitWidget(state),
                   ),
                 ),
               ),
             ),
           ]),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              context.read<AppSettingBloc>().add(UserLogoutEvent());
-            },
-            icon: const Icon(Icons.arrow_back),
-            label: const Text("返回"),
-          ),
+          floatingActionButton: state is ServerConnectDone
+              ? FloatingActionButton.extended(
+                  onPressed: () {
+                    context.read<AppSettingBloc>().add(UserLogoutEvent());
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text("返回"),
+                )
+              : Container(),
         );
       },
     );
+  }
+
+  Widget getInitWidget(AppSettingState state) {
+    if (state is SettingLoading) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Tui",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                margin: EdgeInsets.symmetric(horizontal: 2),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 255, 145, 0),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  "Hub",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 32,
+          ),
+          SizedBox(
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          ),
+        ],
+      );
+    }
+    if (state is ServerConnectDone) {
+      return const LoginWidget();
+    }
+    return const ConnectWidget();
   }
 }
 
@@ -180,49 +245,25 @@ class _ConnectWidgetState extends State<ConnectWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Expanded(
-              child: Center(
-                child: WelComeWidget(),
-              ),
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: '服务器链接地址',
-                hintText: 'https://',
-              ),
-              controller: _controller,
-              onSubmitted: (value) {
-                submitUrl();
-              },
-            ),
-            const SizedBox(
+            SizedBox(
               height: 16,
             ),
-            ElevatedButton(
-              onPressed: () {
-                submitUrl();
-              },
-              style: ButtonStyle(
-                fixedSize: MaterialStatePropertyAll(
-                  Size(476, 36),
-                ),
-                elevation: MaterialStatePropertyAll(0),
-              ),
-              child: state is ServerConnectLoading
-                  ? const SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(
-                        color: Colors.black,
-                      ),
-                    )
-                  : const Text(
-                      "连接服务器",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
+            Text(
+              "选择服务器",
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
+            SizedBox(
+              height: 16,
+            ),
+            for (String server in serverList)
+              ServerConnectivityWidget(
+                url: server,
+                callback: () {
+                  context.read<AppSettingBloc>().add(
+                        ConnectToServerEvent(server),
+                      );
+                },
+              ),
           ],
         );
       },
@@ -301,84 +342,85 @@ class _LoginWidgetState extends State<LoginWidget> {
         }
       },
       builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Center(
-                child: Text(
-                  "🎉欢迎!",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+        return Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "🎉欢迎!",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: '用户名',
-              ),
-              controller: _usernameController,
-              onSubmitted: (value) {
-                submitUrl();
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextField(
-              obscureText: hidePassword,
-              decoration: InputDecoration(
-                labelText: '密码',
-                suffix: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      hidePassword = !hidePassword;
-                    });
-                  },
-                  icon: hidePassword
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: '用户名',
                 ),
+                controller: _usernameController,
+                onSubmitted: (value) {
+                  submitUrl();
+                },
               ),
-              controller: _passwordController,
-              onSubmitted: (value) {
-                submitUrl();
-              },
-              obscuringCharacter: "*",
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                submitUrl();
-              },
-              // style: const ButtonStyle(
-              //   fixedSize: MaterialStatePropertyAll(
-              //     Size(476, 48),
-              //   ),
-              //   elevation: MaterialStatePropertyAll(0),
-              //   backgroundColor:
-              //       MaterialStatePropertyAll(AppDefaultAccentColor),
-              // ),
-              child: state is UserLoginLoading
-                  ? const SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(
-                        color: Colors.black,
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                obscureText: hidePassword,
+                decoration: InputDecoration(
+                  labelText: '密码',
+                  suffix: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    icon: hidePassword
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
+                  ),
+                ),
+                controller: _passwordController,
+                onSubmitted: (value) {
+                  submitUrl();
+                },
+                obscuringCharacter: "*",
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  submitUrl();
+                },
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                    Size(144, 36),
+                  ),
+                  elevation: MaterialStatePropertyAll(0),
+                ),
+                child: state is UserLoginLoading
+                    ? const SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      )
+                    : const Text(
+                        "登录",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
-                    )
-                  : const Text(
-                      "登录",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         );
       },
     );

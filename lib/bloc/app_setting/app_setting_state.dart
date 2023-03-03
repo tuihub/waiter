@@ -5,6 +5,10 @@ abstract class AppSettingState {}
 
 class AppSettingInitial extends AppSettingState {}
 
+class SettingLoading extends AppSettingState {}
+
+class SettingEmpty extends AppSettingState {}
+
 class ServerConnectBase extends AppSettingState {
   final String serverUrl;
 
