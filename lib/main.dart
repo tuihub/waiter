@@ -4,9 +4,9 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:waitress/bloc/bloc/app_setting_bloc.dart';
+import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/common/const/color.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 import 'package:waitress/view/page/init_page.dart';
@@ -52,25 +52,27 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppSettingBloc(dependencies.settingDao),
+          create: (context) => UserBloc(dependencies.settingDao),
         ),
-        BlocProvider(
-          create: (context) => ApiRequestBloc(),
-        ),
+        BlocProvider(create: (context) => AppSettingBloc()),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          // primarySwatch: Colors.amber,
-          colorSchemeSeed: AppDefaultAccentColor,
-          // const Color.fromARGB(255, 54, 57, 63)
-          // Color.fromARGB(255, 32, 34, 37),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 54, 57, 63),
-          cardColor: const Color.fromARGB(255, 54, 57, 63),
-        ),
-        home: const InitPage(),
+      child: BlocBuilder<AppSettingBloc, AppSettingState>(
+        builder: (context, state) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: state.brightness,
+              // primarySwatch: Colors.amber,
+              colorSchemeSeed: state.colorSeed,
+              // const Color.fromARGB(255, 54, 57, 63)
+              // Color.fromARGB(255, 32, 34, 37),
+              // scaffoldBackgroundColor: const Color.fromARGB(255, 54, 57, 63),
+              // cardColor: const Color.fromARGB(255, 54, 57, 63),
+            ),
+            home: const InitPage(),
+          );
+        },
       ),
     );
   }
