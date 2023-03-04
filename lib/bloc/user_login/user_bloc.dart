@@ -4,14 +4,14 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
-part 'app_setting_event.dart';
-part 'app_setting_state.dart';
+part 'user_event.dart';
+part 'user_state.dart';
 
-class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
+class UserBloc extends Bloc<UserEvent, UserLoginState> {
   final SettingDao _dao;
 
-  AppSettingBloc(this._dao) : super(AppSettingInitial()) {
-    on<AppSettingEvent>((event, emit) async {
+  UserBloc(this._dao) : super(AppSettingInitial()) {
+    on<UserEvent>((event, emit) async {
       if (event is CheckLocalSettingEvent) {
         emit(SettingLoading());
         if (_dao.exsist(SettingKey.serverUrl)) {
@@ -49,7 +49,7 @@ class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
           }
           emit(ServerConnectDone(host));
         }
-        // emit(SettingEmpty());
+        emit(SettingEmpty());
       }
       if (event is ConnectToServerEvent) {
         emit(ServerConnectLoading(event.url));

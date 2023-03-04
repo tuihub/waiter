@@ -1,15 +1,15 @@
-part of 'app_setting_bloc.dart';
+part of 'user_bloc.dart';
 
 @immutable
-abstract class AppSettingState {}
+abstract class UserLoginState {}
 
-class AppSettingInitial extends AppSettingState {}
+class AppSettingInitial extends UserLoginState {}
 
-class SettingLoading extends AppSettingState {}
+class SettingLoading extends UserLoginState {}
 
-class SettingEmpty extends AppSettingState {}
+class SettingEmpty extends UserLoginState {}
 
-class ServerConnectBase extends AppSettingState {
+class ServerConnectBase extends UserLoginState {
   final String serverUrl;
 
   ServerConnectBase(this.serverUrl);

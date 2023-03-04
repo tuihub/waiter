@@ -4,7 +4,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 32, 34, 37),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -13,7 +12,6 @@ class HomePage extends StatelessWidget {
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue.shade900,
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: NetworkImage(

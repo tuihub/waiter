@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:waitress/view/page/gebura.dart/gebura_home_page.dart';
 import 'package:waitress/view/page/home_page.dart';
+import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
 import 'package:waitress/view/widget/nav_rail.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
-const mainList = ['Home', 'Gebura'];
+const mainList = ['Home', 'Gebura', 'Tiphereth'];
 
 const icons = <String, IconData>{
   'Home': Icons.home,
   'Login': Icons.face,
   'Setting': Icons.settings,
   'Gebura': Icons.casino,
+  'Tiphereth': Icons.manage_accounts,
 };
 
 class FramePage extends StatefulWidget {
   FramePage({super.key});
+
+  final pageMap = <String, Widget>{
+    'Home': HomePage(),
+    'Gebura': GeburaHome(),
+    'Tiphereth': UserManagePage(),
+  };
 
   @override
   State<FramePage> createState() => _FramePageState();
@@ -22,14 +31,9 @@ class FramePage extends StatefulWidget {
 class _FramePageState extends State<FramePage> {
   String selectedNav = mainList.elementAt(0);
 
-  final pageMap = <String, Widget>{
-    'Home': HomePage(),
-    'Gebura': HomePage(),
-  };
-
   Widget? _getPage() {
-    if (pageMap.containsKey(selectedNav)) {
-      return pageMap[selectedNav];
+    if (widget.pageMap.containsKey(selectedNav)) {
+      return widget.pageMap[selectedNav];
     }
     return HomePage();
   }
@@ -48,7 +52,7 @@ class _FramePageState extends State<FramePage> {
                     for (var pageName in mainList)
                       IconMenuItem(
                         icon: icons[pageName]!,
-                        selected: pageName == "Home",
+                        selected: pageName == selectedNav,
                         onPressed: () {
                           setState(
                             () {
@@ -58,16 +62,25 @@ class _FramePageState extends State<FramePage> {
                         },
                       )
                   ]),
+                  SizedBox(
+                    width: 4,
+                  ),
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 32, 34, 37),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
+                    child: Material(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                      ),
+                      child: Ink(
+                        decoration: BoxDecoration(),
+                        padding: EdgeInsets.only(left: 8, top: 8, right: 8),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            scaffoldBackgroundColor:
+                                Theme.of(context).colorScheme.background,
+                          ),
+                          child: _getPage() ?? Ink(),
                         ),
                       ),
-                      padding: EdgeInsets.only(left: 16, top: 16, right: 16),
-                      child: _getPage(),
                     ),
                   ),
                 ],

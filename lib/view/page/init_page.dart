@@ -1,7 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
+import 'package:waitress/bloc/api_request/api_request_bloc.dart';
+import 'package:waitress/bloc/user_login/user_bloc.dart';
+import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/const/color.dart';
 import 'package:waitress/common/const/string.dart';
 import 'package:waitress/view/page/frame_page.dart';
@@ -13,61 +15,68 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppSettingBloc, AppSettingState>(
-      listener: (context, state) {
-        if (state is UserLoginDone) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: AppBackgroudColor,
-              content: Text(
-                "欢迎回来 ${state.acessToken}",
-                style: TextStyle(color: Colors.white),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      ),
+      child: BlocConsumer<UserBloc, UserLoginState>(
+        listener: (context, state) {
+          if (state is UserLoginDone) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "欢迎回来 ${state.acessToken}",
+                ),
               ),
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        if (state is AppSettingInitial) {
-          context.read<AppSettingBloc>().add(CheckLocalSettingEvent());
-        }
-        if (state is UserLoginDone) {
-          return FramePage();
-        }
-        return Scaffold(
-          body: Column(children: [
-            const TitleBar(),
-            Expanded(
-              child: Scaffold(
-                body: Center(
-                  child: Container(
-                    width: 540,
-                    height: 320,
-                    decoration: BoxDecoration(
-                      color: AppBackgroudColor,
-                      borderRadius: BorderRadius.circular(8),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is AppSettingInitial) {
+            context.read<UserBloc>().add(CheckLocalSettingEvent());
+          }
+          if (state is UserLoginDone) {
+            return BlocProvider(
+              create: (context) => ApiRequestBloc(
+                accessToken: state.acessToken,
+                client: clientFactory(host: state.serverUrl),
+              ),
+              child: FramePage(),
+            );
+          }
+          return Scaffold(
+            body: Column(children: [
+              const TitleBar(),
+              Expanded(
+                child: Scaffold(
+                  body: Center(
+                    child: Card(
+                      child: SizedBox(
+                        width: 540,
+                        height: 320,
+                        child: getInitWidget(state),
+                      ),
                     ),
-                    child: getInitWidget(state),
                   ),
                 ),
               ),
-            ),
-          ]),
-          floatingActionButton: state is ServerConnectDone
-              ? FloatingActionButton.extended(
-                  onPressed: () {
-                    context.read<AppSettingBloc>().add(UserLogoutEvent());
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text("返回"),
-                )
-              : Container(),
-        );
-      },
+            ]),
+            floatingActionButton: state is ServerConnectDone
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      context.read<UserBloc>().add(UserLogoutEvent());
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text("返回"),
+                  )
+                : Container(),
+          );
+        },
+      ),
     );
   }
 
-  Widget getInitWidget(AppSettingState state) {
+  Widget getInitWidget(UserLoginState state) {
     if (state is SettingLoading) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -203,8 +212,8 @@ class _ConnectWidgetState extends State<ConnectWidget> {
     final match = exp.hasMatch(_controller.text);
     if (!match) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: AppBackgroudColor,
+        SnackBar(
+          backgroundColor: Theme.of(context).cardColor,
           content: Text(
             "链接格式错误, 请修改后重试",
             style: TextStyle(color: Colors.white),
@@ -212,7 +221,7 @@ class _ConnectWidgetState extends State<ConnectWidget> {
         ),
       );
     } else {
-      context.read<AppSettingBloc>().add(
+      context.read<UserBloc>().add(
             ConnectToServerEvent(_controller.text),
           );
     }
@@ -221,12 +230,11 @@ class _ConnectWidgetState extends State<ConnectWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppSettingBloc, AppSettingState>(
+    return BlocConsumer<UserBloc, UserLoginState>(
       listener: (context, state) {
         if (state is ServerConnectFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: AppBackgroudColor,
               content: Text(
                 "无法连接到服务器,${state.message}",
                 style: const TextStyle(color: Colors.white),
@@ -259,7 +267,7 @@ class _ConnectWidgetState extends State<ConnectWidget> {
               ServerConnectivityWidget(
                 url: server,
                 callback: () {
-                  context.read<AppSettingBloc>().add(
+                  context.read<UserBloc>().add(
                         ConnectToServerEvent(server),
                       );
                 },
@@ -302,16 +310,14 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: AppBackgroudColor,
+        SnackBar(
           content: Text(
             "用户名或密码为空, 请修改后重试",
-            style: TextStyle(color: Colors.white),
           ),
         ),
       );
     } else {
-      context.read<AppSettingBloc>().add(
+      context.read<UserBloc>().add(
             UserLoginEvent(username, password),
           );
     }
@@ -321,15 +327,13 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppSettingBloc, AppSettingState>(
+    return BlocConsumer<UserBloc, UserLoginState>(
       listener: (context, state) {
         if (state is UserLoginFailed) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: AppBackgroudColor,
               content: Text(
                 "登录失败,${state.message}",
-                style: const TextStyle(color: Colors.white),
               ),
               action: SnackBarAction(
                 label: "重试",

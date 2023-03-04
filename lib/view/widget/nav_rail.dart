@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
+import 'package:waitress/bloc/user_login/user_bloc.dart';
 
 class NavRail extends StatelessWidget {
   const NavRail({super.key, required this.children});
@@ -19,17 +19,30 @@ class NavRail extends StatelessWidget {
               selected: false,
               onPressed: () => {},
             ),
+            Divider(
+              height: 10,
+              indent: 20,
+              endIndent: 20,
+              thickness: 2,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.outline
+                  : Theme.of(context).colorScheme.outlineVariant,
+            ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
+                physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
                 children: children,
               ),
             ),
             Divider(
-              height: 2,
+              height: 10,
               indent: 20,
               endIndent: 20,
               thickness: 2,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.outline
+                  : Theme.of(context).colorScheme.outlineVariant,
             ),
             IconMenuItem(
               icon: Icons.settings,
@@ -40,7 +53,7 @@ class NavRail extends StatelessWidget {
               icon: Icons.logout,
               selected: false,
               onPressed: () {
-                context.read<AppSettingBloc>().add(UserLogoutEvent());
+                context.read<UserBloc>().add(UserLogoutEvent());
               },
             ),
           ],
