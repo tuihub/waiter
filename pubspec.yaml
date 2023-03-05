@@ -49,7 +49,7 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/TuiHub/Protos.git
-      ref: v0.2.0
+      ref: v0.2.10
   
   # view tool
   fl_chart: ^0.61.0

@@ -16,7 +16,7 @@ class UserManagePage extends StatelessWidget {
         if (state is! UserTableBase) {
           context.read<ApiRequestBloc>().add(
                 UserTableLoadEvent(
-                  ListUserRequest(
+                  ListUsersRequest(
                     paging: PagingRequest.getDefault(),
                   ),
                 ),
@@ -31,7 +31,7 @@ class UserManagePage extends StatelessWidget {
                     onPressed: () {
                       context.read<ApiRequestBloc>().add(
                             UserTableLoadEvent(
-                              ListUserRequest(
+                              ListUsersRequest(
                                 paging: PagingRequest.getDefault(),
                               ),
                             ),
@@ -96,7 +96,7 @@ class UserManagePage extends StatelessWidget {
                     ),
                   ],
                   source: state is UserTableDone
-                      ? UserTableSource(context, state.resp.userList)
+                      ? UserTableSource(context, state.resp.users)
                       : UserTableSource(context, []),
                 ),
               ),

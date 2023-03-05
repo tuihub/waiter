@@ -6,7 +6,7 @@ abstract class ApiRequestEvent {}
 class UserTableRequestEvent extends ApiRequestEvent {}
 
 class UserTableLoadEvent extends UserTableRequestEvent {
-  final ListUserRequest request;
+  final ListUsersRequest request;
 
   UserTableLoadEvent(this.request);
 }

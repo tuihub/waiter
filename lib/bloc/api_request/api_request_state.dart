@@ -10,7 +10,7 @@ class UserTableBase extends ApiRequestState {}
 class UserTableLoading extends UserTableBase {}
 
 class UserTableDone extends UserTableBase {
-  final ListUserResponse resp;
+  final ListUsersResponse resp;
 
   UserTableDone(this.resp);
 }

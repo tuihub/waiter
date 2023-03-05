@@ -20,7 +20,7 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
       if (event is UserTableLoadEvent) {
         emit(UserTableLoading());
         try {
-          final resp = await client.listUser(event.request, options: option);
+          final resp = await client.listUsers(event.request, options: option);
           debugPrint(resp.toDebugString());
           emit(UserTableDone(resp));
         } catch (e) {
