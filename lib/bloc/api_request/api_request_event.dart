@@ -24,3 +24,23 @@ class GeburaLoadEvent extends GeburaEvent {
 
   GeburaLoadEvent(this.request);
 }
+
+class YesodEvent extends ApiRequestEvent {}
+
+class ListFeedItem extends YesodEvent {
+  final ListFeedItemsRequest request;
+
+  ListFeedItem(this.request);
+}
+
+class CreateFeedConfig extends YesodEvent {
+  final CreateFeedConfigRequest request;
+
+  CreateFeedConfig(this.request);
+}
+
+class LoadFeedConfig extends YesodEvent {
+  final ListFeedsRequest request;
+
+  LoadFeedConfig(this.request);
+}

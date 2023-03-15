@@ -17,6 +17,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
         if (_dao.exsist(SettingKey.serverUrl)) {
           final host = _dao.require<String>(SettingKey.serverUrl);
           final client = clientFactory(host: host);
+          bool flag = false;
           if (_dao.exsist(SettingKey.refreshToken)) {
             // check token
             final refreshToken = _dao.require(SettingKey.refreshToken);
@@ -26,6 +27,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
               emit(UserLoginDone(host, resp.accessToken));
             } catch (e) {
               debugPrint("login by refresh token fail");
+              flag = true;
             }
             return;
           }
@@ -44,10 +46,12 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
               ));
             } catch (e) {
               debugPrint("login by username password fail");
+              flag = true;
             }
-            return;
           }
-          emit(ServerConnectDone(host));
+          if (flag) {
+            emit(ServerConnectDone(host));
+          }
         }
         emit(SettingEmpty());
       }

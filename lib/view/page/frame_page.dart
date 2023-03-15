@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:waitress/view/page/gebura.dart/gebura_home_page.dart';
+import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/home_page.dart';
 import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
+import 'package:waitress/view/page/yesod/yesode_home_page.dart';
 import 'package:waitress/view/widget/nav_rail.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
-const mainList = ['Home', 'Gebura', 'Tiphereth'];
+const mainList = ['Home', 'Gebura', 'Tiphereth', 'Yesod'];
 
 const icons = <String, IconData>{
   'Home': Icons.home,
@@ -13,6 +14,7 @@ const icons = <String, IconData>{
   'Setting': Icons.settings,
   'Gebura': Icons.casino,
   'Tiphereth': Icons.manage_accounts,
+  'Yesod': Icons.rss_feed,
 };
 
 class FramePage extends StatefulWidget {
@@ -22,6 +24,7 @@ class FramePage extends StatefulWidget {
     'Home': HomePage(),
     'Gebura': GeburaHome(),
     'Tiphereth': UserManagePage(),
+    'Yesod': YesodHome(),
   };
 
   @override

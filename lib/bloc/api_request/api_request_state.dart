@@ -38,3 +38,20 @@ class GeburaFailed extends GeburaState {
 
   GeburaFailed(this.code, this.message);
 }
+
+class YesodState extends ApiRequestState {}
+
+class YesodLoading extends YesodState {}
+
+class YesodLoadDone<T> extends YesodState {
+  final T resp;
+
+  YesodLoadDone(this.resp);
+}
+
+class YesodFailed extends YesodState {
+  final int code;
+  final String message;
+
+  YesodFailed(this.code, this.message);
+}

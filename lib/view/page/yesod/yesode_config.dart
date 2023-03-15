@@ -6,9 +6,8 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/view/widget/timeline.dart';
 
-class YesodHome extends StatelessWidget {
+class YesodConfig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ApiRequestBloc, ApiRequestState>(
@@ -67,42 +66,30 @@ class YesodHome extends StatelessWidget {
                 ),
               ],
             ),
-            // Expanded(
-            //   child: state is YesodLoadDone
-            //       ? ListView.builder(
-            //           itemBuilder: (context, index) {
-            //             if (state.resp is ListFeedsResponse) {
-            //               final item = (state.resp as ListFeedsResponse)
-            //                   .feedsWithConfig
-            //                   .elementAt(index)
-            //                   .config;
-            //               return Card(
-            //                 child: Column(
-            //                   children: [
-            //                     Text(item.feedUrl),
-            //                     Text("${item.id}"),
-            //                   ],
-            //                 ),
-            //               );
-            //             }
-            //             if (state.resp is ListFeedItemsResponse) {
-            //               final item = (state.resp as ListFeedItemsResponse)
-            //                   .items
-            //                   .elementAt(index);
-            //               return Card(
-            //                 child: Column(
-            //                   children: [
-            //                     Text("${item.feedId}"),
-            //                   ],
-            //                 ),
-            //               );
-            //             }
-            //           },
-            //           itemCount: state.resp.feedsWithConfig.length,
-            //         )
-            //       : const SizedBox(),
-            // ),
-            Expanded(child: TimeLine()),
+            Expanded(
+              child: state is YesodLoadDone
+                  ? ListView.builder(
+                      itemBuilder: (context, index) {
+                        if (state.resp is ListFeedsResponse) {
+                          final item = (state.resp as ListFeedsResponse)
+                              .feedsWithConfig
+                              .elementAt(index)
+                              .config;
+                          return Card(
+                            child: Column(
+                              children: [
+                                Text(item.source.name),
+                                Text(item.feedUrl),
+                                Text("${item.id}"),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      itemCount: state.resp.feedsWithConfig.length,
+                    )
+                  : const SizedBox(),
+            ),
           ]),
         );
       },
