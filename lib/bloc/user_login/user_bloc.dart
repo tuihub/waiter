@@ -25,11 +25,11 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
               emit(UserLoginDone(host, resp.accessToken));
+              return;
             } catch (e) {
               debugPrint("login by refresh token fail");
               flag = true;
             }
-            return;
           }
           if (_dao.exsist(SettingKey.username) &&
               _dao.exsist(SettingKey.password)) {

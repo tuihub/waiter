@@ -75,7 +75,7 @@ class _FramePageState extends State<FramePage> {
                       ),
                       child: Ink(
                         decoration: BoxDecoration(),
-                        padding: EdgeInsets.only(left: 8, top: 8, right: 8),
+                        padding: EdgeInsets.only(left: 8, top: 8),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             scaffoldBackgroundColor:

@@ -57,6 +57,7 @@ dependencies:
   data_table_2: ^2.3.12
   animated_text_kit: ^4.2.2
   syncfusion_flutter_sliders: ^20.4.54
+  syncfusion_flutter_core: ^20.4.54
   common_utils: ^2.1.0
   random_x: ^0.3.1
 

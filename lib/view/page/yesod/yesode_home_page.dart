@@ -6,9 +6,25 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/view/widget/timeline.dart';
+import 'package:waitress/view/page/yesod/yesode_config.dart';
+import 'package:waitress/view/page/yesod/yesode_timeline.dart';
 
-class YesodHome extends StatelessWidget {
+import '../../widget/expand_rail_tile.dart';
+import '../../widget/rail_tile.dart';
+
+class YesodHome extends StatefulWidget {
+  @override
+  State<YesodHome> createState() => _YesodHomeState();
+}
+
+class _YesodHomeState extends State<YesodHome> {
+  String selectedIndex = "timeline";
+
+  Map<String, Widget> yesodPages = {
+    "timeline": TimeLine(),
+    "config": YesodConfig()
+  };
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ApiRequestBloc, ApiRequestState>(
@@ -27,83 +43,72 @@ class YesodHome extends StatelessWidget {
         }
 
         return Scaffold(
-          body: Column(children: [
-            Row(
-              children: [
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    context.read<ApiRequestBloc>().add(
-                          CreateFeedConfig(
-                            CreateFeedConfigRequest(
-                              config: FeedConfig(
-                                feedUrl: " https://rsshub.app/agefans/update",
-                                source:
-                                    FeedConfigSource.FEED_CONFIG_SOURCE_COMMON,
-                                status:
-                                    FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE,
-                                pullInterval: Duration(
-                                  seconds: $fixnum.Int64(60),
-                                ),
-                              ),
-                            ),
+          body: Row(
+            children: [
+              SizedBox(
+                width: 256,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0, left: 4),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      // color: Theme.of(context).colorScheme.background,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: Column(
+                      children: [
+                        RailTile(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = "timeline";
+                            });
+                          },
+                          title: Text("Timeline"),
+                          selected: selectedIndex == "timeline",
+                        ),
+                        ExpandRailTile(
+                          title: Text(
+                            "Category",
                           ),
-                        );
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text("添加RSS订阅"),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    context.read<ApiRequestBloc>().add(
-                          LoadFeedConfig(
-                            ListFeedsRequest(
-                              paging: PagingRequest.getDefault(),
+                          childrenPadding: EdgeInsets.only(left: 16),
+                          children: [
+                            RailTile(
+                              title: Text("Anime"),
+                              onTap: () {},
                             ),
-                          ),
-                        );
-                  },
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("刷新"),
+                            RailTile(
+                              title: Text("Anime"),
+                            ),
+                            RailTile(
+                              title: Text("Tech"),
+                            ),
+                          ],
+                        ),
+                        Expanded(child: SizedBox()),
+                        Divider(),
+                        RailTile(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = "config";
+                            });
+                          },
+                          title: Text("Feed Config"),
+                          selected: selectedIndex == "config",
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            // Expanded(
-            //   child: state is YesodLoadDone
-            //       ? ListView.builder(
-            //           itemBuilder: (context, index) {
-            //             if (state.resp is ListFeedsResponse) {
-            //               final item = (state.resp as ListFeedsResponse)
-            //                   .feedsWithConfig
-            //                   .elementAt(index)
-            //                   .config;
-            //               return Card(
-            //                 child: Column(
-            //                   children: [
-            //                     Text(item.feedUrl),
-            //                     Text("${item.id}"),
-            //                   ],
-            //                 ),
-            //               );
-            //             }
-            //             if (state.resp is ListFeedItemsResponse) {
-            //               final item = (state.resp as ListFeedItemsResponse)
-            //                   .items
-            //                   .elementAt(index);
-            //               return Card(
-            //                 child: Column(
-            //                   children: [
-            //                     Text("${item.feedId}"),
-            //                   ],
-            //                 ),
-            //               );
-            //             }
-            //           },
-            //           itemCount: state.resp.feedsWithConfig.length,
-            //         )
-            //       : const SizedBox(),
-            // ),
-            Expanded(child: TimeLine()),
-          ]),
+              ),
+              VerticalDivider(
+                color: Theme.of(context).disabledColor,
+              ),
+              Expanded(child: yesodPages[selectedIndex] ?? SizedBox()),
+            ],
+          ),
         );
       },
     );

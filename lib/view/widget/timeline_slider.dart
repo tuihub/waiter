@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class TimelineSlider extends StatefulWidget {
@@ -12,18 +13,34 @@ class _TimelineSliderState extends State<TimelineSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return SfSliderTheme(
+      data: SfSliderThemeData(
+        activeTrackHeight: 10,
+        inactiveTrackHeight: 10,
+        activeTrackColor: Colors.grey,
+        inactiveTrackColor: Colors.grey,
+        activeDividerColor: Colors.grey,
+        inactiveDividerColor: Colors.grey,
+        activeDividerStrokeColor: Colors.white,
+        activeDividerStrokeWidth: 2,
+        inactiveDividerStrokeWidth: 2,
+        inactiveDividerStrokeColor: Colors.white,
+        activeDividerRadius: 5,
+        inactiveDividerRadius: 5,
+        labelOffset: Offset(-100.0, 0.0),
+      ),
       child: SfSlider.vertical(
         min: DateTime(2000, 01, 01, 00),
-        max: DateTime(2000, 01, 31, 24),
+        max: DateTime(2000, 12, 31, 24),
         value: _value,
-        interval: 10,
-        showTicks: true,
+        interval: 1,
+        // showTicks: true,
         showDividers: true,
-        // showLabels: true,
+        showLabels: true,
         enableTooltip: true,
+        edgeLabelPlacement: EdgeLabelPlacement.inside,
         dateFormat: DateFormat.yMd(),
-        dateIntervalType: DateIntervalType.days,
+        dateIntervalType: DateIntervalType.months,
         onChanged: (value) {
           setState(() {
             _value = value;
