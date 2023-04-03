@@ -1,23 +1,27 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'app_setting_bloc.dart';
 
-class AppSettingState {
-  final Brightness brightness;
-  final Color colorSeed;
+class AppSettingState extends Equatable {
+  final ThemeMode themeMode;
+  final FlexScheme theme;
 
-  AppSettingState(this.brightness, this.colorSeed);
+  const AppSettingState(this.themeMode, this.theme);
 
   AppSettingState copyWith({
-    Brightness? brightness,
-    Color? colorSeed,
+    ThemeMode? themeMode,
+    FlexScheme? theme,
   }) {
     return AppSettingState(
-      brightness ?? this.brightness,
-      colorSeed ?? this.colorSeed,
+      themeMode ?? this.themeMode,
+      theme ?? this.theme,
     );
   }
+
+  @override
+  List<Object> get props => [themeMode, theme];
 }
 
-class DefaultTheme extends AppSettingState {
-  DefaultTheme() : super(Brightness.dark, AppDefaultAccentColor);
+class DefaultAppState extends AppSettingState {
+  const DefaultAppState()
+      : super(ThemeMode.system, FlexScheme.materialBaseline);
 }

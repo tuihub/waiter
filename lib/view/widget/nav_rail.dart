@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/user_login/user_bloc.dart';
 
 class NavRail extends StatelessWidget {
-  const NavRail({super.key, required this.children});
+  const NavRail(
+      {super.key,
+      this.body = const [],
+      this.leading = const [],
+      this.trailing = const []});
 
-  final List<IconMenuItem> children;
+  final List<IconMenuItem> leading;
+  final List<IconMenuItem> body;
+  final List<IconMenuItem> trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -14,48 +18,36 @@ class NavRail extends StatelessWidget {
       child: Ink(
         child: Column(
           children: [
-            IconMenuItem(
-              icon: Icons.account_circle_sharp,
-              selected: false,
-              onPressed: () => {},
-            ),
-            Divider(
-              height: 10,
-              indent: 20,
-              endIndent: 20,
-              thickness: 2,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).colorScheme.outline
-                  : Theme.of(context).colorScheme.outlineVariant,
-            ),
-            Expanded(
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                children: children,
+            if (leading.isNotEmpty) ...leading,
+            if (leading.isNotEmpty && body.isNotEmpty)
+              Divider(
+                height: 10,
+                indent: 20,
+                endIndent: 20,
+                thickness: 2,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.outline
+                    : Theme.of(context).colorScheme.outlineVariant,
               ),
-            ),
-            Divider(
-              height: 10,
-              indent: 20,
-              endIndent: 20,
-              thickness: 2,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).colorScheme.outline
-                  : Theme.of(context).colorScheme.outlineVariant,
-            ),
-            IconMenuItem(
-              icon: Icons.settings,
-              selected: false,
-              onPressed: () => {},
-            ),
-            IconMenuItem(
-              icon: Icons.logout,
-              selected: false,
-              onPressed: () {
-                context.read<UserBloc>().add(UserLogoutEvent());
-              },
-            ),
+            if (body.isNotEmpty)
+              Expanded(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  children: body,
+                ),
+              ),
+            if ((leading.isNotEmpty || body.isNotEmpty) && body.isNotEmpty)
+              Divider(
+                height: 10,
+                indent: 20,
+                endIndent: 20,
+                thickness: 2,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.outline
+                    : Theme.of(context).colorScheme.outlineVariant,
+              ),
+            if (trailing.isNotEmpty) ...trailing,
           ],
         ),
       ),
@@ -69,14 +61,12 @@ class IconMenuItem extends StatefulWidget {
     required this.icon,
     required this.onPressed,
     required this.selected,
-    this.primaryColor = const Color.fromARGB(255, 255, 145, 0),
     this.containerSize = 72,
   });
 
   final IconData icon;
   final VoidCallback onPressed;
   final bool selected;
-  final Color primaryColor;
   final double containerSize;
 
   @override
@@ -88,6 +78,7 @@ class _IconMenuItemState extends State<IconMenuItem> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
     return SizedBox(
       width: widget.containerSize,
       height: widget.containerSize,
@@ -96,8 +87,8 @@ class _IconMenuItemState extends State<IconMenuItem> {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: widget.selected | isHover
-              ? widget.primaryColor
-              : widget.primaryColor.withAlpha(28),
+              ? primaryColor
+              : primaryColor.withAlpha(28),
           borderRadius: BorderRadius.all(
               Radius.circular(widget.selected | isHover ? 12 : 24)),
         ),
@@ -112,9 +103,7 @@ class _IconMenuItemState extends State<IconMenuItem> {
             padding: const EdgeInsets.all(6),
             child: Icon(
               widget.icon,
-              color: widget.selected | isHover
-                  ? Colors.black
-                  : widget.primaryColor,
+              color: widget.selected | isHover ? Colors.black : primaryColor,
             ),
           ),
         ),

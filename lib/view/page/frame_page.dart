@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/home_page.dart';
 import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
 import 'package:waitress/view/page/yesod/yesode_home_page.dart';
 import 'package:waitress/view/widget/nav_rail.dart';
 import 'package:waitress/view/widget/title_bar.dart';
+
+import '../widget/actions/theme_mode_toggle.dart';
+import 'setting_page.dart';
 
 const mainList = ['Home', 'Gebura', 'Tiphereth', 'Yesod'];
 
@@ -25,6 +30,7 @@ class FramePage extends StatefulWidget {
     'Gebura': GeburaHome(),
     'Tiphereth': UserManagePage(),
     'Yesod': YesodHome(),
+    'Setting': SettingPage(),
   };
 
   @override
@@ -41,41 +47,70 @@ class _FramePageState extends State<FramePage> {
     return HomePage();
   }
 
+  void _showPage(String pageName) {
+    setState(
+      () {
+        selectedNav = pageName;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          TitleBar(),
+          const TitleBar(
+            actions: [ThemeModeToggle()],
+          ),
           Expanded(
             child: Scaffold(
               body: Row(
                 children: [
-                  NavRail(children: [
-                    for (var pageName in mainList)
+                  NavRail(
+                    leading: [
                       IconMenuItem(
-                        icon: icons[pageName]!,
-                        selected: pageName == selectedNav,
+                        icon: Icons.account_circle_sharp,
+                        selected: false,
+                        onPressed: () => {},
+                      ),
+                    ],
+                    body: [
+                      for (var pageName in mainList)
+                        IconMenuItem(
+                          icon: icons[pageName]!,
+                          selected: pageName == selectedNav,
+                          onPressed: () {
+                            _showPage(pageName);
+                          },
+                        )
+                    ],
+                    trailing: [
+                      IconMenuItem(
+                        icon: Icons.settings,
+                        selected: false,
+                        onPressed: () => {_showPage("Setting")},
+                      ),
+                      IconMenuItem(
+                        icon: Icons.logout,
+                        selected: false,
                         onPressed: () {
-                          setState(
-                            () {
-                              selectedNav = pageName;
-                            },
-                          );
+                          context.read<UserBloc>().add(UserLogoutEvent());
                         },
-                      )
-                  ]),
-                  SizedBox(
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
                     width: 4,
                   ),
                   Expanded(
                     child: Material(
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(12),
                       ),
                       child: Ink(
-                        decoration: BoxDecoration(),
-                        padding: EdgeInsets.only(left: 8, top: 8),
+                        decoration: const BoxDecoration(),
+                        padding: const EdgeInsets.only(left: 8, top: 8),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             scaffoldBackgroundColor:

@@ -3,10 +3,18 @@ part of 'app_setting_bloc.dart';
 @immutable
 abstract class AppSettingEvent {}
 
-class ToggleBrightnessEvent extends AppSettingEvent {}
+class InitAppSettingEvent extends AppSettingEvent {}
+
+class ToggleThemeModeEvent extends AppSettingEvent {}
 
 class ChangeBrightnessEvent extends AppSettingEvent {
-  final Brightness brightness;
+  final ThemeMode themeMode;
 
-  ChangeBrightnessEvent(this.brightness);
+  ChangeBrightnessEvent(this.themeMode);
+}
+
+class ChangeThemeEvent extends AppSettingEvent {
+  final FlexScheme theme;
+
+  ChangeThemeEvent(this.theme);
 }

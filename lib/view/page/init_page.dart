@@ -138,12 +138,12 @@ class WelComeWidget extends StatelessWidget {
       // mainAxisAlignment: MainAxisAlignment.center,
       // mainAxisSize: MainAxisSize.max,
       children: [
-        const Text(
+        Text(
           '#',
           style: TextStyle(
             fontSize: 80.0,
             fontWeight: FontWeight.bold,
-            color: AppDefaultAccentColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         const SizedBox(

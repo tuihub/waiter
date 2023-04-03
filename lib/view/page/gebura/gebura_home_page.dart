@@ -31,7 +31,7 @@ class GeburaHome extends StatelessWidget {
                       TextSpan(
                         text: "# ",
                         style: TextStyle(
-                          color: AppDefaultAccentColor,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 28,
                         ),
                       ),

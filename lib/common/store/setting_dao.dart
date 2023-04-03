@@ -5,11 +5,17 @@ enum SettingKey {
   username,
   password,
   refreshToken,
+  theme,
+  themeMode,
 }
 
 extension SettingValueType on SettingKey {
   Type getType() {
     switch (this) {
+      case SettingKey.theme:
+        return int;
+      case SettingKey.themeMode:
+        return int;
       default:
         return String;
     }

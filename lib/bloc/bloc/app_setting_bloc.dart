@@ -1,23 +1,50 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:waitress/common/const/color.dart';
+import 'package:waitress/common/store/setting_dao.dart';
 
 part 'app_setting_event.dart';
 part 'app_setting_state.dart';
 
 class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
-  AppSettingBloc() : super(DefaultTheme()) {
-    on<AppSettingEvent>((event, emit) {
-      if (event is ChangeBrightnessEvent) {
-        emit(state.copyWith(brightness: event.brightness));
+  final SettingDao _dao;
+
+  AppSettingBloc(this._dao) : super(const DefaultAppState()) {
+    on<AppSettingEvent>((event, emit) async {
+      if (event is InitAppSettingEvent) {
+        if (_dao.exsist(SettingKey.theme)) {
+          final theme = FlexScheme.values[_dao.require(SettingKey.theme)];
+          debugPrint(theme.name);
+          emit(state.copyWith(theme: theme));
+        }
+        if (_dao.exsist(SettingKey.themeMode)) {
+          final themeMode =
+              ThemeMode.values[_dao.require(SettingKey.themeMode)];
+          emit(state.copyWith(themeMode: themeMode));
+        }
+        return;
       }
-      if (event is ToggleBrightnessEvent) {
-        if (state.brightness == Brightness.light) {
-          emit(state.copyWith(brightness: Brightness.dark));
+      if (event is ChangeThemeEvent) {
+        emit(state.copyWith(theme: event.theme));
+        await _dao.set(SettingKey.themeMode, state.themeMode.index);
+        return;
+      }
+      if (event is ChangeBrightnessEvent) {
+        emit(state.copyWith(themeMode: event.themeMode));
+      }
+      if (event is ToggleThemeModeEvent) {
+        if (state.themeMode == ThemeMode.system) {
+          emit(state.copyWith(themeMode: ThemeMode.dark));
         } else {
-          emit(state.copyWith(brightness: Brightness.light));
+          if (state.themeMode == ThemeMode.dark) {
+            emit(state.copyWith(themeMode: ThemeMode.light));
+          } else {
+            emit(state.copyWith(themeMode: ThemeMode.system));
+          }
         }
       }
+      await _dao.set(SettingKey.theme, state.theme.index);
     });
   }
 }
