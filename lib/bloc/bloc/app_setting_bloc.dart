@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:waitress/common/const/theme.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
 part 'app_setting_event.dart';
@@ -10,11 +10,11 @@ part 'app_setting_state.dart';
 class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
   final SettingDao _dao;
 
-  AppSettingBloc(this._dao) : super(const DefaultAppState()) {
+  AppSettingBloc(this._dao) : super(DefaultAppState()) {
     on<AppSettingEvent>((event, emit) async {
       if (event is InitAppSettingEvent) {
         if (_dao.exsist(SettingKey.theme)) {
-          final theme = FlexScheme.values[_dao.require(SettingKey.theme)];
+          final theme = themeData[_dao.require(SettingKey.theme)];
           debugPrint(theme.name);
           emit(state.copyWith(theme: theme));
         }

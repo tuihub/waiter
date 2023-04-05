@@ -1,15 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'app_setting_bloc.dart';
 
 class AppSettingState extends Equatable {
   final ThemeMode themeMode;
-  final FlexScheme theme;
+  final AppTheme theme;
 
   const AppSettingState(this.themeMode, this.theme);
 
   AppSettingState copyWith({
     ThemeMode? themeMode,
-    FlexScheme? theme,
+    AppTheme? theme,
   }) {
     return AppSettingState(
       themeMode ?? this.themeMode,
@@ -22,6 +21,5 @@ class AppSettingState extends Equatable {
 }
 
 class DefaultAppState extends AppSettingState {
-  const DefaultAppState()
-      : super(ThemeMode.system, FlexScheme.materialBaseline);
+  DefaultAppState() : super(ThemeMode.system, themeData[0]);
 }

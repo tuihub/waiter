@@ -66,12 +66,12 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             // The Mandy red, light theme.
             theme: FlexThemeData.light(
-              scheme: state.theme,
+              scheme: state.theme.scheme,
               useMaterial3: true,
             ),
             // The Mandy red, dark theme.
             darkTheme: FlexThemeData.dark(
-              scheme: state.theme,
+              scheme: state.theme.scheme,
               useMaterial3: true,
             ),
             themeMode: state.themeMode,

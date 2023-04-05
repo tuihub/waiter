@@ -14,7 +14,7 @@ class ChangeBrightnessEvent extends AppSettingEvent {
 }
 
 class ChangeThemeEvent extends AppSettingEvent {
-  final FlexScheme theme;
+  final AppTheme theme;
 
   ChangeThemeEvent(this.theme);
 }
