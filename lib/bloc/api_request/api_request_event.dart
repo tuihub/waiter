@@ -20,7 +20,7 @@ class CreateUserEvent extends UserTableRequestEvent {
 class GeburaEvent extends ApiRequestEvent {}
 
 class GeburaLoadEvent extends GeburaEvent {
-  final ListAppRequest request;
+  final ListAppsRequest request;
 
   GeburaLoadEvent(this.request);
 }
@@ -40,7 +40,7 @@ class CreateFeedConfig extends YesodEvent {
 }
 
 class LoadFeedConfig extends YesodEvent {
-  final ListFeedsRequest request;
+  final ListFeedConfigsRequest request;
 
   LoadFeedConfig(this.request);
 }

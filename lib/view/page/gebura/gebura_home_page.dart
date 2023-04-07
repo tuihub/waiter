@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/common/const/color.dart';
 
 class GeburaHome extends StatelessWidget {
   @override
@@ -13,7 +12,9 @@ class GeburaHome extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is! GeburaState) {
-          context.read<ApiRequestBloc>().add(GeburaLoadEvent(ListAppRequest()));
+          context
+              .read<ApiRequestBloc>()
+              .add(GeburaLoadEvent(ListAppsRequest()));
         }
         return Scaffold(
           body: Column(
@@ -57,7 +58,7 @@ class GeburaHome extends StatelessWidget {
                         maxCrossAxisExtent: 144),
                     itemBuilder: (BuildContext context, int index) {
                       if (state is GeburaLoadDone) {
-                        if (index == state.resp.appList.length) {
+                        if (index == state.resp.apps.length) {
                           return Ink(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
@@ -70,7 +71,7 @@ class GeburaHome extends StatelessWidget {
                             ),
                           );
                         }
-                        final item = state.resp.appList.elementAt(index);
+                        final item = state.resp.apps.elementAt(index);
                         return Ink(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
@@ -98,7 +99,7 @@ class GeburaHome extends StatelessWidget {
                       );
                     },
                     itemCount: state is GeburaLoadDone
-                        ? state.resp.appList.length + 1
+                        ? state.resp.apps.length + 1
                         : 1,
                   ),
                 ),

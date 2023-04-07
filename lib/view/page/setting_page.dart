@@ -26,7 +26,7 @@ class SettingPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     color: Theme.of(context).colorScheme.surfaceVariant,
                   ),
-                  height: 224,
+                  height: 216,
                   child: Column(
                     children: [
                       ListTile(
@@ -50,21 +50,26 @@ class SettingPage extends StatelessWidget {
                       Expanded(
                         child: Row(
                           children: [
+                            ThemePresent(
+                              title: state.theme.name,
+                              lightScheme: FlexColorScheme.light(
+                                      scheme: state.theme.scheme)
+                                  .toScheme,
+                              darkScheme: FlexColorScheme.dark(
+                                      scheme: state.theme.scheme)
+                                  .toScheme,
+                              selected: true,
+                              brightness: Theme.of(context).brightness,
+                            ),
+                            VerticalDivider(
+                              indent: 8,
+                              endIndent: 8,
+                              thickness: 2,
+                            ),
                             Expanded(
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: [
-                                  ThemePresent(
-                                    title: state.theme.name,
-                                    lightScheme: FlexColorScheme.light(
-                                            scheme: state.theme.scheme)
-                                        .toScheme,
-                                    darkScheme: FlexColorScheme.dark(
-                                            scheme: state.theme.scheme)
-                                        .toScheme,
-                                    selected: true,
-                                    brightness: Theme.of(context).brightness,
-                                  ),
                                   for (var theme in themeData)
                                     ThemePresent(
                                       title: theme.name,

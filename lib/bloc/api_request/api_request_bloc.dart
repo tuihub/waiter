@@ -49,7 +49,7 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
       if (event is GeburaLoadEvent) {
         emit(UserTableLoading());
         try {
-          final resp = await client.listApp(event.request, options: option);
+          final resp = await client.listApps(event.request, options: option);
           debugPrint(resp.toDebugString());
           emit(GeburaLoadDone(resp));
         } catch (e) {
@@ -64,7 +64,8 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
       if (event is LoadFeedConfig) {
         emit(YesodLoading());
         try {
-          final resp = await client.listFeeds(event.request, options: option);
+          final resp =
+              await client.listFeedConfigs(event.request, options: option);
           debugPrint(resp.toDebugString());
           emit(YesodLoadDone(resp));
         } catch (e) {

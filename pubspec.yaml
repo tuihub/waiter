@@ -49,7 +49,7 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/TuiHub/Protos.git
-      ref: v0.2.10
+      ref: v0.2.16
   # theme
   flex_color_scheme: ^7.0.0
   

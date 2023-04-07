@@ -33,13 +33,13 @@ class _YesodHomeState extends State<YesodHome> {
       },
       builder: (context, state) {
         if (state is! YesodState) {
-          context.read<ApiRequestBloc>().add(
-                LoadFeedConfig(
-                  ListFeedsRequest(
-                    paging: PagingRequest.getDefault(),
-                  ),
-                ),
-              );
+          // context.read<ApiRequestBloc>().add(
+          //       LoadFeedConfig(
+          //         ListFeedsRequest(
+          //           paging: PagingRequest.getDefault(),
+          //         ),
+          //       ),
+          //     );
         }
 
         return Scaffold(

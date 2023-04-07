@@ -8,6 +8,16 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 
 class YesodConfig extends StatelessWidget {
+  void _loadConfig(context) {
+    context.read<ApiRequestBloc>().add(
+          LoadFeedConfig(
+            ListFeedConfigsRequest(
+              paging: PagingRequest.getDefault(),
+            ),
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ApiRequestBloc, ApiRequestState>(
@@ -16,13 +26,7 @@ class YesodConfig extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is! YesodState) {
-          context.read<ApiRequestBloc>().add(
-                LoadFeedConfig(
-                  ListFeedsRequest(
-                    paging: PagingRequest.getDefault(),
-                  ),
-                ),
-              );
+          _loadConfig(context);
         }
 
         return Scaffold(
@@ -53,13 +57,7 @@ class YesodConfig extends StatelessWidget {
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    context.read<ApiRequestBloc>().add(
-                          LoadFeedConfig(
-                            ListFeedsRequest(
-                              paging: PagingRequest.getDefault(),
-                            ),
-                          ),
-                        );
+                    _loadConfig(context);
                   },
                   icon: const Icon(Icons.refresh),
                   label: const Text("刷新"),
@@ -70,8 +68,8 @@ class YesodConfig extends StatelessWidget {
               child: state is YesodLoadDone
                   ? ListView.builder(
                       itemBuilder: (context, index) {
-                        if (state.resp is ListFeedsResponse) {
-                          final item = (state.resp as ListFeedsResponse)
+                        if (state.resp is ListFeedConfigsResponse) {
+                          final item = (state.resp as ListFeedConfigsResponse)
                               .feedsWithConfig
                               .elementAt(index)
                               .config;

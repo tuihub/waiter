@@ -27,7 +27,7 @@ class GeburaState extends ApiRequestState {}
 class GeburaLoading extends GeburaState {}
 
 class GeburaLoadDone extends GeburaState {
-  final ListAppResponse resp;
+  final ListAppsResponse resp;
 
   GeburaLoadDone(this.resp);
 }
