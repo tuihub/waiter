@@ -44,3 +44,9 @@ class LoadFeedConfig extends YesodEvent {
 
   LoadFeedConfig(this.request);
 }
+
+class PullFeedItem extends YesodEvent {
+  final GroupFeedItemsRequest request;
+
+  PullFeedItem(this.request);
+}

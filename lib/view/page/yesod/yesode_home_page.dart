@@ -1,10 +1,5 @@
-import 'package:fixnum/fixnum.dart' as $fixnum;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/google/protobuf/duration.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/view/page/yesod/yesode_config.dart';
 import 'package:waitress/view/page/yesod/yesode_timeline.dart';
@@ -13,6 +8,8 @@ import '../../widget/expand_rail_tile.dart';
 import '../../widget/rail_tile.dart';
 
 class YesodHome extends StatefulWidget {
+  const YesodHome({super.key});
+
   @override
   State<YesodHome> createState() => _YesodHomeState();
 }
@@ -22,7 +19,7 @@ class _YesodHomeState extends State<YesodHome> {
 
   Map<String, Widget> yesodPages = {
     "timeline": TimeLine(),
-    "config": YesodConfig()
+    "config": YesodConfigPage()
   };
 
   @override

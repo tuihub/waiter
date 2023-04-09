@@ -109,6 +109,22 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           emit(YesodFailed(-1, "发生未知错误"));
         }
       }
+      if (event is PullFeedItem) {
+        emit(YesodLoading());
+        try {
+          final resp =
+              await client.groupFeedItems(event.request, options: option);
+          debugPrint(resp.toDebugString());
+          emit(YesodLoadDone(resp));
+        } catch (e) {
+          debugPrint(e.toString());
+
+          if (e is GrpcError) {
+            emit(YesodFailed(e.code, e.message ?? "发生未知错误"));
+          }
+          emit(YesodFailed(-1, "发生未知错误"));
+        }
+      }
     });
   }
 }
