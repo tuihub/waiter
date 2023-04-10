@@ -353,14 +353,14 @@ class _ExpandRailTileState extends State<ExpandRailTile>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Theme(
-          data: Theme.of(context).copyWith(
-            iconTheme: IconThemeData(
-                color: _iconColor.value ?? expansionTileTheme.iconColor),
+        DefaultTextStyle(
+          style: TextStyle(
+            color: _headerColor.value,
           ),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: _headerColor.value,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              iconTheme: IconThemeData(
+                  color: _iconColor.value ?? expansionTileTheme.iconColor),
             ),
             child: RailTile(
               onTap: _handleTap,

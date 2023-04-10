@@ -45,7 +45,7 @@ class _YesodHomeState extends State<YesodHome> {
               SizedBox(
                 width: 256,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0, left: 4),
+                  padding: const EdgeInsets.only(),
                   child: Ink(
                     decoration: BoxDecoration(
                       // color: Theme.of(context).colorScheme.background,
@@ -82,7 +82,18 @@ class _YesodHomeState extends State<YesodHome> {
                           ],
                         ),
                         Expanded(child: SizedBox()),
-                        Divider(),
+                        Divider(
+                          height: 10,
+                          indent: 20,
+                          endIndent: 20,
+                          thickness: 2,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Theme.of(context).colorScheme.outline
+                              : Theme.of(context).colorScheme.outlineVariant,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
                         RailTile(
                           onTap: () {
                             setState(() {

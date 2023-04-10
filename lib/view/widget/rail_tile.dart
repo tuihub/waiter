@@ -22,17 +22,19 @@ class RailTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: SizedBox(
-        height: kToolbarHeight,
+        height: kToolbarHeight - 8,
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(kToolbarHeight),
-          child: Ink(
+          child: AnimatedContainer(
             decoration: BoxDecoration(
               color: selected
-                  ? Theme.of(context).colorScheme.secondaryContainer
+                  ? Theme.of(context).colorScheme.primary
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(kToolbarHeight),
             ),
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeIn,
             child: Row(
               children: [
                 leading != null

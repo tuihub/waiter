@@ -103,9 +103,6 @@ class _FramePageState extends State<FramePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
                   Expanded(
                     child: Material(
                       borderRadius: const BorderRadius.only(

@@ -14,7 +14,7 @@ class NavRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 72,
+      width: 64,
       child: Ink(
         child: Column(
           children: [
@@ -61,7 +61,7 @@ class IconMenuItem extends StatefulWidget {
     required this.icon,
     required this.onPressed,
     required this.selected,
-    this.containerSize = 72,
+    this.containerSize = 64,
   });
 
   final IconData icon;
@@ -83,7 +83,7 @@ class _IconMenuItemState extends State<IconMenuItem> {
       width: widget.containerSize,
       height: widget.containerSize,
       child: AnimatedContainer(
-        margin: const EdgeInsets.all(12),
+        margin: const EdgeInsets.all(8),
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: widget.selected | isHover
@@ -100,7 +100,7 @@ class _IconMenuItemState extends State<IconMenuItem> {
           borderRadius: BorderRadius.all(
               Radius.circular(widget.selected | isHover ? 12 : 24)),
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(4),
             child: Icon(
               widget.icon,
               color: widget.selected | isHover ? Colors.black : primaryColor,
