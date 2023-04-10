@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
+import 'package:waitress/view/page/ffi_test_page.dart';
 import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/home_page.dart';
 import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
@@ -11,7 +12,7 @@ import 'package:waitress/view/widget/title_bar.dart';
 import '../widget/actions/theme_mode_toggle.dart';
 import 'setting_page.dart';
 
-const mainList = ['Home', 'Gebura', 'Tiphereth', 'Yesod'];
+const mainList = ['Home', 'Gebura', 'Tiphereth', 'Yesod', 'Ffi'];
 
 const icons = <String, IconData>{
   'Home': Icons.home,
@@ -20,6 +21,7 @@ const icons = <String, IconData>{
   'Gebura': Icons.casino,
   'Tiphereth': Icons.manage_accounts,
   'Yesod': Icons.rss_feed,
+  'Ffi': Icons.timelapse,
 };
 
 class FramePage extends StatefulWidget {
@@ -30,6 +32,7 @@ class FramePage extends StatefulWidget {
     'Gebura': GeburaHome(),
     'Tiphereth': UserManagePage(),
     'Yesod': YesodHome(),
+    'Ffi': FfiTestPage(),
     'Setting': SettingPage(),
   };
 
