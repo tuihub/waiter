@@ -53,6 +53,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
     }
     if (isSuccess) {
       final listData = response.getResponse().feedsWithConfig;
+      final bgColor = Theme.of(context).colorScheme.surfaceVariant;
       return ListView.builder(
         padding: const EdgeInsets.only(right: 8),
         itemBuilder: (context, index) {
@@ -61,7 +62,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
             padding: const EdgeInsets.all(8.0),
             child: Ink(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: bgColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
