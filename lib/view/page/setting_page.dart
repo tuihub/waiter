@@ -1,7 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/bloc/app_setting_bloc.dart';
+import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/common/const/theme.dart';
 
 import '../widget/theme_presentation.dart';

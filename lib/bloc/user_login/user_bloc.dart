@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
@@ -24,6 +25,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
+              ApiHelper.instance.init(client, resp.accessToken);
               emit(UserLoginDone(host, resp.accessToken));
               return;
             } catch (e) {
@@ -40,6 +42,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             try {
               final resp = await client.getToken(
                   GetTokenRequest(username: username, password: password));
+              ApiHelper.instance.init(client, resp.accessToken);
               emit(UserLoginDone(
                 host,
                 resp.accessToken,
@@ -82,6 +85,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           );
           print(resp.toDebugString());
           _dao.set(SettingKey.refreshToken, resp.refreshToken);
+          ApiHelper.instance.init(client, resp.accessToken);
           emit(UserLoginDone(
             host,
             resp.accessToken,
