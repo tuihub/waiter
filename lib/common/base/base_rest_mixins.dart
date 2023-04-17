@@ -21,12 +21,15 @@ mixin SingleRequestMixin<M extends StatefulWidget, T> on State<M> {
 
   void callback() {}
 
-  Future<void> doRequest() async {
+  Future<void> doRequest(
+      {Future<T> Function(
+              LibrarianSephirahServiceClient client, CallOptions option)?
+          request}) async {
     if (loading == true) return;
     setState(() {
       loading = true;
     });
-    _response = await ApiHelper.instance.doRequest(request);
+    _response = await ApiHelper.instance.doRequest(request ?? this.request);
     callback();
     setState(() {
       loading = false;

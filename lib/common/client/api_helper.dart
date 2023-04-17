@@ -6,15 +6,15 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 enum ApiStatus { success, error }
 
 class ApiResponse<T> {
-  final T? response;
+  final T? data;
   final ApiStatus status;
   final String? error;
 
-  ApiResponse(this.response, this.status, this.error);
+  ApiResponse(this.data, this.status, this.error);
 
   T getResponse() {
     if (status == ApiStatus.success) {
-      return response!;
+      return data!;
     } else {
       throw Exception("Response is not success");
     }
