@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/client/client.dart';
 
@@ -24,6 +25,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
   bool loading = true;
   bool status = false;
   bool check = false;
+  int time = -1;
 
   void pingUrl() async {
     if (mounted) {
@@ -31,15 +33,21 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
         loading = true;
       });
     }
+    final startTime = (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
 
     final client = clientFactory(host: widget.url);
     try {
-      await client.generateToken(GenerateTokenRequest());
+      final response =
+          await client.getServerInformation(GetServerInformationRequest());
       status = true;
+      final returnTime = response.currentTime.seconds.toInt();
+      debugPrint("returnTime: $returnTime");
+      debugPrint("startTime: $startTime");
+      time = startTime - returnTime;
     } catch (e) {
-      if (e is GrpcError && e.code == 16) {
-        status = true;
-      }
+      debugPrint(e.toString());
+      status = false;
+      time = -1;
     }
     if (mounted) {
       setState(() {
@@ -80,33 +88,39 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
                   Expanded(
                     child: SizedBox(),
                   ),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 300),
-                    child: loading
-                        ? SizedBox(
-                            height: 14,
-                            width: 14,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(28),
-                              color: getStatusColor(),
-                            ),
-                            height: 14,
-                            width: 14,
-                            child: loading
-                                ? const CircularProgressIndicator()
-                                : Center(
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(28),
-                                      onTap: () => pingUrl(),
-                                    ),
-                                  ),
-                          ),
+                  Text(
+                    "${time}ms",
+                    style: TextStyle(
+                      color: getStatusColor(),
+                    ),
                   ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  loading
+                      ? SizedBox(
+                          height: 14,
+                          width: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Ink(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            color: getStatusColor(),
+                          ),
+                          height: 14,
+                          width: 14,
+                          child: loading
+                              ? const CircularProgressIndicator()
+                              : Center(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(28),
+                                    onTap: () => pingUrl(),
+                                  ),
+                                ),
+                        ),
                 ],
               ),
             ),

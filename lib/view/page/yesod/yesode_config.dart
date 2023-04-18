@@ -52,7 +52,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
       );
     }
     if (isSuccess) {
-      final listData = response.getResponse().feedsWithConfig;
+      final listData = response.getData().feedsWithConfig;
       final bgColor = Theme.of(context).colorScheme.surfaceVariant;
       return ListView.builder(
         padding: const EdgeInsets.only(right: 8),

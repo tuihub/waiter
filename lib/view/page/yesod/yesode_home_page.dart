@@ -18,7 +18,7 @@ class _YesodHomeState extends State<YesodHome> {
   String selectedIndex = "timeline";
 
   Map<String, Widget> yesodPages = {
-    "timeline": TimeLine(),
+    "timeline": YesodeTimelinePage(),
     "config": YesodConfigPage()
   };
 

@@ -12,7 +12,7 @@ class ApiResponse<T> {
 
   ApiResponse(this.data, this.status, this.error);
 
-  T getResponse() {
+  T getData() {
     if (status == ApiStatus.success) {
       return data!;
     } else {
@@ -22,8 +22,8 @@ class ApiResponse<T> {
 }
 
 class ApiHelper {
-  late final LibrarianSephirahServiceClient client;
-  late final CallOptions option;
+  late LibrarianSephirahServiceClient client;
+  late CallOptions option;
 
   /// private constructor
   ApiHelper._();
