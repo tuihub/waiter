@@ -9,6 +9,7 @@ part 'app_setting_state.dart';
 
 class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
   final SettingDao _dao;
+  String userPath = '/';
 
   AppSettingBloc(this._dao) : super(DefaultAppState()) {
     on<AppSettingEvent>((event, emit) async {

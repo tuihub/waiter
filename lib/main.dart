@@ -11,6 +11,7 @@ import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 import 'package:waitress/view/page/init_page.dart';
 
+import 'common/const/route.dart';
 import 'common/const/string.dart';
 
 void main() async {
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
           if (state is DefaultAppState) {
             context.read<AppSettingBloc>().add(InitAppSettingEvent());
           }
-          return MaterialApp(
+          return MaterialApp.router(
             title: 'Flutter Demo',
             // The Mandy red, light theme.
             theme: FlexThemeData.light(
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: state.themeMode,
             // Use dark or light theme based on system setting.
-            home: const InitPage(),
+            routerConfig: getRouter(context),
           );
         },
       ),

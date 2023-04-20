@@ -1,12 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/common/client/client.dart';
-import 'package:waitress/common/const/color.dart';
 import 'package:waitress/common/const/string.dart';
-import 'package:waitress/view/page/frame_page.dart';
 import 'package:waitress/view/widget/connectivity.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
@@ -29,20 +26,13 @@ class InitPage extends StatelessWidget {
                 ),
               ),
             );
+
+            GoRouter.of(context).go('/app/Home');
           }
         },
         builder: (context, state) {
           if (state is AppSettingInitial) {
             context.read<UserBloc>().add(CheckLocalSettingEvent());
-          }
-          if (state is UserLoginDone) {
-            return BlocProvider(
-              create: (context) => ApiRequestBloc(
-                accessToken: state.acessToken,
-                client: clientFactory(host: state.serverUrl),
-              ),
-              child: FramePage(),
-            );
           }
           return Scaffold(
             body: Column(children: [

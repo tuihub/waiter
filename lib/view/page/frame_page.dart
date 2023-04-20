@@ -1,62 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/view/page/ffi_test_page.dart';
-import 'package:waitress/view/page/gebura/gebura_home_page.dart';
-import 'package:waitress/view/page/home_page.dart';
-import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
-import 'package:waitress/view/page/yesod/yesode_home_page.dart';
+import 'package:waitress/common/client/client.dart';
+import 'package:waitress/common/const/app.dart';
 import 'package:waitress/view/widget/nav_rail.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
 import '../widget/actions/theme_mode_toggle.dart';
-import 'setting_page.dart';
 
-const mainList = ['Home', 'Gebura', 'Tiphereth', 'Yesod', 'Ffi'];
+class FramePage extends StatelessWidget {
+  const FramePage(
+      {super.key, required this.innerPage, required this.selectedNav});
 
-const icons = <String, IconData>{
-  'Home': Icons.home,
-  'Login': Icons.face,
-  'Setting': Icons.settings,
-  'Gebura': Icons.casino,
-  'Tiphereth': Icons.manage_accounts,
-  'Yesod': Icons.rss_feed,
-  'Ffi': Icons.timelapse,
-};
+  final Widget innerPage;
 
-class FramePage extends StatefulWidget {
-  FramePage({super.key});
-
-  final pageMap = <String, Widget>{
-    'Home': HomePage(),
-    'Gebura': GeburaHome(),
-    'Tiphereth': UserManagePage(),
-    'Yesod': YesodHome(),
-    'Ffi': FfiTestPage(),
-    'Setting': SettingPage(),
-  };
-
-  @override
-  State<FramePage> createState() => _FramePageState();
-}
-
-class _FramePageState extends State<FramePage> {
-  String selectedNav = mainList.elementAt(0);
-
-  Widget? _getPage() {
-    if (widget.pageMap.containsKey(selectedNav)) {
-      return widget.pageMap[selectedNav];
-    }
-    return HomePage();
-  }
-
-  void _showPage(String pageName) {
-    setState(
-      () {
-        selectedNav = pageName;
-      },
-    );
-  }
+  final String selectedNav;
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +39,14 @@ class _FramePageState extends State<FramePage> {
                       ),
                     ],
                     body: [
-                      for (var pageName in mainList)
+                      for (final app in appList)
                         IconMenuItem(
-                          icon: icons[pageName]!,
-                          selected: pageName == selectedNav,
+                          icon: app.icon,
+                          selected: app.name == selectedNav,
                           onPressed: () {
-                            _showPage(pageName);
+                            GoRouter.of(context).go(
+                              '/app/${app.name}',
+                            );
                           },
                         )
                     ],
@@ -92,7 +54,9 @@ class _FramePageState extends State<FramePage> {
                       IconMenuItem(
                         icon: Icons.settings,
                         selected: false,
-                        onPressed: () => {_showPage("Setting")},
+                        onPressed: () {
+                          GoRouter.of(context).go('/app/Setting');
+                        },
                       ),
                       IconMenuItem(
                         icon: Icons.logout,
@@ -116,7 +80,7 @@ class _FramePageState extends State<FramePage> {
                             scaffoldBackgroundColor:
                                 Theme.of(context).colorScheme.background,
                           ),
-                          child: _getPage() ?? Ink(),
+                          child: innerPage,
                         ),
                       ),
                     ),
