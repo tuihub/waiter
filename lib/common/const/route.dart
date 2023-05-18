@@ -18,31 +18,20 @@ final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
 
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
 
-class UserNavObserver extends NavigatorObserver {
-  final BuildContext context;
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    print(route.toString());
-    context.read<AppSettingBloc>().userPath = route.toString();
-  }
-
-  UserNavObserver(this.context);
-}
-
 GoRouter getRouter(BuildContext context) {
   final router = GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
+      print(state.location);
       if (context.read<UserBloc>().state is UserLoginDone) {
         if (state.location == '/') {
           print(state.location);
-          return '/app/Home';
+          return context.read<AppSettingBloc>().userPath;
         }
       }
+      context.read<AppSettingBloc>().userPath = state.location;
       return null;
     },
-    observers: [UserNavObserver(context)],
     routes: [
       GoRoute(
         path: '/',

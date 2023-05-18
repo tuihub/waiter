@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
           if (state is DefaultAppState) {
             context.read<AppSettingBloc>().add(InitAppSettingEvent());
           }
+          final router = getRouter(context);
           return MaterialApp.router(
             title: 'Flutter Demo',
             // The Mandy red, light theme.
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: state.themeMode,
             // Use dark or light theme based on system setting.
-            routerConfig: getRouter(context),
+            routerConfig: router,
           );
         },
       ),

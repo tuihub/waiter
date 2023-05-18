@@ -62,7 +62,7 @@ class FramePage extends StatelessWidget {
                         icon: Icons.logout,
                         selected: false,
                         onPressed: () {
-                          context.read<UserBloc>().add(UserLogoutEvent());
+                          GoRouter.of(context).go('/');
                         },
                       ),
                     ],

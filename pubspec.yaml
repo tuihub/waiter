@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -65,12 +65,19 @@ dependencies:
   equatable: ^2.0.5
   flutter_widget_from_html: ^0.10.0
   animations: ^2.0.7
+  webfeed_revised: ^0.7.2
 
   # rust bridge
   ffi: ^2.0.1
   flutter_rust_bridge: 1.72.2
   freezed_annotation: ^2.2.0
+
+  # router
   go_router: ^6.5.7
+
+  # web
+  http: ^0.13.5
+  favicon: ^1.1.1
 
 
 dev_dependencies:

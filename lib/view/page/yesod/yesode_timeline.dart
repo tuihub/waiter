@@ -189,9 +189,9 @@ class _YesodFeedGroupState extends State<YesodFeedGroup>
                     openBuilder: (context, closedContainer) {
                       return YesodeDetailPage(item: item);
                     },
-                    openColor: theme.cardColor,
+                    openColor: theme.colorScheme.primary,
                     closedShape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
                     closedElevation: 0,
                     closedColor: theme.cardColor,

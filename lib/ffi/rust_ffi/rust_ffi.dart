@@ -200,7 +200,7 @@ class RustFfiWire implements FlutterRustBridgeWireBase {
       _free_WireSyncReturnPtr.asFunction<void Function(WireSyncReturn)>();
 }
 
-class _Dart_Handle extends ffi.Opaque {}
+base class _Dart_Handle extends ffi.Opaque {}
 
 typedef DartPostCObjectFnType = ffi.Pointer<
     ffi.NativeFunction<
