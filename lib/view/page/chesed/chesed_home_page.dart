@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
+import 'package:waitress/view/page/chesed/chesed_upload.dart';
 
 class ChesedHome extends StatelessWidget {
   final controller = TextEditingController();
@@ -133,6 +134,30 @@ class ChesedHome extends StatelessWidget {
                 ],
               ),
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ChesedUpload(
+                      callback: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('上传成功'),
+                            action: SnackBarAction(
+                                label: "关闭",
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                }),
+                          ),
+                        );
+                      },
+                    );
+                  });
+            },
+            child: const Icon(Icons.upload),
           ),
         );
       },
