@@ -6,6 +6,8 @@ import 'package:waitress/view/page/setting_page.dart';
 import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
 import 'package:waitress/view/page/yesod/yesode_home_page.dart';
 
+import '../../view/page/chesed/chesed_home_page.dart';
+
 class App {
   final String name;
   final IconData icon;
@@ -19,6 +21,7 @@ final appList = [
   App('Gebura', Icons.casino, GeburaHome()),
   App('Tiphereth', Icons.manage_accounts, UserManagePage()),
   App('Yesod', Icons.rss_feed, SizedBox()),
+  App('Chesed', Icons.photo_album, ChesedHome()),
   App('Ffi', Icons.timelapse, FfiTestPage()),
 ];
 

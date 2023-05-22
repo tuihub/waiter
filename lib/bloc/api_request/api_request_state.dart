@@ -39,6 +39,23 @@ class GeburaFailed extends GeburaState {
   GeburaFailed(this.code, this.message);
 }
 
+class ChesedState extends ApiRequestState {}
+
+class ChesedLoading extends ChesedState {}
+
+class ChesedLoadDone extends ChesedState {
+  final List<PresignedDownloadFileResponse> resp;
+
+  ChesedLoadDone(this.resp);
+}
+
+class ChesedFailed extends ChesedState {
+  final int code;
+  final String message;
+
+  ChesedFailed(this.code, this.message);
+}
+
 class YesodState extends ApiRequestState {}
 
 class YesodLoading extends YesodState {}
