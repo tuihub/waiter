@@ -87,7 +87,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(widget.config.host),
+                  Text(widget.config.name.isEmpty ? widget.config.host : widget.config.name),
                   Expanded(
                     child: SizedBox(),
                   ),
