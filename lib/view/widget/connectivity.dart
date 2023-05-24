@@ -4,12 +4,14 @@ import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/client/client.dart';
 
+import '../../common/const/string.dart';
+
 class ServerConnectivityWidget extends StatefulWidget {
-  final String url;
+  final ServerConfig config;
   final VoidCallback callback;
 
   const ServerConnectivityWidget(
-      {super.key, required this.url, required this.callback});
+      {super.key, required this.config, required this.callback});
   @override
   State<ServerConnectivityWidget> createState() =>
       _ServerConnectivityWidgetState();
@@ -25,7 +27,8 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
   bool loading = true;
   bool status = false;
   bool check = false;
-  int time = -1;
+  int deTime = 0;
+  int reTime = 0;
 
   void pingUrl() async {
     if (mounted) {
@@ -33,21 +36,21 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
         loading = true;
       });
     }
-    final startTime = (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
 
-    final client = clientFactory(host: widget.url);
+    final client = clientFactory(config: widget.config);
     try {
+      final startTime = DateTime.now();
       final response =
           await client.getServerInformation(GetServerInformationRequest());
+      final endTime = DateTime.now();
       status = true;
-      final returnTime = response.currentTime.seconds.toInt();
-      debugPrint("returnTime: $returnTime");
-      debugPrint("startTime: $startTime");
-      time = startTime - returnTime;
+      final arriveTime = response.currentTime.toDateTime();
+      debugPrint("startTime: $startTime, arriveTime: $arriveTime, endTime: $endTime");
+      deTime =  arriveTime.difference(startTime).inMilliseconds;
+      reTime = endTime.difference(arriveTime).inMilliseconds;
     } catch (e) {
       debugPrint(e.toString());
       status = false;
-      time = -1;
     }
     if (mounted) {
       setState(() {
@@ -84,12 +87,12 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(widget.url),
+                  Text(widget.config.host),
                   Expanded(
                     child: SizedBox(),
                   ),
                   Text(
-                    "${time}ms",
+                    status ? "↑ ${deTime}ms  ↓ ${reTime}ms" : "",
                     style: TextStyle(
                       color: getStatusColor(),
                     ),

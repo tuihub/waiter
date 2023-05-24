@@ -3,62 +3,67 @@ part of 'user_bloc.dart';
 @immutable
 abstract class UserLoginState {}
 
-class AppSettingInitial extends UserLoginState {}
+class PreLogin extends UserLoginState {}
+class OnLogin extends UserLoginState {}
+class PostLogin extends UserLoginState {}
 
-class SettingLoading extends UserLoginState {}
+class AppInitialize extends PreLogin {}
+class AutoLogging extends PreLogin {}
+class AutoLoginFailed extends PreLogin {}
 
-class SettingEmpty extends UserLoginState {}
+// class ServerConnectBase extends OnLogin {
+//   final ServerConfig serverConfig;
+//
+//   ServerConnectBase(this.serverConfig);
+// }
 
-class ServerConnectBase extends UserLoginState {
-  final String serverUrl;
+// class ServerConnectLoading extends ServerConnectBase {
+//   ServerConnectLoading(super.serverUrl);
+// }
+//
+// class ServerConnectFailed extends ServerConnectBase {
+//   final int errorCode;
+//   final String message;
+//
+//   ServerConnectFailed(super.serverUrl, this.errorCode, this.message);
+// }
 
-  ServerConnectBase(this.serverUrl);
+class ServerSelecting extends OnLogin {}
+
+class ServerSelected extends OnLogin {
+  final ServerConfig serverConfig;
+
+  ServerSelected(this.serverConfig);
 }
 
-class ServerConnectLoading extends ServerConnectBase {
-  ServerConnectLoading(super.serverUrl);
-}
-
-class ServerConnectFailed extends ServerConnectBase {
-  final int errorCode;
-  final String message;
-
-  ServerConnectFailed(super.serverUrl, this.errorCode, this.message);
-}
-
-class ServerConnectDone extends ServerConnectBase {
-  ServerConnectDone(super.serverUrl);
-}
-
-class UserLoginBase extends ServerConnectDone {
+class UserLoginLoading extends ServerSelected {
   final String username;
   final String password;
 
-  UserLoginBase(this.username, this.password, super.serverUrl);
+  UserLoginLoading(this.username, this.password, super.serverConfig);
 }
 
-class UserLoginLoading extends UserLoginBase {
-  UserLoginLoading(super.username, super.password, super.serverUrl);
-}
-
-class UserLoginFailed extends UserLoginBase {
+class UserLoginFailed extends ServerSelected {
+  final String username;
+  final String password;
   final int errorCode;
   final String message;
 
   UserLoginFailed(
-    super.username,
-    super.password,
-    super.serverUrl,
+    this.username,
+    this.password,
+    super.serverConfig,
     this.errorCode,
     this.message,
   );
 }
 
-class UserLoginDone extends ServerConnectDone {
+class UserLoggedIn extends PostLogin {
+  final ServerConfig serverConfig;
   final String acessToken;
 
-  UserLoginDone(
-    super.serverUrl,
+  UserLoggedIn(
+    this.serverConfig,
     this.acessToken,
   );
 }

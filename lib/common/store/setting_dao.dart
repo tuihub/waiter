@@ -1,9 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 enum SettingKey {
-  serverUrl,
-  username,
-  password,
+  serverConfig,
   refreshToken,
   theme,
   themeMode,

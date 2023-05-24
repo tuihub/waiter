@@ -5,89 +5,74 @@ import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
+import '../../common/const/string.dart';
+
 part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserLoginState> {
   final SettingDao _dao;
 
-  UserBloc(this._dao) : super(AppSettingInitial()) {
+  UserBloc(this._dao) : super(AppInitialize()) {
     on<UserEvent>((event, emit) async {
-      if (event is CheckLocalSettingEvent) {
-        emit(SettingLoading());
-        if (_dao.exsist(SettingKey.serverUrl)) {
-          final host = _dao.require<String>(SettingKey.serverUrl);
-          final client = clientFactory(host: host);
-          bool flag = false;
+      if (event is LoadLocalSettingEvent) {
+        emit(AutoLogging());
+        if (_dao.exsist(SettingKey.serverConfig)) {
+          final config = _dao.require<ServerConfig>(SettingKey.serverConfig);
+          final client = clientFactory(config: config);
           if (_dao.exsist(SettingKey.refreshToken)) {
-            // check token
             final refreshToken = _dao.require(SettingKey.refreshToken);
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
               ApiHelper.instance.init(client, resp.accessToken);
-              emit(UserLoginDone(host, resp.accessToken));
+              emit(UserLoggedIn(config, resp.accessToken));
               return;
             } catch (e) {
               debugPrint("login by refresh token fail");
-              flag = true;
             }
-          }
-          if (_dao.exsist(SettingKey.username) &&
-              _dao.exsist(SettingKey.password)) {
-            // do login
-            final username = _dao.require<String>(SettingKey.username);
-            final password = _dao.require<String>(SettingKey.password);
-
-            try {
-              final resp = await client.getToken(
-                  GetTokenRequest(username: username, password: password));
-              ApiHelper.instance.init(client, resp.accessToken);
-              emit(UserLoginDone(
-                host,
-                resp.accessToken,
-              ));
-            } catch (e) {
-              debugPrint("login by username password fail");
-              flag = true;
-            }
-          }
-          if (flag) {
-            emit(ServerConnectDone(host));
           }
         }
-        emit(SettingEmpty());
+        emit(AutoLoginFailed());
+      }
+      if (event is ManualLoginEvent) {
+        emit(ServerSelecting());
       }
       if (event is ConnectToServerEvent) {
-        emit(ServerConnectLoading(event.url));
+        // emit(ServerConnectLoading(event.config));
 
         // final grpcProvider = newGrpc("theam-grpc.gyx.moe", port: 443);
         // final resp = await grpcProvider
         //     .getToken(GetTokenRequest(username: "", password: ""));
-        _dao.set(SettingKey.serverUrl, event.url);
-        emit(ServerConnectDone(event.url));
+        _dao.set(SettingKey.serverConfig, event.config);
+        emit(ServerSelected(event.config));
       }
-      if (state is! ServerConnectDone) {
+      if (event is UserLogoutEvent) {
+        await _dao.pure(SettingKey.serverConfig);
+        await _dao.pure(SettingKey.refreshToken);
+        emit(ServerSelecting());
+      }
+      if (state is! ServerSelected) {
         return;
       }
-      final host = (state as ServerConnectDone).serverUrl;
-      final client = clientFactory(host: host);
+      final config = (state as ServerSelected).serverConfig;
+      final client = clientFactory(config: config);
 
       if (event is UserLoginEvent) {
         emit(UserLoginLoading(
-          host,
           event.username,
           event.password,
+          config,
         ));
         try {
           final resp = await client.getToken(
             GetTokenRequest(username: event.username, password: event.password),
           );
-          print(resp.toDebugString());
+          debugPrint(resp.toDebugString());
           _dao.set(SettingKey.refreshToken, resp.refreshToken);
           ApiHelper.instance.init(client, resp.accessToken);
-          emit(UserLoginDone(
-            host,
+          emit(UserLoggedIn(
+            config,
             resp.accessToken,
           ));
         } catch (e) {
@@ -95,18 +80,11 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           emit(UserLoginFailed(
             event.username,
             event.password,
-            host,
+            config,
             10,
             e.toString(),
           ));
         }
-      }
-      if (event is UserLogoutEvent) {
-        await _dao.pure(SettingKey.serverUrl);
-        await _dao.pure(SettingKey.username);
-        await _dao.pure(SettingKey.password);
-        await _dao.pure(SettingKey.refreshToken);
-        emit(AppSettingInitial());
       }
     });
   }

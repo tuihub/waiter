@@ -62,7 +62,17 @@ class FramePage extends StatelessWidget {
                         icon: Icons.logout,
                         selected: false,
                         onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "已退出登录",
+                              ),
+                            ),
+                          );
                           context.read<UserBloc>().add(UserLogoutEvent());
+                          GoRouter.of(context).go(
+                            '/login',
+                          );
                         },
                       ),
                     ],
@@ -78,7 +88,7 @@ class FramePage extends StatelessWidget {
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             scaffoldBackgroundColor:
-                                Theme.of(context).colorScheme.background,
+                            Theme.of(context).colorScheme.background,
                           ),
                           child: innerPage,
                         ),
