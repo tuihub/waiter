@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
+import 'package:screen_capturer/screen_capturer.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/base.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/binah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:path_provider/path_provider.dart';
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
@@ -29,14 +32,58 @@ class ChesedUploadState extends State<ChesedUpload>
   late String rssUrl;
   late int refreshInterval;
   late bool enabled;
+  late File file;
+  late String name;
+  late String extension;
 
-  void submit() {
-    doRequest().then((value) {
-      if (isSuccess) {
-        widget.callback();
-        Navigator.pop(context);
-      }
-    });
+  void pickSubmit() async {
+    final pickResult = await file_picker.FilePicker.platform.pickFiles(type: file_picker.FileType.image);
+    if (pickResult != null) {
+      final pick = pickResult.files.first;
+      file = File(pick.path!); // TODO not compatible with web
+      name = pick.name;
+      extension = pick.extension!;
+      doRequest().then((value) {
+        if (isSuccess) {
+          widget.callback();
+          Navigator.pop(context);
+        }
+      });
+    }
+  }
+
+  void captureSubmit() async {
+    // TODO linux platform rely on gnome-screenshot
+    if (!await ScreenCapturer.instance.isAccessAllowed()) {
+      return;
+    }
+    Directory directory = await getTemporaryDirectory();
+    String imageName =
+        'Screenshot-${DateTime.now().millisecondsSinceEpoch}.png';
+    String imagePath =
+        '${directory.path}/$imageName';
+    debugPrint('imagePath: $imagePath');
+    final capturedData = await ScreenCapturer.instance.capture(
+      mode: CaptureMode.region,
+      imagePath: imagePath,
+      silent: true,
+    );
+    if (capturedData != null) {
+      file = File(capturedData.imagePath!);
+      name = imageName;
+      extension = 'png';
+      doRequest().then((value) {
+        if (isSuccess) {
+          widget.callback();
+          Navigator.pop(context);
+        }
+      });
+      // ignore: avoid_print
+      // print(_lastCapturedData!.toJson());
+    } else {
+      // ignore: avoid_print
+      print('User canceled capture');
+    }
   }
 
   @override
@@ -45,8 +92,12 @@ class ChesedUploadState extends State<ChesedUpload>
       title: const Text('上传图片'),
       actions: <Widget>[
         TextButton(
-          onPressed: submit,
+          onPressed: pickSubmit,
           child: loading ? const CircularProgressIndicator() : const Text('选择文件'),
+        ),
+        TextButton(
+          onPressed: captureSubmit,
+          child: loading ? const CircularProgressIndicator() : const Text('截取屏幕'),
         ),
         TextButton(
           onPressed: () {
@@ -60,36 +111,29 @@ class ChesedUploadState extends State<ChesedUpload>
 
   @override
   Future<PresignedUploadFileStatusResponse> request(client, option) async {
-    final pickResult = await file_picker.FilePicker.platform.pickFiles(type: file_picker.FileType.image);
-    late PresignedUploadFileStatusResponse res;
-    if (pickResult != null) {
-      final pick = pickResult.files.first;
-      final token = await client.uploadImage(UploadImageRequest(
-        fileMetadata: FileMetadata(
-          name: pick.name,
-          size: $fixnum.Int64(pick.size),
-          type: FileType.FILE_TYPE_CHESED_IMAGE,
-        ),
-        name: pick.name,
-      ), options: option);
-      final uploadOption = CallOptions(metadata: {
-        'Authorization': 'Bearer ${token.uploadToken}'
-      });
-      final file = File(pick.path!); // TODO not compatible with web
-      final url = await client.presignedUploadFile(PresignedUploadFileRequest(), options: uploadOption);
-      final uploadResponse = await http.put(
-          Uri.parse(url.uploadUrl),
-          headers: {'Content-Type': 'image/${pick.extension}'},
-          body: await file.readAsBytes(),
-      );
-      if (uploadResponse.statusCode != 200) {
-        throw '文件上传失败： ${uploadResponse.reasonPhrase}';
-      }
-      final resp = await client.presignedUploadFileStatus(PresignedUploadFileStatusRequest(
-        status: FileTransferStatus.FILE_TRANSFER_STATUS_SUCCESS,
-      ), options: uploadOption);
-      res = resp;
+    final token = await client.uploadImage(UploadImageRequest(
+      fileMetadata: FileMetadata(
+        name: name,
+        size: $fixnum.Int64(file.lengthSync()),
+        type: FileType.FILE_TYPE_CHESED_IMAGE,
+      ),
+      name: name,
+    ), options: option);
+    final uploadOption = CallOptions(metadata: {
+      'Authorization': 'Bearer ${token.uploadToken}'
+    });
+    final url = await client.presignedUploadFile(PresignedUploadFileRequest(), options: uploadOption);
+    final uploadResponse = await http.put(
+      Uri.parse(url.uploadUrl),
+      headers: {'Content-Type': 'image/$extension'},
+      body: await file.readAsBytes(),
+    );
+    if (uploadResponse.statusCode != 200) {
+      throw '文件上传失败： ${uploadResponse.reasonPhrase}';
     }
-    return res;
+    final resp = await client.presignedUploadFileStatus(PresignedUploadFileStatusRequest(
+      status: FileTransferStatus.FILE_TRANSFER_STATUS_SUCCESS,
+    ), options: uploadOption);
+    return resp;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
+import 'package:waitress/view/page/chesed/chesed_image_view.dart';
 import 'package:waitress/view/page/chesed/chesed_upload.dart';
 
 class ChesedHome extends StatelessWidget {
@@ -98,16 +99,24 @@ class ChesedHome extends StatelessWidget {
                           );
                         }
                         final item = state.resp.elementAt(index);
-                        return Ink(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                item.downloadUrl,
+                        return InkWell(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChesedImageViewWidget(imageUrl: item.downloadUrl)),
+                            );
+                          },
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  item.downloadUrl,
+                                ),
+                                fit: BoxFit.contain,
                               ),
-                              fit: BoxFit.contain,
                             ),
-                          ),
+                          )
                         );
                       }
                       return Ink(
