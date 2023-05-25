@@ -119,7 +119,7 @@ GoRouter getRouter(BuildContext context) {
                         create: (context) => ApiRequestBloc(
                           accessToken: blocState.acessToken,
                           client: clientFactory(
-                              config: blocState.serverConfig,
+                            config: blocState.serverConfig,
                           ),
                         ),
                         child: page,

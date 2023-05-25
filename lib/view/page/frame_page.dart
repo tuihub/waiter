@@ -88,7 +88,7 @@ class FramePage extends StatelessWidget {
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             scaffoldBackgroundColor:
-                            Theme.of(context).colorScheme.background,
+                                Theme.of(context).colorScheme.background,
                           ),
                           child: innerPage,
                         ),

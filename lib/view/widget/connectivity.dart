@@ -45,8 +45,9 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
       final endTime = DateTime.now();
       status = true;
       final arriveTime = response.currentTime.toDateTime();
-      debugPrint("startTime: $startTime, arriveTime: $arriveTime, endTime: $endTime");
-      deTime =  arriveTime.difference(startTime).inMilliseconds;
+      debugPrint(
+          "startTime: $startTime, arriveTime: $arriveTime, endTime: $endTime");
+      deTime = arriveTime.difference(startTime).inMilliseconds;
       reTime = endTime.difference(arriveTime).inMilliseconds;
     } catch (e) {
       debugPrint(e.toString());
@@ -87,7 +88,9 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Text(widget.config.name.isEmpty ? widget.config.host : widget.config.name),
+                  Text(widget.config.name.isEmpty
+                      ? widget.config.host
+                      : widget.config.name),
                   Expanded(
                     child: SizedBox(),
                   ),

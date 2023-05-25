@@ -5,6 +5,7 @@ const List<ServerConfig> newServerList = [
   ServerConfig("theam-grpc-rp.gyx1.cn", 443, true, name: "rp1"),
   ServerConfig("theam-grpc-rp2.gyx1.cn", 443, true, name: "rp2"),
 ];
+
 class ServerConfig {
   final String host;
   final int port;

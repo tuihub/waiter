@@ -11,7 +11,7 @@ class ChesedImageViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.pop(context);
         },
         child: Ink(

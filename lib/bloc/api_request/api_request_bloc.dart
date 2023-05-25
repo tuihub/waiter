@@ -69,32 +69,34 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
         try {
           var ids = List<InternalID>.empty();
           if (event.request.keywords.isEmpty) {
-            final resp = await client.listImages(ListImagesRequest(paging: event.request.paging), options: option);
+            final resp = await client.listImages(
+                ListImagesRequest(paging: event.request.paging),
+                options: option);
             ids = resp.ids;
           } else {
-            final resp = await client.searchImages(event.request, options: option);
+            final resp =
+                await client.searchImages(event.request, options: option);
             ids = resp.ids;
           }
           var res = List<PresignedDownloadFileResponse>.empty(growable: true);
-          for(var id in ids) {
+          for (var id in ids) {
             try {
-              final resp = await client.downloadImage(
-                  DownloadImageRequest(id: id), options: option);
+              final resp = await client
+                  .downloadImage(DownloadImageRequest(id: id), options: option);
               debugPrint(resp.toString());
-              final downloadOption = CallOptions(metadata: {
-                'Authorization': 'Bearer ${resp.downloadToken}'
-              });
+              final downloadOption = CallOptions(
+                  metadata: {'Authorization': 'Bearer ${resp.downloadToken}'});
               final downloadResp = await client.presignedDownloadFile(
                   PresignedDownloadFileRequest(),
                   options: downloadOption);
               res.add(downloadResp);
-            } catch(e) {
+            } catch (e) {
               debugPrint(e.toString());
             }
           }
           debugPrint(res.toString());
           emit(ChesedLoadDone(res));
-        } catch(e) {
+        } catch (e) {
           debugPrint(e.toString());
 
           if (e is GrpcError) {

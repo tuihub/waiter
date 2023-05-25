@@ -39,17 +39,20 @@ class ChesedHome extends StatelessWidget {
                     width: width,
                     height: height,
                     decoration: BoxDecoration(
-                        border: Border.all(color: Theme.of(context).primaryColor),
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
                         borderRadius: BorderRadius.circular(height)),
                     child: TextField(
                         controller: controller,
                         decoration: InputDecoration(
                             hintText: "搜索",
-                            hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 14),
                             contentPadding: EdgeInsets.only(bottom: height / 3),
                             border: InputBorder.none,
                             icon: Padding(
-                                padding: const EdgeInsets.only(left: 10, top: 5),
+                                padding:
+                                    const EdgeInsets.only(left: 10, top: 5),
                                 child: Icon(
                                   Icons.search,
                                   size: 18,
@@ -60,15 +63,15 @@ class ChesedHome extends StatelessWidget {
                                 Icons.close,
                                 size: 17,
                               ),
-                              onPressed: (){
+                              onPressed: () {
                                 controller.text = "";
                               },
                               splashColor: Theme.of(context).primaryColor,
                             )),
                         onEditingComplete: () {
-                          context
-                              .read<ApiRequestBloc>()
-                              .add(ChesedLoadEvent(SearchImagesRequest(keywords: controller.text, paging: paging)));
+                          context.read<ApiRequestBloc>().add(ChesedLoadEvent(
+                              SearchImagesRequest(
+                                  keywords: controller.text, paging: paging)));
                         }),
                   );
                 }),
@@ -100,40 +103,39 @@ class ChesedHome extends StatelessWidget {
                         }
                         final item = state.resp.elementAt(index);
                         return InkWell(
-                          onTap: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ChesedImageViewWidget(imageUrl: item.downloadUrl)),
-                            );
-                          },
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  item.downloadUrl,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChesedImageViewWidget(
+                                        imageUrl: item.downloadUrl)),
+                              );
+                            },
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    item.downloadUrl,
+                                  ),
+                                  fit: BoxFit.contain,
                                 ),
-                                fit: BoxFit.contain,
                               ),
-                            ),
-                          )
-                        );
+                            ));
                       }
                       return Ink(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondaryContainer,
+                          color:
+                              Theme.of(context).colorScheme.secondaryContainer,
                         ),
                         child: Center(
                           child: Text("加载中"),
                         ),
                       );
                     },
-                    itemCount: state is ChesedLoadDone
-                        ? state.resp.length + 1
-                        : 1,
+                    itemCount:
+                        state is ChesedLoadDone ? state.resp.length + 1 : 1,
                   ),
                 ),
               ),

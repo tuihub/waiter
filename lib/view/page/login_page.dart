@@ -51,13 +51,12 @@ class LoginPage extends StatelessWidget {
             ]),
             floatingActionButton: state is ServerSelected
                 ? FloatingActionButton.extended(
-              onPressed: () {
-                context.read<UserBloc>().add(
-                    ManualLoginEvent());
-              },
-              icon: const Icon(Icons.arrow_back),
-              label: const Text("返回"),
-            )
+                    onPressed: () {
+                      context.read<UserBloc>().add(ManualLoginEvent());
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text("返回"),
+                  )
                 : Container(),
           );
         },
@@ -158,8 +157,8 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
                 config: server,
                 callback: () {
                   context.read<UserBloc>().add(
-                    ConnectToServerEvent(server),
-                  );
+                        ConnectToServerEvent(server),
+                      );
                 },
               ),
           ],
@@ -208,8 +207,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       );
     } else {
       context.read<UserBloc>().add(
-        UserLoginEvent(username, password),
-      );
+            UserLoginEvent(username, password),
+          );
       GoRouter.of(context).go(
         '/app/Home',
       );
@@ -303,18 +302,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
                 child: state is UserLoginLoading
                     ? const SizedBox(
-                  height: 16,
-                  width: 16,
-                  child: CircularProgressIndicator(
-                    color: Colors.black,
-                  ),
-                )
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      )
                     : const Text(
-                  "登录",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
+                        "登录",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ],
           ),

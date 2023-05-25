@@ -28,7 +28,6 @@ class ChesedUpload extends StatefulWidget {
 
 class ChesedUploadState extends State<ChesedUpload>
     with SingleRequestMixin<ChesedUpload, PresignedUploadFileStatusResponse> {
-
   late String rssUrl;
   late int refreshInterval;
   late bool enabled;
@@ -37,7 +36,8 @@ class ChesedUploadState extends State<ChesedUpload>
   late String extension;
 
   void pickSubmit() async {
-    final pickResult = await file_picker.FilePicker.platform.pickFiles(type: file_picker.FileType.image);
+    final pickResult = await file_picker.FilePicker.platform
+        .pickFiles(type: file_picker.FileType.image);
     if (pickResult != null) {
       final pick = pickResult.files.first;
       file = File(pick.path!); // TODO not compatible with web
@@ -60,8 +60,7 @@ class ChesedUploadState extends State<ChesedUpload>
     Directory directory = await getTemporaryDirectory();
     String imageName =
         'Screenshot-${DateTime.now().millisecondsSinceEpoch}.png';
-    String imagePath =
-        '${directory.path}/$imageName';
+    String imagePath = '${directory.path}/$imageName';
     debugPrint('imagePath: $imagePath');
     final capturedData = await ScreenCapturer.instance.capture(
       mode: CaptureMode.region,
@@ -93,11 +92,13 @@ class ChesedUploadState extends State<ChesedUpload>
       actions: <Widget>[
         TextButton(
           onPressed: pickSubmit,
-          child: loading ? const CircularProgressIndicator() : const Text('选择文件'),
+          child:
+              loading ? const CircularProgressIndicator() : const Text('选择文件'),
         ),
         TextButton(
           onPressed: captureSubmit,
-          child: loading ? const CircularProgressIndicator() : const Text('截取屏幕'),
+          child:
+              loading ? const CircularProgressIndicator() : const Text('截取屏幕'),
         ),
         TextButton(
           onPressed: () {
@@ -111,18 +112,20 @@ class ChesedUploadState extends State<ChesedUpload>
 
   @override
   Future<PresignedUploadFileStatusResponse> request(client, option) async {
-    final token = await client.uploadImage(UploadImageRequest(
-      fileMetadata: FileMetadata(
-        name: name,
-        size: $fixnum.Int64(file.lengthSync()),
-        type: FileType.FILE_TYPE_CHESED_IMAGE,
-      ),
-      name: name,
-    ), options: option);
-    final uploadOption = CallOptions(metadata: {
-      'Authorization': 'Bearer ${token.uploadToken}'
-    });
-    final url = await client.presignedUploadFile(PresignedUploadFileRequest(), options: uploadOption);
+    final token = await client.uploadImage(
+        UploadImageRequest(
+          fileMetadata: FileMetadata(
+            name: name,
+            size: $fixnum.Int64(file.lengthSync()),
+            type: FileType.FILE_TYPE_CHESED_IMAGE,
+          ),
+          name: name,
+        ),
+        options: option);
+    final uploadOption =
+        CallOptions(metadata: {'Authorization': 'Bearer ${token.uploadToken}'});
+    final url = await client.presignedUploadFile(PresignedUploadFileRequest(),
+        options: uploadOption);
     final uploadResponse = await http.put(
       Uri.parse(url.uploadUrl),
       headers: {'Content-Type': 'image/$extension'},
@@ -131,9 +134,11 @@ class ChesedUploadState extends State<ChesedUpload>
     if (uploadResponse.statusCode != 200) {
       throw '文件上传失败： ${uploadResponse.reasonPhrase}';
     }
-    final resp = await client.presignedUploadFileStatus(PresignedUploadFileStatusRequest(
-      status: FileTransferStatus.FILE_TRANSFER_STATUS_SUCCESS,
-    ), options: uploadOption);
+    final resp = await client.presignedUploadFileStatus(
+        PresignedUploadFileStatusRequest(
+          status: FileTransferStatus.FILE_TRANSFER_STATUS_SUCCESS,
+        ),
+        options: uploadOption);
     return resp;
   }
 }

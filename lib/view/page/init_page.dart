@@ -52,8 +52,7 @@ class InitPage extends StatelessWidget {
             floatingActionButton: state is! AutoLogging
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      context.read<UserBloc>().add(
-                          ManualLoginEvent());
+                      context.read<UserBloc>().add(ManualLoginEvent());
                       GoRouter.of(context).go(
                         '/login',
                       );

@@ -4,11 +4,15 @@ part of 'user_bloc.dart';
 abstract class UserLoginState {}
 
 class PreLogin extends UserLoginState {}
+
 class OnLogin extends UserLoginState {}
+
 class PostLogin extends UserLoginState {}
 
 class AppInitialize extends PreLogin {}
+
 class AutoLogging extends PreLogin {}
+
 class AutoLoginFailed extends PreLogin {}
 
 // class ServerConnectBase extends OnLogin {
