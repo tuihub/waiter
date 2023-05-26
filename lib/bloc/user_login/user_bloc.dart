@@ -17,8 +17,14 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
     on<UserEvent>((event, emit) async {
       if (event is LoadLocalSettingEvent) {
         emit(AutoLogging());
-        if (_dao.exsist(SettingKey.serverConfig)) {
-          final config = _dao.require<ServerConfig>(SettingKey.serverConfig);
+        if (_dao.exsist(SettingKey.serverHost)
+            && _dao.exsist(SettingKey.serverPort)
+            && _dao.exsist(SettingKey.serverTls)) {
+          final config = ServerConfig(
+              _dao.require<String>(SettingKey.serverHost),
+            _dao.require<int>(SettingKey.serverPort),
+            _dao.require<bool>(SettingKey.serverTls),
+          );
           final client = clientFactory(config: config);
           if (_dao.exsist(SettingKey.refreshToken)) {
             final refreshToken = _dao.require(SettingKey.refreshToken);
@@ -44,11 +50,15 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
         // final grpcProvider = newGrpc("theam-grpc.gyx.moe", port: 443);
         // final resp = await grpcProvider
         //     .getToken(GetTokenRequest(username: "", password: ""));
-        _dao.set(SettingKey.serverConfig, event.config);
+        _dao.set(SettingKey.serverHost, event.config.host);
+        _dao.set(SettingKey.serverPort, event.config.port);
+        _dao.set(SettingKey.serverTls, event.config.tls);
         emit(ServerSelected(event.config));
       }
       if (event is UserLogoutEvent) {
-        await _dao.pure(SettingKey.serverConfig);
+        await _dao.pure(SettingKey.serverHost);
+        await _dao.pure(SettingKey.serverPort);
+        await _dao.pure(SettingKey.serverTls);
         await _dao.pure(SettingKey.refreshToken);
         emit(ServerSelecting());
       }

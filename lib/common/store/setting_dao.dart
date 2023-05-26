@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 enum SettingKey {
-  serverConfig,
+  serverHost,
+  serverPort,
+  serverTls,
   refreshToken,
   theme,
   themeMode,
@@ -10,6 +13,10 @@ enum SettingKey {
 extension SettingValueType on SettingKey {
   Type getType() {
     switch (this) {
+      case SettingKey.serverPort:
+        return int;
+      case SettingKey.serverTls:
+        return bool;
       case SettingKey.theme:
         return int;
       case SettingKey.themeMode:
