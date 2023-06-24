@@ -33,7 +33,13 @@ GoRouter getRouter(BuildContext context) {
       }
       if (context.read<UserBloc>().state is PostLogin) {
         if (state.location == '/login' || state.location == '/') {
-          return context.read<AppSettingBloc>().userPath;
+          final userPath = context.read<AppSettingBloc>().userPath;
+          if (userPath.startsWith("/app")) {
+            return userPath;
+          }
+
+          // return context.read<AppSettingBloc>().userPath;
+          return '/app/Home';
         }
       }
       context.read<AppSettingBloc>().userPath = state.location;
