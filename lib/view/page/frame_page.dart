@@ -76,22 +76,7 @@ class FramePage extends StatelessWidget {
                     ],
                   ),
                   Expanded(
-                    child: Material(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                      ),
-                      child: Ink(
-                        decoration: const BoxDecoration(),
-                        padding: const EdgeInsets.only(left: 8, top: 8),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            scaffoldBackgroundColor:
-                                Theme.of(context).colorScheme.background,
-                          ),
-                          child: innerPage,
-                        ),
-                      ),
-                    ),
+                    child: innerPage,
                   ),
                 ],
               ),

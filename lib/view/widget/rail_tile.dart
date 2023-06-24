@@ -21,6 +21,8 @@ class RailTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(kToolbarHeight),
       child: SizedBox(
         height: kToolbarHeight - 8,
         child: InkWell(
@@ -37,17 +39,26 @@ class RailTile extends StatelessWidget {
             curve: Curves.easeIn,
             child: Row(
               children: [
-                leading != null
-                    ? SizedBox(
-                        width: kToolbarHeight - 16,
-                        child: leading,
-                      )
-                    : SizedBox(
-                        width: 12,
-                      ),
                 SizedBox(
-                  width: 4,
+                  width: 12,
                 ),
+                if (leading != null)
+                  SizedBox(
+                    width: kToolbarHeight - 16,
+                    child: IconTheme(
+                      data: IconThemeData(
+                        size: 24,
+                        color: selected
+                            ? Theme.of(context).colorScheme.onSecondaryContainer
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      child: leading!,
+                    ),
+                  ),
+                if (leading == null)
+                  SizedBox(
+                    width: 4,
+                  ),
                 Expanded(
                   child: DefaultTextStyle(
                     style: TextStyle(

@@ -69,11 +69,29 @@ class MyApp extends StatelessWidget {
             theme: FlexThemeData.light(
               scheme: state.theme.scheme,
               useMaterial3: true,
+              surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
+              blendLevel: 10,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 7,
+                useTextTheme: true,
+                useM2StyleDividerInM3: true,
+              ),
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              swapLegacyOnMaterial3: true,
             ),
             // The Mandy red, dark theme.
             darkTheme: FlexThemeData.dark(
               scheme: state.theme.scheme,
+              surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface,
+              blendLevel: 13,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 20,
+                useTextTheme: true,
+                useM2StyleDividerInM3: true,
+              ),
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
               useMaterial3: true,
+              swapLegacyOnMaterial3: true,
             ),
             themeMode: state.themeMode,
             // Use dark or light theme based on system setting.
