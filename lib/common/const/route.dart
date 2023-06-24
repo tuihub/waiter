@@ -9,9 +9,9 @@ import 'package:waitress/common/util/stream_listener.dart';
 import 'package:waitress/view/page/frame_page.dart';
 import 'package:waitress/view/page/init_page.dart';
 import 'package:waitress/view/page/setting_page.dart';
-import 'package:waitress/view/page/yesod/yesode_config.dart';
-import 'package:waitress/view/page/yesod/yesode_home_page.dart';
-import 'package:waitress/view/page/yesod/yesode_timeline.dart';
+import 'package:waitress/view/page/yesod/yesod_config.dart';
+import 'package:waitress/view/page/yesod/yesod_home_page.dart';
+import 'package:waitress/view/page/yesod/yesod_timeline.dart';
 
 import '../../view/page/login_page.dart';
 import 'app.dart';
@@ -80,7 +80,7 @@ GoRouter getRouter(BuildContext context) {
                 path: "/app/:appName/:function",
                 builder: (context, state) {
                   final yesodPages = {
-                    "timeline": YesodeTimelinePage(),
+                    "timeline": YesodTimelinePage(),
                     "config": YesodConfigPage()
                   };
                   final function = state.params['function'] ?? "timeline";
