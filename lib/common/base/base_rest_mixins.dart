@@ -21,6 +21,13 @@ mixin SingleRequestMixin<M extends StatefulWidget, T> on State<M> {
 
   void callback() {}
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   Future<void> doRequest(
       {Future<T> Function(
               LibrarianSephirahServiceClient client, CallOptions option)?

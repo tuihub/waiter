@@ -4,7 +4,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 
-import 'yesode_add.dart';
+import 'yesod_add/yesod_add.dart';
 
 class YesodConfigPage extends StatefulWidget {
   const YesodConfigPage({super.key});

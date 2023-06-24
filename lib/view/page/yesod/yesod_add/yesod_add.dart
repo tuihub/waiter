@@ -18,55 +18,64 @@ part 'second_stage.dart';
 class YesodeAdd extends StatelessWidget {
   final void Function() callback;
 
-  const YesodeAdd({super.key, required this.callback});
+  YesodeAdd({super.key, required this.callback});
+
+  final _firstFormKey = GlobalKey<FormState>();
+  final _secondFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<YesodAddBloc, YesodAddState>(builder: ((context, state) {
-      return AlertDialog(
-        title: const Text('添加RSS订阅'),
-        content: state.stage.isUrlCheck
-            ? YesodAddFirstStage()
-            : YesodAddSecondStage(),
-        actions: [
-          if (state.stage.isUrlCheck)
+    return BlocProvider(
+      create: (context) => YesodAddBloc(),
+      child:
+          BlocBuilder<YesodAddBloc, YesodAddState>(builder: ((context, state) {
+        return AlertDialog(
+          title: const Text('添加RSS订阅'),
+          content: state.stage.isUrlCheck
+              ? YesodAddFirstStage(
+                  formKey: _firstFormKey,
+                )
+              : YesodAddSecondStage(),
+          actions: [
+            if (state.stage.isUrlCheck)
+              TextButton(
+                onPressed: () {
+                  if (state is YesodAddInitial) {
+                    if (_firstFormKey.currentState!.validate()) {
+                      _firstFormKey.currentState!.save();
+                    }
+                  }
+                },
+                child: state is YesodAddInitial
+                    ? state is YesodUrlCheckLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('验证')
+                    : const Text('下一步'),
+              ),
+            if (state.stage.isFeedConfig)
+              TextButton(
+                onPressed: () {
+                  if (state is YesodAddSecondState) {
+                    context.read<YesodAddBloc>().add(YesodFeedConfigEvent(
+                        name: state.name,
+                        iconUrl: state.iconUrl,
+                        refreshInterval: state.refreshInterval,
+                        enabled: state.enabled));
+                  }
+                },
+                child: state is YesodFeedConfigLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('确定'),
+              ),
             TextButton(
               onPressed: () {
-                if (state is YesodAddFirstState) {
-                  context
-                      .read<YesodAddBloc>()
-                      .add(YesodUrlCheckEvent(url: state.url));
-                }
+                Navigator.pop(context); //close Dialog
               },
-              child: state is YesodAddInitial
-                  ? state is YesodUrlCheckLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('验证')
-                  : const Text('下一步'),
-            ),
-          if (state.stage.isFeedConfig)
-            TextButton(
-              onPressed: () {
-                if (state is YesodAddSecondState) {
-                  context.read<YesodAddBloc>().add(YesodFeedConfigEvent(
-                      name: state.name,
-                      iconUrl: state.iconUrl,
-                      refreshInterval: state.refreshInterval,
-                      enabled: state.enabled));
-                }
-              },
-              child: state is YesodFeedConfigLoading
-                  ? const CircularProgressIndicator()
-                  : const Text('确定'),
-            ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); //close Dialog
-            },
-            child: const Text('取消'),
-          )
-        ],
-      );
-    }));
+              child: const Text('取消'),
+            )
+          ],
+        );
+      })),
+    );
   }
 }

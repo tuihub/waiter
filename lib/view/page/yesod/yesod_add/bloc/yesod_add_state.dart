@@ -37,7 +37,8 @@ class YesodUrlCheckLoading extends YesodAddFirstState {
 }
 
 class YesodUrlCheckSuccess extends YesodAddFirstState {
-  const YesodUrlCheckSuccess({required super.url});
+  final RssPostItem example;
+  const YesodUrlCheckSuccess({required this.example, required super.url});
 }
 
 class YesodUrlCheckFail extends YesodAddFirstState {
