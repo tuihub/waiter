@@ -7,15 +7,15 @@ import 'package:waitress/view/page/yesod/yesod_detail.dart';
 
 import '../../widget/extentions/grid_delegated.dart';
 
-class YesodeTimelinePage extends StatefulWidget {
-  const YesodeTimelinePage({super.key});
+class YesodTimelinePage extends StatefulWidget {
+  const YesodTimelinePage({super.key});
 
   @override
-  State<YesodeTimelinePage> createState() => _YesodeTimelinePageState();
+  State<YesodTimelinePage> createState() => _YesodTimelinePageState();
 }
 
-class _YesodeTimelinePageState extends State<YesodeTimelinePage>
-    with SingleRequestMixin<YesodeTimelinePage, GroupFeedItemsResponse> {
+class _YesodTimelinePageState extends State<YesodTimelinePage>
+    with SingleRequestMixin<YesodTimelinePage, GroupFeedItemsResponse> {
   @override
   void initState() {
     super.initState();
@@ -186,7 +186,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup>
                   final theme = Theme.of(context);
                   return OpenContainer(
                     openBuilder: (context, closedContainer) {
-                      return YesodeDetailPage(item: item);
+                      return YesodDetailPage(item: item);
                     },
                     openColor: theme.colorScheme.primary,
                     closedShape: const RoundedRectangleBorder(
