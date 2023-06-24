@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 import 'package:waitress/view/page/yesod/yesod_detail.dart';

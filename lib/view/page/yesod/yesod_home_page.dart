@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/view/page/yesod/yesode_config.dart';
-import 'package:waitress/view/page/yesod/yesode_timeline.dart';
 
 import '../../widget/expand_rail_tile.dart';
 import '../../widget/rail_tile.dart';
 
 class YesodHome extends StatelessWidget {
-  YesodHome({super.key, required this.function, required this.functionPage});
+  const YesodHome(
+      {super.key, required this.function, required this.functionPage});
 
   final String function;
   final Widget functionPage;
@@ -22,7 +21,7 @@ class YesodHome extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(),
               child: Ink(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   // color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                 ),
@@ -32,28 +31,28 @@ class YesodHome extends StatelessWidget {
                       onTap: () {
                         GoRouter.of(context).go("/app/yesod/timeline");
                       },
-                      title: Text("Timeline"),
+                      title: const Text("Timeline"),
                       selected: function == "timeline",
                     ),
                     ExpandRailTile(
-                      title: Text(
+                      title: const Text(
                         "Category",
                       ),
-                      childrenPadding: EdgeInsets.only(left: 16),
+                      childrenPadding: const EdgeInsets.only(left: 16),
                       children: [
                         RailTile(
-                          title: Text("Anime"),
+                          title: const Text("Anime"),
                           onTap: () {},
                         ),
                         RailTile(
-                          title: Text("Anime"),
+                          title: const Text("Anime"),
                         ),
                         RailTile(
-                          title: Text("Tech"),
+                          title: const Text("Tech"),
                         ),
                       ],
                     ),
-                    Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
                     Divider(
                       height: 10,
                       indent: 20,
@@ -63,17 +62,17 @@ class YesodHome extends StatelessWidget {
                           ? Theme.of(context).colorScheme.outline
                           : Theme.of(context).colorScheme.outlineVariant,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     RailTile(
                       onTap: () {
                         GoRouter.of(context).go("/app/Yesod/config");
                       },
-                      title: Text("Feed Config"),
+                      title: const Text("Feed Config"),
                       selected: function == "config",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                   ],

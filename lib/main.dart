@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/common/store/setting_dao.dart';
-import 'package:waitress/view/page/init_page.dart';
 
 import 'common/const/route.dart';
 import 'common/const/string.dart';

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:waitress/view/page/ffi_test_page.dart';
 import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/home_page.dart';
-import 'package:waitress/view/page/setting_page.dart';
 import 'package:waitress/view/page/tiphereth/user_manage_page.dart';
-import 'package:waitress/view/page/yesod/yesode_home_page.dart';
 
 import '../../view/page/chesed/chesed_home_page.dart';
 
