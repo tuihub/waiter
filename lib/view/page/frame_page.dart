@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/const/app.dart';
 import 'package:waitress/view/widget/nav_rail.dart';
 import 'package:waitress/view/widget/title_bar.dart';
@@ -62,7 +60,17 @@ class FramePage extends StatelessWidget {
                         icon: Icons.logout,
                         selected: false,
                         onPressed: () {
-                          GoRouter.of(context).go('/');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "已退出登录",
+                              ),
+                            ),
+                          );
+                          context.read<UserBloc>().add(UserLogoutEvent());
+                          GoRouter.of(context).go(
+                            '/login',
+                          );
                         },
                       ),
                     ],

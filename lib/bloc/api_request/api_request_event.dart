@@ -25,6 +25,14 @@ class GeburaLoadEvent extends GeburaEvent {
   GeburaLoadEvent(this.request);
 }
 
+class ChesedEvent extends ApiRequestEvent {}
+
+class ChesedLoadEvent extends ChesedEvent {
+  final SearchImagesRequest request;
+
+  ChesedLoadEvent(this.request);
+}
+
 class YesodEvent extends ApiRequestEvent {}
 
 class ListFeedItem extends YesodEvent {

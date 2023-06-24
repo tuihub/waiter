@@ -72,8 +72,10 @@ dependencies:
   flutter_rust_bridge: 1.72.2
   freezed_annotation: ^2.2.0
 
-  # router
+  # others
   go_router: ^6.5.7
+  file_picker: ^5.2.10
+  screen_capturer: ^0.1.4
 
   # web
   http: ^0.13.5

@@ -3,10 +3,12 @@ part of 'user_bloc.dart';
 @immutable
 abstract class UserEvent {}
 
-class ConnectToServerEvent extends UserEvent {
-  final String url;
+class ManualLoginEvent extends UserEvent {}
 
-  ConnectToServerEvent(this.url);
+class ConnectToServerEvent extends UserEvent {
+  final ServerConfig config;
+
+  ConnectToServerEvent(this.config);
 }
 
 class UserLoginEvent extends UserEvent {
@@ -18,4 +20,4 @@ class UserLoginEvent extends UserEvent {
 
 class UserLogoutEvent extends UserEvent {}
 
-class CheckLocalSettingEvent extends UserEvent {}
+class LoadLocalSettingEvent extends UserEvent {}
