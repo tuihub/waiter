@@ -70,21 +70,24 @@ GoRouter getRouter(BuildContext context) {
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? "timeline";
               return NoTransitionPage(
-                  child: YesodHome(
-                function: function,
-                functionPage: child,
-              ));
+                child: YesodHome(
+                  function: function,
+                  functionPage: child,
+                ),
+              );
             },
             routes: [
               GoRoute(
                 path: "/app/:appName/:function",
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final yesodPages = {
                     "timeline": YesodTimelinePage(),
                     "config": YesodConfigPage()
                   };
                   final function = state.params['function'] ?? "timeline";
-                  return yesodPages[function] ?? const SizedBox();
+                  return NoTransitionPage(
+                    child: yesodPages[function] ?? const SizedBox(),
+                  );
                 },
               ),
             ],

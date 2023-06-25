@@ -1,4 +1,7 @@
 const settingBoxKey = "setting";
+
+const yesodCacheBoxKey = "yesodCache";
+
 const List<ServerConfig> newServerList = [
   ServerConfig("theam-grpc.gyx.moe", 443, true, name: "cf 代理"),
   ServerConfig("theam-grpc.gyx1.cn", 443, true, name: "直连"),

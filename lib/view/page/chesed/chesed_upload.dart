@@ -116,7 +116,7 @@ class ChesedUploadState extends State<ChesedUpload>
         UploadImageRequest(
           fileMetadata: FileMetadata(
             name: name,
-            size: $fixnum.Int64(file.lengthSync()),
+            // size: $fixnum.Int64(file.lengthSync()),
             type: FileType.FILE_TYPE_CHESED_IMAGE,
           ),
           name: name,

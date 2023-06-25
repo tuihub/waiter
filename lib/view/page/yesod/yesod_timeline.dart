@@ -2,7 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/common/base/dependeny.dart';
 import 'package:waitress/view/page/yesod/yesod_detail.dart';
 
 import '../../widget/extentions/grid_delegated.dart';
@@ -63,17 +65,13 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Row(
-        children: [
-          Expanded(
-            child: _buildStatePage(),
+      body: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
           ),
-          // SizedBox(
-          //   width: 100,
-          //   child: TimelineSlider(),
-          // ),
-        ],
-      ),
+          margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: _buildStatePage()),
       floatingActionButton: FloatingActionButton(
         onPressed: loadTimeline,
         child: const Icon(Icons.refresh),
@@ -95,48 +93,42 @@ class FeedItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Container(
-            height: kToolbarHeight,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceTint.withAlpha(24),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            ),
-            child: Row(
-              children: [],
-            ),
-          ),
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final group = data.groups.elementAt(index);
-                      return Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: YesodFeedGroup(
-                          group: group,
-                          cardHeight: cardHeight,
-                          cardWith: cardWith,
-                        ),
-                      );
-                    },
-                    childCount: data.groups.length,
-                  ),
+    return Column(
+      children: [
+        // Container(
+        //   height: kToolbarHeight,
+        //   decoration: BoxDecoration(
+        //     color: Theme.of(context).colorScheme.surfaceTint.withAlpha(24),
+        //     borderRadius: BorderRadius.circular(kToolbarHeight),
+        //   ),
+        //   margin: const EdgeInsets.all(8),
+        //   child: Row(
+        //     children: [],
+        //   ),
+        // ),
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final group = data.groups.elementAt(index);
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: YesodFeedGroup(
+                        group: group,
+                        cardHeight: cardHeight,
+                        cardWith: cardWith,
+                      ),
+                    );
+                  },
+                  childCount: data.groups.length,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -157,23 +149,42 @@ class YesodFeedGroup extends StatefulWidget {
   State<YesodFeedGroup> createState() => _YesodFeedGroupState();
 }
 
-class _YesodFeedGroupState extends State<YesodFeedGroup>
-    with SingleRequestMixin<YesodFeedGroup, GetBatchFeedItemsResponse> {
-  void loadFeedList() {
-    doRequest(
-      request: (client, option) {
-        return client.getBatchFeedItems(
-          GetBatchFeedItemsRequest(
-            ids: widget.group.items.map((e) => e.itemId).toList(),
-          ),
-          options: option,
-        );
-      },
-    ).then((value) {
+class _YesodFeedGroupState extends State<YesodFeedGroup> {
+  bool loading = false;
+
+  List<FeedItem> feedItems = [];
+
+  bool isSuccess = false;
+
+  bool get isError => !isSuccess;
+
+  Future<void> loadFeedList() async {
+    setState(() {
+      loaded = true;
+    });
+    try {
+      final result = await AppDependency.instance.yesodRepo
+          .getBatchFeedItems(widget.group.items.map((e) => e.itemId).toList());
       setState(() {
+        loading = false;
+        isSuccess = true;
+        feedItems = result;
         loaded = true;
       });
-    });
+    } catch (e) {
+      setState(() {
+        loading = false;
+        isSuccess = false;
+        loaded = true;
+      });
+    }
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   bool loaded = false;
@@ -183,6 +194,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup>
     if (!loaded) {
       loadFeedList();
     }
+    final theme = Theme.of(context);
     return Column(
       children: [
         Row(
@@ -197,114 +209,121 @@ class _YesodFeedGroupState extends State<YesodFeedGroup>
             )
           ],
         ),
-        isSuccess
-            ? GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithMinCrossAxisExtent(
-                  mainAxisExtent: widget.cardHeight,
-                  minCrossAxisExtent: widget.cardWith,
-                  crossAxisSpacing: 4,
-                ),
-                itemCount: response.getData().items.length,
-                itemBuilder: (context, index) {
-                  final item = response.getData().items.elementAt(index);
-                  final theme = Theme.of(context);
-                  return OpenContainer(
-                    openBuilder: (context, closedContainer) {
-                      return YesodDetailPage(item: item);
-                    },
-                    openColor: theme.colorScheme.primary,
-                    closedShape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+        GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithMinCrossAxisExtent(
+            mainAxisExtent: widget.cardHeight,
+            minCrossAxisExtent: widget.cardWith,
+            crossAxisSpacing: 4,
+          ),
+          itemCount: widget.group.items.length,
+          itemBuilder: (context, index) {
+            if (!loaded || feedItems.isEmpty) {
+              return SizedBox(
+                height: widget.cardHeight,
+                width: widget.cardWith,
+                child: Material(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    closedElevation: 0,
-                    closedColor: theme.cardColor,
-                    closedBuilder: (context, openContainer) {
-                      return SizedBox(
-                        height: widget.cardHeight,
-                        width: widget.cardWith,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+            final item = feedItems.elementAt(index);
+
+            return OpenContainer(
+              openBuilder: (context, closedContainer) {
+                return YesodDetailPage(item: item);
+              },
+              openColor: theme.colorScheme.primary,
+              closedShape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              closedElevation: 0,
+              closedColor: theme.cardColor,
+              closedBuilder: (context, openContainer) {
+                return SizedBox(
+                  height: widget.cardHeight,
+                  width: widget.cardWith,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          openContainer();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(children: [
+                            item.hasImage()
+                                ? SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: Image.network(item.image.url),
+                                  )
+                                : Image.network(
+                                    width: 64,
+                                    height: 64,
+                                    "https://docs.rsshub.app/logo.png",
+                                  ),
+                            const SizedBox(
+                              width: 16,
                             ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(8),
-                              onTap: () {
-                                openContainer();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(children: [
-                                  item.hasImage()
-                                      ? SizedBox(
-                                          width: 100,
-                                          height: 100,
-                                          child: Image.network(item.image.url),
-                                        )
-                                      : Image.network(
-                                          width: 64,
-                                          height: 64,
-                                          "https://docs.rsshub.app/logo.png",
-                                        ),
-                                  const SizedBox(
-                                    width: 16,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.link,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 10,
+                                        color: Theme.of(context).disabledColor),
+                                    maxLines: 2,
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.link,
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              fontSize: 10,
-                                              color: Theme.of(context)
-                                                  .disabledColor),
-                                          maxLines: 2,
-                                        ),
-                                        Text(
-                                          item.title,
-                                          style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                        ),
-                                        Text(
-                                          item.image.title,
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              fontSize: 10,
-                                              color: Theme.of(context)
-                                                  .disabledColor),
-                                          maxLines: 2,
-                                        ),
-                                      ],
+                                  Text(
+                                    item.title,
+                                    style: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
+                                    maxLines: 2,
                                   ),
-                                ]),
+                                  Text(
+                                    item.image.title,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 10,
+                                        color: Theme.of(context).disabledColor),
+                                    maxLines: 2,
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
+                          ]),
                         ),
-                      );
-                    },
-                  );
-                },
-              )
-            : Ink(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                height: 200,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }

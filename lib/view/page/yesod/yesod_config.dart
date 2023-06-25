@@ -58,41 +58,43 @@ class _YesodConfigPageState extends State<YesodConfigPage>
         padding: const EdgeInsets.only(right: 8),
         itemBuilder: (context, index) {
           final item = listData.elementAt(index).config;
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Ink(
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Image.network(
-                      "https://docs.rsshub.app/logo.png",
-                      width: 64,
-                      height: 64,
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Text(item.feedUrl),
-                    ],
-                  ),
-                  const Expanded(child: SizedBox()),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox(
-                      width: 64,
-                      height: 64,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.edit),
+          return SelectionArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Image.network(
+                        "https://docs.rsshub.app/logo.png",
+                        width: 64,
+                        height: 64,
                       ),
                     ),
-                  ),
-                ],
+                    Column(
+                      children: [
+                        Text(item.feedUrl),
+                      ],
+                    ),
+                    const Expanded(child: SizedBox()),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        width: 64,
+                        height: 64,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.edit),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -110,55 +112,53 @@ class _YesodConfigPageState extends State<YesodConfigPage>
 
   @override
   Widget build(BuildContext context) {
-    return SelectionArea(
-      child: Scaffold(
-        body: Column(children: [
-          Row(
-            children: [
-              const SizedBox(width: 8),
-              FilledButton.tonalIcon(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return YesodeAdd(
-                          callback: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text('添加成功'),
-                                action: SnackBarAction(
-                                    label: "关闭",
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                    }),
-                              ),
-                            );
-                            _loadConfig(refresh: true);
-                          },
-                        );
-                      });
-                },
-                icon: const Icon(Icons.add),
-                label: const Text("添加RSS订阅"),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: _buildStatePage(),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-        ]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _loadConfig();
-          },
-          child: const Icon(Icons.refresh),
+    return Scaffold(
+      body: Column(children: [
+        Row(
+          children: [
+            const SizedBox(width: 8),
+            FilledButton.tonalIcon(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return YesodeAdd(
+                        callback: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('添加成功'),
+                              action: SnackBarAction(
+                                  label: "关闭",
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                  }),
+                            ),
+                          );
+                          _loadConfig(refresh: true);
+                        },
+                      );
+                    });
+              },
+              icon: const Icon(Icons.add),
+              label: const Text("添加RSS订阅"),
+            ),
+            const SizedBox(width: 8),
+          ],
         ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: _buildStatePage(),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+      ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _loadConfig();
+        },
+        child: const Icon(Icons.refresh),
       ),
     );
   }

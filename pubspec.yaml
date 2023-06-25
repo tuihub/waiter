@@ -76,6 +76,7 @@ dependencies:
   go_router: ^6.5.7
   file_picker: ^5.2.10
   screen_capturer: ^0.1.4
+  file_sizes: ^1.0.6
 
   # web
   http: ^0.13.5

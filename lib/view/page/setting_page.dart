@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/common/const/theme.dart';
 
+import '../widget/cache_setting.dart';
 import '../widget/theme_presentation.dart';
 
 class SettingPage extends StatelessWidget {
@@ -11,94 +12,108 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('设置'),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: BorderRadius.circular(12),
       ),
-      body: Material(
-        child: BlocBuilder<AppSettingBloc, AppSettingState>(
-          builder: (context, state) {
-            return ListView(
-              padding: EdgeInsets.only(right: 8),
-              children: [
-                Ink(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).colorScheme.surfaceVariant,
-                  ),
-                  height: 216,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: const Text('主题'),
-                        trailing: IconButton(
-                          onPressed: () {
-                            context
-                                .read<AppSettingBloc>()
-                                .add(ToggleThemeModeEvent());
-                          },
-                          icon: AnimatedSwitcher(
-                            duration: Duration.zero,
-                            child: state.themeMode == ThemeMode.system
-                                ? const Icon(Icons.brightness_auto)
-                                : state.themeMode == ThemeMode.light
-                                    ? const Icon(Icons.brightness_5)
-                                    : const Icon(Icons.brightness_3),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(8),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('设置'),
+          backgroundColor: Theme.of(context).colorScheme.background,
+        ),
+        body: Material(
+          child: BlocBuilder<AppSettingBloc, AppSettingState>(
+            builder: (context, state) {
+              return ListView(
+                children: [
+                  Ink(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                    ),
+                    height: 232,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: const Text('主题'),
+                          trailing: IconButton(
+                            onPressed: () {
+                              context
+                                  .read<AppSettingBloc>()
+                                  .add(ToggleThemeModeEvent());
+                            },
+                            icon: AnimatedSwitcher(
+                              duration: Duration.zero,
+                              child: state.themeMode == ThemeMode.system
+                                  ? const Icon(Icons.brightness_auto)
+                                  : state.themeMode == ThemeMode.light
+                                      ? const Icon(Icons.brightness_5)
+                                      : const Icon(Icons.brightness_3),
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            ThemePresent(
-                              title: state.theme.name,
-                              lightScheme: FlexColorScheme.light(
-                                      scheme: state.theme.scheme)
-                                  .toScheme,
-                              darkScheme: FlexColorScheme.dark(
-                                      scheme: state.theme.scheme)
-                                  .toScheme,
-                              selected: true,
-                              brightness: Theme.of(context).brightness,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                ThemePresent(
+                                  title: state.theme.name,
+                                  lightScheme: FlexColorScheme.light(
+                                          scheme: state.theme.scheme)
+                                      .toScheme,
+                                  darkScheme: FlexColorScheme.dark(
+                                          scheme: state.theme.scheme)
+                                      .toScheme,
+                                  selected: true,
+                                  brightness: Theme.of(context).brightness,
+                                ),
+                                VerticalDivider(
+                                  thickness: 2,
+                                ),
+                                Expanded(
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      for (var theme in themeData)
+                                        ThemePresent(
+                                          title: theme.name,
+                                          lightScheme: FlexColorScheme.light(
+                                                  scheme: theme.scheme)
+                                              .toScheme,
+                                          darkScheme: FlexColorScheme.dark(
+                                                  scheme: theme.scheme)
+                                              .toScheme,
+                                          selected: false,
+                                          onTap: () {
+                                            context
+                                                .read<AppSettingBloc>()
+                                                .add(ChangeThemeEvent(theme));
+                                          },
+                                          brightness:
+                                              Theme.of(context).brightness,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            VerticalDivider(
-                              indent: 8,
-                              endIndent: 8,
-                              thickness: 2,
-                            ),
-                            Expanded(
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  for (var theme in themeData)
-                                    ThemePresent(
-                                      title: theme.name,
-                                      lightScheme: FlexColorScheme.light(
-                                              scheme: theme.scheme)
-                                          .toScheme,
-                                      darkScheme: FlexColorScheme.dark(
-                                              scheme: theme.scheme)
-                                          .toScheme,
-                                      selected: false,
-                                      onTap: () {
-                                        context
-                                            .read<AppSettingBloc>()
-                                            .add(ChangeThemeEvent(theme));
-                                      },
-                                      brightness: Theme.of(context).brightness,
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                )
-              ],
-            );
-          },
+                  SizedBox(
+                    height: 8,
+                  ),
+                  CacheSetting(),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
