@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:file_sizes/file_sizes.dart';
 import 'package:flutter/material.dart';
-
-import '../../common/base/dependeny.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:waitress/common/const/string.dart';
 
 class CacheSetting extends StatefulWidget {
   const CacheSetting({super.key});
@@ -14,7 +15,7 @@ class CacheSetting extends StatefulWidget {
 
 class _CacheSettingState extends State<CacheSetting> {
   int cacheSize = 0;
-
+  List<String> cacheFiles = [yesodCacheBoxKey];
   bool clearing = false;
 
   Future<int> _getFileSize(String path) async {
@@ -30,11 +31,17 @@ class _CacheSettingState extends State<CacheSetting> {
   }
 
   void loadCacheSize() async {
-    if (AppDependency.instance.yesodCacheBox.path == null) {
-      return;
+    int size = 0;
+    for (var box in cacheFiles) {
+      final path = GetIt.I<Box<String>>(instanceName: box).path;
+      if (path != null) {
+        size += await _getFileSize(path);
+      }
     }
-    cacheSize = await _getFileSize(AppDependency.instance.yesodCacheBox.path!);
-    setState(() {});
+
+    setState(() {
+      cacheSize = size;
+    });
     print("cache size loaded $cacheSize");
   }
 
@@ -43,7 +50,9 @@ class _CacheSettingState extends State<CacheSetting> {
     setState(() {
       clearing = true;
     });
-    await AppDependency.instance.yesodCacheBox.clear();
+    for (var box in cacheFiles) {
+      await GetIt.I<Box<String>>(instanceName: box).clear();
+    }
     await Future.delayed(const Duration(seconds: 1));
     loadCacheSize();
     setState(() {

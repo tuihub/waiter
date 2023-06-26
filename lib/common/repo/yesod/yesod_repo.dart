@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:grpc/grpc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';

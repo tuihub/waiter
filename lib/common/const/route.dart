@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
@@ -20,10 +21,10 @@ final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
 
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
 
-GoRouter getRouter(BuildContext context) {
+GoRouter getRouter() {
   final router = GoRouter(
     initialLocation: '/',
-    refreshListenable: StreamListener(context.read<UserBloc>().stream),
+    refreshListenable: StreamListener(GetIt.I<UserBloc>().stream),
     redirect: (context, state) {
       if (context.read<UserBloc>().state is PreLogin) {
         return '/';

@@ -1,10 +1,11 @@
 import 'package:animations/animations.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
-import 'package:waitress/common/base/dependeny.dart';
+import 'package:waitress/common/repo/yesod/yesod_repo.dart';
 import 'package:waitress/view/page/yesod/yesod_detail.dart';
 
 import '../../widget/extentions/grid_delegated.dart';
@@ -163,7 +164,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
       loaded = true;
     });
     try {
-      final result = await AppDependency.instance.yesodRepo
+      final result = await GetIt.I<YesodRepo>()
           .getBatchFeedItems(widget.group.items.map((e) => e.itemId).toList());
       setState(() {
         loading = false;

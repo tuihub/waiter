@@ -6,29 +6,19 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/common/store/setting_dao.dart';
 
-import 'common/base/dependeny.dart';
-import 'common/const/route.dart';
-import 'common/const/string.dart';
-import 'common/repo/yesod/yesod_repo.dart';
+import 'dependency.dart' as di;
 
 void main() async {
   await Hive.initFlutter();
 
-  final settingBox = await Hive.openBox<Object>(settingBoxKey);
-
-  final yesodCacheBox = await Hive.openBox<String>(yesodCacheBoxKey);
-
-  AppDependency.init(
-    SettingDao(settingBox),
-    YesodRepo(yesodCacheBox),
-    yesodCacheBox,
-  );
+  await di.setup();
 
   runApp(const MyApp());
 
@@ -52,11 +42,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => UserBloc(AppDependency.instance.settingDao),
+          create: (context) => GetIt.I<UserBloc>(),
         ),
         BlocProvider(
-          create: (context) =>
-              AppSettingBloc(AppDependency.instance.settingDao),
+          create: (context) => GetIt.I<AppSettingBloc>(),
         ),
       ],
       child: BlocBuilder<AppSettingBloc, AppSettingState>(
@@ -64,7 +53,6 @@ class MyApp extends StatelessWidget {
           if (state is DefaultAppState) {
             context.read<AppSettingBloc>().add(InitAppSettingEvent());
           }
-          final router = getRouter(context);
           return MaterialApp.router(
             title: 'Flutter Demo',
             // The Mandy red, light theme.
@@ -97,7 +85,7 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: state.themeMode,
             // Use dark or light theme based on system setting.
-            routerConfig: router,
+            routerConfig: GetIt.I<GoRouter>(),
           );
         },
       ),
