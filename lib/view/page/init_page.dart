@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/common/const/string.dart';
-import 'package:waitress/view/widget/connectivity.dart';
 import 'package:waitress/view/widget/title_bar.dart';
 
 class InitPage extends StatelessWidget {

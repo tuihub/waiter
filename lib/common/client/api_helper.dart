@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 enum ApiStatus { success, error }
 

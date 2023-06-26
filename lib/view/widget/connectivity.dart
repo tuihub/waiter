@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/client/client.dart';
 
 import '../../common/const/string.dart';

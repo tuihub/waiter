@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 
 class RailTile extends StatelessWidget {
-  Widget? leading;
-  Widget? title;
-  Widget? trailing;
+  final Widget? leading;
+  final Widget? title;
+  final Widget? trailing;
 
-  VoidCallback? onTap;
-  bool selected;
+  final VoidCallback? onTap;
+  final bool selected;
 
-  RailTile({
+  const RailTile({
     Key? key,
     this.leading,
     this.title,

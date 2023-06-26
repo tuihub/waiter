@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:waitress/view/widget/rail_tile.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
@@ -62,9 +61,7 @@ class ExpandRailTile extends StatefulWidget {
     this.collapsedShape,
     this.clipBehavior,
     this.controlAffinity,
-  })  : assert(initiallyExpanded != null),
-        assert(maintainState != null),
-        assert(
+  }) : assert(
           expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
           'CrossAxisAlignment.baseline is not supported since the expanded children '
           'are aligned in a column, not a row. Try to use another constant.',
@@ -249,8 +246,6 @@ class ExpandRailTile extends StatefulWidget {
 
 class _ExpandRailTileState extends State<ExpandRailTile>
     with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeOutTween =
-      CurveTween(curve: Curves.easeOut);
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
   static final Animatable<double> _halfTween =
@@ -263,7 +258,6 @@ class _ExpandRailTileState extends State<ExpandRailTile>
   late AnimationController _controller;
   late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
-  late Animation<ShapeBorder?> _border;
   late Animation<Color?> _headerColor;
   late Animation<Color?> _iconColor;
 
@@ -275,7 +269,6 @@ class _ExpandRailTileState extends State<ExpandRailTile>
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
-    _border = _controller.drive(_borderTween.chain(_easeOutTween));
     _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
     _isExpanded = PageStorage.maybeOf(context)?.readState(context) as bool? ??
