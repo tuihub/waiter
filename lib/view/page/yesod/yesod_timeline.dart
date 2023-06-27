@@ -200,11 +200,14 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
       children: [
         Row(
           children: [
+            SizedBox(
+              width: 8,
+            ),
             Text(
               DateUtil.formatDate(widget.group.timeRange.startTime.toDateTime(),
                   format: DateFormats.zh_y_mo_d),
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             )

@@ -1,8 +1,8 @@
 import 'package:favicon/favicon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:waitress/common/base/base_rest_mixins.dart';
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:http/http.dart' as http;

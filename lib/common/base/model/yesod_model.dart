@@ -17,6 +17,7 @@ class RssPostItem {
   String? link;
   String? description;
   String? updateTime;
+  String? image;
   RssSubscription subscription;
 
   RssPostItem({
@@ -24,6 +25,7 @@ class RssPostItem {
     this.link,
     this.description,
     this.updateTime,
+    this.image,
     required this.subscription,
   });
 }

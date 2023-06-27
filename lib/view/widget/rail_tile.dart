@@ -49,7 +49,7 @@ class RailTile extends StatelessWidget {
                       data: IconThemeData(
                         size: 24,
                         color: selected
-                            ? Theme.of(context).colorScheme.onSecondaryContainer
+                            ? Theme.of(context).colorScheme.onPrimary
                             : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       child: leading!,
@@ -63,7 +63,7 @@ class RailTile extends StatelessWidget {
                   child: DefaultTextStyle(
                     style: TextStyle(
                       color: selected
-                          ? Theme.of(context).colorScheme.onSecondaryContainer
+                          ? Theme.of(context).colorScheme.onPrimary
                           : Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,

@@ -4,6 +4,7 @@ import 'package:favicon/favicon.dart';
 import 'package:http/http.dart' as http;
 import 'package:waitress/common/base/model/yesod_model.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
+import 'package:html/parser.dart' show parse;
 
 part 'yesod_add_event.dart';
 part 'yesod_add_state.dart';
@@ -17,12 +18,10 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
         var response = await http.get(url);
         var data = RssFeed.parse(response.body);
 
-        print(data.title); // Flutter - Beautiful native apps in record time
+        print(data.title);
 
-        print(data
-            .description); // Flutter is Google's UI toolkit for crafting beautiful...
-
-        var icon = await FaviconFinder.getBest(event.url);
+        print(data.description);
+        var icon = await FaviconFinder.getBest(Uri.parse(event.url).origin);
         print(icon);
 
         final subscription = RssSubscription(
@@ -32,12 +31,33 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
             iconUrl: icon!.url);
 
         final item = data.items!.first;
+
+        String? imgUrl = null;
+
+        String description = "";
+        if (item.description != null) {
+          try {
+            final doc = parse(item.description!);
+            final imgElements = doc.getElementsByTagName("img");
+            if (imgElements.isNotEmpty) {
+              imgUrl = imgElements.first.attributes["src"];
+            }
+            doc.querySelectorAll('p,h1,h2,h3,h4,h5,span').forEach((element) {
+              description = description + element.text;
+            });
+            description.replaceAll("\n", " ");
+            print(description);
+          } catch (e) {
+            description = item.description!;
+          }
+        }
+
         final example = RssPostItem(
-          title: item.title!,
-          link: item.link!,
-          description: item.description!,
-          updateTime: item.pubDate!.toString(),
+          title: item.title,
+          link: item.link,
+          description: description,
           subscription: subscription,
+          image: imgUrl,
         );
         emit(YesodUrlCheckSuccess(
           example: example,
