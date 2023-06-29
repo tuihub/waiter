@@ -6,7 +6,7 @@ class YesodRemoteSource implements YesodSource {
     if (ids == null || ids.isEmpty) {
       return [];
     }
-    final response = await ApiHelper.instance.doRequest(
+    final response = await GetIt.I<ApiHelper>().doRequest(
       (client, option) {
         return client.getBatchFeedItems(
           GetBatchFeedItemsRequest(

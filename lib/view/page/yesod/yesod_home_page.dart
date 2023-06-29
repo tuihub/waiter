@@ -88,7 +88,14 @@ class YesodHome extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: functionPage,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: functionPage,
+            ),
           ),
         ],
       ),

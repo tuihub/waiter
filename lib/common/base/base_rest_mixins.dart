@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
@@ -36,7 +37,7 @@ mixin SingleRequestMixin<M extends StatefulWidget, T> on State<M> {
     setState(() {
       loading = true;
     });
-    _response = await ApiHelper.instance.doRequest(request ?? this.request);
+    _response = await GetIt.I<ApiHelper>().doRequest(request ?? this.request);
     callback();
     setState(() {
       loading = false;

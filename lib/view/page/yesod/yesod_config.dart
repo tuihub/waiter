@@ -113,47 +113,54 @@ class _YesodConfigPageState extends State<YesodConfigPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        Row(
+      backgroundColor: Colors.transparent,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
           children: [
-            const SizedBox(width: 8),
-            FilledButton.tonalIcon(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return YesodeAdd(
-                        callback: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('添加成功'),
-                              action: SnackBarAction(
-                                  label: "关闭",
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                  }),
-                            ),
-                          );
-                          _loadConfig(refresh: true);
-                        },
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                FilledButton.tonalIcon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const YesodeAdd();
+                      },
+                    ).then((value) {
+                      if (value == null || value == false) {
+                        return;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('添加成功'),
+                          action: SnackBarAction(
+                              label: "关闭",
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                              }),
+                        ),
                       );
+                      _loadConfig(refresh: true);
                     });
-              },
-              icon: const Icon(Icons.add),
-              label: const Text("添加RSS订阅"),
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text("添加RSS订阅"),
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
-            const SizedBox(width: 8),
+            Expanded(
+              child: _buildStatePage(),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
           ],
         ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: _buildStatePage(),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-      ]),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _loadConfig();

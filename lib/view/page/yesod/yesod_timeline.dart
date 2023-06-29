@@ -5,7 +5,9 @@ import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/common/base/model/yesod_model.dart';
 import 'package:waitress/common/repo/yesod/yesod_repo.dart';
+import 'package:waitress/common/util/rss_util.dart';
 import 'package:waitress/view/page/yesod/yesod_detail.dart';
 
 import '../../widget/extentions/grid_delegated.dart';
@@ -66,13 +68,7 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          child: _buildStatePage()),
+      body: _buildStatePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: loadTimeline,
         child: const Icon(Icons.refresh),
@@ -246,7 +242,9 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
 
             return OpenContainer(
               openBuilder: (context, closedContainer) {
-                return YesodDetailPage(item: item);
+                return Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: YesodDetailPage(item: item));
               },
               openColor: theme.colorScheme.primary,
               closedShape: const RoundedRectangleBorder(
@@ -255,6 +253,8 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
               closedElevation: 0,
               closedColor: theme.cardColor,
               closedBuilder: (context, openContainer) {
+                final content = GetIt.I<AbstractContentFormatter>()
+                    .format(item.description);
                 return SizedBox(
                   height: widget.cardHeight,
                   width: widget.cardWith,
@@ -271,54 +271,65 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Row(children: [
-                            item.hasImage()
-                                ? SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Image.network(item.image.url),
-                                  )
-                                : Image.network(
-                                    width: 64,
-                                    height: 64,
-                                    "https://docs.rsshub.app/logo.png",
+                          child: Row(
+                            children: [
+                              if (content is ImgTextContent)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                          content.imgUrl,
+                                        ),
+                                        fit: BoxFit.cover),
                                   ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.link,
-                                    style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 10,
-                                        color: Theme.of(context).disabledColor),
-                                    maxLines: 2,
-                                  ),
-                                  Text(
-                                    item.title,
-                                    style: const TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 2,
-                                  ),
-                                  Text(
-                                    item.image.title,
-                                    style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 10,
-                                        color: Theme.of(context).disabledColor),
-                                    maxLines: 2,
-                                  ),
-                                ],
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              const SizedBox(
+                                width: 16,
                               ),
-                            ),
-                          ]),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.link,
+                                      style: TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: 10,
+                                          color:
+                                              Theme.of(context).disabledColor),
+                                      maxLines: 2,
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      item.title,
+                                      style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      content.content,
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 10,
+                                      ),
+                                      maxLines: 3,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

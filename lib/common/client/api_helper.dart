@@ -24,12 +24,6 @@ class ApiHelper {
   late LibrarianSephirahServiceClient client;
   late CallOptions option;
 
-  /// private constructor
-  ApiHelper._();
-
-  /// the one and only instance of this singleton
-  static final instance = ApiHelper._();
-
   void init(LibrarianSephirahServiceClient client, String accessToken) {
     this.client = client;
     final option = CallOptions(

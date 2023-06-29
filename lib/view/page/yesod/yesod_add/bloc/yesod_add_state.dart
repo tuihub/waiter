@@ -1,48 +1,102 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'yesod_add_bloc.dart';
 
-enum YesodAddStage { urlCheck, feedConfig }
-
-extension YesodAddStageExtension on YesodAddStage {
-  bool get isUrlCheck => this == YesodAddStage.urlCheck;
-  bool get isFeedConfig => this == YesodAddStage.feedConfig;
-}
-
 abstract class YesodAddState extends Equatable {
-  const YesodAddState({
-    this.stage = YesodAddStage.urlCheck,
-  });
+  final String url;
+  final LoadState loadState;
+  final String errorMessage;
 
-  final YesodAddStage stage;
+  const YesodAddState(
+      {this.url = "",
+      this.loadState = LoadState.initial,
+      this.errorMessage = ""});
 
   @override
-  List<Object> get props => [stage];
+  List<Object> get props => [url, loadState, errorMessage];
+
+  YesodAddState copyWith({
+    String? url,
+    String? errorMessage,
+    LoadState? loadState,
+  });
+}
+
+class YesodAddInitial extends YesodAddState {
+  const YesodAddInitial({
+    String? url,
+    String? errorMessage,
+    LoadState loadState = LoadState.initial,
+  }) : super(
+          url: url ?? "",
+          errorMessage: errorMessage ?? "",
+          loadState: loadState,
+        );
+
+  @override
+  YesodAddInitial copyWith({
+    String? url,
+    RssPostItem? example,
+    String? errorMessage,
+    LoadState? loadState,
+  }) {
+    return YesodAddInitial(
+      url: url ?? this.url,
+      errorMessage: errorMessage ?? this.errorMessage,
+      loadState: loadState ?? this.loadState,
+    );
+  }
+}
+
+class YesodAddValidate extends YesodAddInitial {
+  const YesodAddValidate({
+    String? url,
+    String? errorMessage,
+    LoadState loadState = LoadState.initial,
+  }) : super(
+          url: url ?? "",
+          errorMessage: errorMessage ?? "",
+          loadState: loadState,
+        );
 }
 
 class YesodAddFirstState extends YesodAddState {
-  final String url;
+  final RssPostItem example;
 
   const YesodAddFirstState({
-    required this.url,
-  }) : super(stage: YesodAddStage.urlCheck);
+    String? url,
+    String? errorMessage,
+    LoadState loadState = LoadState.initial,
+    required this.example,
+  }) : super(
+          url: url ?? "",
+          errorMessage: errorMessage ?? "",
+          loadState: loadState,
+        );
 
   @override
-  List<Object> get props => [url, stage];
-}
+  List<Object> get props {
+    return [
+      url,
+      example,
+      errorMessage,
+      loadState,
+    ];
+  }
 
-class YesodAddInitial extends YesodAddState {}
-
-class YesodUrlCheckLoading extends YesodAddFirstState {
-  const YesodUrlCheckLoading({required super.url});
-}
-
-class YesodUrlCheckSuccess extends YesodAddFirstState {
-  final RssPostItem example;
-  const YesodUrlCheckSuccess({required this.example, required super.url});
-}
-
-class YesodUrlCheckFail extends YesodAddFirstState {
-  const YesodUrlCheckFail({required super.url});
+  @override
+  YesodAddFirstState copyWith({
+    String? url,
+    RssPostItem? example,
+    String? errorMessage,
+    LoadState? loadState,
+  }) {
+    return YesodAddFirstState(
+      url: url ?? this.url,
+      example: example ?? this.example,
+      errorMessage: errorMessage ?? this.errorMessage,
+      loadState: loadState ?? this.loadState,
+    );
+  }
 }
 
 class YesodAddSecondState extends YesodAddState {
@@ -52,40 +106,50 @@ class YesodAddSecondState extends YesodAddState {
   final bool enabled;
 
   const YesodAddSecondState({
+    String? url,
+    String? errorMessage,
+    LoadState loadState = LoadState.initial,
     required this.name,
     required this.iconUrl,
     required this.refreshInterval,
     required this.enabled,
-  }) : super(stage: YesodAddStage.feedConfig);
+  }) : super(
+          url: url ?? "",
+          errorMessage: errorMessage ?? "",
+          loadState: loadState,
+        );
 
   @override
-  List<Object> get props => [name, iconUrl, refreshInterval, enabled, stage];
-}
+  List<Object> get props {
+    return [
+      url,
+      name,
+      iconUrl,
+      refreshInterval,
+      enabled,
+      errorMessage,
+      loadState,
+    ];
+  }
 
-class YesodFeedConfigLoading extends YesodAddSecondState {
-  const YesodFeedConfigLoading(
-      {required super.name,
-      required super.iconUrl,
-      required super.refreshInterval,
-      required super.enabled});
-}
-
-class YesodFeedConfigSuccess extends YesodAddSecondState {
-  const YesodFeedConfigSuccess(
-      {required super.name,
-      required super.iconUrl,
-      required super.refreshInterval,
-      required super.enabled});
-}
-
-class YesodFeedConfigFail extends YesodAddSecondState {
-  final String message;
-
-  const YesodFeedConfigFail({
-    required super.name,
-    required super.iconUrl,
-    required super.refreshInterval,
-    required super.enabled,
-    required this.message,
-  });
+  @override
+  YesodAddSecondState copyWith({
+    String? url,
+    String? name,
+    String? iconUrl,
+    int? refreshInterval,
+    bool? enabled,
+    String? errorMessage,
+    LoadState? loadState,
+  }) {
+    return YesodAddSecondState(
+      url: url ?? this.url,
+      name: name ?? this.name,
+      iconUrl: iconUrl ?? this.iconUrl,
+      refreshInterval: refreshInterval ?? this.refreshInterval,
+      enabled: enabled ?? this.enabled,
+      errorMessage: errorMessage ?? this.errorMessage,
+      loadState: loadState ?? this.loadState,
+    );
+  }
 }

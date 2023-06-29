@@ -6,8 +6,10 @@ import 'package:waitress/common/store/setting_dao.dart';
 
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
+import 'common/client/api_helper.dart';
 import 'common/const/string.dart';
 import 'common/repo/yesod/yesod_repo.dart';
+import 'common/util/rss_util.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -31,4 +33,10 @@ Future<void> setup() async {
 
   // router
   getIt.registerSingleton<GoRouter>(getRouter());
+
+  // util
+  getIt.registerSingleton<AbstractContentFormatter>(RssContentFormatter());
+
+  // api
+  getIt.registerSingleton<ApiHelper>(ApiHelper());
 }

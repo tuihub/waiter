@@ -29,3 +29,19 @@ class RssPostItem {
     required this.subscription,
   });
 }
+
+class RssDescriptionContent {
+  final String content;
+
+  RssDescriptionContent(this.content);
+}
+
+class TextContent extends RssDescriptionContent {
+  TextContent(super.content);
+}
+
+class ImgTextContent extends RssDescriptionContent {
+  final String imgUrl;
+
+  ImgTextContent(super.content, this.imgUrl);
+}

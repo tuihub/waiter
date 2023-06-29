@@ -9,13 +9,26 @@ class YesodDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(item.title),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(8),
       ),
-      body: HtmlWidget(
-        item.description,
-        renderMode: RenderMode.listView,
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+            child: AppBar(
+              title: Text(item.title),
+            ),
+          ),
+          Expanded(
+            child: HtmlWidget(
+              item.description,
+              renderMode: RenderMode.listView,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/client/client.dart';
@@ -17,11 +18,11 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
     on<UserEvent>((event, emit) async {
       if (event is LoadLocalSettingEvent) {
         emit(AutoLogging());
-        if (_dao.exsist(SettingKey.serverHost)
-            && _dao.exsist(SettingKey.serverPort)
-            && _dao.exsist(SettingKey.serverTls)) {
+        if (_dao.exsist(SettingKey.serverHost) &&
+            _dao.exsist(SettingKey.serverPort) &&
+            _dao.exsist(SettingKey.serverTls)) {
           final config = ServerConfig(
-              _dao.require<String>(SettingKey.serverHost),
+            _dao.require<String>(SettingKey.serverHost),
             _dao.require<int>(SettingKey.serverPort),
             _dao.require<bool>(SettingKey.serverTls),
           );
@@ -31,7 +32,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
-              ApiHelper.instance.init(client, resp.accessToken);
+              GetIt.I<ApiHelper>().init(client, resp.accessToken);
               emit(UserLoggedIn(config, resp.accessToken));
               return;
             } catch (e) {
@@ -80,7 +81,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           );
           debugPrint(resp.toDebugString());
           _dao.set(SettingKey.refreshToken, resp.refreshToken);
-          ApiHelper.instance.init(client, resp.accessToken);
+          GetIt.I<ApiHelper>().init(client, resp.accessToken);
           emit(UserLoggedIn(
             config,
             resp.accessToken,
