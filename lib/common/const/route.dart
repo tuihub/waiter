@@ -10,6 +10,7 @@ import 'package:waitress/common/util/stream_listener.dart';
 import 'package:waitress/view/page/frame_page.dart';
 import 'package:waitress/view/page/gebura/gebura_detail.dart';
 import 'package:waitress/view/page/gebura/gebura_home_page.dart';
+import 'package:waitress/view/page/gebura/gebura_store.dart';
 import 'package:waitress/view/page/init_page.dart';
 import 'package:waitress/view/page/setting_page.dart';
 import 'package:waitress/view/page/yesod/yesod_config.dart';
@@ -117,6 +118,11 @@ GoRouter getRouter() {
                   if (appID != 0) {
                     return NoTransitionPage(
                       child: GeburaDetailPage(appID: appID),
+                    );
+                  }
+                  if (function == "store") {
+                    return NoTransitionPage(
+                      child: GeburaStorePage(),
                     );
                   }
                   return const NoTransitionPage(

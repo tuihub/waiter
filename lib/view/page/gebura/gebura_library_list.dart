@@ -20,6 +20,11 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
   }
 
   Widget _buildStatePage() {
+    if (loading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     if (isSuccess) {
       print(response.getData().apps.length);
       return response.getData().apps.isEmpty
@@ -40,8 +45,8 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
     doRequest(
       request: (client, option) {
         return client.getPurchasedApps(
-            GetPurchasedAppsRequest(),
-        options: option,
+          GetPurchasedAppsRequest(),
+          options: option,
         );
       }
     );

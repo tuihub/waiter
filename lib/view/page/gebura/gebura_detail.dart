@@ -27,7 +27,6 @@ class _GeburaDetailPageState extends State<GeburaDetailPage>
   }
 
   Widget _buildStatePage() {
-    debugPrint("loading:$loading, suc: $isSuccess, err: $isError");
     if (loading) {
       return const Center(
         child: CircularProgressIndicator(),
