@@ -16,7 +16,7 @@ class App {
 
 final appList = [
   App('Home', Icons.home, HomePage()),
-  App('Gebura', Icons.casino, GeburaHome()),
+  App('Gebura', Icons.casino, SizedBox()),
   App('Tiphereth', Icons.manage_accounts, UserManagePage()),
   App('Yesod', Icons.rss_feed, SizedBox()),
   App('Chesed', Icons.photo_album, ChesedHome()),

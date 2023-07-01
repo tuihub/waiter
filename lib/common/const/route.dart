@@ -8,6 +8,8 @@ import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/util/stream_listener.dart';
 import 'package:waitress/view/page/frame_page.dart';
+import 'package:waitress/view/page/gebura/gebura_detail.dart';
+import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/init_page.dart';
 import 'package:waitress/view/page/setting_page.dart';
 import 'package:waitress/view/page/yesod/yesod_config.dart';
@@ -20,6 +22,7 @@ import 'app.dart';
 final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
 
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _geburaNavigateKey = GlobalKey<NavigatorState>();
 
 GoRouter getRouter() {
   final router = GoRouter(
@@ -79,7 +82,7 @@ GoRouter getRouter() {
             },
             routes: [
               GoRoute(
-                path: "/app/:appName/:function",
+                path: "/app/Yesod/:function",
                 pageBuilder: (context, state) {
                   final yesodPages = {
                     "timeline": YesodTimelinePage(),
@@ -93,12 +96,45 @@ GoRouter getRouter() {
               ),
             ],
           ),
+          ShellRoute(
+            navigatorKey: _geburaNavigateKey,
+            pageBuilder:
+                (BuildContext context, GoRouterState state, Widget child) {
+              final function = state.params['function'] ?? "library";
+              return NoTransitionPage(
+                child: GeburaHome(
+                  function: function,
+                  functionPage: child,
+                ),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: "/app/Gebura/:function",
+                pageBuilder: (context, state) {
+                  final function = state.params['function'] ?? "library";
+                  final appID = int.tryParse(function) ?? 0;
+                  if (appID != 0) {
+                    return NoTransitionPage(
+                      child: GeburaDetailPage(appID: appID),
+                    );
+                  }
+                  return const NoTransitionPage(
+                    child: SizedBox(),
+                  );
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: "/app/:appName",
             redirect: (context, state) {
               final appName = state.params['appName'];
               if (appName == "Yesod") {
                 return "/app/Yesod/timeline";
+              }
+              if (appName == "Gebura") {
+                return "/app/Gebura/library";
               }
               return null;
             },
