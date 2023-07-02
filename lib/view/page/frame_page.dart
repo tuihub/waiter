@@ -13,7 +13,6 @@ class FramePage extends StatelessWidget {
       {super.key, required this.innerPage, required this.selectedNav});
 
   final Widget innerPage;
-
   final String selectedNav;
 
   @override
@@ -46,12 +45,12 @@ class FramePage extends StatelessWidget {
                               '/app/${app.name}',
                             );
                           },
-                        )
+                        ),
                     ],
                     trailing: [
                       IconMenuItem(
                         icon: Icons.settings,
-                        selected: false,
+                        selected: "Settings" == selectedNav,
                         onPressed: () {
                           GoRouter.of(context).go('/app/Settings');
                         },

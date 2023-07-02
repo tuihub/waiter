@@ -15,8 +15,7 @@ class GeburaStorePage extends StatefulWidget {
 }
 
 class _GeburaStorePageState extends State<GeburaStorePage>
-  with SingleRequestMixin<GeburaStorePage, SearchAppsResponse> {
-
+    with SingleRequestMixin<GeburaStorePage, SearchAppsResponse> {
   @override
   void initState() {
     super.initState();
@@ -33,8 +32,8 @@ class _GeburaStorePageState extends State<GeburaStorePage>
       print(response.getData().apps.length);
       return response.getData().apps.isEmpty
           ? const Center(
-        child: Text("空空如也"),
-      )
+              child: Text("空空如也"),
+            )
           : StoreList(data: response.getData());
     }
     if (isError) {
@@ -46,14 +45,12 @@ class _GeburaStorePageState extends State<GeburaStorePage>
   }
 
   void loadStore() {
-    doRequest(
-      request: (client, option) {
-        return client.searchApps(
-          SearchAppsRequest(),
-          options: option,
-        );
-      }
-    );
+    doRequest(request: (client, option) {
+      return client.searchApps(
+        SearchAppsRequest(),
+        options: option,
+      );
+    });
   }
 
   @override
@@ -72,52 +69,50 @@ class StoreList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: Card(
-          margin: EdgeInsets.zero,
-          child: GridView.builder(
-            padding: EdgeInsets.all(8),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 256),
-            itemBuilder: (BuildContext context, int index) {
-              if (index == data.apps.length) {
-                return Ink(
+      child: Card(
+        margin: EdgeInsets.zero,
+        child: GridView.builder(
+          padding: EdgeInsets.all(8),
+          gridDelegate:
+              SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 256),
+          itemBuilder: (BuildContext context, int index) {
+            if (index == data.apps.length) {
+              return Ink(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                ),
+                child: Center(
+                  child: Text("没有了"),
+                ),
+              );
+            }
+            final item = data.apps.elementAt(index);
+            return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ChesedImageViewWidget(imageUrl: item.imageUrl)),
+                  );
+                },
+                child: Ink(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondaryContainer,
-                  ),
-                  child: Center(
-                    child: Text("没有了"),
-                  ),
-                );
-              }
-              final item = data.apps.elementAt(index);
-              return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChesedImageViewWidget(
-                              imageUrl: item.imageUrl)),
-                    );
-                  },
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          item.imageUrl,
-                        ),
-                        fit: BoxFit.contain,
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        item.imageUrl,
                       ),
+                      fit: BoxFit.contain,
                     ),
-                    child: Text(item.name),
-                  ));
-            },
-            itemCount: data.apps.length,
-          ),
+                  ),
+                  child: Text(item.name),
+                ));
+          },
+          itemCount: data.apps.length,
         ),
-      );
+      ),
+    );
   }
 }

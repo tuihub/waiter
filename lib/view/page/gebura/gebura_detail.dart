@@ -119,7 +119,11 @@ class AppDetails extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 52,
                           fontWeight: FontWeight.bold,
-                          shadows: [Shadow(color: Theme.of(context).colorScheme.surface, blurRadius: 3)],
+                          shadows: [
+                            Shadow(
+                                color: Theme.of(context).colorScheme.surface,
+                                blurRadius: 3)
+                          ],
                         ),
                       ),
                     ),

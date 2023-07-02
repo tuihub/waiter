@@ -6,13 +6,13 @@ import 'package:waitress/view/widget/rail_tile.dart';
 
 class GeburaLibraryListPage extends StatefulWidget {
   const GeburaLibraryListPage({super.key});
-  
+
   @override
   State<GeburaLibraryListPage> createState() => _GeburaLibraryListPageState();
 }
 
 class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
-  with SingleRequestMixin<GeburaLibraryListPage, GetPurchasedAppsResponse> {
+    with SingleRequestMixin<GeburaLibraryListPage, GetPurchasedAppsResponse> {
   @override
   void initState() {
     super.initState();
@@ -29,8 +29,8 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
       print(response.getData().apps.length);
       return response.getData().apps.isEmpty
           ? const Center(
-        child: Text("空空如也"),
-      )
+              child: Text("空空如也"),
+            )
           : LibraryList(data: response.getData());
     }
     if (isError) {
@@ -42,14 +42,12 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
   }
 
   void loadLibrary() {
-    doRequest(
-      request: (client, option) {
-        return client.getPurchasedApps(
-          GetPurchasedAppsRequest(),
-          options: option,
-        );
-      }
-    );
+    doRequest(request: (client, option) {
+      return client.getPurchasedApps(
+        GetPurchasedAppsRequest(),
+        options: option,
+      );
+    });
   }
 
   @override
