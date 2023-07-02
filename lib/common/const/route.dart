@@ -9,10 +9,11 @@ import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/util/stream_listener.dart';
 import 'package:waitress/view/page/frame_page.dart';
 import 'package:waitress/view/page/gebura/gebura_detail.dart';
-import 'package:waitress/view/page/gebura/gebura_home_page.dart';
+import 'package:waitress/view/page/gebura/gebura_frame_page.dart';
 import 'package:waitress/view/page/gebura/gebura_store.dart';
 import 'package:waitress/view/page/init_page.dart';
 import 'package:waitress/view/page/login_page.dart';
+import 'package:waitress/view/page/settings/app_manage_page.dart';
 import 'package:waitress/view/page/settings/client_setting_page.dart';
 import 'package:waitress/view/page/settings/settings_frame_page.dart';
 import 'package:waitress/view/page/settings/user_manage_page.dart';
@@ -160,6 +161,7 @@ GoRouter getRouter() {
                   final settingsPages = {
                     "client": ClientSettingPage(),
                     "user": UserManagePage(),
+                    "app": AppManagePage(),
                   };
                   final function = state.params['function'] ?? "client";
                   return NoTransitionPage(

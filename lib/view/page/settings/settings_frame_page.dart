@@ -36,12 +36,12 @@ class SettingsFramePage extends StatelessWidget {
                           onTap: () {
                             GoRouter.of(context).go("/app/Settings/client");
                           },
-                          title: const Text("应用设置"),
+                          title: const Text("客户端设置"),
                           selected: function == "client",
                         ),
                         ExpandRailTile(
                           title: const Text(
-                            "管理员",
+                            "管理区域",
                           ),
                           childrenPadding: const EdgeInsets.only(left: 12),
                           children: [
@@ -51,6 +51,13 @@ class SettingsFramePage extends StatelessWidget {
                                 GoRouter.of(context).go("/app/Settings/user");
                               },
                               selected: function == "user",
+                            ),
+                            RailTile(
+                              title: const Text("应用管理"),
+                              onTap: () {
+                                GoRouter.of(context).go("/app/Settings/app");
+                              },
+                              selected: function == "app",
                             ),
                           ],
                         ),

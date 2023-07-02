@@ -1,34 +1,35 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/view/page/settings/app_create_dialog.dart';
 
 import 'user_edit_dialog.dart';
 
-class UserManagePage extends StatefulWidget {
-  const UserManagePage({super.key});
+class AppManagePage extends StatefulWidget {
+  const AppManagePage({super.key});
 
   @override
-  State<UserManagePage> createState() => _UserManagePageState();
+  State<AppManagePage> createState() => _AppManagePageState();
 }
 
-class _UserManagePageState extends State<UserManagePage>
-    with SingleRequestMixin<UserManagePage, ListUsersResponse> {
+class _AppManagePageState extends State<AppManagePage>
+    with SingleRequestMixin<AppManagePage, ListAppsResponse> {
   int page = 0;
   int pageSize = 10;
 
   @override
   void initState() {
     super.initState();
-    loadUserTable();
+    loadAppTable();
   }
 
-  void loadUserTable() {
+  void loadAppTable() {
     doRequest(
       request: (client, option) {
-        return client.listUsers(
-          ListUsersRequest(
+        return client.listApps(
+          ListAppsRequest(
             paging: PagingRequest(pageSize: pageSize, pageNum: page + 1),
           ),
           options: option,
@@ -47,7 +48,7 @@ class _UserManagePageState extends State<UserManagePage>
             Row(
               children: [
                 FilledButton.tonalIcon(
-                  onPressed: loadUserTable,
+                  onPressed: loadAppTable,
                   icon: const Icon(Icons.refresh),
                   label: const Text("刷新"),
                 ),
@@ -56,8 +57,8 @@ class _UserManagePageState extends State<UserManagePage>
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => UserCreateDialog(
-                        callback: loadUserTable,
+                      builder: (context) => AppCreateDialog(
+                        callback: loadAppTable,
                       ),
                     );
                   },
@@ -89,21 +90,21 @@ class _UserManagePageState extends State<UserManagePage>
                     size: ColumnSize.L,
                   ),
                   DataColumn(
-                    label: Text('用户名'),
+                    label: Text('名称'),
                   ),
                   DataColumn(
-                    label: Text('密码'),
+                    label: Text('描述'),
                   ),
                   DataColumn(
-                    label: Text('用户状态'),
+                    label: Text('数据来源'),
                   ),
                   DataColumn(
-                    label: Text('用户类型'),
+                    label: Text('类型'),
                   ),
                 ],
                 source: isSuccess
-                    ? UserTableSource(context, response.data!.users)
-                    : UserTableSource(context, []),
+                    ? AppTableSource(context, response.data!.apps)
+                    : AppTableSource(context, []),
               ),
             ),
           ],
@@ -113,10 +114,10 @@ class _UserManagePageState extends State<UserManagePage>
   }
 }
 
-class UserTableSource extends DataTableSource {
-  UserTableSource(this.context, this.users);
+class AppTableSource extends DataTableSource {
+  AppTableSource(this.context, this.users);
   final BuildContext context;
-  final List<User> users;
+  final List<App> users;
 
   @override
   DataRow getRow(int index) {
@@ -124,10 +125,10 @@ class UserTableSource extends DataTableSource {
     return DataRow2.byIndex(
       index: index,
       cells: [
-        DataCell(Text('${users[index].id.id}')),
-        DataCell(Text(users[index].username)),
-        const DataCell(Text("********")),
-        DataCell(Text('${users[index].status}')),
+        DataCell(Text(users[index].id.id.toHexString())),
+        DataCell(Text(users[index].name)),
+        DataCell(Text(users[index].shortDescription)),
+        DataCell(Text('${users[index].source}')),
         DataCell(Text('${users[index].type}')),
       ],
     );
