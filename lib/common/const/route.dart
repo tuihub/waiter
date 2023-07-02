@@ -62,7 +62,11 @@ GoRouter getRouter() {
       ShellRoute(
         navigatorKey: _appNavigateKey,
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          final appName = state.params['appName'] ?? "Home";
+          var appName = state.params['appName'] ?? "";
+          final fullPath = state.fullpath ?? "/app/Home";
+          if (appName == "" && fullPath.startsWith("/app")) {
+            appName = fullPath.split("/")[2];
+          }
           return FramePage(
             innerPage: child,
             selectedNav: appName,
