@@ -53,7 +53,7 @@ class FramePage extends StatelessWidget {
                         icon: Icons.settings,
                         selected: false,
                         onPressed: () {
-                          GoRouter.of(context).go('/app/Setting');
+                          GoRouter.of(context).go('/app/Settings');
                         },
                       ),
                       IconMenuItem(

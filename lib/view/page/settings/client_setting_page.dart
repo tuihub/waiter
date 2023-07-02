@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/common/const/theme.dart';
+import 'package:waitress/view/widget/cache_setting.dart';
+import 'package:waitress/view/widget/theme_presentation.dart';
 
-import '../widget/cache_setting.dart';
-import '../widget/theme_presentation.dart';
-
-class SettingPage extends StatelessWidget {
-  const SettingPage({Key? key}) : super(key: key);
+class ClientSettingPage extends StatelessWidget {
+  const ClientSettingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

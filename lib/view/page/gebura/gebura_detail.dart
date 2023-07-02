@@ -15,7 +15,7 @@ class GeburaDetailPage extends StatefulWidget {
 }
 
 class _GeburaDetailPageState extends State<GeburaDetailPage>
-  with SingleRequestMixin<GeburaDetailPage, GetBindAppsResponse> {
+    with SingleRequestMixin<GeburaDetailPage, GetBindAppsResponse> {
   _GeburaDetailPageState({required this.appID});
 
   final int appID;
@@ -44,14 +44,12 @@ class _GeburaDetailPageState extends State<GeburaDetailPage>
   }
 
   void loadAppDetail() {
-    doRequest(
-      request: (client, option) {
-        return client.getBindApps(
-            GetBindAppsRequest(appId: InternalID(id: $fixnum.Int64(appID))),
-          options: option,
-        );
-      }
-    );
+    doRequest(request: (client, option) {
+      return client.getBindApps(
+        GetBindAppsRequest(appId: InternalID(id: $fixnum.Int64(appID))),
+        options: option,
+      );
+    });
   }
 
   @override
@@ -77,8 +75,66 @@ class AppDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(data.toString()),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 400,
+            child: Center(
+                child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "https://cdn.akamai.steamstatic.com/steam/apps/1448440/capsule_616x353.jpg?t=1677225626",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  // margin: EdgeInsets.all(32),
+                  height: 400,
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.center,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Color.fromRGBO(0, 0, 0, 0),
+                        Theme.of(context).colorScheme.surface,
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        data.apps[0].name,
+                        style: TextStyle(
+                          fontSize: 52,
+                          fontWeight: FontWeight.bold,
+                          shadows: [Shadow(color: Theme.of(context).colorScheme.surface, blurRadius: 3)],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            )),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Center(
+            child: Text(data.toString()),
+          ),
+        )
+      ],
     );
   }
 }

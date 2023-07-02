@@ -12,18 +12,23 @@ import 'package:waitress/view/page/gebura/gebura_detail.dart';
 import 'package:waitress/view/page/gebura/gebura_home_page.dart';
 import 'package:waitress/view/page/gebura/gebura_store.dart';
 import 'package:waitress/view/page/init_page.dart';
-import 'package:waitress/view/page/setting_page.dart';
+import 'package:waitress/view/page/login_page.dart';
+import 'package:waitress/view/page/settings/client_setting_page.dart';
+import 'package:waitress/view/page/settings/settings_frame_page.dart';
+import 'package:waitress/view/page/settings/user_manage_page.dart';
 import 'package:waitress/view/page/yesod/yesod_config.dart';
 import 'package:waitress/view/page/yesod/yesod_home_page.dart';
 import 'package:waitress/view/page/yesod/yesod_timeline.dart';
 
-import '../../view/page/login_page.dart';
 import 'app.dart';
 
 final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
 
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> _geburaNavigateKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _geburaNavigateKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _settingsNavigateKey =
+    GlobalKey<NavigatorState>();
 
 GoRouter getRouter() {
   final router = GoRouter(
@@ -136,6 +141,34 @@ GoRouter getRouter() {
               ),
             ],
           ),
+          ShellRoute(
+            navigatorKey: _settingsNavigateKey,
+            pageBuilder:
+                (BuildContext context, GoRouterState state, Widget child) {
+              final function = state.params['function'] ?? "client";
+              return NoTransitionPage(
+                child: SettingsFramePage(
+                  function: function,
+                  functionPage: child,
+                ),
+              );
+            },
+            routes: [
+              GoRoute(
+                path: "/app/Settings/:function",
+                pageBuilder: (context, state) {
+                  final settingsPages = {
+                    "client": ClientSettingPage(),
+                    "user": UserManagePage(),
+                  };
+                  final function = state.params['function'] ?? "client";
+                  return NoTransitionPage(
+                    child: settingsPages[function] ?? const SizedBox(),
+                  );
+                },
+              ),
+            ],
+          ),
           GoRoute(
             path: "/app/:appName",
             redirect: (context, state) {
@@ -145,6 +178,9 @@ GoRouter getRouter() {
               }
               if (appName == "Gebura") {
                 return "/app/Gebura/library";
+              }
+              if (appName == "Settings") {
+                return "/app/Settings/client";
               }
               return null;
             },
@@ -156,7 +192,6 @@ GoRouter getRouter() {
                       final appName = state.params['appName'];
                       Widget page = const SizedBox();
 
-                      if (appName == 'Setting') page = SettingPage();
                       if (appMap.containsKey(appName))
                         page = appMap[appName]!.page;
                       return BlocProvider(
