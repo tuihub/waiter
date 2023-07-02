@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
@@ -55,6 +56,15 @@ class MyApp extends StatelessWidget {
           }
           return MaterialApp.router(
             title: 'Flutter Demo',
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('zh', 'CN'),
+            ],
             // The Mandy red, light theme.
             theme: FlexThemeData.light(
               scheme: state.theme.scheme,
