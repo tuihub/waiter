@@ -17,6 +17,7 @@ import 'package:waitress/view/page/settings/app_manage_page.dart';
 import 'package:waitress/view/page/settings/client_setting_page.dart';
 import 'package:waitress/view/page/settings/settings_frame_page.dart';
 import 'package:waitress/view/page/settings/user_manage_page.dart';
+import 'package:waitress/view/page/tiphereth/tiphereth_frame_page.dart';
 import 'package:waitress/view/page/yesod/yesod_config.dart';
 import 'package:waitress/view/page/yesod/yesod_home_page.dart';
 import 'package:waitress/view/page/yesod/yesod_timeline.dart';
@@ -113,7 +114,7 @@ GoRouter getRouter() {
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? "library";
               return NoTransitionPage(
-                child: GeburaHome(
+                child: GeburaFramePage(
                   function: function,
                   functionPage: child,
                 ),
@@ -193,6 +194,8 @@ GoRouter getRouter() {
                     if (blocState is UserLoggedIn) {
                       final appName = state.params['appName'];
                       Widget page = const SizedBox();
+
+                      if (appName == "Tiphereth") page = TipherethFramePage();
 
                       if (appMap.containsKey(appName))
                         page = appMap[appName]!.page;

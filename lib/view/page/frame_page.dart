@@ -31,8 +31,10 @@ class FramePage extends StatelessWidget {
                     leading: [
                       IconMenuItem(
                         icon: Icons.account_circle_sharp,
-                        selected: false,
-                        onPressed: () => {},
+                        selected: "Tiphereth" == selectedNav,
+                        onPressed: () {
+                          GoRouter.of(context).go('/app/Tiphereth');
+                        },
                       ),
                     ],
                     body: [

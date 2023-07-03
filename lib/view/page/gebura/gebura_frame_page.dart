@@ -6,8 +6,8 @@ import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/view/page/gebura/gebura_library_list.dart';
 import 'package:waitress/view/widget/rail_tile.dart';
 
-class GeburaHome extends StatelessWidget {
-  const GeburaHome(
+class GeburaFramePage extends StatelessWidget {
+  const GeburaFramePage(
       {super.key, required this.function, required this.functionPage});
 
   final String function;
