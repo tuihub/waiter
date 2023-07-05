@@ -26,13 +26,13 @@ class GeburaFramePage extends StatelessWidget {
                   height: 64,
                   child: RailTile(
                     leading: Icon(
-                      Icons.add,
+                      Icons.shopping_cart,
                     ),
                     onTap: () {
                       GoRouter.of(context).go("/app/Gebura/store");
                     },
-                    title: const Text("Add"),
-                    selected: function == "add",
+                    title: const Text("Store"),
+                    selected: function == "store",
                   ),
                 ),
                 GeburaLibraryListPage()

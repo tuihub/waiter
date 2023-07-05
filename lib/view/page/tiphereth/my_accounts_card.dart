@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/view/page/tiphereth/account_dialog.dart';
 
 class MyAccountsCard extends StatefulWidget {
   const MyAccountsCard({super.key});
@@ -24,7 +26,7 @@ class _MyAccountsCardState extends State<MyAccountsCard>
       );
     }
     if (isSuccess) {
-      return MyProfile(data: response.getData());
+      return MyProfile(data: response.getData(), callback: loadMyProfile,);
     }
     if (isError) {
       return Center(
@@ -37,7 +39,9 @@ class _MyAccountsCardState extends State<MyAccountsCard>
   void loadMyProfile() {
     doRequest(request: (client, option) {
       return client.listLinkAccounts(
-        ListLinkAccountsRequest(),
+        ListLinkAccountsRequest(
+          paging: PagingRequest(pageNum: 1, pageSize: 10),
+        ),
         options: option,
       );
     });
@@ -57,9 +61,10 @@ class _MyAccountsCardState extends State<MyAccountsCard>
 class MyProfile extends StatelessWidget {
   const MyProfile({
     super.key,
-    required this.data,
+    required this.data, required this.callback,
   });
 
+  final void Function() callback;
   final ListLinkAccountsResponse data;
   final accountPlatformCount = 1;
 
@@ -72,12 +77,24 @@ class MyProfile extends StatelessWidget {
         children: [
           for (final account in data.accounts)
             SizedBox(
+              width: 384,
+              height: 128,
               child: Material(
                 borderRadius: BorderRadius.circular(8),
                 child: Ink(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => UnLinkAccountDialog(
+                          callback: callback, account: account,
+                        ),
+                      );
+                    },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -138,6 +155,7 @@ class MyProfile extends StatelessWidget {
                       ],
                     ),
                   ),
+                  ),
                 ),
               ),
             ),
@@ -153,7 +171,14 @@ class MyProfile extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
                       child: TextButton(
-                        onPressed: () {  },
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => LinkAccountDialog(
+                              callback: callback,
+                            ),
+                          );
+                          },
                         child: const Text("添加绑定"),
                       ),
                     ),

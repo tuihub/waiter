@@ -57,23 +57,6 @@ class FramePage extends StatelessWidget {
                           GoRouter.of(context).go('/app/Settings');
                         },
                       ),
-                      IconMenuItem(
-                        icon: Icons.logout,
-                        selected: false,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "已退出登录",
-                              ),
-                            ),
-                          );
-                          context.read<UserBloc>().add(UserLogoutEvent());
-                          GoRouter.of(context).go(
-                            '/login',
-                          );
-                        },
-                      ),
                     ],
                   ),
                   Expanded(

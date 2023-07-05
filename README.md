@@ -11,7 +11,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
   - [ ] `v0.1 Tiphereth` User editable server address (NONE)
   - [ ] `v0.2 Tiphereth` Basic Sentinel manage (CreateUser, UpdateUser, GetUser, ListUsers, GenerateToken)
 - [ ] Third-Party Account
-  - [ ] `v0.1 Tiphereth` Basic steam account link and unlink (LinkAccount, ListLinkAccounts, UnLinkAccount)
+  - [x] `v0.1 Tiphereth` Basic steam account link and unlink (LinkAccount, ListLinkAccounts, UnLinkAccount)
   - [ ] `v0.1 Gebura` Auto pull steam account library and pull status manage (WIP)
 - [ ] App
   - [ ] `v0.1 Gebura` Basic app store explore (SearchApps, GetBindApps, PurchaseApp)

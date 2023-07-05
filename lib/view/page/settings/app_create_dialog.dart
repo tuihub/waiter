@@ -25,7 +25,7 @@ class _AppCreateDialogState extends State<AppCreateDialog>
                 name: name,
                 type: appType,
                 shortDescription: shortDescription,
-                imageUrl: imageUrl,
+                iconImageUrl: iconImageUrl,
               ),
             ),
             options: option,
@@ -41,7 +41,7 @@ class _AppCreateDialogState extends State<AppCreateDialog>
   final _formKey = GlobalKey<FormState>();
 
   late String name;
-  late String imageUrl;
+  late String iconImageUrl;
   late String shortDescription;
   AppType appType = AppType.APP_TYPE_GAME;
 
@@ -86,7 +86,7 @@ class _AppCreateDialogState extends State<AppCreateDialog>
                 height: 16,
               ),
               TextFormField(
-                onSaved: (newValue) => imageUrl = newValue!,
+                onSaved: (newValue) => iconImageUrl = newValue!,
                 decoration: const InputDecoration(
                   icon: Icon(Icons.person),
                   border: OutlineInputBorder(),
