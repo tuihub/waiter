@@ -29,7 +29,7 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
       print(response.getData().apps.length);
       return response.getData().apps.isEmpty
           ? const Center(
-              child: Text("空空如也"),
+              child: Text(""),
             )
           : LibraryList(data: response.getData());
     }

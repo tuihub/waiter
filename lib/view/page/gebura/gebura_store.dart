@@ -1,11 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
-import 'package:waitress/view/page/chesed/chesed_image_view.dart';
-import 'package:waitress/view/page/gebura/gebura_library_list.dart';
+import 'package:waitress/view/page/gebura/gebura_store_detail.dart';
 
 class GeburaStorePage extends StatefulWidget {
   const GeburaStorePage({super.key});
@@ -68,6 +65,7 @@ class StoreList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Expanded(
@@ -75,84 +73,105 @@ class StoreList extends StatelessWidget {
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final app = data.apps.elementAt(index);
-                    return SizedBox(
-                      width: 384,
-                      height: 128,
-                      child: Material(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Ink(
-                          decoration: BoxDecoration(
+                    return OpenContainer(
+                      openBuilder: (context, closedContainer) {
+                        return Container(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: GeburaStoreDetail(appID: app.id),
+                        );
+                      },
+                      openColor: theme.colorScheme.primary,
+                      closedShape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      closedElevation: 0,
+                      closedColor: theme.cardColor,
+                      closedBuilder: (context, openContainer) {
+                        return SizedBox(
+                          width: 384,
+                          height: 128,
+                          child: Material(
                             borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                            app.iconImageUrl,
-                                          ),
-                                          fit: BoxFit.cover),
-                                    ),
-                                    width: 100,
-                                    height: 100,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(8),
+                                onTap: () {
+                                  openContainer();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                app.iconImageUrl,
+                                              ),
+                                              fit: BoxFit.cover),
+                                        ),
+                                        width: 100,
+                                        height: 100,
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              app.id.id.toHexString(),
+                                              style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
+                                                      .disabledColor),
+                                              maxLines: 2,
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              app.name,
+                                              style: const TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 2,
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              app.shortDescription,
+                                              style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 10,
+                                              ),
+                                              maxLines: 3,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          app.id.id.toHexString(),
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              fontSize: 10,
-                                              color: Theme.of(context).disabledColor),
-                                          maxLines: 2,
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          app.name,
-                                          style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          app.shortDescription,
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 10,
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                   childCount: data.apps.length,
