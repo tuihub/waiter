@@ -32,7 +32,6 @@ class _GeburaStoreDetailState extends State<GeburaStoreDetail>
       );
     }
     if (isSuccess) {
-      debugPrint(response.getData().toString());
       return AppDetails(data: response.getData());
     }
     if (isError) {
@@ -69,10 +68,10 @@ class _GeburaStoreDetailState extends State<GeburaStoreDetail>
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: loadAppDetail,
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: loadAppDetail,
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
@@ -95,66 +94,84 @@ class AppDetails extends StatelessWidget {
             height: 400,
             child: Center(
                 child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            data.app.details.heroImageUrl,
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        data.app.details.heroImageUrl,
                       ),
-                      // margin: EdgeInsets.all(32),
-                      height: 400,
+                      fit: BoxFit.cover,
                     ),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: FractionalOffset.center,
-                          end: FractionalOffset.bottomCenter,
-                          colors: [
-                            Color.fromRGBO(0, 0, 0, 0),
-                            Theme.of(context).colorScheme.surface,
+                  ),
+                  // margin: EdgeInsets.all(32),
+                  height: 400,
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.center,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Color.fromRGBO(0, 0, 0, 0),
+                        Theme.of(context).colorScheme.surface,
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        data.app.name,
+                        style: TextStyle(
+                          fontSize: 52,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                                color: Theme.of(context).colorScheme.surface,
+                                blurRadius: 3)
                           ],
                         ),
                       ),
                     ),
-                    Container(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            data.app.name,
-                            style: TextStyle(
-                              fontSize: 52,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                    color: Theme.of(context).colorScheme.surface,
-                                    blurRadius: 3)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
+                  ),
+                )
+              ],
+            )),
           ),
           SizedBox(
             height: 100,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text("开发商：${data.app.details.developer}"),
-                  Text("发行商：${data.app.details.publisher}"),
-                  Text("发行日期：${data.app.details.releaseDate}"),
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => PurchaseAppDialog(
+                          callback: (){}, app: data.app,
+                        ),
+                      );
+                    },
+                    child: Text("添加至游戏库"),
+                  ),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("开发商：${data.app.details.developer}"),
+                      Text("发行商：${data.app.details.publisher}"),
+                      Text("发行日期：${data.app.details.releaseDate}"),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -174,11 +191,68 @@ class AppDetails extends StatelessWidget {
               data.app.details.description,
               buildAsync: false,
               renderMode: RenderMode.column,
-              onErrorBuilder: (context, element, error) => Text('$element error: $error'),
+              onErrorBuilder: (context, element, error) =>
+                  Text('$element error: $error'),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class PurchaseAppDialog extends StatefulWidget {
+  const PurchaseAppDialog({super.key, required this.callback, required this.app});
+
+  final void Function() callback;
+  final App app;
+
+  @override
+  State<PurchaseAppDialog> createState() => _PurchaseAppDialogState(app: app);
+}
+
+class _PurchaseAppDialogState extends State<PurchaseAppDialog>
+    with SingleRequestMixin<PurchaseAppDialog, PurchaseAppResponse> {
+  _PurchaseAppDialogState({required this.app});
+
+  void purchase() {
+    doRequest(
+      request: (client, option) {
+        return client.purchaseApp(
+          PurchaseAppRequest(
+              appId: app.id,
+          ),
+          options: option,
+        );
+      },
+    ).then((value) {
+      widget.callback();
+      Navigator.of(context).pop();
+    });
+  }
+
+  final App app;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('入库'),
+      content: SizedBox(
+        width: 600,
+        child: Text("确定将《${app.name}》加入你的库存？"),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: purchase,
+          child: loading ? const CircularProgressIndicator() : const Text('确定'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); //close Dialog
+          },
+          child: const Text('关闭'),
+        )
+      ],
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:waitress/bloc/user_login/user_bloc.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/util/stream_listener.dart';
 import 'package:waitress/view/page/frame_page.dart';
-import 'package:waitress/view/page/gebura/gebura_detail.dart';
+import 'package:waitress/view/page/gebura/gebura_library_detail.dart';
 import 'package:waitress/view/page/gebura/gebura_frame_page.dart';
 import 'package:waitress/view/page/gebura/gebura_store.dart';
 import 'package:waitress/view/page/init_page.dart';
@@ -128,7 +128,7 @@ GoRouter getRouter() {
                   final appID = int.tryParse(function) ?? 0;
                   if (appID != 0) {
                     return NoTransitionPage(
-                      child: GeburaDetailPage(appID: appID),
+                      child: GeburaLibraryDetailPage(appID: appID),
                     );
                   }
                   if (function == "store") {

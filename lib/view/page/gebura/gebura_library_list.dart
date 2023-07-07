@@ -26,7 +26,6 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
       );
     }
     if (isSuccess) {
-      print(response.getData().apps.length);
       return response.getData().apps.isEmpty
           ? const Center(
               child: Text(""),
@@ -81,6 +80,20 @@ class LibraryList extends StatelessWidget {
             onTap: () {
               GoRouter.of(context).go("/app/Gebura/${app.id.id}");
             },
+            leading: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    app.iconImageUrl,
+                  ),
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              // margin: EdgeInsets.all(32),
+              height: 24,
+              width: 24,
+            ),
             title: Text(app.name),
           ),
       ],
