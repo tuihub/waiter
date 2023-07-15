@@ -6,7 +6,7 @@ import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/client/client.dart';
 import 'package:waitress/common/store/setting_dao.dart';
 
-import '../../common/const/string.dart';
+import '../../common/const/value.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

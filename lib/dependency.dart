@@ -7,7 +7,7 @@ import 'package:waitress/common/store/setting_dao.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/client/api_helper.dart';
-import 'common/const/string.dart';
+import 'common/const/value.dart';
 import 'common/repo/yesod/yesod_repo.dart';
 import 'common/util/rss_util.dart';
 

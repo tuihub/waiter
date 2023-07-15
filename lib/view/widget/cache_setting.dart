@@ -4,7 +4,7 @@ import 'package:file_sizes/file_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waitress/common/const/string.dart';
+import 'package:waitress/common/const/value.dart';
 
 class CacheSetting extends StatefulWidget {
   const CacheSetting({super.key});

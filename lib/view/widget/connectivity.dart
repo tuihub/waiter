@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:waitress/common/client/client.dart';
 
-import '../../common/const/string.dart';
+import '../../common/const/value.dart';
 
 class ServerConnectivityWidget extends StatefulWidget {
   final ServerConfig config;
