@@ -101,7 +101,7 @@ class AppDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: NetworkImage(
-                        data.app.details.heroImageUrl,
+                        data.app.heroImageUrl,
                       ),
                       fit: BoxFit.cover,
                     ),

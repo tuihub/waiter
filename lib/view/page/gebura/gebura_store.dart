@@ -19,6 +19,8 @@ class _GeburaStorePageState extends State<GeburaStorePage>
     loadStore();
   }
 
+  final controller = TextEditingController();
+
   Widget _buildStatePage() {
     if (loading) {
       return const Center(
@@ -44,7 +46,9 @@ class _GeburaStorePageState extends State<GeburaStorePage>
   void loadStore() {
     doRequest(request: (client, option) {
       return client.searchApps(
-        SearchAppsRequest(),
+        SearchAppsRequest(
+          keywords: controller.text
+        ),
         options: option,
       );
     });
@@ -52,7 +56,57 @@ class _GeburaStorePageState extends State<GeburaStorePage>
 
   @override
   Widget build(BuildContext context) {
-    return _buildStatePage();
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: _buildStatePage(),
+      appBar: AppBar(
+        title: LayoutBuilder(builder: (context, constrains) {
+          var width = constrains.maxWidth / 2; // 父级宽度
+          var height = 45.0;
+          return Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+                border: Border.all(color: Theme.of(context).primaryColor),
+                borderRadius: BorderRadius.circular(height)),
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                  hintText: "搜索",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: (height / 3)),
+                  contentPadding: EdgeInsets.only(top: (height / 5)),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  fillColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  icon: Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 4),
+                      child: Icon(
+                        Icons.search,
+                        size: 18,
+                        color: Theme.of(context).primaryColor,
+                      )),
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.close,
+                      size: 18,
+                    ),
+                    onPressed: () {
+                      controller.text = "";
+                      loadStore();
+                    },
+                    splashColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
+                  )),
+              onEditingComplete: () {
+                loadStore();
+              },
+            ),
+          );
+        }),
+      ),
+    );
   }
 }
 
@@ -113,11 +167,11 @@ class StoreList extends StatelessWidget {
                                               BorderRadius.circular(8),
                                           image: DecorationImage(
                                               image: NetworkImage(
-                                                app.iconImageUrl,
+                                                app.heroImageUrl,
                                               ),
-                                              fit: BoxFit.cover),
+                                              fit: BoxFit.scaleDown),
                                         ),
-                                        width: 100,
+                                        width: 200,
                                         height: 100,
                                       ),
                                       const SizedBox(

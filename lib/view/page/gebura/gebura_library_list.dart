@@ -52,14 +52,6 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
   @override
   Widget build(BuildContext context) {
     return _buildStatePage();
-    // return Scaffold(
-    //   backgroundColor: Colors.transparent,
-    //   body: _buildStatePage(),
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: loadLibrary,
-    //     child: const Icon(Icons.refresh),
-    //   ),
-    // );
   }
 }
 
@@ -81,7 +73,7 @@ class LibraryList extends StatelessWidget {
               GoRouter.of(context).go("/app/Gebura/${app.id.id}");
             },
             leading: Container(
-              decoration: BoxDecoration(
+              decoration: app.iconImageUrl.isEmpty? BoxDecoration() :BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 image: DecorationImage(
                   image: NetworkImage(
@@ -90,11 +82,10 @@ class LibraryList extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                 ),
               ),
-              // margin: EdgeInsets.all(32),
               height: 24,
               width: 24,
             ),
-            title: Text(app.name),
+            title: Text(app.name.isEmpty?app.id.id.toHexString():app.name),
           ),
       ],
     );

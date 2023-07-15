@@ -26,6 +26,7 @@ class _MyAccountsCardState extends State<MyAccountsCard>
       );
     }
     if (isSuccess) {
+      debugPrint(response.getData().toString());
       return MyProfile(data: response.getData(), callback: loadMyProfile,);
     }
     if (isError) {
@@ -39,9 +40,7 @@ class _MyAccountsCardState extends State<MyAccountsCard>
   void loadMyProfile() {
     doRequest(request: (client, option) {
       return client.listLinkAccounts(
-        ListLinkAccountsRequest(
-          paging: PagingRequest(pageNum: 1, pageSize: 10),
-        ),
+        ListLinkAccountsRequest(),
         options: option,
       );
     });
