@@ -41,7 +41,9 @@ class GeburaFramePage extends StatelessWidget {
                       ? Theme.of(context).colorScheme.outline
                       : Theme.of(context).colorScheme.outlineVariant,
                 ),
-                GeburaLibraryListPage()
+                Expanded(
+                    child: GeburaLibraryListPage(),
+                )
               ],
             ),
           ),

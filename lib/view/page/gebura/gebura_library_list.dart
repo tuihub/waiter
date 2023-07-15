@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 import 'package:waitress/view/widget/rail_tile.dart';
 
@@ -51,7 +53,16 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
 
   @override
   Widget build(BuildContext context) {
-    return _buildStatePage();
+    return BlocConsumer<ApiRequestBloc, ApiRequestState>(
+      listener: (context, state) {
+        if (state is GeburaRefreshLibrary) {
+          loadLibrary();
+        }
+      },
+      builder: (context, state) {
+        return _buildStatePage();
+      },
+    );
   }
 }
 
@@ -65,29 +76,34 @@ class LibraryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (final app in data.apps)
-          RailTile(
-            onTap: () {
-              GoRouter.of(context).go("/app/Gebura/${app.id.id}");
-            },
-            leading: Container(
-              decoration: app.iconImageUrl.isEmpty? BoxDecoration() :BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    app.iconImageUrl,
-                  ),
-                  fit: BoxFit.scaleDown,
-                ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          for (final app in data.apps)
+            RailTile(
+              onTap: () {
+                GoRouter.of(context).go("/app/Gebura/${app.id.id}");
+              },
+              leading: Container(
+                decoration: app.iconImageUrl.isEmpty
+                    ? BoxDecoration()
+                    : BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            app.iconImageUrl,
+                          ),
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                height: 24,
+                width: 24,
               ),
-              height: 24,
-              width: 24,
+              title:
+                  Text(app.name.isEmpty ? app.id.id.toHexString() : app.name),
             ),
-            title: Text(app.name.isEmpty?app.id.id.toHexString():app.name),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -24,20 +24,7 @@ class UserTableFailed extends UserTableBase {
 
 class GeburaState extends ApiRequestState {}
 
-class GeburaLoading extends GeburaState {}
-
-class GeburaLoadDone extends GeburaState {
-  final ListAppsResponse resp;
-
-  GeburaLoadDone(this.resp);
-}
-
-class GeburaFailed extends GeburaState {
-  final int code;
-  final String message;
-
-  GeburaFailed(this.code, this.message);
-}
+class GeburaRefreshLibrary extends GeburaState {}
 
 class ChesedState extends ApiRequestState {}
 

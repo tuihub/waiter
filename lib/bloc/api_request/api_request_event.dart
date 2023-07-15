@@ -19,11 +19,7 @@ class CreateUserEvent extends UserTableRequestEvent {
 
 class GeburaEvent extends ApiRequestEvent {}
 
-class GeburaLoadEvent extends GeburaEvent {
-  final ListAppsRequest request;
-
-  GeburaLoadEvent(this.request);
-}
+class GeburaLibraryRefreshEvent extends GeburaEvent {}
 
 class ChesedEvent extends ApiRequestEvent {}
 

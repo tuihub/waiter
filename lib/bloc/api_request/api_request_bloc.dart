@@ -49,20 +49,8 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           emit(UserTableFailed(-1, "发生未知错误"));
         }
       }
-      if (event is GeburaLoadEvent) {
-        emit(UserTableLoading());
-        try {
-          final resp = await client.listApps(event.request, options: option);
-          debugPrint(resp.toDebugString());
-          emit(GeburaLoadDone(resp));
-        } catch (e) {
-          debugPrint(e.toString());
-
-          if (e is GrpcError) {
-            emit(GeburaFailed(e.code, e.message ?? "发生未知错误"));
-          }
-          emit(GeburaFailed(-1, "发生未知错误"));
-        }
+      if (event is GeburaLibraryRefreshEvent) {
+        emit(GeburaRefreshLibrary());
       }
       if (event is ChesedLoadEvent) {
         emit(ChesedLoading());

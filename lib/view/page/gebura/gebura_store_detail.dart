@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:waitress/bloc/api_request/api_request_bloc.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 
 class GeburaStoreDetail extends StatefulWidget {
@@ -154,9 +156,14 @@ class AppDetails extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => PurchaseAppDialog(
-                          callback: (){}, app: data.app,
-                        ),
+                        builder: (_) {
+                          return  BlocProvider.value(
+                            value: context.read<ApiRequestBloc>(),
+                            child: PurchaseAppDialog(
+                              app: data.app,
+                            ),
+                          );
+                        },
                       );
                     },
                     child: Text("添加至游戏库"),
@@ -202,9 +209,9 @@ class AppDetails extends StatelessWidget {
 }
 
 class PurchaseAppDialog extends StatefulWidget {
-  const PurchaseAppDialog({super.key, required this.callback, required this.app});
+  const PurchaseAppDialog(
+      {super.key, required this.app});
 
-  final void Function() callback;
   final App app;
 
   @override
@@ -215,44 +222,53 @@ class _PurchaseAppDialogState extends State<PurchaseAppDialog>
     with SingleRequestMixin<PurchaseAppDialog, PurchaseAppResponse> {
   _PurchaseAppDialogState({required this.app});
 
-  void purchase() {
-    doRequest(
-      request: (client, option) {
-        return client.purchaseApp(
-          PurchaseAppRequest(
-              appId: app.id,
-          ),
-          options: option,
-        );
-      },
-    ).then((value) {
-      widget.callback();
-      Navigator.of(context).pop();
-    });
-  }
-
   final App app;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('入库'),
-      content: SizedBox(
-        width: 600,
-        child: Text("确定将《${app.name}》加入你的库存？"),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: purchase,
-          child: loading ? const CircularProgressIndicator() : const Text('确定'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); //close Dialog
-          },
-          child: const Text('关闭'),
-        )
-      ],
+    return BlocConsumer<ApiRequestBloc, ApiRequestState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return AlertDialog(
+          title: const Text('入库'),
+          content: SizedBox(
+            width: 600,
+            child: Text("确定将《${app.name}》加入你的库存？"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: (){
+                doRequest(
+                  request: (client, option) {
+                    return client.purchaseApp(
+                      PurchaseAppRequest(
+                        appId: app.id,
+                      ),
+                      options: option,
+                    );
+                  },
+                ).then((value) {
+                  context
+                      .read<ApiRequestBloc>()
+                      .add(GeburaLibraryRefreshEvent());
+                  Navigator.of(context).pop();
+                });
+              },
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : const Text('确定'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); //close Dialog
+              },
+              child: const Text('关闭'),
+            )
+          ],
+        );
+      },
     );
   }
 }
