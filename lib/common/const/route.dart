@@ -74,9 +74,24 @@ GoRouter getRouter() {
           if (appName == "" && fullPath.startsWith("/app")) {
             appName = fullPath.split("/")[2];
           }
-          return FramePage(
-            innerPage: child,
-            selectedNav: appName,
+          return BlocBuilder<UserBloc, UserLoginState>(
+            builder: (context, blocState) {
+              if (blocState is UserLoggedIn) {
+                return BlocProvider(
+                  create: (context) => ApiRequestBloc(
+                    accessToken: blocState.acessToken,
+                    client: clientFactory(
+                      config: blocState.serverConfig,
+                    ),
+                  ),
+                  child: FramePage(
+                    innerPage: child,
+                    selectedNav: appName,
+                  ),
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
           );
         },
         routes: [
@@ -188,31 +203,14 @@ GoRouter getRouter() {
               return null;
             },
             pageBuilder: (context, state) {
-              return NoTransitionPage(
-                child: BlocBuilder<UserBloc, UserLoginState>(
-                  builder: (context, blocState) {
-                    if (blocState is UserLoggedIn) {
-                      final appName = state.params['appName'];
-                      Widget page = const SizedBox();
+              final appName = state.params['appName'];
+              Widget page = const SizedBox();
 
-                      if (appName == "Tiphereth") page = TipherethFramePage();
+              if (appName == "Tiphereth") page = TipherethFramePage();
 
-                      if (appMap.containsKey(appName))
-                        page = appMap[appName]!.page;
-                      return BlocProvider(
-                        create: (context) => ApiRequestBloc(
-                          accessToken: blocState.acessToken,
-                          client: clientFactory(
-                            config: blocState.serverConfig,
-                          ),
-                        ),
-                        child: page,
-                      );
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
-              );
+              if (appMap.containsKey(appName))
+                page = appMap[appName]!.page;
+              return NoTransitionPage(child: page);
             },
           ),
         ],
