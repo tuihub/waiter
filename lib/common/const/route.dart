@@ -128,10 +128,12 @@ GoRouter getRouter() {
             pageBuilder:
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? "library";
+              final appID = state.queryParams['id'] ?? "0";
               return NoTransitionPage(
                 child: GeburaFramePage(
                   function: function,
                   functionPage: child,
+                  selectedAppID: appID,
                 ),
               );
             },
@@ -140,11 +142,14 @@ GoRouter getRouter() {
                 path: "/app/Gebura/:function",
                 pageBuilder: (context, state) {
                   final function = state.params['function'] ?? "library";
-                  final appID = int.tryParse(function) ?? 0;
-                  if (appID != 0) {
-                    return NoTransitionPage(
-                      child: GeburaLibraryDetailPage(appID: appID),
-                    );
+                  final id = state.queryParams['id'] ?? "0";
+                  final appID = int.tryParse(id) ?? 0;
+                  if (function == "library") {
+                    if (appID != 0) {
+                      return NoTransitionPage(
+                        child: GeburaLibraryDetailPage(appID: appID),
+                      );
+                    }
                   }
                   if (function == "store") {
                     return NoTransitionPage(
@@ -208,8 +213,7 @@ GoRouter getRouter() {
 
               if (appName == "Tiphereth") page = TipherethFramePage();
 
-              if (appMap.containsKey(appName))
-                page = appMap[appName]!.page;
+              if (appMap.containsKey(appName)) page = appMap[appName]!.page;
               return NoTransitionPage(child: page);
             },
           ),

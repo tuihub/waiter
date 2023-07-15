@@ -46,9 +46,7 @@ class _GeburaStorePageState extends State<GeburaStorePage>
   void loadStore() {
     doRequest(request: (client, option) {
       return client.searchApps(
-        SearchAppsRequest(
-          keywords: controller.text
-        ),
+        SearchAppsRequest(keywords: controller.text),
         options: option,
       );
     });
@@ -73,7 +71,8 @@ class _GeburaStorePageState extends State<GeburaStorePage>
               controller: controller,
               decoration: InputDecoration(
                   hintText: "搜索",
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: (height / 3)),
+                  hintStyle:
+                      TextStyle(color: Colors.grey, fontSize: (height / 3)),
                   contentPadding: EdgeInsets.only(top: (height / 5)),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,

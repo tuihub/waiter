@@ -5,10 +5,14 @@ import 'package:waitress/view/widget/rail_tile.dart';
 
 class GeburaFramePage extends StatelessWidget {
   const GeburaFramePage(
-      {super.key, required this.function, required this.functionPage});
+      {super.key,
+      required this.function,
+      required this.functionPage,
+      required this.selectedAppID});
 
   final String function;
   final Widget functionPage;
+  final String selectedAppID;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class GeburaFramePage extends StatelessWidget {
                       : Theme.of(context).colorScheme.outlineVariant,
                 ),
                 Expanded(
-                    child: GeburaLibraryListPage(),
+                  child: GeburaLibraryListPage(selectedAppID: selectedAppID),
                 )
               ],
             ),

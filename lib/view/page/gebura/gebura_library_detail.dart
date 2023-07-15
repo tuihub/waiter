@@ -11,18 +11,20 @@ class GeburaLibraryDetailPage extends StatefulWidget {
   final int appID;
 
   @override
-  State<StatefulWidget> createState() => _GeburaLibraryDetailPageState(appID: appID);
+  State<StatefulWidget> createState() => _GeburaLibraryDetailPageState();
 }
 
 class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
     with SingleRequestMixin<GeburaLibraryDetailPage, GetAppResponse> {
-  _GeburaLibraryDetailPageState({required this.appID});
-
-  final int appID;
-
   @override
   void initState() {
     super.initState();
+    loadAppDetail();
+  }
+
+  @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
     loadAppDetail();
   }
 
@@ -46,7 +48,7 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
   void loadAppDetail() {
     doRequest(request: (client, option) {
       return client.getApp(
-        GetAppRequest(appId: InternalID(id: $fixnum.Int64(appID))),
+        GetAppRequest(appId: InternalID(id: $fixnum.Int64(widget.appID))),
         options: option,
       );
     });
@@ -58,7 +60,7 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
       backgroundColor: Colors.transparent,
       body: _buildStatePage(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         child: const Icon(Icons.settings),
       ),
     );
@@ -83,55 +85,55 @@ class AppDetails extends StatelessWidget {
             height: 400,
             child: Center(
                 child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            data.app.heroImageUrl,
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        data.app.heroImageUrl,
                       ),
-                      // margin: EdgeInsets.all(32),
-                      height: 400,
+                      fit: BoxFit.cover,
                     ),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: FractionalOffset.center,
-                          end: FractionalOffset.bottomCenter,
-                          colors: [
-                            Color.fromRGBO(0, 0, 0, 0),
-                            Theme.of(context).colorScheme.surface,
+                  ),
+                  // margin: EdgeInsets.all(32),
+                  height: 400,
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.center,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                        Color.fromRGBO(0, 0, 0, 0),
+                        Theme.of(context).colorScheme.surface,
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        data.app.name,
+                        style: TextStyle(
+                          fontSize: 52,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                                color: Theme.of(context).colorScheme.surface,
+                                blurRadius: 3)
                           ],
                         ),
                       ),
                     ),
-                    Container(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            data.app.name,
-                            style: TextStyle(
-                              fontSize: 52,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                    color: Theme.of(context).colorScheme.surface,
-                                    blurRadius: 3)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
+                  ),
+                )
+              ],
+            )),
           ),
           SizedBox(
             height: 100,
@@ -140,8 +142,7 @@ class AppDetails extends StatelessWidget {
               child: Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                     child: Text("启动游戏"),
                   ),
                   SizedBox(

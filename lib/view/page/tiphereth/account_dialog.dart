@@ -21,11 +21,10 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
         request: (client, option) {
           return client.linkAccount(
             LinkAccountRequest(
-              accountId: AccountID(
-                platform: platform,
-                platformAccountId: platformAccountID,
-              )
-            ),
+                accountId: AccountID(
+              platform: platform,
+              platformAccountId: platformAccountID,
+            )),
             options: option,
           );
         },
@@ -129,29 +128,27 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
 }
 
 class UnLinkAccountDialog extends StatefulWidget {
-  const UnLinkAccountDialog({super.key, required this.callback, required this.account});
+  const UnLinkAccountDialog(
+      {super.key, required this.callback, required this.account});
 
   final void Function() callback;
   final Account account;
 
   @override
-  State<UnLinkAccountDialog> createState() => _UnLinkAccountDialogState(account: account);
+  State<UnLinkAccountDialog> createState() => _UnLinkAccountDialogState();
 }
 
 class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
     with SingleRequestMixin<UnLinkAccountDialog, UnLinkAccountResponse> {
-  _UnLinkAccountDialogState({required this.account});
-
   void unlink() {
     doRequest(
       request: (client, option) {
         return client.unLinkAccount(
           UnLinkAccountRequest(
               accountId: AccountID(
-                platform: account.platform,
-                platformAccountId: account.platformAccountId,
-              )
-          ),
+            platform: widget.account.platform,
+            platformAccountId: widget.account.platformAccountId,
+          )),
           options: option,
         );
       },
@@ -160,8 +157,6 @@ class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
       Navigator.of(context).pop();
     });
   }
-
-  final Account account;
 
   @override
   Widget build(BuildContext context) {

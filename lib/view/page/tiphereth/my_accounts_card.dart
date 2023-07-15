@@ -27,7 +27,10 @@ class _MyAccountsCardState extends State<MyAccountsCard>
     }
     if (isSuccess) {
       debugPrint(response.getData().toString());
-      return MyProfile(data: response.getData(), callback: loadMyProfile,);
+      return MyProfile(
+        data: response.getData(),
+        callback: loadMyProfile,
+      );
     }
     if (isError) {
       return Center(
@@ -60,7 +63,8 @@ class _MyAccountsCardState extends State<MyAccountsCard>
 class MyProfile extends StatelessWidget {
   const MyProfile({
     super.key,
-    required this.data, required this.callback,
+    required this.data,
+    required this.callback,
   });
 
   final void Function() callback;
@@ -90,70 +94,71 @@ class MyProfile extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (context) => UnLinkAccountDialog(
-                          callback: callback, account: account,
+                          callback: callback,
+                          account: account,
                         ),
                       );
                     },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                  account.avatarUrl,
-                                ),
-                                fit: BoxFit.cover),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    account.avatarUrl,
+                                  ),
+                                  fit: BoxFit.cover),
+                            ),
+                            width: 100,
+                            height: 100,
                           ),
-                          width: 100,
-                          height: 100,
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                account.id.id.toHexString(),
-                                style: TextStyle(
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  account.id.id.toHexString(),
+                                  style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 10,
+                                      color: Theme.of(context).disabledColor),
+                                  maxLines: 2,
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  account.name,
+                                  style: const TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  account.platform.toString(),
+                                  style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 10,
-                                    color: Theme.of(context).disabledColor),
-                                maxLines: 2,
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                account.name,
-                                style: const TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 3,
                                 ),
-                                maxLines: 2,
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                account.platform.toString(),
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 10,
-                                ),
-                                maxLines: 3,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   ),
                 ),
               ),
@@ -177,7 +182,7 @@ class MyProfile extends StatelessWidget {
                               callback: callback,
                             ),
                           );
-                          },
+                        },
                         child: const Text("添加绑定"),
                       ),
                     ),

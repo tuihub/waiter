@@ -7,7 +7,9 @@ import 'package:waitress/common/base/base_rest_mixins.dart';
 import 'package:waitress/view/widget/rail_tile.dart';
 
 class GeburaLibraryListPage extends StatefulWidget {
-  const GeburaLibraryListPage({super.key});
+  const GeburaLibraryListPage({super.key, required this.selectedAppID});
+
+  final String selectedAppID;
 
   @override
   State<GeburaLibraryListPage> createState() => _GeburaLibraryListPageState();
@@ -32,7 +34,10 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
           ? const Center(
               child: Text(""),
             )
-          : LibraryList(data: response.getData());
+          : LibraryList(
+              data: response.getData(),
+              selectedAppID: widget.selectedAppID,
+            );
     }
     if (isError) {
       return Center(
@@ -70,9 +75,11 @@ class LibraryList extends StatelessWidget {
   const LibraryList({
     super.key,
     required this.data,
+    required this.selectedAppID,
   });
 
   final GetPurchasedAppsResponse data;
+  final String selectedAppID;
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +88,9 @@ class LibraryList extends StatelessWidget {
         children: [
           for (final app in data.apps)
             RailTile(
+              selected: app.id.id.toString() == selectedAppID,
               onTap: () {
-                GoRouter.of(context).go("/app/Gebura/${app.id.id}");
+                GoRouter.of(context).go("/app/Gebura/library?id=${app.id.id}");
               },
               leading: Container(
                 decoration: app.iconImageUrl.isEmpty

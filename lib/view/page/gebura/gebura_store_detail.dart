@@ -12,15 +12,11 @@ class GeburaStoreDetail extends StatefulWidget {
   final InternalID appID;
 
   @override
-  State<StatefulWidget> createState() => _GeburaStoreDetailState(appID: appID);
+  State<StatefulWidget> createState() => _GeburaStoreDetailState();
 }
 
 class _GeburaStoreDetailState extends State<GeburaStoreDetail>
     with SingleRequestMixin<GeburaStoreDetail, GetAppResponse> {
-  _GeburaStoreDetailState({required this.appID});
-
-  final InternalID appID;
-
   @override
   void initState() {
     super.initState();
@@ -47,7 +43,7 @@ class _GeburaStoreDetailState extends State<GeburaStoreDetail>
   void loadAppDetail() {
     doRequest(request: (client, option) {
       return client.getApp(
-        GetAppRequest(appId: appID),
+        GetAppRequest(appId: widget.appID),
         options: option,
       );
     });
@@ -157,7 +153,7 @@ class AppDetails extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (_) {
-                          return  BlocProvider.value(
+                          return BlocProvider.value(
                             value: context.read<ApiRequestBloc>(),
                             child: PurchaseAppDialog(
                               app: data.app,
@@ -209,21 +205,16 @@ class AppDetails extends StatelessWidget {
 }
 
 class PurchaseAppDialog extends StatefulWidget {
-  const PurchaseAppDialog(
-      {super.key, required this.app});
+  const PurchaseAppDialog({super.key, required this.app});
 
   final App app;
 
   @override
-  State<PurchaseAppDialog> createState() => _PurchaseAppDialogState(app: app);
+  State<PurchaseAppDialog> createState() => _PurchaseAppDialogState();
 }
 
 class _PurchaseAppDialogState extends State<PurchaseAppDialog>
     with SingleRequestMixin<PurchaseAppDialog, PurchaseAppResponse> {
-  _PurchaseAppDialogState({required this.app});
-
-  final App app;
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ApiRequestBloc, ApiRequestState>(
@@ -235,16 +226,16 @@ class _PurchaseAppDialogState extends State<PurchaseAppDialog>
           title: const Text('入库'),
           content: SizedBox(
             width: 600,
-            child: Text("确定将《${app.name}》加入你的库存？"),
+            child: Text("确定将《${widget.app.name}》加入你的库存？"),
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 doRequest(
                   request: (client, option) {
                     return client.purchaseApp(
                       PurchaseAppRequest(
-                        appId: app.id,
+                        appId: widget.app.id,
                       ),
                       options: option,
                     );
