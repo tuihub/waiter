@@ -15,13 +15,14 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [ ] `Gebura` Auto pull steam account library and pull status manage (WIP)
   - [ ] App
     - [x] `Gebura` Basic app store explore (SearchApps, GetBindApps, PurchaseApp)
-    - [ ] `Gebura` Basic app library & app package manage (GetPurchasedApps, CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
+    - [ ] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
   - [ ] Feed
     - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
     - [ ] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
-  - [ ] Admin Area
+  - [ ] Settings
     - [ ] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
     - [x] `Gebura` Basic internal app manage (CreateApp, UpdateApp, ListApps)
+    - [ ] `Gebura` Basic app package manage (CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
     - [ ] `Gebura` Basic app bind relationship manage (MergeApp, PickApp)
   - [ ] Quality Tests
     - [ ] Windows

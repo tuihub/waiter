@@ -6,8 +6,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/const/gebura.dart';
-import 'package:waitress/view/page/settings/app_create_dialog.dart';
-import 'package:waitress/view/page/settings/app_update_dialog.dart';
+import 'package:waitress/view/page/settings/app/app_create_dialog.dart';
+import 'package:waitress/view/page/settings/app/app_update_dialog.dart';
 
 class AppManagePage extends StatefulWidget {
   const AppManagePage({super.key});
