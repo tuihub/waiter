@@ -59,6 +59,14 @@ class SettingsFramePage extends StatelessWidget {
                               },
                               selected: function == "app",
                             ),
+                            RailTile(
+                              title: const Text("应用包管理"),
+                              onTap: () {
+                                GoRouter.of(context)
+                                    .go("/app/Settings/appPackage");
+                              },
+                              selected: function == "appPackage",
+                            ),
                           ],
                         ),
                         const Expanded(child: SizedBox()),

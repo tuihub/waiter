@@ -2,30 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/common/const/gebura.dart';
 
-class AppCreateDialog extends StatefulWidget {
+class AppPackageUpdateDialog extends StatefulWidget {
   final void Function() callback;
+  final AppPackage appPackage;
 
-  const AppCreateDialog({super.key, required this.callback});
+  const AppPackageUpdateDialog(
+      {super.key, required this.appPackage, required this.callback});
   @override
-  State<AppCreateDialog> createState() => _AppCreateDialogState();
+  State<AppPackageUpdateDialog> createState() => _AppPackageUpdateDialogState();
 }
 
-class _AppCreateDialogState extends State<AppCreateDialog>
-    with SingleRequestMixin<AppCreateDialog, CreateAppResponse> {
+class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
+    with SingleRequestMixin<AppPackageUpdateDialog, UpdateAppPackageResponse> {
+  @override
+  void initState() {
+    super.initState();
+    name = widget.appPackage.name;
+    description = widget.appPackage.description;
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
+  late String name;
+  late String description;
+
   void submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       doRequest(
         request: (client, option) {
-          return client.createApp(
-            CreateAppRequest(
-              app: App(
+          return client.updateAppPackage(
+            UpdateAppPackageRequest(
+              appPackage: AppPackage(
+                id: widget.appPackage.id,
+                source: widget.appPackage.source,
                 name: name,
-                type: appType,
-                shortDescription: shortDescription,
-                iconImageUrl: iconImageUrl,
-                heroImageUrl: heroImageUrl,
+                description: description,
               ),
             ),
             options: option,
@@ -38,26 +52,24 @@ class _AppCreateDialogState extends State<AppCreateDialog>
     }
   }
 
-  final _formKey = GlobalKey<FormState>();
-
-  late String name;
-  late String iconImageUrl;
-  late String heroImageUrl;
-  late String shortDescription;
-  AppType appType = AppType.APP_TYPE_GAME;
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('添加应用'),
-      content: SizedBox(
-        width: 600,
+      title: const Text('应用包详情'),
+      content: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Text('ID: ${widget.appPackage.id.id.toHexString()}'),
+              Text(
+                  'Source: ${appPackageSourceString(widget.appPackage.source)}'),
+              const SizedBox(
+                height: 16,
+              ),
               TextFormField(
+                initialValue: name,
                 onSaved: (newValue) => name = newValue!,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -75,31 +87,11 @@ class _AppCreateDialogState extends State<AppCreateDialog>
                 height: 16,
               ),
               TextFormField(
-                onSaved: (newValue) => shortDescription = newValue!,
+                initialValue: description,
+                onSaved: (newValue) => description = newValue!,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: '描述',
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                onSaved: (newValue) => iconImageUrl = newValue!,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '图标链接',
-                ),
-                maxLines: null,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                onSaved: (newValue) => heroImageUrl = newValue!,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '图片链接',
                 ),
                 maxLines: null,
               ),

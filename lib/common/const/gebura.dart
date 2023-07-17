@@ -23,3 +23,14 @@ String appTypeString(AppType type) {
       return '';
   }
 }
+
+String appPackageSourceString(AppPackageSource source) {
+  switch (source) {
+    case AppPackageSource.APP_PACKAGE_SOURCE_MANUAL:
+      return '手动';
+    case AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL:
+      return '扫描';
+    default:
+      return '';
+  }
+}

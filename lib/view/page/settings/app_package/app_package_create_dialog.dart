@@ -3,29 +3,26 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 
-class AppCreateDialog extends StatefulWidget {
+class AppPackageCreateDialog extends StatefulWidget {
   final void Function() callback;
 
-  const AppCreateDialog({super.key, required this.callback});
+  const AppPackageCreateDialog({super.key, required this.callback});
   @override
-  State<AppCreateDialog> createState() => _AppCreateDialogState();
+  State<AppPackageCreateDialog> createState() => _AppPackageCreateDialogState();
 }
 
-class _AppCreateDialogState extends State<AppCreateDialog>
-    with SingleRequestMixin<AppCreateDialog, CreateAppResponse> {
+class _AppPackageCreateDialogState extends State<AppPackageCreateDialog>
+    with SingleRequestMixin<AppPackageCreateDialog, CreateAppPackageResponse> {
   void submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       doRequest(
         request: (client, option) {
-          return client.createApp(
-            CreateAppRequest(
-              app: App(
+          return client.createAppPackage(
+            CreateAppPackageRequest(
+              appPackage: AppPackage(
                 name: name,
-                type: appType,
-                shortDescription: shortDescription,
-                iconImageUrl: iconImageUrl,
-                heroImageUrl: heroImageUrl,
+                description: description,
               ),
             ),
             options: option,
@@ -41,15 +38,12 @@ class _AppCreateDialogState extends State<AppCreateDialog>
   final _formKey = GlobalKey<FormState>();
 
   late String name;
-  late String iconImageUrl;
-  late String heroImageUrl;
-  late String shortDescription;
-  AppType appType = AppType.APP_TYPE_GAME;
+  late String description;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('添加应用'),
+      title: const Text('添加应用包'),
       content: SizedBox(
         width: 600,
         child: Form(
@@ -60,6 +54,7 @@ class _AppCreateDialogState extends State<AppCreateDialog>
               TextFormField(
                 onSaved: (newValue) => name = newValue!,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   labelText: '名称',
                 ),
@@ -75,33 +70,12 @@ class _AppCreateDialogState extends State<AppCreateDialog>
                 height: 16,
               ),
               TextFormField(
-                onSaved: (newValue) => shortDescription = newValue!,
+                onSaved: (newValue) => description = newValue!,
                 decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   labelText: '描述',
                 ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                onSaved: (newValue) => iconImageUrl = newValue!,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '图标链接',
-                ),
-                maxLines: null,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                onSaved: (newValue) => heroImageUrl = newValue!,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '图片链接',
-                ),
-                maxLines: null,
               ),
               const SizedBox(
                 height: 16,

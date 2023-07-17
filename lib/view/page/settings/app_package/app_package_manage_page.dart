@@ -6,19 +6,19 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/client/api_helper.dart';
 import 'package:waitress/common/const/gebura.dart';
-import 'package:waitress/view/page/settings/app/app_create_dialog.dart';
-import 'package:waitress/view/page/settings/app/app_update_dialog.dart';
+import 'package:waitress/view/page/settings/app_package/app_package_create_dialog.dart';
+import 'app_package_update_dialog.dart';
 
-class AppManagePage extends StatefulWidget {
-  const AppManagePage({super.key});
+class AppPackageManagePage extends StatefulWidget {
+  const AppPackageManagePage({super.key});
 
   @override
-  State<AppManagePage> createState() => _AppManagePageState();
+  State<AppPackageManagePage> createState() => _AppPackageManagePageState();
 }
 
-class _AppManagePageState extends State<AppManagePage> {
+class _AppPackageManagePageState extends State<AppPackageManagePage> {
   int pageSize = 10;
-  late AppTableSource dataSource = AppTableSource(pageSize);
+  late AppPackageTableSource dataSource = AppPackageTableSource(pageSize);
   PaginatorController paginatorController = PaginatorController();
 
   @override
@@ -46,10 +46,14 @@ class _AppManagePageState extends State<AppManagePage> {
                     buttonText: const Text('数据来源'),
                     buttonIcon: const Icon(Icons.filter_alt_outlined),
                     items: [
-                      MultiSelectItem(AppSource.APP_SOURCE_INTERNAL,
-                          appSourceString(AppSource.APP_SOURCE_INTERNAL)),
-                      MultiSelectItem(AppSource.APP_SOURCE_STEAM,
-                          appSourceString(AppSource.APP_SOURCE_STEAM)),
+                      MultiSelectItem(
+                          AppPackageSource.APP_PACKAGE_SOURCE_MANUAL,
+                          appPackageSourceString(
+                              AppPackageSource.APP_PACKAGE_SOURCE_MANUAL)),
+                      MultiSelectItem(
+                          AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL,
+                          appPackageSourceString(
+                              AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL)),
                     ],
                     onConfirm: (values) {
                       dataSource.sourceFilter = values;
@@ -66,7 +70,7 @@ class _AppManagePageState extends State<AppManagePage> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => AppCreateDialog(
+                      builder: (context) => AppPackageCreateDialog(
                         callback: () {
                           dataSource.refreshDatasource();
                           paginatorController.goToFirstPage();
@@ -105,7 +109,7 @@ class _AppManagePageState extends State<AppManagePage> {
                     size: ColumnSize.S,
                   ),
                   DataColumn2(
-                    label: Text('类型'),
+                    label: Text('简介'),
                     size: ColumnSize.S,
                   ),
                 ],
@@ -119,17 +123,17 @@ class _AppManagePageState extends State<AppManagePage> {
   }
 }
 
-class AppTableSource extends AsyncDataTableSource {
-  AppTableSource(this.pageSize);
+class AppPackageTableSource extends AsyncDataTableSource {
+  AppPackageTableSource(this.pageSize);
   late BuildContext context;
   final int pageSize;
-  late List<AppSource> sourceFilter = [];
+  late List<AppPackageSource> sourceFilter = [];
 
   @override
   Future<AsyncRowsResponse> getRows(int start, int end) async {
     var resp = await GetIt.I<ApiHelper>().doRequest((client, option) async {
-      return client.listApps(
-          ListAppsRequest(
+      return client.listAppPackages(
+          ListAppPackagesRequest(
             paging: PagingRequest(
                 pageSize: pageSize, pageNum: start ~/ pageSize + 1),
             sourceFilter: sourceFilter,
@@ -138,23 +142,23 @@ class AppTableSource extends AsyncDataTableSource {
     });
     return AsyncRowsResponse(
       resp.getData().paging.totalSize.toInt(),
-      resp.getData().apps.map(
-        (app) {
+      resp.getData().appPackages.map(
+        (appPackage) {
           return DataRow2(
               cells: [
-                DataCell(Text(app.id.id.toHexString())),
-                DataCell(Text(app.name)),
-                DataCell(Text(appSourceString(app.source))),
-                DataCell(Text(appTypeString(app.type))),
+                DataCell(Text(appPackage.id.id.toHexString())),
+                DataCell(Text(appPackage.name)),
+                DataCell(Text(appPackageSourceString(appPackage.source))),
+                DataCell(Text(appPackage.description)),
               ],
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AppUpdateDialog(
+                  builder: (context) => AppPackageUpdateDialog(
                     callback: () {
                       refreshDatasource();
                     },
-                    app: app,
+                    appPackage: appPackage,
                   ),
                 );
               });
