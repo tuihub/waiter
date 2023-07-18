@@ -5,11 +5,11 @@ Current version is for developer testing only. It's not ready for user. Don't ru
 ## To-do List
 
 - v0.1
-  - [ ] Login & Logout
+  - [x] Login & Logout
     - [x] `Tiphereth` Check server status before login  (GetServerInformation)
     - [x] `Tiphereth` Basic login and logout (GetToken, RefreshToken)
-    - [ ] `Tiphereth` Keep login status, auto refresh when AccessToken expired (RefreshToken)
-    - [ ] `Tiphereth` User editable server address (NONE)
+    - [x] `Tiphereth` Keep login status, auto refresh when AccessToken expired (RefreshToken)
+    - [x] `Tiphereth` User editable server address (NONE)
   - [ ] Third-Party Account
     - [x] `Tiphereth` Basic steam account link and unlink (LinkAccount, ListLinkAccounts, UnLinkAccount)
     - [ ] `Gebura` Auto pull steam account library and pull status manage (WIP)

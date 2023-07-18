@@ -28,6 +28,13 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
   int deTime = 0;
   int reTime = 0;
 
+  @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    debugPrint("ping ${widget.config.toString()}");
+    pingUrl();
+  }
+
   void pingUrl() async {
     if (mounted) {
       setState(() {

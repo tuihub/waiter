@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
@@ -40,7 +41,7 @@ class LoginPage extends StatelessWidget {
                     child: Card(
                       child: SizedBox(
                         width: 540,
-                        height: 320,
+                        height: 430,
                         child: getInitWidget(state),
                       ),
                     ),
@@ -138,31 +139,130 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
         // }
       },
       builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 16,
+        return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Center(child: Text('选择服务器')),
+              bottom: TabBar(tabs: [
+                Tab(
+                  text: "输入服务器",
+                ),
+                Tab(
+                  text: "内置",
+                ),
+              ]),
             ),
-            Text(
-              "选择服务器",
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            for (var server in newServerList)
-              ServerConnectivityWidget(
-                config: server,
-                callback: () {
-                  context.read<UserBloc>().add(
-                        ConnectToServerEvent(server),
-                      );
-                },
+            body: TabBarView(children: [
+              ServerSelectForm(callback: () {}),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  for (var server in newServerList)
+                    ServerConnectivityWidget(
+                      config: server,
+                      callback: () {
+                        context.read<UserBloc>().add(
+                              ConnectToServerEvent(server),
+                            );
+                      },
+                    ),
+                ],
               ),
-          ],
+            ]),
+          ),
         );
       },
+    );
+  }
+}
+
+class ServerSelectForm extends StatefulWidget {
+  final void Function() callback;
+
+  const ServerSelectForm({super.key, required this.callback});
+  @override
+  State<ServerSelectForm> createState() => _ServerSelectFormState();
+}
+
+class _ServerSelectFormState extends State<ServerSelectForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  String host = "";
+  int port = 0;
+  bool tls = false;
+  final String name = "确定";
+  ServerConfig server = const ServerConfig("", 0, true);
+
+  void submit() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        server = ServerConfig(host, port, tls, name: name);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              onSaved: (newValue) => host = newValue!,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '地址',
+              ),
+              // The validator receives the text that the user has entered.
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '请输入地址';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              onSaved: (newValue) => port = int.parse(newValue!),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '端口',
+              ),
+              validator: (value) {
+                final p = int.tryParse(value!) ?? 0;
+                if (p <= 0) {
+                  return '请输入端口';
+                }
+                return null;
+              },
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextButton(
+              onPressed: submit,
+              child: const Text('检查'),
+            ),
+            ServerConnectivityWidget(
+              config: server,
+              callback: () {
+                context.read<UserBloc>().add(
+                  ConnectToServerEvent(server),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

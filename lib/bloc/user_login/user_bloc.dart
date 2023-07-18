@@ -32,7 +32,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
-              GetIt.I<ApiHelper>().init(client, resp.accessToken);
+              GetIt.I<ApiHelper>().init(client, resp.accessToken, resp.refreshToken);
               emit(UserLoggedIn(config, resp.accessToken));
               return;
             } catch (e) {
@@ -81,7 +81,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           );
           debugPrint(resp.toDebugString());
           _dao.set(SettingKey.refreshToken, resp.refreshToken);
-          GetIt.I<ApiHelper>().init(client, resp.accessToken);
+          GetIt.I<ApiHelper>().init(client, resp.accessToken, resp.refreshToken);
           emit(UserLoggedIn(
             config,
             resp.accessToken,

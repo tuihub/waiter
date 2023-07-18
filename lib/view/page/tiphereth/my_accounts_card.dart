@@ -26,7 +26,6 @@ class _MyAccountsCardState extends State<MyAccountsCard>
       );
     }
     if (isSuccess) {
-      debugPrint(response.getData().toString());
       return MyProfile(
         data: response.getData(),
         callback: loadMyProfile,
