@@ -256,8 +256,8 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
               config: server,
               callback: () {
                 context.read<UserBloc>().add(
-                  ConnectToServerEvent(server),
-                );
+                      ConnectToServerEvent(server),
+                    );
               },
             ),
           ],

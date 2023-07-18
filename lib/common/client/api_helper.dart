@@ -26,7 +26,8 @@ class ApiHelper {
   late CallOptions option;
   late String refreshToken;
 
-  void init(LibrarianSephirahServiceClient client, String accessToken, String refreshToken) {
+  void init(LibrarianSephirahServiceClient client, String accessToken,
+      String refreshToken) {
     this.client = client;
     final option = newCallOptions(accessToken);
     this.option = option;
@@ -35,8 +36,8 @@ class ApiHelper {
 
   CallOptions newCallOptions(String bearerToken) {
     return CallOptions(
-        metadata: {'Authorization': 'Bearer $bearerToken'},
-        timeout: const Duration(seconds: 120),
+      metadata: {'Authorization': 'Bearer $bearerToken'},
+      timeout: const Duration(seconds: 120),
     );
   }
 
@@ -48,11 +49,13 @@ class ApiHelper {
       final resp = await request(client, option);
       return ApiResponse(resp, ApiStatus.success, null);
     } catch (e) {
-      if (e is GrpcError && e.code == StatusCode.unauthenticated && await doRefresh()) {
+      if (e is GrpcError &&
+          e.code == StatusCode.unauthenticated &&
+          await doRefresh()) {
         try {
           final resp = await request(client, option);
           return ApiResponse(resp, ApiStatus.success, null);
-        } catch(e) {
+        } catch (e) {
           if (e is GrpcError) {
             return ApiResponse(null, ApiStatus.error, e.message ?? "发生未知错误");
           }
@@ -70,7 +73,8 @@ class ApiHelper {
   Future<bool> doRefresh() async {
     try {
       debugPrint("refreshing token");
-      final resp = await client.refreshToken(RefreshTokenRequest(), options: newCallOptions(refreshToken));
+      final resp = await client.refreshToken(RefreshTokenRequest(),
+          options: newCallOptions(refreshToken));
       option = newCallOptions(resp.accessToken);
       refreshToken = resp.refreshToken;
     } catch (e) {

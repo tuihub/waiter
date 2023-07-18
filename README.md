@@ -20,7 +20,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
     - [ ] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
   - [ ] Settings
-    - [ ] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
+    - [x] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
     - [x] `Gebura` Basic internal app manage (CreateApp, UpdateApp, ListApps)
     - [ ] `Gebura` Basic app package manage (CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
     - [ ] `Gebura` Basic app bind relationship manage (MergeApp, PickApp)

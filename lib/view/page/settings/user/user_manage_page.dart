@@ -1,10 +1,13 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/base/base_rest_mixins.dart';
-
-import 'user_edit_dialog.dart';
+import 'package:waitress/common/client/api_helper.dart';
+import 'package:waitress/common/const/tiphereth.dart';
+import 'package:waitress/view/page/settings/user/user_create_dialog.dart';
+import 'package:waitress/view/page/settings/user/user_update_dialog.dart';
 
 class UserManagePage extends StatefulWidget {
   const UserManagePage({super.key});
@@ -13,32 +16,19 @@ class UserManagePage extends StatefulWidget {
   State<UserManagePage> createState() => _UserManagePageState();
 }
 
-class _UserManagePageState extends State<UserManagePage>
-    with SingleRequestMixin<UserManagePage, ListUsersResponse> {
-  int page = 0;
+class _UserManagePageState extends State<UserManagePage> {
   int pageSize = 10;
+  late AppPackageTableSource dataSource = AppPackageTableSource(pageSize);
+  PaginatorController paginatorController = PaginatorController();
 
   @override
   void initState() {
     super.initState();
-    loadUserTable();
-  }
-
-  void loadUserTable() {
-    doRequest(
-      request: (client, option) {
-        return client.listUsers(
-          ListUsersRequest(
-            paging: PagingRequest(pageSize: pageSize, pageNum: page + 1),
-          ),
-          options: option,
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    dataSource.context = context;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(right: 8, bottom: 8),
@@ -46,10 +36,70 @@ class _UserManagePageState extends State<UserManagePage>
           children: [
             Row(
               children: [
-                FilledButton.tonalIcon(
-                  onPressed: loadUserTable,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("刷新"),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: MultiSelectDialogField(
+                    title: const Text('按用户类型筛选'),
+                    buttonText: const Text('用户类型'),
+                    buttonIcon: const Icon(Icons.filter_alt_outlined),
+                    items: [
+                      MultiSelectItem(
+                        UserType.USER_TYPE_ADMIN,
+                        userTypeString(UserType.USER_TYPE_ADMIN),
+                      ),
+                      MultiSelectItem(
+                        UserType.USER_TYPE_NORMAL,
+                        userTypeString(UserType.USER_TYPE_NORMAL),
+                      ),
+                      MultiSelectItem(
+                        UserType.USER_TYPE_SENTINEL,
+                        userTypeString(UserType.USER_TYPE_SENTINEL),
+                      ),
+                    ],
+                    onConfirm: (values) {
+                      dataSource.typeFilter = values;
+                      dataSource.refreshDatasource();
+                      paginatorController.goToFirstPage();
+                    },
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: MultiSelectDialogField(
+                    title: const Text('按用户状态筛选'),
+                    buttonText: const Text('用户状态'),
+                    buttonIcon: const Icon(Icons.filter_alt_outlined),
+                    items: [
+                      MultiSelectItem(
+                        UserStatus.USER_STATUS_ACTIVE,
+                        userStatusString(UserStatus.USER_STATUS_ACTIVE),
+                      ),
+                      MultiSelectItem(
+                        UserStatus.USER_STATUS_BLOCKED,
+                        userStatusString(UserStatus.USER_STATUS_BLOCKED),
+                      ),
+                    ],
+                    onConfirm: (values) {
+                      dataSource.statusFilter = values;
+                      dataSource.refreshDatasource();
+                      paginatorController.goToFirstPage();
+                    },
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
                 const Expanded(child: SizedBox()),
                 FilledButton.tonalIcon(
@@ -57,7 +107,10 @@ class _UserManagePageState extends State<UserManagePage>
                     showDialog(
                       context: context,
                       builder: (context) => UserCreateDialog(
-                        callback: loadUserTable,
+                        callback: () {
+                          dataSource.refreshDatasource();
+                          paginatorController.goToFirstPage();
+                        },
                       ),
                     );
                   },
@@ -68,42 +121,31 @@ class _UserManagePageState extends State<UserManagePage>
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: PaginatedDataTable2(
-                empty: Center(
-                  child: loading
-                      ? const CircularProgressIndicator()
-                      : Container(
-                          padding: const EdgeInsets.all(20),
-                          child: isError
-                              ? Text('error ${response.error}')
-                              : const Text('No data'),
-                        ),
-                ),
-                rowsPerPage: 10,
+              child: AsyncPaginatedDataTable2(
+                empty: const Center(child: Text('No data')),
+                errorBuilder: (e) {
+                  return Center(child: Text('Load Failed: ${e.toString()}'));
+                },
+                rowsPerPage: pageSize,
                 columnSpacing: 12,
                 horizontalMargin: 12,
                 minWidth: 600,
+                controller: paginatorController,
                 columns: const [
                   DataColumn2(
                     label: Text('Id'),
-                    size: ColumnSize.L,
                   ),
-                  DataColumn(
+                  DataColumn2(
                     label: Text('用户名'),
                   ),
-                  DataColumn(
-                    label: Text('密码'),
-                  ),
-                  DataColumn(
+                  DataColumn2(
                     label: Text('用户状态'),
                   ),
-                  DataColumn(
+                  DataColumn2(
                     label: Text('用户类型'),
                   ),
                 ],
-                source: isSuccess
-                    ? UserTableSource(context, response.data!.users)
-                    : UserTableSource(context, []),
+                source: dataSource,
               ),
             ),
           ],
@@ -113,31 +155,54 @@ class _UserManagePageState extends State<UserManagePage>
   }
 }
 
-class UserTableSource extends DataTableSource {
-  UserTableSource(this.context, this.users);
-  final BuildContext context;
-  final List<User> users;
+class AppPackageTableSource extends AsyncDataTableSource {
+  AppPackageTableSource(this.pageSize);
+  late BuildContext context;
+  final int pageSize;
+  late List<UserType> typeFilter = [];
+  late List<UserStatus> statusFilter = [];
 
   @override
-  DataRow getRow(int index) {
-    assert(index >= 0);
-    return DataRow2.byIndex(
-      index: index,
-      cells: [
-        DataCell(Text('${users[index].id.id}')),
-        DataCell(Text(users[index].username)),
-        const DataCell(Text("********")),
-        DataCell(Text('${users[index].status}')),
-        DataCell(Text('${users[index].type}')),
-      ],
+  Future<AsyncRowsResponse> getRows(int start, int end) async {
+    var resp = await GetIt.I<ApiHelper>().doRequest((client, option) async {
+      return client.listUsers(
+          ListUsersRequest(
+            paging: PagingRequest(
+                pageSize: pageSize, pageNum: start ~/ pageSize + 1),
+            typeFilter: typeFilter,
+            statusFilter: statusFilter,
+          ),
+          options: option);
+    });
+    return AsyncRowsResponse(
+      resp.getData().paging.totalSize.toInt(),
+      resp.getData().users.map(
+        (user) {
+          return DataRow2(
+              cells: [
+                DataCell(Text(user.id.id.toHexString())),
+                DataCell(Text(user.username)),
+                DataCell(Text(userTypeString(user.type))),
+                DataCell(Text(userStatusString(user.status))),
+              ],
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => UserUpdateDialog(
+                    callback: () {
+                      refreshDatasource();
+                    },
+                    user: user,
+                  ),
+                );
+              });
+        },
+      ).toList(),
     );
   }
 
   @override
   bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => users.length;
 
   @override
   int get selectedRowCount => 0;

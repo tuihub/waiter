@@ -169,7 +169,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog>
                 onPressed: submit,
                 child: loading
                     ? const CircularProgressIndicator()
-                    : const Text('确定'),
+                    : const Text('应用更改'),
               )
             : Text('数据来自${appSourceString(widget.app.source)}，无法修改'),
         TextButton(

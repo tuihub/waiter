@@ -125,7 +125,8 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
       actions: <Widget>[
         TextButton(
           onPressed: submit,
-          child: loading ? const CircularProgressIndicator() : const Text('确定'),
+          child:
+              loading ? const CircularProgressIndicator() : const Text('应用更改'),
         ),
         TextButton(
           onPressed: () {

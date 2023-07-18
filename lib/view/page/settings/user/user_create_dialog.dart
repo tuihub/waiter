@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
+import 'package:waitress/common/const/tiphereth.dart';
 
 class UserCreateDialog extends StatefulWidget {
   final void Function() callback;
@@ -117,22 +118,18 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                   labelText: '用户类型',
                 ),
                 value: userType,
-                items: const [
-                  DropdownMenuItem(
-                    value: UserType.USER_TYPE_NORMAL,
-                    child: Text("普通用户"),
-                  ),
+                items: [
                   DropdownMenuItem(
                     value: UserType.USER_TYPE_ADMIN,
-                    child: Text("管理员"),
+                    child: Text(userTypeString(UserType.USER_TYPE_ADMIN)),
+                  ),
+                  DropdownMenuItem(
+                    value: UserType.USER_TYPE_NORMAL,
+                    child: Text(userTypeString(UserType.USER_TYPE_NORMAL)),
                   ),
                   DropdownMenuItem(
                     value: UserType.USER_TYPE_SENTINEL,
-                    child: Text("审核"),
-                  ),
-                  DropdownMenuItem(
-                    value: UserType.USER_TYPE_UNSPECIFIED,
-                    child: Text("自由人"),
+                    child: Text(userTypeString(UserType.USER_TYPE_SENTINEL)),
                   ),
                 ],
                 onChanged: (select) {},
@@ -147,18 +144,16 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                   labelText: '用户状态',
                 ),
                 value: userStatus,
-                items: const [
+                items: [
                   DropdownMenuItem(
                     value: UserStatus.USER_STATUS_ACTIVE,
-                    child: Text("正常"),
+                    child:
+                        Text(userStatusString(UserStatus.USER_STATUS_ACTIVE)),
                   ),
                   DropdownMenuItem(
                     value: UserStatus.USER_STATUS_BLOCKED,
-                    child: Text("禁用"),
-                  ),
-                  DropdownMenuItem(
-                    value: UserStatus.USER_STATUS_UNSPECIFIED,
-                    child: Text("未知"),
+                    child:
+                        Text(userStatusString(UserStatus.USER_STATUS_BLOCKED)),
                   ),
                 ],
                 onChanged: (select) {},
