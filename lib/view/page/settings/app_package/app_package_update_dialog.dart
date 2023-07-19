@@ -3,6 +3,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:waitress/common/base/base_rest_mixins.dart';
 import 'package:waitress/common/const/gebura.dart';
+import 'package:waitress/view/page/settings/app_package/app_package_assign_dialog.dart';
 
 class AppPackageUpdateDialog extends StatefulWidget {
   final void Function() callback;
@@ -123,6 +124,22 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
         ),
       ),
       actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (context) => AppPackageAssignDialog(
+                callback: () {
+                  widget.callback();
+                },
+                appPackage: widget.appPackage,
+              ),
+            );
+          },
+          child: const Text('绑定应用包'),
+        ),
+        Expanded(child: SizedBox()),
         TextButton(
           onPressed: submit,
           child:

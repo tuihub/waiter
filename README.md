@@ -22,7 +22,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
   - [ ] Settings
     - [x] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
     - [x] `Gebura` Basic internal app manage (CreateApp, UpdateApp, ListApps)
-    - [ ] `Gebura` Basic app package manage (CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
+    - [x] `Gebura` Basic app package manage (CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
     - [ ] `Gebura` Basic app bind relationship manage (MergeApp, PickApp)
   - [ ] Quality Tests
     - [ ] Windows

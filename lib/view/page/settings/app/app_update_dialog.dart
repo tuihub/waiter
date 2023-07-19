@@ -82,6 +82,17 @@ class _AppUpdateDialogState extends State<AppUpdateDialog>
                 height: 16,
               ),
               TextFormField(
+                initialValue: widget.app.id.id.toString(),
+                readOnly: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'ID',
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
                 initialValue: name,
                 readOnly: readOnly,
                 onSaved: (newValue) => name = newValue!,
