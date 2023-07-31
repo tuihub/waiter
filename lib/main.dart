@@ -14,7 +14,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
 import 'package:waitress/bloc/user_login/user_bloc.dart';
 
-import 'dependency.dart' as di;
+import 'bootstrap.dart' as di;
+import 'l10n/l10n.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -55,16 +56,14 @@ class MyApp extends StatelessWidget {
             context.read<AppSettingBloc>().add(InitAppSettingEvent());
           }
           return MaterialApp.router(
-            title: 'Flutter Demo',
+            onGenerateTitle: (context) => S.of(context).title,
             localizationsDelegates: const [
+              S.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('zh', 'CN'),
-            ],
+            supportedLocales: S.delegate.supportedLocales,
             // The Mandy red, light theme.
             theme: FlexThemeData.light(
               scheme: state.theme.scheme,

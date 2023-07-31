@@ -2,11 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:waitress/common/client/api_helper.dart';
-import 'package:waitress/common/client/client.dart';
-import 'package:waitress/common/store/setting_dao.dart';
-
-import '../../common/const/value.dart';
+import 'package:waitress/common/api/api_helper.dart';
+import 'package:waitress/common/api/client.dart';
+import 'package:waitress/consts.dart';
+import 'package:waitress/store/setting_dao.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

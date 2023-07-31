@@ -1,0 +1,9 @@
+{
+  "@@locale":"en",
+  "title": "TuiHub",
+  "@title": {
+    "description": "Title for the application",
+    "type": "text",
+    "placeholders": {}
+  }
+}

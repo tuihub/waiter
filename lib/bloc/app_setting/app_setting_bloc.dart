@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:waitress/common/const/theme.dart';
-import 'package:waitress/common/store/setting_dao.dart';
+import 'package:waitress/consts.dart';
+import 'package:waitress/store/setting_dao.dart';
 
 part 'app_setting_event.dart';
 part 'app_setting_state.dart';

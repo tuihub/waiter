@@ -1,6 +1,5 @@
 import 'package:html/parser.dart' show parse;
-
-import '../base/model/yesod_model.dart';
+import 'package:waitress/common/model/yesod_model.dart';
 
 abstract class AbstractContentFormatter {
   RssDescriptionContent format(String content);
