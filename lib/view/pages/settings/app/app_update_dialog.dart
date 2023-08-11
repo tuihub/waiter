@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/common/api/l10n.dart';
+import '../../../../common/api/api_mixins.dart';
+import '../../../../common/api/l10n.dart';
 
 class AppUpdateDialog extends StatefulWidget {
   final void Function() callback;
@@ -164,7 +164,7 @@ class _AppUpdateDialogState extends State<AppUpdateDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )
@@ -175,14 +175,15 @@ class _AppUpdateDialogState extends State<AppUpdateDialog>
         ),
       ),
       actions: <Widget>[
-        !readOnly
-            ? TextButton(
-                onPressed: submit,
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : const Text('应用更改'),
-              )
-            : Text('数据来自${appSourceString(widget.app.source)}，无法修改'),
+        if (!readOnly)
+          TextButton(
+            onPressed: submit,
+            child: loading
+                ? const CircularProgressIndicator()
+                : const Text('应用更改'),
+          )
+        else
+          Text('数据来自${appSourceString(widget.app.source)}，无法修改'),
         TextButton(
           onPressed: () {
             Navigator.pop(context); //close Dialog

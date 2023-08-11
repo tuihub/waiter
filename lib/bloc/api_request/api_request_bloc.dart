@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
-import 'package:meta/meta.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/binah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
@@ -31,9 +29,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(UserTableFailed(e.code, e.message ?? "发生未知错误"));
+            emit(UserTableFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(UserTableFailed(-1, "发生未知错误"));
+          emit(UserTableFailed(-1, '发生未知错误'));
         }
       }
       if (event is CreateUserEvent) {
@@ -44,9 +42,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(UserTableFailed(e.code, e.message ?? "发生未知错误"));
+            emit(UserTableFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(UserTableFailed(-1, "发生未知错误"));
+          emit(UserTableFailed(-1, '发生未知错误'));
         }
       }
       if (event is GeburaLibraryRefreshEvent) {
@@ -66,8 +64,8 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
                 await client.searchImages(event.request, options: option);
             ids = resp.ids;
           }
-          var res = List<PresignedDownloadFileResponse>.empty(growable: true);
-          for (var id in ids) {
+          final res = List<PresignedDownloadFileResponse>.empty(growable: true);
+          for (final id in ids) {
             try {
               final resp = await client
                   .downloadImage(DownloadImageRequest(id: id), options: option);
@@ -88,9 +86,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(ChesedFailed(e.code, e.message ?? "发生未知错误"));
+            emit(ChesedFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(ChesedFailed(-1, "发生未知错误"));
+          emit(ChesedFailed(-1, '发生未知错误'));
         }
       }
       if (event is LoadFeedConfig) {
@@ -104,9 +102,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(YesodFailed(e.code, e.message ?? "发生未知错误"));
+            emit(YesodFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(YesodFailed(-1, "发生未知错误"));
+          emit(YesodFailed(-1, '发生未知错误'));
         }
       }
       if (event is ListFeedItem) {
@@ -120,9 +118,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(YesodFailed(e.code, e.message ?? "发生未知错误"));
+            emit(YesodFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(YesodFailed(-1, "发生未知错误"));
+          emit(YesodFailed(-1, '发生未知错误'));
         }
       }
       if (event is CreateFeedConfig) {
@@ -136,9 +134,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(YesodFailed(e.code, e.message ?? "发生未知错误"));
+            emit(YesodFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(YesodFailed(-1, "发生未知错误"));
+          emit(YesodFailed(-1, '发生未知错误'));
         }
       }
       if (event is PullFeedItem) {
@@ -152,9 +150,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
           debugPrint(e.toString());
 
           if (e is GrpcError) {
-            emit(YesodFailed(e.code, e.message ?? "发生未知错误"));
+            emit(YesodFailed(e.code, e.message ?? '发生未知错误'));
           }
-          emit(YesodFailed(-1, "发生未知错误"));
+          emit(YesodFailed(-1, '发生未知错误'));
         }
       }
     });

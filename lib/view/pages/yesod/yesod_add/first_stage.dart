@@ -39,11 +39,11 @@ class YesodAddFirstStage extends StatelessWidget {
                       return '请输入RSS订阅地址';
                     }
                     value = value.trim();
-                    if (value.startsWith("http://") ||
-                        value.startsWith("https://")) {
+                    if (value.startsWith('http://') ||
+                        value.startsWith('https://')) {
                       return null;
                     }
-                    return "请输入正确的地址格式";
+                    return '请输入正确的地址格式';
                   },
                 ),
                 if (state.loadState == LoadState.loading)

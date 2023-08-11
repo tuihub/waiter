@@ -1,7 +1,7 @@
 part of 'yesod_add.dart';
 
 class YesodAddSecondStage extends StatefulWidget {
-  const YesodAddSecondStage({Key? key}) : super(key: key);
+  const YesodAddSecondStage({super.key});
 
   @override
   YesodAddSecondStageState createState() => YesodAddSecondStageState();
@@ -41,8 +41,8 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
                   TextFormField(
                     enabled: false,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.rss_feed),
-                      border: OutlineInputBorder(),
+                      icon: const Icon(Icons.rss_feed),
+                      border: const OutlineInputBorder(),
                       label: Text(state.url),
                     ),
                   ),
@@ -94,7 +94,7 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
                           .read<YesodAddBloc>()
                           .add(ChangeEnabledEvent(newValue ?? false));
                     },
-                    title: const Text("立即启用"),
+                    title: const Text('立即启用'),
                     initialValue: state.enabled,
                   ),
                   AnimatedContainer(

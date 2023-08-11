@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/common/api/l10n.dart';
-import 'package:waitress/view/pages/settings/app_package/app_package_assign_dialog.dart';
+import '../../../../common/api/api_mixins.dart';
+import '../../../../common/api/l10n.dart';
+import 'app_package_assign_dialog.dart';
 
 class AppPackageUpdateDialog extends StatefulWidget {
   final void Function() callback;
@@ -113,7 +115,7 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )
@@ -127,7 +129,7 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            showDialog(
+            unawaited(showDialog<void>(
               context: context,
               builder: (context) => AppPackageAssignDialog(
                 callback: () {
@@ -135,11 +137,11 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
                 },
                 appPackage: widget.appPackage,
               ),
-            );
+            ));
           },
           child: const Text('绑定应用包'),
         ),
-        Expanded(child: SizedBox()),
+        const Expanded(child: SizedBox()),
         TextButton(
           onPressed: submit,
           child:

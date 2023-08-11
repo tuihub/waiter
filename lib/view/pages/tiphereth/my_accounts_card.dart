@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/view/pages/tiphereth/account_dialog.dart';
+import '../../../common/api/api_mixins.dart';
+import 'account_dialog.dart';
 
 class MyAccountsCard extends StatefulWidget {
   const MyAccountsCard({super.key});
@@ -33,7 +34,7 @@ class _MyAccountsCardState extends State<MyAccountsCard>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
@@ -90,13 +91,13 @@ class MyProfile extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(8),
                     onTap: () {
-                      showDialog(
+                      unawaited(showDialog<void>(
                         context: context,
                         builder: (context) => UnLinkAccountDialog(
                           callback: callback,
                           account: account,
                         ),
-                      );
+                      ));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -129,7 +130,7 @@ class MyProfile extends StatelessWidget {
                                       color: Theme.of(context).disabledColor),
                                   maxLines: 2,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 4,
                                 ),
                                 Text(
@@ -141,12 +142,12 @@ class MyProfile extends StatelessWidget {
                                   ),
                                   maxLines: 2,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 4,
                                 ),
                                 Text(
                                   account.platform.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 10,
                                   ),
@@ -175,14 +176,14 @@ class MyProfile extends StatelessWidget {
                     child: Center(
                       child: TextButton(
                         onPressed: () {
-                          showDialog(
+                          unawaited(showDialog<void>(
                             context: context,
                             builder: (context) => LinkAccountDialog(
                               callback: callback,
                             ),
-                          );
+                          ));
                         },
-                        child: const Text("添加绑定"),
+                        child: const Text('添加绑定'),
                       ),
                     ),
                   ),

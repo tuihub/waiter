@@ -34,9 +34,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "APP_TYPE_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
         "USER_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("启用"),
         "USER_STATUS_BLOCKED": MessageLookupByLibrary.simpleMessage("禁用"),
+        "USER_STATUS_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
         "USER_TYPE_ADMIN": MessageLookupByLibrary.simpleMessage("管理员"),
         "USER_TYPE_NORMAL": MessageLookupByLibrary.simpleMessage("普通"),
         "USER_TYPE_SENTINEL": MessageLookupByLibrary.simpleMessage("扫描器"),
+        "USER_TYPE_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
         "title": MessageLookupByLibrary.simpleMessage("TuiHub")
       };
 }

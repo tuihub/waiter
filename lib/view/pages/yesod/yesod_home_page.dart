@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/view/widgets/expand_rail_tile.dart';
-import 'package:waitress/view/widgets/rail_tile.dart';
+import '../../widgets/expand_rail_tile.dart';
+import '../../widgets/rail_tile.dart';
 
 class YesodHome extends StatelessWidget {
   const YesodHome(
@@ -33,30 +33,30 @@ class YesodHome extends StatelessWidget {
                     child: Column(
                       children: [
                         RailTile(
-                          leading: Icon(
+                          leading: const Icon(
                             Icons.timeline,
                           ),
                           onTap: () {
-                            GoRouter.of(context).go("/app/Yesod/timeline");
+                            GoRouter.of(context).go('/app/Yesod/timeline');
                           },
-                          title: const Text("Timeline"),
-                          selected: function == "timeline",
+                          title: const Text('Timeline'),
+                          selected: function == 'timeline',
                         ),
                         ExpandRailTile(
                           title: const Text(
-                            "Category",
+                            'Category',
                           ),
                           childrenPadding: const EdgeInsets.only(left: 12),
                           children: [
                             RailTile(
-                              title: const Text("Anime"),
+                              title: const Text('Anime'),
                               onTap: () {},
                             ),
-                            RailTile(
-                              title: const Text("Anime"),
+                            const RailTile(
+                              title: Text('Anime'),
                             ),
-                            RailTile(
-                              title: const Text("Tech"),
+                            const RailTile(
+                              title: Text('Tech'),
                             ),
                           ],
                         ),
@@ -73,14 +73,14 @@ class YesodHome extends StatelessWidget {
                   ),
                   margin: const EdgeInsets.all(8),
                   child: RailTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.rss_feed,
                     ),
                     onTap: () {
-                      GoRouter.of(context).go("/app/Yesod/config");
+                      GoRouter.of(context).go('/app/Yesod/config');
                     },
-                    title: const Text("Feed Config"),
-                    selected: function == "config",
+                    title: const Text('Feed Config'),
+                    selected: function == 'config',
                   ),
                 ),
               ],

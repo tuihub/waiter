@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'dart:async';
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:flutter/material.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
+import '../../../common/api/api_mixins.dart';
 
 class GeburaLibraryDetailPage extends StatefulWidget {
   const GeburaLibraryDetailPage({super.key, required this.appID});
@@ -23,7 +25,7 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
   }
 
   @override
-  void didUpdateWidget(covariant oldWidget) {
+  void didUpdateWidget(covariant GeburaLibraryDetailPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     loadAppDetail();
   }
@@ -39,19 +41,19 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadAppDetail() {
-    doRequest(request: (client, option) {
+    unawaited(doRequest(request: (client, option) {
       return client.getApp(
         GetAppRequest(appId: InternalID(id: $fixnum.Int64(widget.appID))),
         options: option,
       );
-    });
+    }));
   }
 
   @override
@@ -106,28 +108,26 @@ class AppDetails extends StatelessWidget {
                       begin: FractionalOffset.center,
                       end: FractionalOffset.bottomCenter,
                       colors: [
-                        Color.fromRGBO(0, 0, 0, 0),
+                        const Color.fromRGBO(0, 0, 0, 0),
                         Theme.of(context).colorScheme.surface,
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        data.app.name,
-                        style: TextStyle(
-                          fontSize: 52,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                                color: Theme.of(context).colorScheme.surface,
-                                blurRadius: 3)
-                          ],
-                        ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      data.app.name,
+                      style: TextStyle(
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                              color: Theme.of(context).colorScheme.surface,
+                              blurRadius: 3)
+                        ],
                       ),
                     ),
                   ),
@@ -138,22 +138,22 @@ class AppDetails extends StatelessWidget {
           SizedBox(
             height: 100,
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text("启动游戏"),
+                    child: const Text('启动游戏'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 24,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("开发商：${data.app.details.developer}"),
-                      Text("发行商：${data.app.details.publisher}"),
-                      Text("发行日期：${data.app.details.releaseDate}"),
+                      Text('开发商：${data.app.details.developer}'),
+                      Text('发行商：${data.app.details.publisher}'),
+                      Text('发行日期：${data.app.details.releaseDate}'),
                     ],
                   ),
                 ],
@@ -170,7 +170,7 @@ class AppDetails extends StatelessWidget {
                 : Theme.of(context).colorScheme.outlineVariant,
           ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Text(data.app.shortDescription),
           ),
         ],

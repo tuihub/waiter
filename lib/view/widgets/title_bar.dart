@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:waitress/view/widgets/window_button.dart';
+import 'window_button.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});
@@ -19,7 +19,7 @@ class TitleBar extends StatelessWidget {
           height: 28,
         ),
         const Text(
-          "Tui",
+          'Tui',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
@@ -30,7 +30,7 @@ class TitleBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: const Text(
-            "Hub",
+            'Hub',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ),
@@ -42,7 +42,7 @@ class TitleBar extends StatelessWidget {
               : const SizedBox(),
         ),
         for (var action in actions) action,
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
         if (!kIsWeb && Platform.isWindows) const WindowButtons()

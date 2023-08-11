@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/view/pages/gebura/gebura_library_list.dart';
-import 'package:waitress/view/widgets/rail_tile.dart';
+
+import '../../widgets/rail_tile.dart';
+import 'gebura_library_list.dart';
 
 class GeburaFramePage extends StatelessWidget {
   const GeburaFramePage(
@@ -26,14 +27,14 @@ class GeburaFramePage extends StatelessWidget {
                 SizedBox(
                   height: 64,
                   child: RailTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.shopping_cart,
                     ),
                     onTap: () {
-                      GoRouter.of(context).go("/app/Gebura/store");
+                      GoRouter.of(context).go('/app/Gebura/store');
                     },
-                    title: const Text("Store"),
-                    selected: function == "store",
+                    title: const Text('Store'),
+                    selected: function == 'store',
                   ),
                 ),
                 Divider(

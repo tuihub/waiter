@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
+import '../../../common/api/api_mixins.dart';
 
 class LinkAccountDialog extends StatefulWidget {
   const LinkAccountDialog({super.key, required this.callback});
@@ -52,16 +52,16 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.place),
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.place),
+                  border: OutlineInputBorder(),
                   labelText: '平台',
                 ),
                 value: platform,
                 items: const [
                   DropdownMenuItem(
                     value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
-                    child: Text("Steam"),
+                    child: Text('Steam'),
                   ),
                 ],
                 onChanged: (newValue) => platform = newValue!,
@@ -101,7 +101,7 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )
@@ -162,7 +162,7 @@ class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('账户详情'),
-      content: SizedBox(
+      content: const SizedBox(
         width: 600,
         child: SizedBox(),
       ),

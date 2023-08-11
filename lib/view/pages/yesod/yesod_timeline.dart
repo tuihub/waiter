@@ -1,15 +1,18 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/common/model/yesod_model.dart';
-import 'package:waitress/repo/yesod/yesod_repo.dart';
-import 'package:waitress/common/util/rss_util.dart';
-import 'package:waitress/view/pages/yesod/yesod_detail.dart';
-import 'package:waitress/view/widgets/extentions/grid_delegated.dart';
+
+import '../../../common/api/api_mixins.dart';
+import '../../../common/model/yesod_model.dart';
+import '../../../common/util/rss_util.dart';
+import '../../../repo/yesod/yesod_repo.dart';
+import '../../widgets/extentions/grid_delegated.dart';
+import 'yesod_detail.dart';
 
 class YesodTimelinePage extends StatefulWidget {
   const YesodTimelinePage({super.key});
@@ -33,23 +36,23 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
       );
     }
     if (isSuccess) {
-      print(response.getData().groups.length);
+      debugPrint(response.getData().groups.length.toString());
       return response.getData().groups.isEmpty
           ? const Center(
-              child: Text("空空如也"),
+              child: Text('空空如也'),
             )
           : FeedItemList(data: response.getData());
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadTimeline() {
-    doRequest(
+    unawaited(doRequest(
       request: (client, option) {
         client.getBatchFeedItems(GetBatchFeedItemsRequest());
         return client.groupFeedItems(
@@ -60,7 +63,7 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
           options: option,
         );
       },
-    );
+    ));
   }
 
   @override
@@ -82,8 +85,8 @@ class FeedItemList extends StatelessWidget {
     required this.data,
   });
 
-  final cardWith = 384.0;
-  final cardHeight = 128.0;
+  static const cardWith = 384.0;
+  static const cardHeight = 128.0;
 
   final GroupFeedItemsResponse data;
 
@@ -188,14 +191,14 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
   @override
   Widget build(BuildContext context) {
     if (!loaded) {
-      loadFeedList();
+      unawaited(loadFeedList());
     }
     final theme = Theme.of(context);
     return Column(
       children: [
         Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Text(
@@ -227,9 +230,9 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: const Center(
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     ),
@@ -301,7 +304,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                                               Theme.of(context).disabledColor),
                                       maxLines: 2,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
                                     Text(
@@ -313,12 +316,12 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                                       ),
                                       maxLines: 2,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
                                     Text(
                                       content.content,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         overflow: TextOverflow.ellipsis,
                                         fontSize: 10,
                                       ),

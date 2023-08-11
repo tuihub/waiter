@@ -20,7 +20,7 @@ class CacheDao {
       return _cacheBox.get(key) as String;
     }
     throw CacheMissException(
-      "cache data $key is required before cached",
+      'cache data $key is required before cached',
     );
   }
 

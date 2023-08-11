@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/view/widgets/rail_tile.dart';
+import '../../../bloc/api_request/api_request_bloc.dart';
+import '../../../common/api/api_mixins.dart';
+import '../../widgets/rail_tile.dart';
 
 class GeburaLibraryListPage extends StatefulWidget {
   const GeburaLibraryListPage({super.key, required this.selectedAppID});
@@ -32,7 +34,7 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
     if (isSuccess) {
       return response.getData().apps.isEmpty
           ? const Center(
-              child: Text(""),
+              child: Text(''),
             )
           : LibraryList(
               data: response.getData(),
@@ -41,19 +43,19 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadLibrary() {
-    doRequest(request: (client, option) {
+    unawaited(doRequest(request: (client, option) {
       return client.getPurchasedApps(
         GetPurchasedAppsRequest(),
         options: option,
       );
-    });
+    }));
   }
 
   @override
@@ -90,11 +92,11 @@ class LibraryList extends StatelessWidget {
             RailTile(
               selected: app.id.id.toString() == selectedAppID,
               onTap: () {
-                GoRouter.of(context).go("/app/Gebura/library?id=${app.id.id}");
+                GoRouter.of(context).go('/app/Gebura/library?id=${app.id.id}');
               },
               leading: Container(
                 decoration: app.iconImageUrl.isEmpty
-                    ? BoxDecoration()
+                    ? const BoxDecoration()
                     : BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         image: DecorationImage(

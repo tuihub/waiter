@@ -1,13 +1,13 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waitress/bloc/app_setting/app_setting_bloc.dart';
-import 'package:waitress/consts.dart';
-import 'package:waitress/view/widgets/cache_setting.dart';
-import 'package:waitress/view/widgets/theme_presentation.dart';
+import '../../../bloc/app_setting/app_setting_bloc.dart';
+import '../../../consts.dart';
+import '../../widgets/cache_setting.dart';
+import '../../widgets/theme_presentation.dart';
 
 class ClientSettingPage extends StatelessWidget {
-  const ClientSettingPage({Key? key}) : super(key: key);
+  const ClientSettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class ClientSettingPage extends StatelessWidget {
                                   selected: true,
                                   brightness: Theme.of(context).brightness,
                                 ),
-                                VerticalDivider(
+                                const VerticalDivider(
                                   thickness: 2,
                                 ),
                                 Expanded(
@@ -105,10 +105,10 @@ class ClientSettingPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
-                  CacheSetting(),
+                  const CacheSetting(),
                 ],
               );
             },

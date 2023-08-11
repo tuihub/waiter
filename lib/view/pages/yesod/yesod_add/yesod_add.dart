@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:waitress/common/model/common_model.dart';
-import 'package:waitress/common/util/input_formatters.dart';
-import 'package:waitress/view/pages/yesod/yesod_add/bloc/yesod_add_bloc.dart';
-import 'package:waitress/view/widgets/form_field.dart';
-import 'package:waitress/common/model/common_model.dart';
+import '../../../../common/model/common_model.dart';
+import '../../../../common/util/input_formatters.dart';
+import '../../../widgets/form_field.dart';
+import 'bloc/yesod_add_bloc.dart';
 
 part 'first_stage.dart';
 part 'second_stage.dart';
@@ -18,7 +17,7 @@ class YesodeAdd extends StatelessWidget {
     return BlocProvider(
       create: (context) => YesodAddBloc(),
       child:
-          BlocBuilder<YesodAddBloc, YesodAddState>(builder: ((context, state) {
+          BlocBuilder<YesodAddBloc, YesodAddState>(builder: (context, state) {
         return AlertDialog(
           title: const Text('添加RSS订阅'),
           content: state is! YesodAddSecondState
@@ -90,7 +89,7 @@ class YesodeAdd extends StatelessWidget {
             )
           ],
         );
-      })),
+      }),
     );
   }
 }

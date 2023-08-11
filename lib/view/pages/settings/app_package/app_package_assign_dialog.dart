@@ -1,10 +1,11 @@
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:fixnum/fixnum.dart' as $fixnum;
-import 'package:waitress/common/api/l10n.dart';
+
+import '../../../../common/api/api_mixins.dart';
+import '../../../../common/api/l10n.dart';
 
 class AppPackageAssignDialog extends StatefulWidget {
   final void Function() callback;
@@ -81,19 +82,19 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
                 height: isError && !loading ? 48 : 0,
                 child: isError && !loading
                     ? Ink(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(kToolbarHeight),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Text(response.error ?? "未知错误"),
-                    ],
-                  ),
-                )
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(kToolbarHeight),
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 24,
+                            ),
+                            Text(response.error ?? '未知错误'),
+                          ],
+                        ),
+                      )
                     : const SizedBox(),
               ),
             ],
@@ -104,7 +105,7 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
         TextButton(
           onPressed: submit,
           child:
-          loading ? const CircularProgressIndicator() : const Text('应用更改'),
+              loading ? const CircularProgressIndicator() : const Text('应用更改'),
         ),
         TextButton(
           onPressed: () {

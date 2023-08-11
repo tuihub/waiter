@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/view/widgets/expand_rail_tile.dart';
-import 'package:waitress/view/widgets/rail_tile.dart';
+import '../../widgets/expand_rail_tile.dart';
+import '../../widgets/rail_tile.dart';
 
 class SettingsFramePage extends StatelessWidget {
   const SettingsFramePage(
@@ -34,38 +34,38 @@ class SettingsFramePage extends StatelessWidget {
                       children: [
                         RailTile(
                           onTap: () {
-                            GoRouter.of(context).go("/app/Settings/client");
+                            GoRouter.of(context).go('/app/Settings/client');
                           },
-                          title: const Text("客户端设置"),
-                          selected: function == "client",
+                          title: const Text('客户端设置'),
+                          selected: function == 'client',
                         ),
                         ExpandRailTile(
                           title: const Text(
-                            "管理区域",
+                            '管理区域',
                           ),
                           childrenPadding: const EdgeInsets.only(left: 12),
                           children: [
                             RailTile(
-                              title: const Text("用户管理"),
+                              title: const Text('用户管理'),
                               onTap: () {
-                                GoRouter.of(context).go("/app/Settings/user");
+                                GoRouter.of(context).go('/app/Settings/user');
                               },
-                              selected: function == "user",
+                              selected: function == 'user',
                             ),
                             RailTile(
-                              title: const Text("应用管理"),
+                              title: const Text('应用管理'),
                               onTap: () {
-                                GoRouter.of(context).go("/app/Settings/app");
+                                GoRouter.of(context).go('/app/Settings/app');
                               },
-                              selected: function == "app",
+                              selected: function == 'app',
                             ),
                             RailTile(
-                              title: const Text("应用包管理"),
+                              title: const Text('应用包管理'),
                               onTap: () {
                                 GoRouter.of(context)
-                                    .go("/app/Settings/appPackage");
+                                    .go('/app/Settings/appPackage');
                               },
-                              selected: function == "appPackage",
+                              selected: function == 'appPackage',
                             ),
                           ],
                         ),

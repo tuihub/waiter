@@ -60,6 +60,16 @@ class S {
     );
   }
 
+  /// `未知`
+  String get USER_TYPE_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'USER_TYPE_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `管理员`
   String get USER_TYPE_ADMIN {
     return Intl.message(
@@ -85,6 +95,16 @@ class S {
     return Intl.message(
       '扫描器',
       name: 'USER_TYPE_SENTINEL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get USER_STATUS_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'USER_STATUS_UNSPECIFIED',
       desc: '',
       args: [],
     );

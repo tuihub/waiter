@@ -9,14 +9,14 @@ class ThemePresent extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ThemePresent({
-    Key? key,
+    super.key,
     required this.title,
     required this.lightScheme,
     required this.darkScheme,
     required this.selected,
     this.onTap,
     required this.brightness,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class ThemePresent extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           Container(
@@ -79,7 +79,7 @@ class ThemePresent extends StatelessWidget {
                               color: theme.colorScheme.primary,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           Expanded(
@@ -91,7 +91,7 @@ class ThemePresent extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                         ],

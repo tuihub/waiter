@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/common/api/api_mixins.dart';
+import '../../../bloc/api_request/api_request_bloc.dart';
+import '../../../common/api/api_mixins.dart';
 
 class GeburaStoreDetail extends StatefulWidget {
   const GeburaStoreDetail({super.key, required this.appID});
@@ -34,19 +36,19 @@ class _GeburaStoreDetailState extends State<GeburaStoreDetail>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadAppDetail() {
-    doRequest(request: (client, option) {
+    unawaited(doRequest(request: (client, option) {
       return client.getApp(
         GetAppRequest(appId: widget.appID),
         options: option,
       );
-    });
+    }));
   }
 
   @override
@@ -58,7 +60,7 @@ class _GeburaStoreDetailState extends State<GeburaStoreDetail>
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
             child: AppBar(
-              title: Text(""),
+              title: const Text(''),
             ),
           ),
           Expanded(
@@ -113,28 +115,26 @@ class AppDetails extends StatelessWidget {
                       begin: FractionalOffset.center,
                       end: FractionalOffset.bottomCenter,
                       colors: [
-                        Color.fromRGBO(0, 0, 0, 0),
+                        const Color.fromRGBO(0, 0, 0, 0),
                         Theme.of(context).colorScheme.surface,
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        data.app.name,
-                        style: TextStyle(
-                          fontSize: 52,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                                color: Theme.of(context).colorScheme.surface,
-                                blurRadius: 3)
-                          ],
-                        ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      data.app.name,
+                      style: TextStyle(
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                              color: Theme.of(context).colorScheme.surface,
+                              blurRadius: 3)
+                        ],
                       ),
                     ),
                   ),
@@ -145,7 +145,7 @@ class AppDetails extends StatelessWidget {
           SizedBox(
             height: 100,
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   ElevatedButton(
@@ -162,17 +162,17 @@ class AppDetails extends StatelessWidget {
                         },
                       );
                     },
-                    child: Text("添加至游戏库"),
+                    child: const Text('添加至游戏库'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 24,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("开发商：${data.app.details.developer}"),
-                      Text("发行商：${data.app.details.publisher}"),
-                      Text("发行日期：${data.app.details.releaseDate}"),
+                      Text('开发商：${data.app.details.developer}'),
+                      Text('发行商：${data.app.details.publisher}'),
+                      Text('发行日期：${data.app.details.releaseDate}'),
                     ],
                   ),
                 ],
@@ -189,7 +189,7 @@ class AppDetails extends StatelessWidget {
                 : Theme.of(context).colorScheme.outlineVariant,
           ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: HtmlWidget(
               data.app.details.description,
               buildAsync: false,
@@ -226,12 +226,12 @@ class _PurchaseAppDialogState extends State<PurchaseAppDialog>
           title: const Text('入库'),
           content: SizedBox(
             width: 600,
-            child: Text("确定将《${widget.app.name}》加入你的库存？"),
+            child: Text('确定将《${widget.app.name}》加入你的库存？'),
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                doRequest(
+              onPressed: () async {
+                await doRequest(
                   request: (client, option) {
                     return client.purchaseApp(
                       PurchaseAppRequest(

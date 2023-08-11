@@ -7,9 +7,9 @@ abstract class YesodAddState extends Equatable {
   final String errorMessage;
 
   const YesodAddState(
-      {this.url = "",
+      {this.url = '',
       this.loadState = LoadState.initial,
-      this.errorMessage = ""});
+      this.errorMessage = ''});
 
   @override
   List<Object> get props => [url, loadState, errorMessage];
@@ -25,11 +25,10 @@ class YesodAddInitial extends YesodAddState {
   const YesodAddInitial({
     String? url,
     String? errorMessage,
-    LoadState loadState = LoadState.initial,
+    super.loadState,
   }) : super(
-          url: url ?? "",
-          errorMessage: errorMessage ?? "",
-          loadState: loadState,
+          url: url ?? '',
+          errorMessage: errorMessage ?? '',
         );
 
   @override
@@ -51,11 +50,10 @@ class YesodAddValidate extends YesodAddInitial {
   const YesodAddValidate({
     String? url,
     String? errorMessage,
-    LoadState loadState = LoadState.initial,
+    super.loadState,
   }) : super(
-          url: url ?? "",
-          errorMessage: errorMessage ?? "",
-          loadState: loadState,
+          url: url ?? '',
+          errorMessage: errorMessage ?? '',
         );
 }
 
@@ -65,12 +63,11 @@ class YesodAddFirstState extends YesodAddState {
   const YesodAddFirstState({
     String? url,
     String? errorMessage,
-    LoadState loadState = LoadState.initial,
+    super.loadState,
     required this.example,
   }) : super(
-          url: url ?? "",
-          errorMessage: errorMessage ?? "",
-          loadState: loadState,
+          url: url ?? '',
+          errorMessage: errorMessage ?? '',
         );
 
   @override
@@ -108,15 +105,14 @@ class YesodAddSecondState extends YesodAddState {
   const YesodAddSecondState({
     String? url,
     String? errorMessage,
-    LoadState loadState = LoadState.initial,
+    super.loadState,
     required this.name,
     required this.iconUrl,
     required this.refreshInterval,
     required this.enabled,
   }) : super(
-          url: url ?? "",
-          errorMessage: errorMessage ?? "",
-          loadState: loadState,
+          url: url ?? '',
+          errorMessage: errorMessage ?? '',
         );
 
   @override

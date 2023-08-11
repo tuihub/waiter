@@ -2,10 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:waitress/common/api/api_helper.dart';
-import 'package:waitress/common/api/client.dart';
-import 'package:waitress/consts.dart';
-import 'package:waitress/store/setting_dao.dart';
+import '../../common/api/api_helper.dart';
+import '../../common/api/client.dart';
+import '../../consts.dart';
+import '../../store/setting_dao.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
@@ -27,7 +27,8 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           );
           final client = clientFactory(config: config);
           if (_dao.exsist(SettingKey.refreshToken)) {
-            final refreshToken = _dao.require(SettingKey.refreshToken);
+            final refreshToken =
+                _dao.require(SettingKey.refreshToken) as String;
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
@@ -36,7 +37,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
               emit(UserLoggedIn(config, resp.accessToken));
               return;
             } catch (e) {
-              debugPrint("login by refresh token fail");
+              debugPrint('login by refresh token fail');
             }
           }
         }
@@ -51,9 +52,9 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
         // final grpcProvider = newGrpc("theam-grpc.gyx.moe", port: 443);
         // final resp = await grpcProvider
         //     .getToken(GetTokenRequest(username: "", password: ""));
-        _dao.set(SettingKey.serverHost, event.config.host);
-        _dao.set(SettingKey.serverPort, event.config.port);
-        _dao.set(SettingKey.serverTls, event.config.tls);
+        await _dao.set(SettingKey.serverHost, event.config.host);
+        await _dao.set(SettingKey.serverPort, event.config.port);
+        await _dao.set(SettingKey.serverTls, event.config.tls);
         emit(ServerSelected(event.config));
       }
       if (event is UserLogoutEvent) {
@@ -80,7 +81,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             GetTokenRequest(username: event.username, password: event.password),
           );
           debugPrint(resp.toDebugString());
-          _dao.set(SettingKey.refreshToken, resp.refreshToken);
+          await _dao.set(SettingKey.refreshToken, resp.refreshToken);
           GetIt.I<ApiHelper>()
               .init(client, resp.accessToken, resp.refreshToken);
           emit(UserLoggedIn(

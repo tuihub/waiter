@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/consts.dart';
-import 'package:waitress/view/widgets/nav_rail.dart';
-import 'package:waitress/view/widgets/title_bar.dart';
-import 'package:waitress/view/widgets/actions/theme_mode_toggle.dart';
+
+import '../../consts.dart';
+import '../widgets/actions/theme_mode_toggle.dart';
+import '../widgets/nav_rail.dart';
+import '../widgets/title_bar.dart';
 
 class FramePage extends StatelessWidget {
   const FramePage(
@@ -30,7 +29,7 @@ class FramePage extends StatelessWidget {
                     leading: [
                       IconMenuItem(
                         icon: Icons.account_circle_sharp,
-                        selected: "Tiphereth" == selectedNav,
+                        selected: 'Tiphereth' == selectedNav,
                         onPressed: () {
                           GoRouter.of(context).go('/app/Tiphereth');
                         },
@@ -51,7 +50,7 @@ class FramePage extends StatelessWidget {
                     trailing: [
                       IconMenuItem(
                         icon: Icons.settings,
-                        selected: "Settings" == selectedNav,
+                        selected: 'Settings' == selectedNav,
                         onPressed: () {
                           GoRouter.of(context).go('/app/Settings');
                         },

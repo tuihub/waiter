@@ -16,7 +16,7 @@ class ApiResponse<T> {
     if (status == ApiStatus.success) {
       return data!;
     } else {
-      throw Exception("Response is not success");
+      throw Exception('Response is not success');
     }
   }
 }
@@ -57,14 +57,14 @@ class ApiHelper {
           return ApiResponse(resp, ApiStatus.success, null);
         } catch (e) {
           if (e is GrpcError) {
-            return ApiResponse(null, ApiStatus.error, e.message ?? "发生未知错误");
+            return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
           }
           return ApiResponse(null, ApiStatus.error, e.toString());
         }
       }
       debugPrint(e.toString());
       if (e is GrpcError) {
-        return ApiResponse(null, ApiStatus.error, e.message ?? "发生未知错误");
+        return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
       }
       return ApiResponse(null, ApiStatus.error, e.toString());
     }
@@ -72,7 +72,7 @@ class ApiHelper {
 
   Future<bool> doRefresh() async {
     try {
-      debugPrint("refreshing token");
+      debugPrint('refreshing token');
       final resp = await client.refreshToken(RefreshTokenRequest(),
           options: newCallOptions(refreshToken));
       option = newCallOptions(resp.accessToken);

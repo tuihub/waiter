@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:waitress/view/widgets/rail_tile.dart';
+import 'rail_tile.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 

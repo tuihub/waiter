@@ -1,7 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-
-import 'dart:math' as math;
 
 /// Creates grid layouts with tiles that each have a maximum cross-axis extent.
 ///

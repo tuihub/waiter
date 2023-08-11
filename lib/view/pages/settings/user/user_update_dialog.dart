@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/common/api/l10n.dart';
-import 'package:waitress/view/widgets/expand_rail_tile.dart';
+import '../../../../common/api/api_mixins.dart';
+import '../../../../common/api/l10n.dart';
+import '../../../widgets/expand_rail_tile.dart';
 
 class UserUpdateDialog extends StatefulWidget {
   final void Function() callback;
@@ -27,8 +27,8 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
   final _formKey = GlobalKey<FormState>();
 
   late String username;
-  late String oldPassword = "";
-  late String newPassword = "";
+  late String oldPassword = '';
+  late String newPassword = '';
   final TextEditingController _pass = TextEditingController();
   late UserType userType;
   late UserStatus userStatus;
@@ -39,7 +39,7 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
       _formKey.currentState!.save();
       doRequest(
         request: (client, option) {
-          var req = User(
+          final req = User(
             id: widget.user.id,
             username: username,
             type: userType,
@@ -101,9 +101,9 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                 height: 16,
               ),
               DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.security),
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.security),
+                  border: OutlineInputBorder(),
                   labelText: '用户类型',
                 ),
                 value: userType,
@@ -127,9 +127,9 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                 height: 16,
               ),
               DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.settings),
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.settings),
+                  border: OutlineInputBorder(),
                   labelText: '用户状态',
                 ),
                 value: userStatus,
@@ -151,9 +151,9 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                 height: 16,
               ),
               ExpandRailTile(
-                title: Text('修改密码'),
+                title: const Text('修改密码'),
                 children: [
-                  Text('你必须拥有旧密码才能修改密码'),
+                  const Text('你必须拥有旧密码才能修改密码'),
                   const SizedBox(
                     height: 8,
                   ),
@@ -236,7 +236,7 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )

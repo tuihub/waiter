@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_helper.dart';
-import 'package:waitress/common/api/l10n.dart';
-import 'package:waitress/view/pages/settings/app/app_create_dialog.dart';
-import 'package:waitress/view/pages/settings/app/app_update_dialog.dart';
+import '../../../../common/api/api_helper.dart';
+import '../../../../common/api/l10n.dart';
+import 'app_create_dialog.dart';
+import 'app_update_dialog.dart';
 
 class AppManagePage extends StatefulWidget {
   const AppManagePage({super.key});
@@ -36,7 +38,7 @@ class _AppManagePageState extends State<AppManagePage> {
           children: [
             Row(
               children: [
-                Container(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).primaryColor),
                     borderRadius: BorderRadius.circular(8),
@@ -64,7 +66,7 @@ class _AppManagePageState extends State<AppManagePage> {
                 const Expanded(child: SizedBox()),
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    showDialog(
+                    unawaited(showDialog<void>(
                       context: context,
                       builder: (context) => AppCreateDialog(
                         callback: () {
@@ -72,10 +74,10 @@ class _AppManagePageState extends State<AppManagePage> {
                           paginatorController.goToFirstPage();
                         },
                       ),
-                    );
+                    ));
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text("新增"),
+                  label: const Text('新增'),
                 ),
               ],
             ),
@@ -84,7 +86,7 @@ class _AppManagePageState extends State<AppManagePage> {
               child: AsyncPaginatedDataTable2(
                 empty: const Center(child: Text('No data')),
                 errorBuilder: (e) {
-                  return Center(child: Text('Load Failed: ${e.toString()}'));
+                  return Center(child: Text('Load Failed: $e'));
                 },
                 rowsPerPage: pageSize,
                 columnSpacing: 12,
@@ -127,7 +129,7 @@ class AppTableSource extends AsyncDataTableSource {
 
   @override
   Future<AsyncRowsResponse> getRows(int start, int end) async {
-    var resp = await GetIt.I<ApiHelper>().doRequest((client, option) async {
+    final resp = await GetIt.I<ApiHelper>().doRequest((client, option) async {
       return client.listApps(
           ListAppsRequest(
             paging: PagingRequest(
@@ -148,12 +150,10 @@ class AppTableSource extends AsyncDataTableSource {
                 DataCell(Text(appTypeString(app.type))),
               ],
               onTap: () {
-                showDialog(
+                showDialog<void>(
                   context: context,
                   builder: (context) => AppUpdateDialog(
-                    callback: () {
-                      refreshDatasource();
-                    },
+                    callback: refreshDatasource,
                     app: app,
                   ),
                 );

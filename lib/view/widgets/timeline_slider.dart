@@ -4,12 +4,14 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class TimelineSlider extends StatefulWidget {
+  const TimelineSlider({super.key});
+
   @override
   State<TimelineSlider> createState() => _TimelineSliderState();
 }
 
 class _TimelineSliderState extends State<TimelineSlider> {
-  DateTime _value = DateTime(2002, 01, 01);
+  dynamic _value = DateTime(2002, 01, 01);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _TimelineSliderState extends State<TimelineSlider> {
         inactiveDividerStrokeColor: Colors.white,
         activeDividerRadius: 5,
         inactiveDividerRadius: 5,
-        labelOffset: Offset(-100.0, 0.0),
+        labelOffset: const Offset(-100.0, 0.0),
       ),
       child: SfSlider.vertical(
         min: DateTime(2000, 01, 01, 00),

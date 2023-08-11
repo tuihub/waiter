@@ -4,7 +4,7 @@ import 'package:file_sizes/file_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waitress/consts.dart';
+import '../../consts.dart';
 
 class CacheSetting extends StatefulWidget {
   const CacheSetting({super.key});
@@ -30,9 +30,9 @@ class _CacheSettingState extends State<CacheSetting> {
     loadCacheSize();
   }
 
-  void loadCacheSize() async {
+  Future<void> loadCacheSize() async {
     int size = 0;
-    for (var box in cacheFiles) {
+    for (final box in cacheFiles) {
       final path = GetIt.I<Box<String>>(instanceName: box).path;
       if (path != null) {
         size += await _getFileSize(path);
@@ -42,19 +42,19 @@ class _CacheSettingState extends State<CacheSetting> {
     setState(() {
       cacheSize = size;
     });
-    print("cache size loaded $cacheSize");
+    print('cache size loaded $cacheSize');
   }
 
-  void clearCache() async {
+  Future<void> clearCache() async {
     if (clearing) return;
     setState(() {
       clearing = true;
     });
-    for (var box in cacheFiles) {
+    for (final box in cacheFiles) {
       await GetIt.I<Box<String>>(instanceName: box).clear();
     }
     await Future.delayed(const Duration(seconds: 1));
-    loadCacheSize();
+    await loadCacheSize();
     setState(() {
       clearing = false;
     });
@@ -72,7 +72,7 @@ class _CacheSettingState extends State<CacheSetting> {
         children: [
           const SizedBox(height: kToolbarHeight, width: 16),
           const Text(
-            "缓存",
+            '缓存',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -88,16 +88,12 @@ class _CacheSettingState extends State<CacheSetting> {
           ),
           const Expanded(child: SizedBox()),
           TextButton.icon(
-            onPressed: () {
-              loadCacheSize();
-            },
+            onPressed: loadCacheSize,
             icon: const Icon(Icons.cached),
-            label: const Text("刷新"),
+            label: const Text('刷新'),
           ),
           TextButton.icon(
-            onPressed: () {
-              clearCache();
-            },
+            onPressed: clearCache,
             icon: clearing
                 ? const SizedBox(
                     width: 24,
@@ -109,7 +105,7 @@ class _CacheSettingState extends State<CacheSetting> {
                       ),
                     ))
                 : const Icon(Icons.delete),
-            label: const Text("清空"),
+            label: const Text('清空'),
           )
         ],
       ),

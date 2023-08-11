@@ -11,7 +11,7 @@ class FfiTestPage extends StatefulWidget {
 class _FfiTestPageState extends State<FfiTestPage> {
   int _counter = 0;
 
-  void _incrementCounter() async {
+  Future<void> _incrementCounter() async {
     _counter = await NativeFunc.add(_counter, 1);
     setState(() {});
   }

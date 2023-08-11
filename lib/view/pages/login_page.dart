@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/consts.dart';
-import 'package:waitress/view/widgets/connectivity.dart';
-import 'package:waitress/view/widgets/title_bar.dart';
+import '../../bloc/user_login/user_bloc.dart';
+import '../../consts.dart';
+import '../widgets/connectivity.dart';
+import '../widgets/title_bar.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -20,9 +20,9 @@ class LoginPage extends StatelessWidget {
         listener: (context, state) {
           if (state is UserLoggedIn) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text(
-                  "欢迎",
+                  '欢迎',
                 ),
               ),
             );
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                       context.read<UserBloc>().add(ManualLoginEvent());
                     },
                     icon: const Icon(Icons.arrow_back),
-                    label: const Text("返回"),
+                    label: const Text('返回'),
                   )
                 : Container(),
           );
@@ -143,13 +143,13 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              title: Center(child: Text('选择服务器')),
-              bottom: TabBar(tabs: [
+              title: const Center(child: Text('选择服务器')),
+              bottom: const TabBar(tabs: [
                 Tab(
-                  text: "输入服务器",
+                  text: '输入服务器',
                 ),
                 Tab(
-                  text: "内置",
+                  text: '内置',
                 ),
               ]),
             ),
@@ -188,11 +188,11 @@ class ServerSelectForm extends StatefulWidget {
 class _ServerSelectFormState extends State<ServerSelectForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String host = "";
+  String host = '';
   int port = 0;
   bool tls = false;
-  final String name = "确定";
-  ServerConfig server = const ServerConfig("", 0, true);
+  final String name = '确定';
+  ServerConfig server = const ServerConfig('', 0, true);
 
   void submit() {
     if (_formKey.currentState!.validate()) {
@@ -298,9 +298,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
-            "用户名或密码为空, 请修改后重试",
+            '用户名或密码为空, 请修改后重试',
           ),
         ),
       );
@@ -324,13 +324,11 @@ class _LoginWidgetState extends State<LoginWidget> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                "登录失败,${state.message}",
+                '登录失败,${state.message}',
               ),
               action: SnackBarAction(
-                label: "重试",
-                onPressed: () {
-                  submitUrl();
-                },
+                label: '重试',
+                onPressed: submitUrl,
               ),
             ),
           );
@@ -345,7 +343,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               Expanded(
                 child: Center(
                   child: Text(
-                    "🎉欢迎!",
+                    '🎉欢迎!',
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
@@ -384,15 +382,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                 onSubmitted: (value) {
                   submitUrl();
                 },
-                obscuringCharacter: "*",
+                obscuringCharacter: '*',
               ),
               const SizedBox(
                 height: 16,
               ),
               ElevatedButton(
-                onPressed: () {
-                  submitUrl();
-                },
+                onPressed: submitUrl,
                 style: const ButtonStyle(
                   fixedSize: MaterialStatePropertyAll(
                     Size(144, 36),
@@ -408,7 +404,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ),
                       )
                     : const Text(
-                        "登录",
+                        '登录',
                         style: TextStyle(
                           fontSize: 16,
                         ),

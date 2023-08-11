@@ -10,13 +10,13 @@ class RailTile extends StatelessWidget {
   final bool selected;
 
   const RailTile({
-    Key? key,
+    super.key,
     this.leading,
     this.title,
     this.trailing,
     this.onTap,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class RailTile extends StatelessWidget {
             curve: Curves.easeIn,
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 12,
                 ),
                 if (leading != null)
@@ -56,7 +56,7 @@ class RailTile extends StatelessWidget {
                     ),
                   ),
                 if (leading == null)
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                   ),
                 Expanded(
@@ -73,7 +73,7 @@ class RailTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4,
                 ),
                 if (trailing != null)

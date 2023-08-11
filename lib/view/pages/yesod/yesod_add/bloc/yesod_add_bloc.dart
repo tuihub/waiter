@@ -1,20 +1,18 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:favicon/favicon.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:waitress/common/model/common_model.dart';
-import 'package:waitress/common/model/yesod_model.dart';
-import 'package:waitress/common/api/api_helper.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 
-import 'package:html/parser.dart' show parse;
-import 'package:fixnum/fixnum.dart' as $fixnum;
-import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
+import '../../../../../common/api/api_helper.dart';
+import '../../../../../common/model/common_model.dart';
+import '../../../../../common/model/yesod_model.dart';
 
 part 'yesod_add_event.dart';
 part 'yesod_add_state.dart';
@@ -38,15 +36,15 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
           loadState: LoadState.loading,
         ));
         try {
-          var url = Uri.parse(event.url);
-          var response = await http.get(url);
-          var data = RssFeed.parse(response.body);
+          final url = Uri.parse(event.url);
+          final response = await http.get(url);
+          final data = RssFeed.parse(response.body);
 
-          print(data.title);
+          debugPrint(data.title);
 
-          print(data.description);
-          var icon = await FaviconFinder.getBest(Uri.parse(event.url).origin);
-          print(icon);
+          debugPrint(data.description);
+          final icon = await FaviconFinder.getBest(Uri.parse(event.url).origin);
+          debugPrint(icon.toString());
 
           final subscription = RssSubscription(
               title: data.title!,
@@ -56,21 +54,21 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
 
           final item = data.items!.first;
 
-          String? imgUrl = null;
+          String? imgUrl;
 
-          String description = "";
+          String description = '';
           if (item.description != null) {
             try {
-              final doc = parse(item.description!);
-              final imgElements = doc.getElementsByTagName("img");
+              final doc = parse(item.description);
+              final imgElements = doc.getElementsByTagName('img');
               if (imgElements.isNotEmpty) {
-                imgUrl = imgElements.first.attributes["src"];
+                imgUrl = imgElements.first.attributes['src'];
               }
               doc.querySelectorAll('p,h1,h2,h3,h4,h5,span').forEach((element) {
                 description = description + element.text;
               });
-              description.replaceAll("\n", " ");
-              print(description);
+              description.replaceAll('\n', ' ');
+              debugPrint(description);
             } catch (e) {
               description = item.description!;
             }
@@ -89,7 +87,7 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
           ));
         } on Exception catch (e) {
           emit(state.copyWith(
-            errorMessage: "解析失败, ${e.toString()}",
+            errorMessage: '解析失败, $e',
             loadState: LoadState.failure,
           ));
         }
@@ -131,7 +129,7 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
           });
         } catch (e) {
           emit(state.copyWith(
-            errorMessage: "添加失败, ${e.toString()}",
+            errorMessage: '添加失败, $e',
             loadState: LoadState.failure,
           ));
         }

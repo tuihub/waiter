@@ -1,14 +1,15 @@
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waitress/route.dart';
-import 'package:waitress/consts.dart';
-import 'package:waitress/repo/yesod/yesod_repo.dart';
-import 'package:waitress/store/setting_dao.dart';
+
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/api/api_helper.dart';
 import 'common/util/rss_util.dart';
+import 'consts.dart';
+import 'repo/yesod/yesod_repo.dart';
+import 'route.dart';
+import 'store/setting_dao.dart';
 
 final GetIt getIt = GetIt.instance;
 

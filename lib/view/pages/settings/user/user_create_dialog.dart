@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/common/api/l10n.dart';
+import '../../../../common/api/api_mixins.dart';
+import '../../../../common/api/l10n.dart';
 
 class UserCreateDialog extends StatefulWidget {
   final void Function() callback;
@@ -112,9 +112,9 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                 height: 16,
               ),
               DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.security),
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.security),
+                  border: OutlineInputBorder(),
                   labelText: '用户类型',
                 ),
                 value: userType,
@@ -138,9 +138,9 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                 height: 16,
               ),
               DropdownButtonFormField(
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.settings),
-                  border: const OutlineInputBorder(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.settings),
+                  border: OutlineInputBorder(),
                   labelText: '用户状态',
                 ),
                 value: userStatus,
@@ -175,7 +175,7 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )

@@ -2,8 +2,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/bloc/user_login/user_bloc.dart';
-import 'package:waitress/view/widgets/title_bar.dart';
+import '../../bloc/user_login/user_bloc.dart';
+import '../widgets/title_bar.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({super.key});
@@ -18,9 +18,9 @@ class InitPage extends StatelessWidget {
         listener: (context, state) {
           if (state is UserLoggedIn) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text(
-                  "欢迎回来",
+                  '欢迎回来',
                 ),
               ),
             );
@@ -56,7 +56,7 @@ class InitPage extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.arrow_forward),
-                    label: const Text("登录"),
+                    label: const Text('登录'),
                   )
                 : Container(),
           );
@@ -84,22 +84,22 @@ class InitWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Tui",
+            const Text(
+              'Tui',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 4),
-              margin: EdgeInsets.symmetric(horizontal: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 145, 0),
+                color: const Color.fromARGB(255, 255, 145, 0),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Text(
-                "Hub",
+              child: const Text(
+                'Hub',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
@@ -109,10 +109,10 @@ class InitWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 32,
         ),
-        SizedBox(
+        const SizedBox(
           height: 24,
           width: 24,
           child: CircularProgressIndicator(

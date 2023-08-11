@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:waitress/view/pages/gebura/gebura_store_detail.dart';
+import '../../../common/api/api_mixins.dart';
+import 'gebura_store_detail.dart';
 
 class GeburaStorePage extends StatefulWidget {
   const GeburaStorePage({super.key});
@@ -28,28 +30,28 @@ class _GeburaStorePageState extends State<GeburaStorePage>
       );
     }
     if (isSuccess) {
-      print(response.getData().apps.length);
+      debugPrint(response.getData().apps.length.toString());
       return response.getData().apps.isEmpty
           ? const Center(
-              child: Text("空空如也"),
+              child: Text('空空如也'),
             )
           : StoreList(data: response.getData());
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadStore() {
-    doRequest(request: (client, option) {
+    unawaited(doRequest(request: (client, option) {
       return client.searchApps(
         SearchAppsRequest(keywords: controller.text),
         options: option,
       );
-    });
+    }));
   }
 
   @override
@@ -59,8 +61,8 @@ class _GeburaStorePageState extends State<GeburaStorePage>
       body: _buildStatePage(),
       appBar: AppBar(
         title: LayoutBuilder(builder: (context, constrains) {
-          var width = constrains.maxWidth / 2; // 父级宽度
-          var height = 45.0;
+          final width = constrains.maxWidth / 2; // 父级宽度
+          const height = 45.0;
           return Container(
             width: width,
             height: height,
@@ -70,10 +72,10 @@ class _GeburaStorePageState extends State<GeburaStorePage>
             child: TextField(
               controller: controller,
               decoration: InputDecoration(
-                  hintText: "搜索",
+                  hintText: '搜索',
                   hintStyle:
-                      TextStyle(color: Colors.grey, fontSize: (height / 3)),
-                  contentPadding: EdgeInsets.only(top: (height / 5)),
+                      const TextStyle(color: Colors.grey, fontSize: height / 3),
+                  contentPadding: const EdgeInsets.only(top: height / 5),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -92,15 +94,13 @@ class _GeburaStorePageState extends State<GeburaStorePage>
                       size: 18,
                     ),
                     onPressed: () {
-                      controller.text = "";
+                      controller.text = '';
                       loadStore();
                     },
                     splashColor: Theme.of(context).primaryColor,
                     color: Theme.of(context).primaryColor,
                   )),
-              onEditingComplete: () {
-                loadStore();
-              },
+              onEditingComplete: loadStore,
             ),
           );
         }),
@@ -191,7 +191,7 @@ class StoreList extends StatelessWidget {
                                                       .disabledColor),
                                               maxLines: 2,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 4,
                                             ),
                                             Text(
@@ -203,12 +203,12 @@ class StoreList extends StatelessWidget {
                                               ),
                                               maxLines: 2,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 4,
                                             ),
                                             Text(
                                               app.shortDescription,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontSize: 10,
                                               ),

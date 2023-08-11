@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_helper.dart';
+import '../../common/api/api_helper.dart';
 import '../../store/cache_dao.dart';
 
 part 'yesod_local_source.dart';

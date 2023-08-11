@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-import 'package:waitress/common/api/client.dart';
-import 'package:waitress/consts.dart';
+import '../../common/api/client.dart';
+import '../../consts.dart';
 
 class ServerConnectivityWidget extends StatefulWidget {
   final ServerConfig config;
@@ -28,13 +28,13 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
   int reTime = 0;
 
   @override
-  void didUpdateWidget(covariant oldWidget) {
+  void didUpdateWidget(covariant ServerConnectivityWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    debugPrint("ping ${widget.config.toString()}");
+    debugPrint('ping ${widget.config}');
     pingUrl();
   }
 
-  void pingUrl() async {
+  Future<void> pingUrl() async {
     if (mounted) {
       setState(() {
         loading = true;
@@ -50,7 +50,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
       status = true;
       final arriveTime = response.currentTime.toDateTime();
       debugPrint(
-          "startTime: $startTime, arriveTime: $arriveTime, endTime: $endTime");
+          'startTime: $startTime, arriveTime: $arriveTime, endTime: $endTime');
       deTime = arriveTime.difference(startTime).inMilliseconds;
       reTime = endTime.difference(arriveTime).inMilliseconds;
     } catch (e) {
@@ -95,11 +95,11 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
                   Text(widget.config.name.isEmpty
                       ? widget.config.host
                       : widget.config.name),
-                  Expanded(
+                  const Expanded(
                     child: SizedBox(),
                   ),
                   Text(
-                    status ? "↑ ${deTime}ms  ↓ ${reTime}ms" : "",
+                    status ? '↑ ${deTime}ms  ↓ ${reTime}ms' : '',
                     style: TextStyle(
                       color: getStatusColor(),
                     ),
@@ -107,30 +107,31 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
                   const SizedBox(
                     width: 8,
                   ),
-                  loading
-                      ? SizedBox(
-                          height: 14,
-                          width: 14,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Ink(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(28),
-                            color: getStatusColor(),
-                          ),
-                          height: 14,
-                          width: 14,
-                          child: loading
-                              ? const CircularProgressIndicator()
-                              : Center(
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(28),
-                                    onTap: () => pingUrl(),
-                                  ),
-                                ),
-                        ),
+                  if (loading)
+                    const SizedBox(
+                      height: 14,
+                      width: 14,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    )
+                  else
+                    Ink(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        color: getStatusColor(),
+                      ),
+                      height: 14,
+                      width: 14,
+                      child: loading
+                          ? const CircularProgressIndicator()
+                          : Center(
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(28),
+                                onTap: pingUrl,
+                              ),
+                            ),
+                    ),
                 ],
               ),
             ),

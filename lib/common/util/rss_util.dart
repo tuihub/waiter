@@ -1,5 +1,5 @@
 import 'package:html/parser.dart' show parse;
-import 'package:waitress/common/model/yesod_model.dart';
+import '../model/yesod_model.dart';
 
 abstract class AbstractContentFormatter {
   RssDescriptionContent format(String content);
@@ -13,15 +13,15 @@ class HtmlContentFormatter implements AbstractContentFormatter {
     try {
       final doc = parse(content);
 
-      String description = "";
+      String description = '';
       doc.querySelectorAll('p,h1,h2,h3,h4,h5,span').forEach((element) {
         description = description + element.text;
       });
-      description.replaceAll("\n", " ");
+      description.replaceAll('\n', ' ');
 
-      final imgElements = doc.getElementsByTagName("img");
+      final imgElements = doc.getElementsByTagName('img');
       if (imgElements.isNotEmpty) {
-        final imgUrl = imgElements.first.attributes["src"];
+        final imgUrl = imgElements.first.attributes['src'];
         if (imgUrl != null) {
           return ImgTextContent(description, imgUrl);
         }
@@ -37,8 +37,8 @@ class HtmlContentFormatter implements AbstractContentFormatter {
 class TextContentFormatter implements AbstractContentFormatter {
   @override
   RssDescriptionContent format(String content) {
-    content = content.replaceAll("\n", " ");
-    return TextContent(content);
+    final newContent = content.replaceAll('\n', ' ');
+    return TextContent(newContent);
   }
 }
 
@@ -49,7 +49,7 @@ class RssContentFormatter implements AbstractContentFormatter {
   @override
   RssDescriptionContent format(String content) {
     bool isHtml = false;
-    if (RegExp(r"<[^>]*>.*<[^>]*>").hasMatch(content)) {
+    if (RegExp('<[^>]*>.*<[^>]*>').hasMatch(content)) {
       isHtml = true;
     }
     if (isHtml) {

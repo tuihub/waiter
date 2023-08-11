@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 class ChesedImageViewWidget extends StatelessWidget {
   final String imageUrl;

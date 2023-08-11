@@ -43,7 +43,7 @@ class SettingDao {
       return _box.get(key.name) as T;
     }
     throw Exception(
-      "setting key ${key.toString()} is required before initialize",
+      'setting key $key is required before initialize',
     );
   }
 

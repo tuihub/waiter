@@ -4,18 +4,15 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:screen_capturer/screen_capturer.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/base.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/binah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
-import 'package:http/http.dart' as http;
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
-import 'package:path_provider/path_provider.dart';
-
-import 'package:fixnum/fixnum.dart' as $fixnum;
-import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
+import '../../../common/api/api_mixins.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;
@@ -35,7 +32,7 @@ class ChesedUploadState extends State<ChesedUpload>
   late String name;
   late String extension;
 
-  void pickSubmit() async {
+  Future<void> pickSubmit() async {
     final pickResult = await file_picker.FilePicker.platform
         .pickFiles(type: file_picker.FileType.image);
     if (pickResult != null) {
@@ -43,7 +40,7 @@ class ChesedUploadState extends State<ChesedUpload>
       file = File(pick.path!); // TODO not compatible with web
       name = pick.name;
       extension = pick.extension!;
-      doRequest().then((value) {
+      await doRequest().then((value) {
         if (isSuccess) {
           widget.callback();
           Navigator.pop(context);
@@ -52,15 +49,15 @@ class ChesedUploadState extends State<ChesedUpload>
     }
   }
 
-  void captureSubmit() async {
+  Future<void> captureSubmit() async {
     // TODO linux platform rely on gnome-screenshot
     if (!await ScreenCapturer.instance.isAccessAllowed()) {
       return;
     }
-    Directory directory = await getTemporaryDirectory();
-    String imageName =
+    final Directory directory = await getTemporaryDirectory();
+    final String imageName =
         'Screenshot-${DateTime.now().millisecondsSinceEpoch}.png';
-    String imagePath = '${directory.path}/$imageName';
+    final String imagePath = '${directory.path}/$imageName';
     debugPrint('imagePath: $imagePath');
     final capturedData = await ScreenCapturer.instance.capture(
       mode: CaptureMode.region,
@@ -71,7 +68,7 @@ class ChesedUploadState extends State<ChesedUpload>
       file = File(capturedData.imagePath!);
       name = imageName;
       extension = 'png';
-      doRequest().then((value) {
+      await doRequest().then((value) {
         if (isSuccess) {
           widget.callback();
           Navigator.pop(context);
@@ -111,7 +108,8 @@ class ChesedUploadState extends State<ChesedUpload>
   }
 
   @override
-  Future<PresignedUploadFileStatusResponse> request(client, option) async {
+  Future<PresignedUploadFileStatusResponse> request(
+      LibrarianSephirahServiceClient client, CallOptions option) async {
     final token = await client.uploadImage(
         UploadImageRequest(
           fileMetadata: FileMetadata(

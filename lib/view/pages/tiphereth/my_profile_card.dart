@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
+import '../../../common/api/api_mixins.dart';
 
 class MyProfileCard extends StatefulWidget {
   const MyProfileCard({super.key});
@@ -28,19 +30,19 @@ class _MyProfileCardState extends State<MyProfileCard>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
   }
 
   void loadMyProfile() {
-    doRequest(request: (client, option) {
+    unawaited(doRequest(request: (client, option) {
       return client.getUser(
         GetUserRequest(),
         options: option,
       );
-    });
+    }));
   }
 
   @override
@@ -77,12 +79,12 @@ class MyProfile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("ID: ${data.user.id.id.toHexString()}"),
+          Text('ID: ${data.user.id.id.toHexString()}'),
           Text(data.user.username,
               style: const TextStyle(
                 fontSize: 32,
               )),
-          Text("${data.user.type} | ${data.user.status}")
+          Text('${data.user.type} | ${data.user.status}')
         ],
       ),
     );

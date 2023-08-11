@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:waitress/view/pages/chesed/chesed_home_page.dart';
-import 'package:waitress/view/pages/ffi_test_page.dart';
-import 'package:waitress/view/pages/home_page.dart';
-import 'dart:ui';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/material.dart';
+
+import 'view/pages/chesed/chesed_home_page.dart';
+import 'view/pages/ffi_test_page.dart';
+import 'view/pages/home_page.dart';
 
 class App {
   final String name;
@@ -14,16 +14,16 @@ class App {
 }
 
 final appList = [
-  App('Home', Icons.home, HomePage()),
-  App('Gebura', Icons.casino, SizedBox()),
-  App('Yesod', Icons.rss_feed, SizedBox()),
+  App('Home', Icons.home, const HomePage()),
+  App('Gebura', Icons.casino, const SizedBox()),
+  App('Yesod', Icons.rss_feed, const SizedBox()),
   App('Chesed', Icons.photo_album, ChesedHome()),
-  App('Ffi', Icons.timelapse, FfiTestPage()),
+  App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];
 
 final appMap = Map.fromEntries(appList.map((e) => MapEntry(e.name, e)));
 
-const AppDefaultAccentColor = const Color.fromARGB(255, 255, 145, 0);
+const appDefaultAccentColor = Color.fromARGB(255, 255, 145, 0);
 // const AppBackgroudColor = Color.fromARGB(255, 32, 34, 37);
 
 class AppTheme {
@@ -47,15 +47,15 @@ const themeData = [
   ),
 ];
 
-const settingBoxKey = "setting";
+const settingBoxKey = 'setting';
 
-const yesodCacheBoxKey = "yesodCache";
+const yesodCacheBoxKey = 'yesodCache';
 
 const List<ServerConfig> newServerList = [
-  ServerConfig("theam-grpc.gyx.moe", 443, true, name: "cf 代理"),
-  ServerConfig("theam-grpc.gyx1.cn", 443, true, name: "直连"),
-  ServerConfig("theam-grpc-rp.gyx1.cn", 443, true, name: "rp1"),
-  ServerConfig("theam-grpc-rp2.gyx1.cn", 443, true, name: "rp2"),
+  ServerConfig('theam-grpc.gyx.moe', 443, true, name: 'cf 代理'),
+  ServerConfig('theam-grpc.gyx1.cn', 443, true, name: '直连'),
+  ServerConfig('theam-grpc-rp.gyx1.cn', 443, true, name: 'rp1'),
+  ServerConfig('theam-grpc-rp2.gyx1.cn', 443, true, name: 'rp2'),
 ];
 
 class ServerConfig {
@@ -64,5 +64,5 @@ class ServerConfig {
   final bool tls;
   final String name;
 
-  const ServerConfig(this.host, this.port, this.tls, {this.name = ""});
+  const ServerConfig(this.host, this.port, this.tls, {this.name = ''});
 }

@@ -31,7 +31,7 @@ class NativeFunc {
   static final _ffi = RustFfiImpl(NativeFFI.dyLib);
 
   static Future<int> add(int left, int right) async {
-    int sum = await _ffi.add(left: left, right: right);
+    final int sum = await _ffi.add(left: left, right: right);
     return sum;
   }
 }

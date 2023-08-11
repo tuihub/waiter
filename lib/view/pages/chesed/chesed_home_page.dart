@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/bloc/api_request/api_request_bloc.dart';
-import 'package:waitress/view/pages/chesed/chesed_image_view.dart';
-import 'package:waitress/view/pages/chesed/chesed_upload.dart';
+import '../../../bloc/api_request/api_request_bloc.dart';
+import 'chesed_image_view.dart';
+import 'chesed_upload.dart';
 
 class ChesedHome extends StatelessWidget {
   final controller = TextEditingController();
   final paging = PagingRequest(pageNum: 1, pageSize: 50);
+
+  ChesedHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +31,14 @@ class ChesedHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Ink(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   // color: Theme.of(context).colorScheme.secondaryContainer,
                 ),
                 child: LayoutBuilder(builder: (context, constrains) {
-                  var width = constrains.maxWidth / 2; // 父级宽度
-                  var height = 35.0;
+                  final width = constrains.maxWidth / 2; // 父级宽度
+                  const height = 35.0;
                   return Container(
                     width: width,
                     height: height,
@@ -45,10 +49,11 @@ class ChesedHome extends StatelessWidget {
                     child: TextField(
                         controller: controller,
                         decoration: InputDecoration(
-                            hintText: "搜索",
-                            hintStyle:
-                                TextStyle(color: Colors.grey, fontSize: 14),
-                            contentPadding: EdgeInsets.only(bottom: height / 3),
+                            hintText: '搜索',
+                            hintStyle: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                            contentPadding:
+                                const EdgeInsets.only(bottom: height / 3),
                             border: InputBorder.none,
                             icon: Padding(
                                 padding:
@@ -64,7 +69,7 @@ class ChesedHome extends StatelessWidget {
                                 size: 17,
                               ),
                               onPressed: () {
-                                controller.text = "";
+                                controller.text = '';
                               },
                               splashColor: Theme.of(context).primaryColor,
                             )),
@@ -76,16 +81,17 @@ class ChesedHome extends StatelessWidget {
                   );
                 }),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8,
               ),
               Expanded(
                 child: Card(
                   margin: EdgeInsets.zero,
                   child: GridView.builder(
-                    padding: EdgeInsets.all(8),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 256),
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 256),
                     itemBuilder: (BuildContext context, int index) {
                       if (state is ChesedLoadDone) {
                         if (index == state.resp.length) {
@@ -96,20 +102,20 @@ class ChesedHome extends StatelessWidget {
                                   .colorScheme
                                   .secondaryContainer,
                             ),
-                            child: Center(
-                              child: Text("没有了"),
+                            child: const Center(
+                              child: Text('没有了'),
                             ),
                           );
                         }
                         final item = state.resp.elementAt(index);
                         return InkWell(
                             onTap: () {
-                              Navigator.push(
+                              unawaited(Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ChesedImageViewWidget(
                                         imageUrl: item.downloadUrl)),
-                              );
+                              ));
                             },
                             child: Ink(
                               decoration: BoxDecoration(
@@ -129,8 +135,8 @@ class ChesedHome extends StatelessWidget {
                           color:
                               Theme.of(context).colorScheme.secondaryContainer,
                         ),
-                        child: Center(
-                          child: Text("加载中"),
+                        child: const Center(
+                          child: Text('加载中'),
                         ),
                       );
                     },
@@ -139,7 +145,7 @@ class ChesedHome extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
+              const Row(
                 children: [
                   Expanded(child: SizedBox()),
                 ],
@@ -148,7 +154,8 @@ class ChesedHome extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              showDialog(
+              unawaited(
+                showDialog<void>(
                   context: context,
                   builder: (context) {
                     return ChesedUpload(
@@ -157,16 +164,19 @@ class ChesedHome extends StatelessWidget {
                           SnackBar(
                             content: const Text('上传成功'),
                             action: SnackBarAction(
-                                label: "关闭",
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .hideCurrentSnackBar();
-                                }),
+                              label: '关闭',
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                              },
+                            ),
                           ),
                         );
                       },
                     );
-                  });
+                  },
+                ),
+              );
             },
             child: const Icon(Icons.upload),
           ),

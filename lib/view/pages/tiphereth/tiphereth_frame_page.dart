@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:waitress/view/pages/tiphereth/my_accounts_card.dart';
-import 'package:waitress/view/pages/tiphereth/my_profile_card.dart';
 
 import '../../../bloc/user_login/user_bloc.dart';
+import 'my_accounts_card.dart';
+import 'my_profile_card.dart';
 
 class TipherethFramePage extends StatelessWidget {
   const TipherethFramePage({super.key});
@@ -22,9 +22,9 @@ class TipherethFramePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text(
-                "已退出登录",
+                '已退出登录',
               ),
             ),
           );

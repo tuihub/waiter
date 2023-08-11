@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:grpc/src/client/call.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
+import '../../../common/api/api_mixins.dart';
 
 import 'yesod_add/yesod_add.dart';
 
@@ -27,7 +31,8 @@ class _YesodConfigPageState extends State<YesodConfigPage>
   }
 
   @override
-  Future<ListFeedConfigsResponse> request(client, option) async {
+  Future<ListFeedConfigsResponse> request(
+      LibrarianSephirahServiceClient client, CallOptions option) async {
     return await client.listFeedConfigs(
       ListFeedConfigsRequest(
         paging: PagingRequest(
@@ -42,7 +47,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
     if (refresh) {
       page = 0;
     }
-    doRequest();
+    unawaited(doRequest());
   }
 
   Widget _buildStatePage() {
@@ -71,7 +76,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: Image.network(
-                        "https://docs.rsshub.app/logo.png",
+                        'https://docs.rsshub.app/logo.png',
                         width: 64,
                         height: 64,
                       ),
@@ -104,7 +109,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
     }
     if (isError) {
       return Center(
-        child: Text("加载失败: ${response.error}"),
+        child: Text('加载失败: ${response.error}'),
       );
     }
     return const SizedBox();
@@ -122,21 +127,21 @@ class _YesodConfigPageState extends State<YesodConfigPage>
               children: [
                 const SizedBox(width: 8),
                 FilledButton.tonalIcon(
-                  onPressed: () {
-                    showDialog(
+                  onPressed: () async {
+                    await showDialog<bool>(
                       context: context,
                       builder: (context) {
                         return const YesodeAdd();
                       },
                     ).then((value) {
-                      if (value == null || value == false) {
+                      if (value == null || !value) {
                         return;
                       }
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text('添加成功'),
                           action: SnackBarAction(
-                              label: "关闭",
+                              label: '关闭',
                               onPressed: () {
                                 ScaffoldMessenger.of(context)
                                     .hideCurrentSnackBar();
@@ -147,7 +152,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                     });
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text("添加RSS订阅"),
+                  label: const Text('添加RSS订阅'),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -162,9 +167,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _loadConfig();
-        },
+        onPressed: _loadConfig,
         child: const Icon(Icons.refresh),
       ),
     );

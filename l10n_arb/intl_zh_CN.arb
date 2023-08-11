@@ -6,9 +6,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "USER_TYPE_UNSPECIFIED": "未知",
   "USER_TYPE_ADMIN": "管理员",
   "USER_TYPE_NORMAL": "普通",
   "USER_TYPE_SENTINEL": "扫描器",
+  "USER_STATUS_UNSPECIFIED": "未知",
   "USER_STATUS_ACTIVE": "启用",
   "USER_STATUS_BLOCKED": "禁用",
   "APP_SOURCE_UNSPECIFIED": "未知",

@@ -56,7 +56,7 @@ class NavRail extends StatelessWidget {
 }
 
 class IconMenuItem extends StatefulWidget {
-  IconMenuItem({
+  const IconMenuItem({
     super.key,
     required this.icon,
     required this.onPressed,

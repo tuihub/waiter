@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:waitress/common/api/api_mixins.dart';
+import '../../../../common/api/api_mixins.dart';
 
 class AppPackageCreateDialog extends StatefulWidget {
   final void Function() callback;
@@ -94,7 +94,7 @@ class _AppPackageCreateDialogState extends State<AppPackageCreateDialog>
                             const SizedBox(
                               width: 24,
                             ),
-                            Text(response.error ?? "未知错误"),
+                            Text(response.error ?? '未知错误'),
                           ],
                         ),
                       )

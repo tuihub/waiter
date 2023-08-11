@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'yesod_repo.dart';
 
 class YesodLocalSource implements YesodSource {
@@ -33,8 +32,8 @@ class YesodLocalSource implements YesodSource {
     if (ids == null || ids.isEmpty) {
       return [];
     }
-    List<FeedItem> cacheList = [];
-    for (final id in ids!) {
+    final List<FeedItem> cacheList = [];
+    for (final id in ids) {
       final cached = _cacheDao.get(id.id.toString());
       if (cached != null) {
         final cachedObj = FeedItem.fromJson(cached);
