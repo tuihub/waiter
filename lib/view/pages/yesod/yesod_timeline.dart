@@ -29,6 +29,9 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
     loadTimeline();
   }
 
+  GroupFeedItemsRequest_GroupBy groupBy =
+      GroupFeedItemsRequest_GroupBy.GROUP_BY_DAY;
+
   Widget _buildStatePage() {
     if (loading) {
       return const Center(
@@ -37,11 +40,17 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
     }
     if (isSuccess) {
       debugPrint(response.getData().groups.length.toString());
-      return response.getData().groups.isEmpty
-          ? const Center(
-              child: Text('空空如也'),
-            )
-          : FeedItemList(data: response.getData());
+      if (response.getData().groups.isEmpty) {
+        return const Center(
+          child: Text('空空如也'),
+        );
+      } else {
+        final GroupFeedItemsResponse data = response.getData();
+        data.groups.sort((a, b) => -a.timeRange.startTime
+            .toDateTime()
+            .compareTo(b.timeRange.startTime.toDateTime()));
+        return FeedItemList(data: data, groupBy: groupBy);
+      }
     }
     if (isError) {
       return Center(
@@ -57,7 +66,7 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
         client.getBatchFeedItems(GetBatchFeedItemsRequest());
         return client.groupFeedItems(
           GroupFeedItemsRequest(
-            groupBy: GroupFeedItemsRequest_GroupBy.GROUP_BY_DAY,
+            groupBy: groupBy,
             groupSize: 10,
           ),
           options: option,
@@ -70,7 +79,50 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _buildStatePage(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              height: 32,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        groupBy = GroupFeedItemsRequest_GroupBy.GROUP_BY_DAY;
+                      });
+                      loadTimeline();
+                    },
+                    child: const Text('按天'),
+                  ),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        groupBy = GroupFeedItemsRequest_GroupBy.GROUP_BY_MONTH;
+                      });
+                      loadTimeline();
+                    },
+                    child: const Text('按月'),
+                  ),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        groupBy = GroupFeedItemsRequest_GroupBy.GROUP_BY_YEAR;
+                      });
+                      loadTimeline();
+                    },
+                    child: const Text('按年'),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Expanded(child: _buildStatePage()),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: loadTimeline,
         child: const Icon(Icons.refresh),
@@ -83,12 +135,14 @@ class FeedItemList extends StatelessWidget {
   const FeedItemList({
     super.key,
     required this.data,
+    required this.groupBy,
   });
 
   static const cardWith = 384.0;
   static const cardHeight = 128.0;
 
   final GroupFeedItemsResponse data;
+  final GroupFeedItemsRequest_GroupBy groupBy;
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +170,7 @@ class FeedItemList extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       child: YesodFeedGroup(
                         group: group,
+                        groupBy: groupBy,
                         cardHeight: cardHeight,
                         cardWith: cardWith,
                       ),
@@ -136,11 +191,13 @@ class YesodFeedGroup extends StatefulWidget {
   const YesodFeedGroup({
     super.key,
     required this.group,
+    required this.groupBy,
     required this.cardHeight,
     required this.cardWith,
   });
 
   final GroupFeedItemsResponse_FeedItemsGroup group;
+  final GroupFeedItemsRequest_GroupBy groupBy;
   final double cardHeight;
   final double cardWith;
 
@@ -149,6 +206,23 @@ class YesodFeedGroup extends StatefulWidget {
 }
 
 class _YesodFeedGroupState extends State<YesodFeedGroup> {
+  @override
+  void initState() {
+    super.initState();
+    switch (widget.groupBy) {
+      case GroupFeedItemsRequest_GroupBy.GROUP_BY_DAY:
+        dateFormats = DateFormats.zh_y_mo_d;
+      case GroupFeedItemsRequest_GroupBy.GROUP_BY_MONTH:
+        dateFormats = DateFormats.zh_y_mo;
+      case GroupFeedItemsRequest_GroupBy.GROUP_BY_YEAR:
+        dateFormats = 'yyyy年';
+      case GroupFeedItemsRequest_GroupBy.GROUP_BY_UNSPECIFIED:
+        dateFormats = DateFormats.zh_y_mo_d;
+    }
+  }
+
+  late String dateFormats;
+
   bool loading = false;
 
   List<FeedItem> feedItems = [];
@@ -203,7 +277,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
             ),
             Text(
               DateUtil.formatDate(widget.group.timeRange.startTime.toDateTime(),
-                  format: DateFormats.zh_y_mo_d),
+                  format: dateFormats),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

@@ -36,7 +36,8 @@ class _YesodConfigPageState extends State<YesodConfigPage>
     return await client.listFeedConfigs(
       ListFeedConfigsRequest(
         paging: PagingRequest(
-          pageNum: page,
+          pageSize: 100,
+          pageNum: page + 1,
         ),
       ),
       options: option,
@@ -62,7 +63,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
       return ListView.builder(
         padding: const EdgeInsets.only(right: 8),
         itemBuilder: (context, index) {
-          final item = listData.elementAt(index).config;
+          final item = listData.elementAt(index);
           return SelectionArea(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -75,15 +76,17 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: Image.network(
-                        'https://docs.rsshub.app/logo.png',
-                        width: 64,
-                        height: 64,
-                      ),
+                      child: item.feed.image.url.isNotEmpty
+                          ? Image.network(
+                              item.feed.image.url,
+                              width: 64,
+                              height: 64,
+                            )
+                          : const SizedBox(),
                     ),
                     Column(
                       children: [
-                        Text(item.feedUrl),
+                        Text(item.config.feedUrl),
                       ],
                     ),
                     const Expanded(child: SizedBox()),

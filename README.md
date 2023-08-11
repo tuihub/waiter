@@ -19,7 +19,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [x] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
   - [ ] Feed
     - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
-    - [ ] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
+    - [x] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
   - [x] Settings
     - [x] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
     - [x] `Gebura` Basic internal app manage (CreateApp, UpdateApp, ListApps)
