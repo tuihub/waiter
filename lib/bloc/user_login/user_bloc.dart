@@ -17,16 +17,16 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
     on<UserEvent>((event, emit) async {
       if (event is LoadLocalSettingEvent) {
         emit(AutoLogging());
-        if (_dao.exsist(SettingKey.serverHost) &&
-            _dao.exsist(SettingKey.serverPort) &&
-            _dao.exsist(SettingKey.serverTls)) {
+        if (_dao.exist(SettingKey.serverHost) &&
+            _dao.exist(SettingKey.serverPort) &&
+            _dao.exist(SettingKey.serverTls)) {
           final config = ServerConfig(
             _dao.require<String>(SettingKey.serverHost),
             _dao.require<int>(SettingKey.serverPort),
             _dao.require<bool>(SettingKey.serverTls),
           );
           final client = clientFactory(config: config);
-          if (_dao.exsist(SettingKey.refreshToken)) {
+          if (_dao.exist(SettingKey.refreshToken)) {
             final refreshToken =
                 _dao.require(SettingKey.refreshToken) as String;
             try {

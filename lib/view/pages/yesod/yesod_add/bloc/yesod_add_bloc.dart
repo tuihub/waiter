@@ -10,9 +10,9 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 
+import '../../../../../../model/common_model.dart';
+import '../../../../../../model/yesod_model.dart';
 import '../../../../../common/api/api_helper.dart';
-import '../../../../../common/model/common_model.dart';
-import '../../../../../common/model/yesod_model.dart';
 
 part 'yesod_add_event.dart';
 part 'yesod_add_state.dart';

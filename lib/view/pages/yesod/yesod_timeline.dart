@@ -7,8 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import '../../../../model/yesod_model.dart';
 import '../../../common/api/api_mixins.dart';
-import '../../../common/model/yesod_model.dart';
 import '../../../common/util/rss_util.dart';
 import '../../../repo/yesod/yesod_repo.dart';
 import '../../widgets/extentions/grid_delegated.dart';

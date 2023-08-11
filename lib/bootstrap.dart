@@ -7,6 +7,7 @@ import 'bloc/user_login/user_bloc.dart';
 import 'common/api/api_helper.dart';
 import 'common/util/rss_util.dart';
 import 'consts.dart';
+import 'repo/gebura/gebura_repo.dart';
 import 'repo/yesod/yesod_repo.dart';
 import 'route.dart';
 import 'store/setting_dao.dart';
@@ -17,15 +18,21 @@ Future<void> setup() async {
   // dao
   final settingBox = await Hive.openBox<Object>(settingBoxKey);
   final yesodCacheBox = await Hive.openBox<String>(yesodCacheBoxKey);
+  final appLauncherSettingsBox =
+      await Hive.openBox<Object>(appLauncherSettingsBoxKey);
 
   getIt.registerSingleton<Box<Object>>(settingBox, instanceName: settingBoxKey);
   getIt.registerSingleton<Box<String>>(yesodCacheBox,
       instanceName: yesodCacheBoxKey);
+  getIt.registerSingleton<Box<Object>>(appLauncherSettingsBox,
+      instanceName: appLauncherSettingsBoxKey);
   getIt.registerSingleton(SettingDao(getIt(instanceName: settingBoxKey)));
 
   // repo
   getIt.registerLazySingleton<YesodRepo>(
       () => YesodRepo(getIt(instanceName: yesodCacheBoxKey)));
+  getIt.registerLazySingleton<GeburaRepo>(
+      () => GeburaRepo(getIt(instanceName: appLauncherSettingsBoxKey)));
 
   // bloc
   getIt.registerSingleton<UserBloc>(UserBloc(getIt()));

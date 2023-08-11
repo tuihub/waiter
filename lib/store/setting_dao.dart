@@ -59,7 +59,7 @@ class SettingDao {
     await _box.delete(key.name);
   }
 
-  bool exsist(SettingKey key) {
+  bool exist(SettingKey key) {
     return _box.containsKey(key.name);
   }
 }

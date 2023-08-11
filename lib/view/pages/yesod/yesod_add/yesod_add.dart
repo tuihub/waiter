@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/model/common_model.dart';
+import '../../../../../model/common_model.dart';
 import '../../../../common/util/input_formatters.dart';
 import '../../../widgets/form_field.dart';
 import 'bloc/yesod_add_bloc.dart';

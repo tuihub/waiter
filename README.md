@@ -14,9 +14,9 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [x] `Tiphereth` User editable server address (NONE)
   - [x] Third-Party Account
     - [x] `Tiphereth` Basic steam account link and unlink (LinkAccount, ListLinkAccounts, UnLinkAccount)
-  - [ ] App
+  - [x] App
     - [x] `Gebura` Basic app store explore (SearchApps, GetBindApps, PurchaseApp)
-    - [ ] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
+    - [x] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
   - [ ] Feed
     - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
     - [ ] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
