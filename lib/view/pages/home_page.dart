@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
         body: Center(
-      child: Text('HomePage'),
+      child: Text('主页无内容，请点击左侧导航按钮'),
     ));
   }
 }

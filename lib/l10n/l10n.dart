@@ -60,6 +60,16 @@ class S {
     );
   }
 
+  /// `类型`
+  String get USER_TYPE {
+    return Intl.message(
+      '类型',
+      name: 'USER_TYPE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `未知`
   String get USER_TYPE_UNSPECIFIED {
     return Intl.message(
@@ -100,6 +110,16 @@ class S {
     );
   }
 
+  /// `状态`
+  String get USER_STATUS {
+    return Intl.message(
+      '状态',
+      name: 'USER_STATUS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `未知`
   String get USER_STATUS_UNSPECIFIED {
     return Intl.message(
@@ -110,10 +130,10 @@ class S {
     );
   }
 
-  /// `启用`
+  /// `正常`
   String get USER_STATUS_ACTIVE {
     return Intl.message(
-      '启用',
+      '正常',
       name: 'USER_STATUS_ACTIVE',
       desc: '',
       args: [],
@@ -125,6 +145,46 @@ class S {
     return Intl.message(
       '禁用',
       name: 'USER_STATUS_BLOCKED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `平台`
+  String get ACCOUNT_PLATFORM {
+    return Intl.message(
+      '平台',
+      name: 'ACCOUNT_PLATFORM',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get ACCOUNT_PLATFORM_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'ACCOUNT_PLATFORM_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Steam`
+  String get ACCOUNT_PLATFORM_STEAM {
+    return Intl.message(
+      'Steam',
+      name: 'ACCOUNT_PLATFORM_STEAM',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `来源`
+  String get APP_SOURCE {
+    return Intl.message(
+      '来源',
+      name: 'APP_SOURCE',
       desc: '',
       args: [],
     );
@@ -160,6 +220,16 @@ class S {
     );
   }
 
+  /// `类型`
+  String get APP_TYPE {
+    return Intl.message(
+      '类型',
+      name: 'APP_TYPE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `未知`
   String get APP_TYPE_UNSPECIFIED {
     return Intl.message(
@@ -175,6 +245,16 @@ class S {
     return Intl.message(
       '游戏',
       name: 'APP_TYPE_GAME',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `来源`
+  String get APP_PACKAGE_SOURCE {
+    return Intl.message(
+      '来源',
+      name: 'APP_PACKAGE_SOURCE',
       desc: '',
       args: [],
     );

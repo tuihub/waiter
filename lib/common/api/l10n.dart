@@ -29,6 +29,16 @@ String userStatusString(UserStatus status) {
   return '';
 }
 
+String accountPlatformString(AccountPlatform platform) {
+  switch (platform) {
+    case AccountPlatform.ACCOUNT_PLATFORM_UNSPECIFIED:
+      return S.current.ACCOUNT_PLATFORM_UNSPECIFIED;
+    case AccountPlatform.ACCOUNT_PLATFORM_STEAM:
+      return S.current.ACCOUNT_PLATFORM_STEAM;
+  }
+  return '';
+}
+
 String appSourceString(AppSource source) {
   switch (source) {
     case AppSource.APP_SOURCE_UNSPECIFIED:

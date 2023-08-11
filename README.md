@@ -2,28 +2,28 @@
 
 Current version is for developer testing only. It's not ready for user. Don't run it on your computer.
 
-## To-do List
+## TODO
 
 - v0.1
+  - [ ] General
+    - [ ] Show appropriate pages based on user privilege
   - [x] Login & Logout
     - [x] `Tiphereth` Check server status before login  (GetServerInformation)
     - [x] `Tiphereth` Basic login and logout (GetToken, RefreshToken)
     - [x] `Tiphereth` Keep login status, auto refresh when AccessToken expired (RefreshToken)
     - [x] `Tiphereth` User editable server address (NONE)
-  - [ ] Third-Party Account
+  - [x] Third-Party Account
     - [x] `Tiphereth` Basic steam account link and unlink (LinkAccount, ListLinkAccounts, UnLinkAccount)
-    - [ ] `Gebura` Auto pull steam account library and pull status manage (WIP)
   - [ ] App
     - [x] `Gebura` Basic app store explore (SearchApps, GetBindApps, PurchaseApp)
     - [ ] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
   - [ ] Feed
     - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
     - [ ] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
-  - [ ] Settings
+  - [x] Settings
     - [x] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)
     - [x] `Gebura` Basic internal app manage (CreateApp, UpdateApp, ListApps)
     - [x] `Gebura` Basic app package manage (CreateAppPackage, UpdateAppPackage, ListAppPackages, AssignAppPackage, UnAssignAppPackage)
-    - [ ] `Gebura` Basic app bind relationship manage (MergeApp, PickApp)
   - [ ] Quality Tests
     - [ ] Windows
     - [ ] Linux
@@ -44,6 +44,8 @@ Current version is for developer testing only. It's not ready for user. Don't ru
   - [ ] Image
     - [ ] `Chesed` Basic image upload and manage (UploadImage, UpdateImage, ListImages, GetImage, DownloadImage)
     - [ ] `Chesed` Search image by ocr (SearchImages)
+  - [ ] Settings
+    - [ ] `Gebura` Basic app bind relationship manage (MergeApp, PickApp)
   - [ ] Quality Tests
     - [ ] Windows
     - [ ] Linux

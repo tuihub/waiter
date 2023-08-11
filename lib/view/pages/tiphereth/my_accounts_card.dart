@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../common/api/api_mixins.dart';
+import '../../../common/api/l10n.dart';
+import '../../../l10n/l10n.dart';
 import 'account_dialog.dart';
 
 class MyAccountsCard extends StatefulWidget {
@@ -146,7 +148,7 @@ class MyProfile extends StatelessWidget {
                                   height: 4,
                                 ),
                                 Text(
-                                  account.platform.toString(),
+                                  '${S.current.ACCOUNT_PLATFORM}: ${accountPlatformString(account.platform)}',
                                   style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 10,

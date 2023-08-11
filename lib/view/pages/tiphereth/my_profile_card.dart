@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../common/api/api_mixins.dart';
+import '../../../common/api/l10n.dart';
 
 class MyProfileCard extends StatefulWidget {
   const MyProfileCard({super.key});
@@ -84,7 +85,8 @@ class MyProfile extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 32,
               )),
-          Text('${data.user.type} | ${data.user.status}')
+          Text(
+              '${userTypeString(data.user.type)} | ${userStatusString(data.user.status)}')
         ],
       ),
     );
