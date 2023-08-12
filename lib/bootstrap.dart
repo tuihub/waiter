@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/api/api_helper.dart';
+import 'common/util/platform.dart';
 import 'common/util/rss_util.dart';
 import 'consts.dart';
 import 'repo/gebura/gebura_repo.dart';
@@ -20,7 +20,7 @@ Future<void> setup() async {
   // dao
 
   // https://github.com/hivedb/hive/issues/1044
-  if (kIsWeb) {
+  if (PlatformHelper.isWeb()) {
     await Hive.initFlutter();
   } else {
     await Hive.initFlutter((await getApplicationSupportDirectory()).path);

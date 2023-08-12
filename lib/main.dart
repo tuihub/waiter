@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'bootstrap.dart' as di;
+import 'common/util/platform.dart';
 import 'l10n/l10n.dart';
 
 void main() async {
@@ -22,7 +20,7 @@ void main() async {
 
   runApp(const MyApp());
 
-  if (!kIsWeb && Platform.isWindows) {
+  if (PlatformHelper.isWindowsApp()) {
     doWhenWindowReady(() {
       const initialSize = Size(1024, 768);
       appWindow.minSize = initialSize;

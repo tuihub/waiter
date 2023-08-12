@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../bloc/user_login/user_bloc.dart';
 import '../../consts.dart';
 import '../widgets/connectivity.dart';
+import '../widgets/form_field.dart';
 import '../widgets/title_bar.dart';
 
 class LoginPage extends StatelessWidget {
@@ -41,7 +42,7 @@ class LoginPage extends StatelessWidget {
                     child: Card(
                       child: SizedBox(
                         width: 540,
-                        height: 430,
+                        height: 450,
                         child: getInitWidget(state),
                       ),
                     ),
@@ -244,6 +245,14 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
               },
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            SwitchFormField(
+              onSaved: (newValue) => tls = newValue!,
+              title: const Text('TLS'),
+              initialValue: tls,
             ),
             const SizedBox(
               height: 16,

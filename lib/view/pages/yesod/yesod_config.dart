@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/src/client/call.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
@@ -77,10 +78,17 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: item.feed.image.url.isNotEmpty
-                          ? Image.network(
-                              item.feed.image.url,
-                              width: 64,
-                              height: 64,
+                          ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                      item.feed.image.url,
+                                    ),
+                                    fit: BoxFit.cover),
+                              ),
+                              width: 100,
+                              height: 100,
                             )
                           : const SizedBox(),
                     ),

@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../common/util/platform.dart';
 import 'window_button.dart';
 
 class TitleBar extends StatelessWidget {
@@ -35,7 +33,7 @@ class TitleBar extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: (!kIsWeb && Platform.isWindows)
+          child: PlatformHelper.isWindowsApp()
               ? WindowTitleBarBox(
                   child: MoveWindow(),
                 )
@@ -45,7 +43,7 @@ class TitleBar extends StatelessWidget {
         const SizedBox(
           width: 8,
         ),
-        if (!kIsWeb && Platform.isWindows) const WindowButtons()
+        if (PlatformHelper.isWindowsApp()) const WindowButtons()
       ],
     );
   }

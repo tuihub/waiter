@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../common/api/api_mixins.dart';
+import '../../../common/util/platform.dart';
 import '../../../repo/gebura/gebura_repo.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
@@ -66,17 +67,19 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: _buildStatePage(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          unawaited(showDialog<void>(
-            context: context,
-            builder: (context) => GeburaAppLauncherSettingDialog(
-              appID: widget.appID,
-            ),
-          ));
-        },
-        child: const Icon(Icons.settings),
-      ),
+      floatingActionButton: PlatformHelper.isWindowsApp()
+          ? FloatingActionButton(
+              onPressed: () {
+                unawaited(showDialog<void>(
+                  context: context,
+                  builder: (context) => GeburaAppLauncherSettingDialog(
+                    appID: widget.appID,
+                  ),
+                ));
+              },
+              child: const Icon(Icons.settings),
+            )
+          : const SizedBox(),
     );
   }
 }
@@ -153,23 +156,25 @@ class AppDetails extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      final setting = await GetIt.I<GeburaRepo>()
-                          .getLauncherSetting(data.app.id.id.toInt());
-                      if (setting == null || setting.path.isEmpty) {
-                        await showDialog<void>(
-                          context: context,
-                          builder: (context) => GeburaAppLauncherSettingDialog(
-                            appID: data.app.id.id.toInt(),
-                          ),
-                        );
-                      } else {
-                        await OpenFile.open(setting.path);
-                      }
-                    },
-                    child: const Text('启动游戏'),
-                  ),
+                  if (PlatformHelper.isWindowsApp())
+                    ElevatedButton(
+                      onPressed: () async {
+                        final setting = await GetIt.I<GeburaRepo>()
+                            .getLauncherSetting(data.app.id.id.toInt());
+                        if (setting == null || setting.path.isEmpty) {
+                          await showDialog<void>(
+                            context: context,
+                            builder: (context) =>
+                                GeburaAppLauncherSettingDialog(
+                              appID: data.app.id.id.toInt(),
+                            ),
+                          );
+                        } else {
+                          await OpenFile.open(setting.path);
+                        }
+                      },
+                      child: const Text('启动游戏'),
+                    ),
                   const SizedBox(
                     width: 24,
                   ),
