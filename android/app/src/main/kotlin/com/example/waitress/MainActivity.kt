@@ -1,4 +1,4 @@
-package com.example.waitress
+package com.tuihub.waiter
 
 import io.flutter.embedding.android.FlutterActivity
 

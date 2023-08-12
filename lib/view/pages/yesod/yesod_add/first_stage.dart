@@ -144,7 +144,7 @@ class RssPreviewCard extends StatelessWidget {
                     height: 160,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(image!),
+                        image: CachedNetworkImageProvider(image!),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(8),

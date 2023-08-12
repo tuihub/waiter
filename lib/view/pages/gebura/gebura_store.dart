@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import '../../../common/api/api_mixins.dart';
@@ -165,7 +166,7 @@ class StoreList extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           image: DecorationImage(
-                                              image: NetworkImage(
+                                              image: CachedNetworkImageProvider(
                                                 app.heroImageUrl,
                                               ),
                                               fit: BoxFit.scaleDown),

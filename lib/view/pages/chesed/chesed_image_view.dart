@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ChesedImageViewWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ class ChesedImageViewWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             image: DecorationImage(
-              image: NetworkImage(
+              image: CachedNetworkImageProvider(
                 imageUrl,
               ),
               fit: BoxFit.contain,

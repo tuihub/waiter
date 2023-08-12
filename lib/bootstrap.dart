@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
@@ -16,6 +18,14 @@ final GetIt getIt = GetIt.instance;
 
 Future<void> setup() async {
   // dao
+
+  // https://github.com/hivedb/hive/issues/1044
+  if (kIsWeb) {
+    await Hive.initFlutter();
+  } else {
+    await Hive.initFlutter((await getApplicationSupportDirectory()).path);
+  }
+
   final settingBox = await Hive.openBox<Object>(settingBoxKey);
   final yesodCacheBox = await Hive.openBox<String>(yesodCacheBoxKey);
   final appLauncherSettingsBox =
