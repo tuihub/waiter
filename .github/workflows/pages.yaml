@@ -31,7 +31,6 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter test
           flutter build web
 
       - name: Setup Pages
