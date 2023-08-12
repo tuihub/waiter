@@ -162,11 +162,11 @@ class AppDetails extends StatelessWidget {
                         final setting = await GetIt.I<GeburaRepo>()
                             .getLauncherSetting(data.app.id.id.toInt());
                         if (setting == null || setting.path.isEmpty) {
-                          await showDialog<void>(
-                            context: context,
-                            builder: (context) =>
-                                GeburaAppLauncherSettingDialog(
-                              appID: data.app.id.id.toInt(),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                '未设置应用路径，请点击右下角设置',
+                              ),
                             ),
                           );
                         } else {

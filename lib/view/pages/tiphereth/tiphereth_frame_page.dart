@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,20 +23,50 @@ class TipherethFramePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                '已退出登录',
-              ),
-            ),
-          );
-          context.read<UserBloc>().add(UserLogoutEvent());
-          GoRouter.of(context).go(
-            '/login',
-          );
+          unawaited(showDialog<void>(
+            context: context,
+            builder: (context) => _LogoutDialog(),
+          ));
         },
         child: const Icon(Icons.logout),
       ),
+    );
+  }
+}
+
+class _LogoutDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('退出登录'),
+      content: const SizedBox(
+        width: 600,
+        child: SizedBox(),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  '已退出登录',
+                ),
+              ),
+            );
+            context.read<UserBloc>().add(UserLogoutEvent());
+            GoRouter.of(context).go(
+              '/login',
+            );
+          },
+          child: const Text('确定'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); //close Dialog
+          },
+          child: const Text('关闭'),
+        )
+      ],
     );
   }
 }

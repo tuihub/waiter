@@ -17,8 +17,8 @@ class GeburaRepo {
   }
 
   Future<AppLauncherSetting?> getLauncherSetting(int appID) async {
-    final String? setting = _dao.get(appID.toString());
-    if (setting != null) {
+    final setting = _dao.get(appID.toString());
+    if (setting != null && setting is String) {
       return AppLauncherSetting.fromJson(
           jsonDecode(setting) as Map<String, dynamic>);
     }

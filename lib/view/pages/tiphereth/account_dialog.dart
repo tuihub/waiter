@@ -162,9 +162,92 @@ class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('账户详情'),
-      content: const SizedBox(
+      content: SizedBox(
         width: 600,
-        child: SizedBox(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextFormField(
+              onSaved: null,
+              readOnly: true,
+              decoration: const InputDecoration(
+                // icon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+                labelText: 'ID',
+              ),
+              initialValue: widget.account.platformAccountId,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            DropdownButtonFormField(
+              decoration: const InputDecoration(
+                // icon: Icon(Icons.place),
+                border: OutlineInputBorder(),
+                labelText: '平台',
+              ),
+              value: widget.account.platform,
+              items: const [
+                DropdownMenuItem(
+                  value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
+                  child: Text('Steam'),
+                ),
+              ],
+              onChanged: null,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              onSaved: null,
+              readOnly: true,
+              decoration: const InputDecoration(
+                // icon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+                labelText: '用户名',
+              ),
+              initialValue: widget.account.name,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              onSaved: null,
+              readOnly: true,
+              decoration: const InputDecoration(
+                // icon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+                labelText: '上次更新时间',
+              ),
+              initialValue: widget.account.latestUpdateTime
+                  .toDateTime()
+                  .toIso8601String(),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: isError && !loading ? 48 : 0,
+              child: isError && !loading
+                  ? Ink(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(kToolbarHeight),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          Text(response.error ?? '未知错误'),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+          ],
+        ),
       ),
       actions: <Widget>[
         TextButton(
