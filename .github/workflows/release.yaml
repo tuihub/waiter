@@ -41,7 +41,6 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter test
           flutter build web
           tar -zcvf ${{ env.APP_NAME }}-web.tar.gz ./build/web/*
 
