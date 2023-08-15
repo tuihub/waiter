@@ -86,7 +86,9 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
             url: event.url,
           ));
         } on Exception catch (e) {
-          emit(state.copyWith(
+          emit(YesodAddFirstState(
+            example: null,
+            url: event.url,
             errorMessage: '解析失败, $e',
             loadState: LoadState.failure,
           ));
@@ -97,12 +99,27 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
           YesodAddSecondState(
             url: event.url,
             name: event.name,
-            iconUrl: event.iconUrl,
             refreshInterval: 60,
             category: '',
             enabled: true,
           ),
         );
+      }
+      if (state is YesodAddSecondState) {
+        if (event is ChangeNameEvent) {
+          emit((state as YesodAddSecondState).copyWith(name: event.name));
+        }
+        if (event is ChangeIntervalEvent) {
+          emit((state as YesodAddSecondState)
+              .copyWith(refreshInterval: event.interval));
+        }
+        if (event is ChangeCategoryEvent) {
+          emit((state as YesodAddSecondState)
+              .copyWith(category: event.category));
+        }
+        if (event is ChangeEnabledEvent) {
+          emit((state as YesodAddSecondState).copyWith(enabled: event.enabled));
+        }
       }
       if (event is YesodFeedConfigEvent) {
         emit(state.copyWith(

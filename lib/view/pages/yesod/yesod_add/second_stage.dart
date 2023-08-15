@@ -14,7 +14,6 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
   late int refreshInterval;
   late bool enabled;
   late String name;
-  String? iconUrl;
 
   int step = 0;
 
@@ -37,35 +36,44 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Image.network(state.iconUrl),
                   TextFormField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.rss_feed),
-                      border: const OutlineInputBorder(),
-                      label: Text(state.url),
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.rss_feed),
+                      border: OutlineInputBorder(),
+                      label: Text('订阅地址'),
                     ),
+                    initialValue: state.url,
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   TextFormField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                      icon: const Icon(Icons.text_fields),
-                      border: const OutlineInputBorder(),
-                      label: Text(state.name),
-                    ),
-                    // The validator receives the text that the user has entered.
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  TextFormField(
-                    onSaved: (newValue) {
+                    onChanged: (newValue) {
                       context
                           .read<YesodAddBloc>()
-                          .add(ChangeIntervalEvent(int.parse(newValue!)));
+                          .add(ChangeNameEvent(newValue));
+                    },
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      label: Text('名称'),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '请输入名称';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    onChanged: (newValue) {
+                      context
+                          .read<YesodAddBloc>()
+                          .add(ChangeIntervalEvent(int.parse(newValue)));
                     },
                     initialValue: state.refreshInterval.toString(),
                     decoration: const InputDecoration(
@@ -86,12 +94,11 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
                     height: 16,
                   ),
                   TextFormField(
-                    onSaved: (newValue) {
+                    onChanged: (newValue) {
                       context
                           .read<YesodAddBloc>()
-                          .add(ChangeCategoryEvent(newValue!));
+                          .add(ChangeCategoryEvent(newValue));
                     },
-                    initialValue: '',
                     decoration: const InputDecoration(
                       icon: Icon(Icons.category),
                       border: OutlineInputBorder(),

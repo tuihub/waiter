@@ -58,7 +58,7 @@ class YesodAddValidate extends YesodAddInitial {
 }
 
 class YesodAddFirstState extends YesodAddState {
-  final RssPostItem example;
+  final RssPostItem? example;
 
   const YesodAddFirstState({
     String? url,
@@ -69,16 +69,6 @@ class YesodAddFirstState extends YesodAddState {
           url: url ?? '',
           errorMessage: errorMessage ?? '',
         );
-
-  @override
-  List<Object> get props {
-    return [
-      url,
-      example,
-      errorMessage,
-      loadState,
-    ];
-  }
 
   @override
   YesodAddFirstState copyWith({
@@ -98,7 +88,6 @@ class YesodAddFirstState extends YesodAddState {
 
 class YesodAddSecondState extends YesodAddState {
   final String name;
-  final String iconUrl;
   final int refreshInterval;
   final String category;
   final bool enabled;
@@ -108,7 +97,6 @@ class YesodAddSecondState extends YesodAddState {
     String? errorMessage,
     super.loadState,
     required this.name,
-    required this.iconUrl,
     required this.refreshInterval,
     required this.category,
     required this.enabled,
@@ -122,7 +110,6 @@ class YesodAddSecondState extends YesodAddState {
     return [
       url,
       name,
-      iconUrl,
       refreshInterval,
       enabled,
       errorMessage,
@@ -144,7 +131,6 @@ class YesodAddSecondState extends YesodAddState {
     return YesodAddSecondState(
       url: url ?? this.url,
       name: name ?? this.name,
-      iconUrl: iconUrl ?? this.iconUrl,
       refreshInterval: refreshInterval ?? this.refreshInterval,
       category: category ?? this.category,
       enabled: enabled ?? this.enabled,

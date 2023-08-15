@@ -61,123 +61,20 @@ class YesodAddFirstStage extends StatelessWidget {
                       child: Text(state.errorMessage),
                     ),
                   ),
-                if (state is YesodAddFirstState)
-                  RssPreviewCard(
-                    iconUrl: state.example.subscription.iconUrl,
-                    name: state.example.subscription.title,
-                    image: state.example.image,
-                    description: state.example.description,
-                    title: state.example.title!,
+                if (state is YesodAddFirstState && state.example != null)
+                  YesodPreviewCard(
+                    iconUrl: state.example!.subscription.iconUrl,
+                    name: state.example!.subscription.title,
+                    image: state.example!.image,
+                    description: state.example!.description,
+                    title: state.example!.title ?? '',
+                    callback: () {},
                   ),
               ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class RssPreviewCard extends StatelessWidget {
-  const RssPreviewCard({
-    super.key,
-    required this.iconUrl,
-    required this.name,
-    required this.title,
-    this.image,
-    this.description,
-  });
-
-  final String iconUrl;
-  final String name;
-  final String? image;
-  final String title;
-  final String? description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Ink(
-      height: 220,
-      width: 600,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).cardColor,
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 32,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
-                  iconUrl,
-                  height: 16,
-                  width: 16,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                SizedBox(
-                  height: 16,
-                  child: Text(
-                    name,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).disabledColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                if (image != null)
-                  Container(
-                    width: 160,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(image!),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                if (image != null)
-                  const SizedBox(
-                    width: 16,
-                  ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      if (description != null) Text(description!),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 }

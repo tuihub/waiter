@@ -21,7 +21,6 @@ class YesodUrlCheckEvent extends YesodAddEvent {
 class YesodFeedConfigEvent extends YesodAddEvent {
   final String name;
   final String url;
-  final String iconUrl;
   final int refreshInterval;
   final String category;
   final bool enabled;
@@ -29,22 +28,26 @@ class YesodFeedConfigEvent extends YesodAddEvent {
   const YesodFeedConfigEvent({
     required this.url,
     required this.name,
-    required this.iconUrl,
     required this.refreshInterval,
     required this.category,
     required this.enabled,
   });
 
   @override
-  List<Object> get props => [url, name, iconUrl, refreshInterval, enabled];
+  List<Object> get props => [url, name, refreshInterval, enabled];
 }
 
 class YesodAddSecondStageEvent extends YesodAddEvent {
   final String url;
   final String name;
-  final String iconUrl;
 
-  const YesodAddSecondStageEvent(this.name, this.iconUrl, this.url);
+  const YesodAddSecondStageEvent(this.name, this.url);
+}
+
+class ChangeNameEvent extends YesodAddEvent {
+  final String name;
+
+  const ChangeNameEvent(this.name);
 }
 
 class ChangeEnabledEvent extends YesodAddEvent {

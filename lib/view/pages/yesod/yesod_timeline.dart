@@ -1,19 +1,17 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../model/yesod_model.dart';
 import '../../../common/api/api_mixins.dart';
-import '../../../common/util/rss_util.dart';
 import '../../../repo/yesod/yesod_repo.dart';
 import '../../widgets/extentions/grid_delegated.dart';
 import 'yesod_detail.dart';
+import 'yesod_preview_card.dart';
 
 class YesodTimelinePage extends StatefulWidget {
   const YesodTimelinePage({super.key});
@@ -64,7 +62,6 @@ class _YesodTimelinePageState extends State<YesodTimelinePage>
   void loadTimeline() {
     unawaited(doRequest(
       request: (client, option) {
-        client.getBatchFeedItems(GetBatchFeedItemsRequest());
         return client.groupFeedItems(
           GroupFeedItemsRequest(
             groupBy: groupBy,
@@ -315,13 +312,17 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                 ),
               );
             }
-            final item = feedItems.elementAt(index);
+            final item = widget.group.items.elementAt(index);
 
             return OpenContainer(
               openBuilder: (context, closedContainer) {
                 return Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: YesodDetailPage(item: item));
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: YesodDetailPage(
+                    item: feedItems.firstWhere(
+                        (element) => element.id.id == item.itemId.id),
+                  ),
+                );
               },
               openColor: theme.colorScheme.primary,
               closedShape: const RoundedRectangleBorder(
@@ -330,86 +331,16 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
               closedElevation: 0,
               closedColor: theme.cardColor,
               closedBuilder: (context, openContainer) {
-                final content = GetIt.I<AbstractContentFormatter>()
-                    .format(item.description);
                 return SizedBox(
                   height: widget.cardHeight,
                   width: widget.cardWith,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () {
-                          openContainer();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              if (content is ImgTextContent)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: DecorationImage(
-                                        image: CachedNetworkImageProvider(
-                                          content.imgUrl,
-                                        ),
-                                        fit: BoxFit.cover),
-                                  ),
-                                  width: 100,
-                                  height: 100,
-                                ),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.link,
-                                      style: TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontSize: 10,
-                                          color:
-                                              Theme.of(context).disabledColor),
-                                      maxLines: 2,
-                                    ),
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
-                                    Text(
-                                      item.title,
-                                      style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
-                                    Text(
-                                      content.content,
-                                      style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 10,
-                                      ),
-                                      maxLines: 3,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  child: YesodPreviewCard(
+                    iconUrl: item.feedAvatarUrl,
+                    name: item.feedConfigName,
+                    title: item.title,
+                    callback: openContainer,
+                    image: item.avatarUrl,
+                    description: item.shortDescription,
                   ),
                 );
               },

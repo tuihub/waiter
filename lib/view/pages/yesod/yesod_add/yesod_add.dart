@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../model/common_model.dart';
 import '../../../../common/util/input_formatters.dart';
 import '../../../widgets/form_field.dart';
+import '../yesod_preview_card.dart';
 import 'bloc/yesod_add_bloc.dart';
 
 part 'first_stage.dart';
@@ -55,9 +55,8 @@ class YesodAdd extends StatelessWidget {
                     : () {
                         context.read<YesodAddBloc>().add(
                               YesodAddSecondStageEvent(
-                                state.example.subscription.title,
-                                state.example.subscription.iconUrl,
-                                state.example.subscription.link,
+                                state.example?.subscription.title ?? '',
+                                state.url,
                               ),
                             );
                       },
@@ -72,7 +71,6 @@ class YesodAdd extends StatelessWidget {
                               YesodFeedConfigEvent(
                                 url: state.url,
                                 name: state.name,
-                                iconUrl: state.iconUrl,
                                 refreshInterval: state.refreshInterval,
                                 category: state.category,
                                 enabled: state.enabled,
