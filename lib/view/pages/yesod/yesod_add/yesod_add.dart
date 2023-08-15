@@ -10,8 +10,8 @@ import 'bloc/yesod_add_bloc.dart';
 part 'first_stage.dart';
 part 'second_stage.dart';
 
-class YesodeAdd extends StatelessWidget {
-  const YesodeAdd({super.key});
+class YesodAdd extends StatelessWidget {
+  const YesodAdd({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +74,7 @@ class YesodeAdd extends StatelessWidget {
                                 name: state.name,
                                 iconUrl: state.iconUrl,
                                 refreshInterval: state.refreshInterval,
+                                category: state.category,
                                 enabled: state.enabled,
                               ),
                             );

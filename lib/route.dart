@@ -22,7 +22,7 @@ import 'view/pages/settings/settings_frame_page.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/yesod/yesod_config.dart';
-import 'view/pages/yesod/yesod_home_page.dart';
+import 'view/pages/yesod/yesod_frame_page.dart';
 import 'view/pages/yesod/yesod_timeline.dart';
 
 final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
@@ -102,7 +102,7 @@ GoRouter getRouter() {
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? 'timeline';
               return NoTransitionPage(
-                child: YesodHome(
+                child: YesodFramePage(
                   function: function,
                   functionPage: child,
                 ),

@@ -1,4 +1,5 @@
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pbenum.dart';
 
 import '../../l10n/l10n.dart';
@@ -69,6 +70,18 @@ String appPackageSourceString(AppPackageSource source) {
       return S.current.APP_PACKAGE_SOURCE_MANUAL;
     case AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL:
       return S.current.APP_PACKAGE_SOURCE_SENTINEL;
+  }
+  return '';
+}
+
+String feedConfigStatusString(FeedConfigStatus status) {
+  switch (status) {
+    case FeedConfigStatus.FEED_CONFIG_STATUS_UNSPECIFIED:
+      return S.current.FEED_CONFIG_STATUS_UNSPECIFIED;
+    case FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE:
+      return S.current.FEED_CONFIG_STATUS_ACTIVE;
+    case FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND:
+      return S.current.FEED_CONFIG_STATUS_SUSPEND;
   }
   return '';
 }

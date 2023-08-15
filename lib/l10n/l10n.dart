@@ -289,6 +289,46 @@ class S {
       args: [],
     );
   }
+
+  /// `状态`
+  String get FEED_CONFIG_STATUS {
+    return Intl.message(
+      '状态',
+      name: 'FEED_CONFIG_STATUS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get FEED_CONFIG_STATUS_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'FEED_CONFIG_STATUS_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启用`
+  String get FEED_CONFIG_STATUS_ACTIVE {
+    return Intl.message(
+      '启用',
+      name: 'FEED_CONFIG_STATUS_ACTIVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `停止`
+  String get FEED_CONFIG_STATUS_SUSPEND {
+    return Intl.message(
+      '停止',
+      name: 'FEED_CONFIG_STATUS_SUSPEND',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

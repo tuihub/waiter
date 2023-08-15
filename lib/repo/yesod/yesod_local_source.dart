@@ -45,4 +45,9 @@ class YesodLocalSource implements YesodSource {
     }
     return cacheList;
   }
+
+  @override
+  Future<List<String>> getFeedCategories() {
+    throw UnimplementedError();
+  }
 }

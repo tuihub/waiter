@@ -39,6 +39,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "APP_TYPE": MessageLookupByLibrary.simpleMessage("类型"),
         "APP_TYPE_GAME": MessageLookupByLibrary.simpleMessage("游戏"),
         "APP_TYPE_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
+        "FEED_CONFIG_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
+        "FEED_CONFIG_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("启用"),
+        "FEED_CONFIG_STATUS_SUSPEND":
+            MessageLookupByLibrary.simpleMessage("停止"),
+        "FEED_CONFIG_STATUS_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
         "USER_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
         "USER_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("正常"),
         "USER_STATUS_BLOCKED": MessageLookupByLibrary.simpleMessage("禁用"),

@@ -23,6 +23,7 @@ class YesodFeedConfigEvent extends YesodAddEvent {
   final String url;
   final String iconUrl;
   final int refreshInterval;
+  final String category;
   final bool enabled;
 
   const YesodFeedConfigEvent({
@@ -30,6 +31,7 @@ class YesodFeedConfigEvent extends YesodAddEvent {
     required this.name,
     required this.iconUrl,
     required this.refreshInterval,
+    required this.category,
     required this.enabled,
   });
 
@@ -55,4 +57,10 @@ class ChangeIntervalEvent extends YesodAddEvent {
   final int interval;
 
   const ChangeIntervalEvent(this.interval);
+}
+
+class ChangeCategoryEvent extends YesodAddEvent {
+  final String category;
+
+  const ChangeCategoryEvent(this.category);
 }

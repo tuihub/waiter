@@ -22,4 +22,17 @@ class YesodRemoteSource implements YesodSource {
     }
     return response.data?.items ?? [];
   }
+
+  @override
+  Future<List<String>> getFeedCategories() async {
+    final response = await GetIt.I<ApiHelper>().doRequest(
+      (client, option) {
+        return client.listFeedConfigCategories(
+          ListFeedConfigCategoriesRequest(),
+          options: option,
+        );
+      },
+    );
+    return response.data?.categories ?? [];
+  }
 }

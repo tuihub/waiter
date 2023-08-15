@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../widgets/rail_tile.dart';
@@ -37,7 +38,7 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
           ? const Center(
               child: Text(''),
             )
-          : LibraryList(
+          : _LibraryList(
               data: response.getData(),
               selectedAppID: widget.selectedAppID,
             );
@@ -74,9 +75,8 @@ class _GeburaLibraryListPageState extends State<GeburaLibraryListPage>
   }
 }
 
-class LibraryList extends StatelessWidget {
-  const LibraryList({
-    super.key,
+class _LibraryList extends StatelessWidget {
+  const _LibraryList({
     required this.data,
     required this.selectedAppID,
   });

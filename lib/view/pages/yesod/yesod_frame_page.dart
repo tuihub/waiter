@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../widgets/expand_rail_tile.dart';
-import '../../widgets/rail_tile.dart';
 
-class YesodHome extends StatelessWidget {
-  const YesodHome(
+import '../../widgets/rail_tile.dart';
+import 'yesod_category_list.dart';
+
+class YesodFramePage extends StatelessWidget {
+  const YesodFramePage(
       {super.key, required this.function, required this.functionPage});
 
   final String function;
@@ -42,24 +43,7 @@ class YesodHome extends StatelessWidget {
                           title: const Text('Timeline'),
                           selected: function == 'timeline',
                         ),
-                        ExpandRailTile(
-                          title: const Text(
-                            'Category',
-                          ),
-                          childrenPadding: const EdgeInsets.only(left: 12),
-                          children: [
-                            RailTile(
-                              title: const Text('Anime'),
-                              onTap: () {},
-                            ),
-                            const RailTile(
-                              title: Text('Anime'),
-                            ),
-                            const RailTile(
-                              title: Text('Tech'),
-                            ),
-                          ],
-                        ),
+                        const YesodCategoryListPage(selectedAppID: ''),
                         const Expanded(child: SizedBox()),
                       ],
                     ),

@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:grpc/src/client/call.dart';
+import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import '../../../common/api/api_mixins.dart';
 
+import '../../../common/api/api_mixins.dart';
+import '../../../common/api/l10n.dart';
+import '../../../l10n/l10n.dart';
 import 'yesod_add/yesod_add.dart';
 
 class YesodConfigPage extends StatefulWidget {
@@ -87,17 +88,37 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                                     ),
                                     fit: BoxFit.cover),
                               ),
-                              width: 100,
-                              height: 100,
+                              width: 48,
+                              height: 48,
                             )
                           : const SizedBox(),
                     ),
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.config.feedUrl),
+                        Text(
+                          item.config.feedUrl,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 10,
+                              color: Theme.of(context).disabledColor),
+                          maxLines: 2,
+                        ),
+                        Text(item.config.name)
                       ],
                     ),
                     const Expanded(child: SizedBox()),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                            '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
+                        Text(
+                            '上次更新：${item.config.latestUpdateTime.toDateTime().toIso8601String()}')
+                      ],
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: SizedBox(
@@ -142,7 +163,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                     await showDialog<bool>(
                       context: context,
                       builder: (context) {
-                        return const YesodeAdd();
+                        return const YesodAdd();
                       },
                     ).then((value) {
                       if (value == null || !value) {

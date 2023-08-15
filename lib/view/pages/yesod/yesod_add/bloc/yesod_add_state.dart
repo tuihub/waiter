@@ -100,6 +100,7 @@ class YesodAddSecondState extends YesodAddState {
   final String name;
   final String iconUrl;
   final int refreshInterval;
+  final String category;
   final bool enabled;
 
   const YesodAddSecondState({
@@ -109,6 +110,7 @@ class YesodAddSecondState extends YesodAddState {
     required this.name,
     required this.iconUrl,
     required this.refreshInterval,
+    required this.category,
     required this.enabled,
   }) : super(
           url: url ?? '',
@@ -134,6 +136,7 @@ class YesodAddSecondState extends YesodAddState {
     String? name,
     String? iconUrl,
     int? refreshInterval,
+    String? category,
     bool? enabled,
     String? errorMessage,
     LoadState? loadState,
@@ -143,6 +146,7 @@ class YesodAddSecondState extends YesodAddState {
       name: name ?? this.name,
       iconUrl: iconUrl ?? this.iconUrl,
       refreshInterval: refreshInterval ?? this.refreshInterval,
+      category: category ?? this.category,
       enabled: enabled ?? this.enabled,
       errorMessage: errorMessage ?? this.errorMessage,
       loadState: loadState ?? this.loadState,

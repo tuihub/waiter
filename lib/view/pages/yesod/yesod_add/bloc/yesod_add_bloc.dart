@@ -99,6 +99,7 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
             name: event.name,
             iconUrl: event.iconUrl,
             refreshInterval: 60,
+            category: '',
             enabled: true,
           ),
         );
@@ -122,6 +123,7 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
                   pullInterval: $duration.Duration(
                     seconds: $fixnum.Int64(event.refreshInterval),
                   ),
+                  category: event.category,
                 ),
               ),
               options: option,

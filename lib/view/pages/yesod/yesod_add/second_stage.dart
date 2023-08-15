@@ -85,6 +85,22 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
                   const SizedBox(
                     height: 16,
                   ),
+                  TextFormField(
+                    onSaved: (newValue) {
+                      context
+                          .read<YesodAddBloc>()
+                          .add(ChangeCategoryEvent(newValue!));
+                    },
+                    initialValue: '',
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.category),
+                      border: OutlineInputBorder(),
+                      labelText: '分组',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   const Divider(
                     height: 8,
                   ),
