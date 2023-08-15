@@ -21,9 +21,10 @@ import 'view/pages/settings/client_setting_page.dart';
 import 'view/pages/settings/settings_frame_page.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
-import 'view/pages/yesod/yesod_config.dart';
+import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_frame_page.dart';
-import 'view/pages/yesod/yesod_timeline.dart';
+import 'view/pages/yesod/yesod_recent_page.dart';
+import 'view/pages/yesod/yesod_timeline_page.dart';
 
 final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
 
@@ -100,7 +101,7 @@ GoRouter getRouter() {
             navigatorKey: _yesodNavigateKey,
             pageBuilder:
                 (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.params['function'] ?? 'timeline';
+              final function = state.params['function'] ?? 'recent';
               return NoTransitionPage(
                 child: YesodFramePage(
                   function: function,
@@ -113,10 +114,11 @@ GoRouter getRouter() {
                 path: '/app/Yesod/:function',
                 pageBuilder: (context, state) {
                   final yesodPages = {
+                    'recent': const YesodRecentPage(),
                     'timeline': const YesodTimelinePage(),
                     'config': const YesodConfigPage()
                   };
-                  final function = state.params['function'] ?? 'timeline';
+                  final function = state.params['function'] ?? 'recent';
                   return NoTransitionPage(
                     child: yesodPages[function] ?? const SizedBox(),
                   );

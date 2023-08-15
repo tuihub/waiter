@@ -23,6 +23,11 @@ class YesodRepo {
     _localSource = YesodLocalSource(cacheBox);
   }
 
+  Future<FeedItem> getFeedItem(InternalID id) async {
+    final item = await getBatchFeedItems([id].reversed);
+    return item[0];
+  }
+
   Future<List<FeedItem>> getBatchFeedItems(Iterable<InternalID>? ids) async {
     final cachedIds = _localSource.checkCached(ids);
     final cachedItems = await _localSource.getBatchFeedItems(cachedIds);

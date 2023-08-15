@@ -35,6 +35,16 @@ class YesodFramePage extends StatelessWidget {
                       children: [
                         RailTile(
                           leading: const Icon(
+                            Icons.timelapse,
+                          ),
+                          onTap: () {
+                            GoRouter.of(context).go('/app/Yesod/recent');
+                          },
+                          title: const Text('Recent'),
+                          selected: function == 'recent',
+                        ),
+                        RailTile(
+                          leading: const Icon(
                             Icons.timeline,
                           ),
                           onTap: () {

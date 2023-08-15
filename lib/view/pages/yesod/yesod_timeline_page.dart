@@ -10,7 +10,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../../repo/yesod/yesod_repo.dart';
 import '../../widgets/extentions/grid_delegated.dart';
-import 'yesod_detail.dart';
+import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
 class YesodTimelinePage extends StatefulWidget {
@@ -137,7 +137,7 @@ class FeedItemList extends StatelessWidget {
   });
 
   static const cardWith = 384.0;
-  static const cardHeight = 128.0;
+  static const cardHeight = 170.0;
 
   final GroupFeedItemsResponse data;
   final GroupFeedItemsRequest_GroupBy groupBy;
@@ -321,6 +321,7 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                   child: YesodDetailPage(
                     item: feedItems.firstWhere(
                         (element) => element.id.id == item.itemId.id),
+                    controller: ScrollController(),
                   ),
                 );
               },
@@ -335,11 +336,13 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                   height: widget.cardHeight,
                   width: widget.cardWith,
                   child: YesodPreviewCard(
-                    iconUrl: item.feedAvatarUrl,
+                    iconUrl: item.avatarUrl.isNotEmpty
+                        ? item.avatarUrl
+                        : item.feedAvatarUrl,
                     name: item.feedConfigName,
                     title: item.title,
                     callback: openContainer,
-                    image: item.avatarUrl,
+                    images: const [],
                     description: item.shortDescription,
                   ),
                 );
