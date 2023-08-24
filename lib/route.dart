@@ -201,7 +201,7 @@ GoRouter getRouter() {
             redirect: (context, state) {
               final appName = state.params['appName'];
               if (appName == 'Yesod') {
-                return '/app/Yesod/timeline';
+                return '/app/Yesod/recent';
               }
               if (appName == 'Gebura') {
                 return '/app/Gebura/library';

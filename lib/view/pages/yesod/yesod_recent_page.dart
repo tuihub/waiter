@@ -22,8 +22,10 @@ class _YesodRecentPageState extends State<YesodRecentPage> {
   final ScrollController _detailScrollController = ScrollController();
 
   Future<void> setSelectedItem(InternalID id) async {
-    await _detailScrollController.animateTo(0,
-        duration: const Duration(milliseconds: 100), curve: Curves.ease);
+    try {
+      await _detailScrollController.animateTo(0,
+          duration: const Duration(milliseconds: 100), curve: Curves.ease);
+    } catch (e) {}
     final result = await GetIt.I<YesodRepo>().getFeedItem(id);
     setState(() {
       selectedItem = result;
@@ -148,7 +150,8 @@ class _YesodRecentListState extends State<YesodRecentList> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: YesodPreviewCard(
-                name: item.feedConfigName,
+                name:
+                    '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
                 title: item.title,
                 callback: () async => {widget.selectCallback(item.itemId)},
                 iconUrl: item.feedAvatarUrl,
@@ -157,7 +160,12 @@ class _YesodRecentListState extends State<YesodRecentList> {
               ),
             );
           } else {
-            return const Text('加载中');
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: Text('加载中'),
+              ),
+            );
           }
         },
       );

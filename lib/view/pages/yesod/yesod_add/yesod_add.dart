@@ -20,7 +20,7 @@ class YesodAdd extends StatelessWidget {
       child:
           BlocBuilder<YesodAddBloc, YesodAddState>(builder: (context, state) {
         return AlertDialog(
-          title: const Text('添加RSS订阅'),
+          title: const Text('添加订阅'),
           content: state is! YesodAddSecondState
               ? YesodAddFirstStage()
               : const YesodAddSecondStage(),

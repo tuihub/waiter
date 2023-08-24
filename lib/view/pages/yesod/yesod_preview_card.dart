@@ -18,7 +18,6 @@ class YesodPreviewCard extends StatelessWidget {
   final String title;
   final String? description;
   final void Function() callback;
-  static const basicHeight = 100;
 
   @override
   Widget build(BuildContext context) {
@@ -83,15 +82,15 @@ class YesodPreviewCard extends StatelessWidget {
                   ),
                 if (images != null && images!.isNotEmpty)
                   ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxHeight: 406,
+                    constraints: BoxConstraints(
+                      maxHeight: images!.length <= 3 ? 268 : 406,
                       maxWidth: 406,
                     ),
-                    child: images!.length == 1
-                        ? CachedNetworkImage(imageUrl: images![0])
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Wrap(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: images!.length == 1
+                          ? CachedNetworkImage(imageUrl: images![0])
+                          : Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: [
@@ -113,7 +112,7 @@ class YesodPreviewCard extends StatelessWidget {
                                   ),
                               ],
                             ),
-                          ),
+                    ),
                   ),
               ],
             ),

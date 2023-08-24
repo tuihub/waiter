@@ -11,6 +11,7 @@ import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
 import 'yesod_add/yesod_add.dart';
+import 'yesod_config_edit_dialog.dart';
 
 class YesodConfigPage extends StatefulWidget {
   const YesodConfigPage({super.key});
@@ -125,7 +126,15 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                         width: 64,
                         height: 64,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            unawaited(showDialog<void>(
+                              context: context,
+                              builder: (context) => YesodConfigEditDialog(
+                                callback: _loadConfig,
+                                config: item.config,
+                              ),
+                            ));
+                          },
                           icon: const Icon(Icons.edit),
                         ),
                       ),
@@ -184,7 +193,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                     });
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text('添加RSS订阅'),
+                  label: const Text('添加订阅'),
                 ),
                 const SizedBox(width: 8),
               ],

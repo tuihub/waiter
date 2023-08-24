@@ -30,13 +30,13 @@ class YesodAddFirstStage extends StatelessWidget {
                   decoration: const InputDecoration(
                     icon: Icon(Icons.rss_feed),
                     border: OutlineInputBorder(),
-                    labelText: 'RSS订阅地址',
+                    labelText: '订阅地址',
                   ),
                   initialValue: state.url,
                   // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '请输入RSS订阅地址';
+                      return '请输入订阅地址';
                     }
                     value = value.trim();
                     if (value.startsWith('http://') ||
