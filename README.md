@@ -5,8 +5,8 @@ Current version is for developer testing only. It's not ready for user. Don't ru
 ## TODO
 
 - v0.1
-  - [ ] General
-    - [ ] Show appropriate pages based on user privilege
+  - [x] General
+    - [x] Show appropriate pages based on user privilege
   - [x] Login & Logout
     - [x] `Tiphereth` Check server status before login  (GetServerInformation)
     - [x] `Tiphereth` Basic login and logout (GetToken, RefreshToken)
@@ -17,8 +17,8 @@ Current version is for developer testing only. It's not ready for user. Don't ru
   - [x] App
     - [x] `Gebura` Basic app store explore (SearchApps, GetBindApps, PurchaseApp)
     - [x] `Gebura` Basic app library & simple app launcher (GetPurchasedApps, ListAppPackages)
-  - [ ] Feed
-    - [ ] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
+  - [x] Feed
+    - [x] `Yesod` Basic feed manage and pull state manage (CreateFeedConfig, UpdateFeedConfig, ListFeedConfigs)
     - [x] `Yesod` Basic feed reader (ListFeedItems, GroupFeedItems, GetFeedItem, GetBatchFeedItems)
   - [x] Settings
     - [x] `Tiphereth` Basic user manage (CreateUser, UpdateUser, GetUser, ListUsers)

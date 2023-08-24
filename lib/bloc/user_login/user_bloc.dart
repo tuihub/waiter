@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+
 import '../../common/api/api_helper.dart';
 import '../../common/api/client.dart';
 import '../../consts.dart';
@@ -32,12 +33,14 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             try {
               final resp = await client.refreshToken(RefreshTokenRequest(),
                   options: withAuth(refreshToken));
+              final user = await client.getUser(GetUserRequest(),
+                  options: withAuth(resp.accessToken));
               GetIt.I<ApiHelper>()
                   .init(client, resp.accessToken, resp.refreshToken);
-              emit(UserLoggedIn(config, resp.accessToken));
+              emit(UserLoggedIn(config, resp.accessToken, user.user));
               return;
             } catch (e) {
-              debugPrint('login by refresh token fail');
+              debugPrint('login by refresh token failed');
             }
           }
         }
@@ -81,12 +84,15 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             GetTokenRequest(username: event.username, password: event.password),
           );
           debugPrint(resp.toDebugString());
+          final user = await client.getUser(GetUserRequest(),
+              options: withAuth(resp.accessToken));
           await _dao.set(SettingKey.refreshToken, resp.refreshToken);
           GetIt.I<ApiHelper>()
               .init(client, resp.accessToken, resp.refreshToken);
           emit(UserLoggedIn(
             config,
             resp.accessToken,
+            user.user,
           ));
         } catch (e) {
           debugPrint(e.toString());

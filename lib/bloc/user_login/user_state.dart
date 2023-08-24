@@ -65,9 +65,11 @@ class UserLoginFailed extends ServerSelected {
 class UserLoggedIn extends PostLogin {
   final ServerConfig serverConfig;
   final String acessToken;
+  final User user;
 
   UserLoggedIn(
     this.serverConfig,
     this.acessToken,
+    this.user,
   );
 }
