@@ -319,8 +319,10 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                 return Container(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: YesodDetailPage(
-                    item: feedItems.firstWhere(
-                        (element) => element.id.id == item.itemId.id),
+                    itemId: feedItems
+                        .firstWhere(
+                            (element) => element.id.id == item.itemId.id)
+                        .id,
                     controller: ScrollController(),
                   ),
                 );

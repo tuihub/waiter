@@ -38,7 +38,7 @@ class YesodPreviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 16,
+                  height: 18,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -53,11 +53,11 @@ class YesodPreviewCard extends StatelessWidget {
                           width: 8,
                         ),
                       SizedBox(
-                        height: 16,
+                        height: 18,
                         child: Text(
                           name,
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             color: Theme.of(context).disabledColor,
                           ),
                         ),
@@ -74,16 +74,25 @@ class YesodPreviewCard extends StatelessWidget {
                   ),
                 ),
                 if (description != null)
-                  Text(
-                    '${description!}...',
-                    style: const TextStyle(
-                      fontSize: 15,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: Text(
+                      '${description!}...',
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 if (images != null && images!.isNotEmpty)
                   ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: images!.length <= 3 ? 268 : 406,
+                      maxHeight: images!.length == 1
+                          ? 260
+                          : images!.length <= 3
+                              ? 130
+                              : images!.length <= 6
+                                  ? 268
+                                  : 406,
                       maxWidth: 406,
                     ),
                     child: ClipRRect(

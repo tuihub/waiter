@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../common/api/api_helper.dart';
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../widgets/bootstrap/layout.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
@@ -19,13 +22,8 @@ class YesodRecentPage extends StatefulWidget {
 
 class _YesodRecentPageState extends State<YesodRecentPage> {
   FeedItem? selectedItem;
-  final ScrollController _detailScrollController = ScrollController();
 
   Future<void> setSelectedItem(InternalID id) async {
-    try {
-      await _detailScrollController.animateTo(0,
-          duration: const Duration(milliseconds: 100), curve: Curves.ease);
-    } catch (e) {}
     final result = await GetIt.I<YesodRepo>().getFeedItem(id);
     setState(() {
       selectedItem = result;
@@ -35,32 +33,8 @@ class _YesodRecentPageState extends State<YesodRecentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          SizedBox(
-            width: 450,
-            child: YesodRecentList(
-              selectCallback: setSelectedItem,
-            ),
-          ),
-          if (selectedItem != null)
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: YesodDetailPage(
-                    item: selectedItem!,
-                    controller: _detailScrollController,
-                  ),
-                ),
-              ),
-            ),
-        ],
+      body: YesodRecentList(
+        selectCallback: setSelectedItem,
       ),
     );
   }
@@ -76,7 +50,6 @@ class YesodRecentList extends StatefulWidget {
 }
 
 class _YesodRecentListState extends State<YesodRecentList> {
-  final ScrollController _scrollController = ScrollController();
   Map<int, List<FeedItemDigest>> items = {};
   List<FeedItemDigest> flattenedItems = [];
   int lastPageNum = 0;
@@ -87,23 +60,6 @@ class _YesodRecentListState extends State<YesodRecentList> {
   void initState() {
     super.initState();
     unawaited(loadData(lastPageNum));
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        if (items[lastPageNum] != null && items[lastPageNum]!.isNotEmpty) {
-          setState(() {
-            lastPageNum++;
-          });
-        }
-        if (items[lastPageNum] == null) {
-          unawaited(loadData(lastPageNum));
-        } else {
-          setState(() {
-            pageEnd = true;
-          });
-        }
-      }
-    });
   }
 
   Future<void> loadData(int pageNum) async {
@@ -138,43 +94,97 @@ class _YesodRecentListState extends State<YesodRecentList> {
     }
   }
 
-  Widget _build() {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     if (lastPageNum >= 0) {
-      return ListView.builder(
-        controller: _scrollController,
-        itemCount: flattenedItems.length + 1,
-        itemBuilder: (context, index) {
-          if (index < flattenedItems.length) {
-            final item = flattenedItems[index];
+      return BootstrapContainer(
+        children: [
+          const BootstrapColumn(xs: 1, xl: 2, child: SizedBox()),
+          Expanded(
+            child: BootstrapColumn(
+              xs: 10,
+              xl: 8,
+              child: DynMouseScroll(
+                builder: (context, controller, physics) {
+                  controller.addListener(() {
+                    if (controller.position.pixels ==
+                        controller.position.maxScrollExtent) {
+                      if (items[lastPageNum] != null &&
+                          items[lastPageNum]!.isNotEmpty) {
+                        setState(() {
+                          lastPageNum++;
+                        });
+                      }
+                      if (items[lastPageNum] == null) {
+                        unawaited(loadData(lastPageNum));
+                      } else {
+                        setState(() {
+                          pageEnd = true;
+                        });
+                      }
+                    }
+                  });
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: YesodPreviewCard(
-                name:
-                    '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
-                title: item.title,
-                callback: () async => {widget.selectCallback(item.itemId)},
-                iconUrl: item.feedAvatarUrl,
-                images: item.imageUrls,
-                description: item.shortDescription,
+                  return ListView.builder(
+                    controller: controller,
+                    physics: physics,
+                    itemCount: flattenedItems.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < flattenedItems.length) {
+                        final item = flattenedItems[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: OpenContainer(
+                            openBuilder: (context, closedContainer) {
+                              return Container(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                child: YesodDetailPage(
+                                  itemId: item.itemId,
+                                  controller: ScrollController(),
+                                ),
+                              );
+                            },
+                            openColor: theme.colorScheme.primary,
+                            closedShape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            closedElevation: 0,
+                            closedColor: theme.cardColor,
+                            closedBuilder: (context, openContainer) {
+                              return YesodPreviewCard(
+                                name:
+                                    '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
+                                title: item.title,
+                                callback: openContainer,
+                                iconUrl: item.feedAvatarUrl,
+                                images: item.imageUrls,
+                                description: item.shortDescription,
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Center(
+                            child: Text('加载中'),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
               ),
-            );
-          } else {
-            return const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(
-                child: Text('加载中'),
-              ),
-            );
-          }
-        },
+            ),
+          ),
+          const BootstrapColumn(xs: 1, xl: 2, child: SizedBox()),
+        ],
       );
     }
     return const SizedBox();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: _build());
   }
 }

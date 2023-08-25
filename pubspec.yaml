@@ -68,6 +68,7 @@ dependencies:
   animations: ^2.0.7
   webfeed_revised: ^0.7.2
   multi_select_flutter: ^4.1.3
+  smooth_scroll_multiplatform: ^1.0.8
 
   # rust bridge
   ffi: ^2.0.1
