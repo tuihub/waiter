@@ -19,9 +19,11 @@ class _BootstrapContainerMaxWidth {
 }
 
 class BootstrapContainer extends StatelessWidget {
-  const BootstrapContainer({super.key, required this.children});
+  const BootstrapContainer(
+      {super.key, required this.children, this.alignment = Alignment.center});
 
   final List<Widget> children;
+  final AlignmentGeometry alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +46,14 @@ class BootstrapContainer extends StatelessWidget {
       }
       return _InheritedBootstrapContainer(
         width: maxWidth,
-        child: Center(
+        child: Align(
+          alignment: alignment,
           child: Container(
+            alignment: alignment,
             constraints: BoxConstraints(
               maxWidth: maxWidth,
             ),
             width: maxWidth,
-            height: constraints.biggest.height,
             child: Row(
               children: children,
             ),
@@ -84,12 +87,12 @@ class BootstrapColumn extends StatelessWidget {
   const BootstrapColumn(
       {super.key,
       required this.child,
-      this.xs = 0,
-      this.sm = 0,
-      this.md = 0,
-      this.lg = 0,
-      this.xl = 0,
-      this.xxl = 0});
+      this.xs = -1,
+      this.sm = -1,
+      this.md = -1,
+      this.lg = -1,
+      this.xl = -1,
+      this.xxl = -1});
 
   final Widget child;
   final int xs;
@@ -101,47 +104,47 @@ class BootstrapColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int xs = 0;
-    int sm = 0;
-    int md = 0;
-    int lg = 0;
-    int xl = 0;
-    int xxl = 0;
+    int xs_ = 0;
+    int sm_ = 0;
+    int md_ = 0;
+    int lg_ = 0;
+    int xl_ = 0;
+    int xxl_ = 0;
 
     return LayoutBuilder(builder: (context, constraints) {
       final containerWidth =
           _InheritedBootstrapContainer.of(context)?.width ?? double.infinity;
       late double columnWidth;
 
-      if (1 <= xs && xs <= 12) {
-        xs = xs;
+      if (0 <= xs && xs <= 12) {
+        xs_ = xs;
       } else {
-        xs = 1;
+        xs_ = 0;
       }
-      if (1 <= sm && sm <= 12) {
-        sm = sm;
+      if (0 <= sm && sm <= 12) {
+        sm_ = sm;
       } else {
-        sm = xs;
+        sm_ = xs_;
       }
-      if (1 <= md && md <= 12) {
-        md = md;
+      if (0 <= md && md <= 12) {
+        md_ = md;
       } else {
-        md = sm;
+        md_ = sm_;
       }
-      if (1 <= lg && lg <= 12) {
-        lg = lg;
+      if (0 <= lg && lg <= 12) {
+        lg_ = lg;
       } else {
-        lg = md;
+        lg_ = md_;
       }
-      if (1 <= xl && xl <= 12) {
-        xl = xl;
+      if (0 <= xl && xl <= 12) {
+        xl_ = xl;
       } else {
-        xl = lg;
+        xl_ = lg_;
       }
-      if (1 <= xxl && xxl <= 12) {
-        xxl = xxl;
+      if (0 <= xxl && xxl <= 12) {
+        xxl_ = xxl;
       } else {
-        xxl = xxl;
+        xxl_ = xl_;
       }
 
       if (containerWidth == _BootstrapContainerMaxWidth.xs ||
@@ -150,18 +153,20 @@ class BootstrapColumn extends StatelessWidget {
         if (maxWidth == double.infinity) {
           maxWidth = _BootstrapContainerMaxWidth.sm;
         }
-        columnWidth = maxWidth * xs / 12;
+        columnWidth = maxWidth * xs_ / 12;
       } else if (containerWidth < _BootstrapContainerMaxWidth.md) {
-        columnWidth = _BootstrapContainerMaxWidth.sm * sm / 12;
+        columnWidth = _BootstrapContainerMaxWidth.sm * sm_ / 12;
       } else if (containerWidth < _BootstrapContainerMaxWidth.lg) {
-        columnWidth = _BootstrapContainerMaxWidth.md * md / 12;
+        columnWidth = _BootstrapContainerMaxWidth.md * md_ / 12;
       } else if (containerWidth < _BootstrapContainerMaxWidth.xl) {
-        columnWidth = _BootstrapContainerMaxWidth.lg * lg / 12;
+        columnWidth = _BootstrapContainerMaxWidth.lg * lg_ / 12;
       } else if (containerWidth < _BootstrapContainerMaxWidth.xxl) {
-        columnWidth = _BootstrapContainerMaxWidth.xl * xl / 12;
+        columnWidth = _BootstrapContainerMaxWidth.xl * xl_ / 12;
       } else {
-        columnWidth = _BootstrapContainerMaxWidth.xxl * xxl / 12;
+        columnWidth = _BootstrapContainerMaxWidth.xxl * xxl_ / 12;
       }
+
+      debugPrint('$containerWidth $xs_ $sm_ $md_ $lg_ $xl_ $xxl_ $columnWidth');
 
       return SizedBox(
         width: columnWidth,

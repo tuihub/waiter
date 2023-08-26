@@ -3,16 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get_it/get_it.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../repo/yesod/yesod_repo.dart';
 
 class YesodDetailPage extends StatefulWidget {
-  const YesodDetailPage(
-      {super.key, required this.itemId, required this.controller});
+  const YesodDetailPage({super.key, required this.itemId});
 
   final InternalID itemId;
-  final ScrollController controller;
 
   @override
   State<StatefulWidget> createState() => _YesodDetailPageState();
@@ -47,40 +46,46 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              controller: widget.controller,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                alignment: Alignment.topCenter,
-                constraints: const BoxConstraints(
-                  maxWidth: 720,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 16,
+            child: DynMouseScroll(
+              builder: (context, controller, physics) {
+                return SingleChildScrollView(
+                  controller: controller,
+                  physics: physics,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.topCenter,
+                    constraints: const BoxConstraints(
+                      maxWidth: 720,
                     ),
-                    Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('作者：'),
-                        for (final author in item.authors) Text(author.name),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: [
+                            const Text('作者：'),
+                            for (final author in item.authors)
+                              Text(author.name),
+                          ],
+                        ),
+                        Text('发布日期：${item.publishedParsed.toDateTime()}'),
+                        if (!item.updatedParsed.toDateTime().isUtc)
+                          Text('更新日期：${item.updatedParsed.toDateTime()}'),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        HtmlWidget(
+                          item.description,
+                          renderMode: RenderMode.column,
+                          enableCaching: true,
+                        ),
                       ],
                     ),
-                    Text('发布日期：${item.publishedParsed.toDateTime()}'),
-                    if (!item.updatedParsed.toDateTime().isUtc)
-                      Text('更新日期：${item.updatedParsed.toDateTime()}'),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    HtmlWidget(
-                      item.description,
-                      renderMode: RenderMode.column,
-                      enableCaching: true,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ],

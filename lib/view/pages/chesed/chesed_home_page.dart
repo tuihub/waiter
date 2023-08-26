@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../bloc/api_request/api_request_bloc.dart';
+import '../../widgets/bootstrap/toasts.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
@@ -161,18 +163,10 @@ class ChesedHome extends StatelessWidget {
                   builder: (context) {
                     return ChesedUpload(
                       callback: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('上传成功'),
-                            action: SnackBarAction(
-                              label: '关闭',
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              },
-                            ),
-                          ),
-                        );
+                        const BootstrapToast(
+                          title: '',
+                          message: '上传成功',
+                        ).show(context);
                       },
                     );
                   },

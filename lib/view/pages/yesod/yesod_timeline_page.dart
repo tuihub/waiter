@@ -323,7 +323,6 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                         .firstWhere(
                             (element) => element.id.id == item.itemId.id)
                         .id,
-                    controller: ScrollController(),
                   ),
                 );
               },

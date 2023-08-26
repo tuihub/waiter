@@ -2,7 +2,9 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../bloc/user_login/user_bloc.dart';
+import '../widgets/bootstrap/toasts.dart';
 import '../widgets/title_bar.dart';
 
 class InitPage extends StatelessWidget {
@@ -17,13 +19,7 @@ class InitPage extends StatelessWidget {
       child: BlocConsumer<UserBloc, UserLoginState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  '欢迎回来',
-                ),
-              ),
-            );
+            const BootstrapToast(title: '', message: '欢迎回来').show(context);
           }
         },
         builder: (context, state) {

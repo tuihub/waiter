@@ -100,11 +100,11 @@ class _YesodRecentListState extends State<YesodRecentList> {
     if (lastPageNum >= 0) {
       return BootstrapContainer(
         children: [
-          const BootstrapColumn(xs: 1, xl: 2, child: SizedBox()),
+          const BootstrapColumn(xs: 1, lg: 2, child: SizedBox()),
           Expanded(
             child: BootstrapColumn(
               xs: 10,
-              xl: 8,
+              lg: 8,
               child: DynMouseScroll(
                 builder: (context, controller, physics) {
                   controller.addListener(() {
@@ -143,7 +143,6 @@ class _YesodRecentListState extends State<YesodRecentList> {
                                     Theme.of(context).scaffoldBackgroundColor,
                                 child: YesodDetailPage(
                                   itemId: item.itemId,
-                                  controller: ScrollController(),
                                 ),
                               );
                             },
@@ -181,7 +180,7 @@ class _YesodRecentListState extends State<YesodRecentList> {
               ),
             ),
           ),
-          const BootstrapColumn(xs: 1, xl: 2, child: SizedBox()),
+          const BootstrapColumn(xs: 1, lg: 2, child: SizedBox()),
         ],
       );
     }

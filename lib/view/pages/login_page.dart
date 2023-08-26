@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../bloc/user_login/user_bloc.dart';
 import '../../consts.dart';
+import '../widgets/bootstrap/toasts.dart';
 import '../widgets/connectivity.dart';
 import '../widgets/form_field.dart';
 import '../widgets/title_bar.dart';
@@ -20,13 +22,7 @@ class LoginPage extends StatelessWidget {
       child: BlocConsumer<UserBloc, UserLoginState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  '欢迎',
-                ),
-              ),
-            );
+            const BootstrapToast(title: '', message: '欢迎').show(context);
           }
         },
         builder: (context, state) {
@@ -306,13 +302,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     final password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            '用户名或密码为空, 请修改后重试',
-          ),
-        ),
-      );
+      const BootstrapToast(title: '', message: '用户名或密码为空, 请修改后重试')
+          .show(context);
     } else {
       context.read<UserBloc>().add(
             UserLoginEvent(username, password),
@@ -330,17 +321,14 @@ class _LoginWidgetState extends State<LoginWidget> {
     return BlocConsumer<UserBloc, UserLoginState>(
       listener: (context, state) {
         if (state is UserLoginFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '登录失败,${state.message}',
-              ),
-              action: SnackBarAction(
-                label: '重试',
-                onPressed: submitUrl,
-              ),
+          BootstrapToast(
+            title: '',
+            message: '登录失败,${state.message}',
+            action: SnackBarAction(
+              label: '重试',
+              onPressed: submitUrl,
             ),
-          );
+          ).show(context);
         }
       },
       builder: (context, state) {

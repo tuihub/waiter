@@ -11,6 +11,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../../common/util/platform.dart';
 import '../../../repo/gebura/gebura_repo.dart';
+import '../../widgets/bootstrap/toasts.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatefulWidget {
@@ -67,19 +68,19 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage>
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: _buildStatePage(),
-      floatingActionButton: PlatformHelper.isWindowsApp()
-          ? FloatingActionButton(
-              onPressed: () {
-                unawaited(showDialog<void>(
-                  context: context,
-                  builder: (context) => GeburaAppLauncherSettingDialog(
-                    appID: widget.appID,
-                  ),
-                ));
-              },
-              child: const Icon(Icons.settings),
-            )
-          : const SizedBox(),
+      // floatingActionButton: PlatformHelper.isWindowsApp()
+      //     ? FloatingActionButton(
+      //         onPressed: () {
+      //           unawaited(showDialog<void>(
+      //             context: context,
+      //             builder: (context) => GeburaAppLauncherSettingDialog(
+      //               appID: widget.appID,
+      //             ),
+      //           ));
+      //         },
+      //         child: const Icon(Icons.settings),
+      //       )
+      //     : const SizedBox(),
     );
   }
 }
@@ -162,13 +163,11 @@ class AppDetails extends StatelessWidget {
                         final setting = await GetIt.I<GeburaRepo>()
                             .getLauncherSetting(data.app.id.id.toInt());
                         if (setting == null || setting.path.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                '未设置应用路径，请点击右下角设置',
-                              ),
-                            ),
-                          );
+                          if (context.mounted) {
+                            const BootstrapToast(
+                                    title: '', message: '未设置应用路径，请完成设置')
+                                .show(context);
+                          }
                         } else {
                           await OpenFile.open(setting.path);
                         }
@@ -186,6 +185,19 @@ class AppDetails extends StatelessWidget {
                       Text('发行日期：${data.app.details.releaseDate}'),
                     ],
                   ),
+                  const Expanded(child: SizedBox()),
+                  if (PlatformHelper.isWindowsApp())
+                    ElevatedButton(
+                      onPressed: () {
+                        unawaited(showDialog<void>(
+                          context: context,
+                          builder: (context) => GeburaAppLauncherSettingDialog(
+                            appID: data.app.id.id.toInt(),
+                          ),
+                        ));
+                      },
+                      child: const Icon(Icons.settings),
+                    )
                 ],
               ),
             ),
@@ -199,10 +211,10 @@ class AppDetails extends StatelessWidget {
                 ? Theme.of(context).colorScheme.outline
                 : Theme.of(context).colorScheme.outlineVariant,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(data.app.shortDescription),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8),
+          //   child: Text(data.app.shortDescription),
+          // ),
         ],
       ),
     );

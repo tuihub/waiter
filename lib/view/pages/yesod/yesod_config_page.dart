@@ -10,6 +10,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
+import '../../widgets/bootstrap/toasts.dart';
 import 'yesod_add/yesod_add.dart';
 import 'yesod_config_edit_dialog.dart';
 
@@ -178,17 +179,10 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                       if (value == null || !value) {
                         return;
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('添加成功'),
-                          action: SnackBarAction(
-                              label: '关闭',
-                              onPressed: () {
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                              }),
-                        ),
-                      );
+                      const BootstrapToast(
+                        title: '',
+                        message: '添加成功',
+                      ).show(context);
                       _loadConfig(refresh: true);
                     });
                   },
