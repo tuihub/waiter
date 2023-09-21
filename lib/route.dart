@@ -86,10 +86,7 @@ GoRouter getRouter() {
                       config: blocState.serverConfig,
                     ),
                   ),
-                  child: FramePage(
-                    innerPage: child,
-                    selectedNav: appName,
-                  ),
+                  child: child,
                 );
               }
               return const Center(child: CircularProgressIndicator());
@@ -103,9 +100,12 @@ GoRouter getRouter() {
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? 'recent';
               return NoTransitionPage(
-                child: YesodFramePage(
-                  function: function,
-                  functionPage: child,
+                child: FramePage(
+                  selectedNav: '',
+                  leftPart: YesodFramePage(
+                    function: function,
+                    functionPage: child,
+                  ),
                 ),
               );
             },
@@ -133,10 +133,15 @@ GoRouter getRouter() {
               final function = state.params['function'] ?? 'library';
               final appID = state.queryParams['id'] ?? '0';
               return NoTransitionPage(
-                child: GeburaFramePage(
-                  function: function,
-                  functionPage: child,
-                  selectedAppID: appID,
+                child: FramePage(
+                  selectedNav: '',
+                  leftPart: GeburaFramePage(
+                    function: function,
+                    functionPage: const SizedBox(),
+                    selectedAppID: appID,
+                  ),
+                  rightPart: child,
+                  onRight: true,
                 ),
               );
             },
@@ -172,9 +177,12 @@ GoRouter getRouter() {
                 (BuildContext context, GoRouterState state, Widget child) {
               final function = state.params['function'] ?? 'client';
               return NoTransitionPage(
-                child: SettingsFramePage(
-                  function: function,
-                  functionPage: child,
+                child: FramePage(
+                  selectedNav: '',
+                  leftPart: SettingsFramePage(
+                    function: function,
+                    functionPage: child,
+                  ),
                 ),
               );
             },
@@ -218,7 +226,12 @@ GoRouter getRouter() {
               if (appName == 'Tiphereth') page = const TipherethFramePage();
 
               if (appMap.containsKey(appName)) page = appMap[appName]!.page;
-              return NoTransitionPage(child: page);
+              return NoTransitionPage(
+                child: FramePage(
+                  selectedNav: '',
+                  leftPart: page,
+                ),
+              );
             },
           ),
         ],

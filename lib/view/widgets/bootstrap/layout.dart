@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class _BootstrapBreakpoints {
+class BootstrapBreakpoints {
   static const int xs = 0;
   static const int sm = 576;
   static const int md = 768;
@@ -31,15 +31,15 @@ class BootstrapContainer extends StatelessWidget {
       final width = constraints.biggest.width;
       late double maxWidth;
 
-      if (width >= _BootstrapBreakpoints.xxl) {
+      if (width >= BootstrapBreakpoints.xxl) {
         maxWidth = _BootstrapContainerMaxWidth.xxl;
-      } else if (width >= _BootstrapBreakpoints.xl) {
+      } else if (width >= BootstrapBreakpoints.xl) {
         maxWidth = _BootstrapContainerMaxWidth.xl;
-      } else if (width >= _BootstrapBreakpoints.lg) {
+      } else if (width >= BootstrapBreakpoints.lg) {
         maxWidth = _BootstrapContainerMaxWidth.lg;
-      } else if (width >= _BootstrapBreakpoints.md) {
+      } else if (width >= BootstrapBreakpoints.md) {
         maxWidth = _BootstrapContainerMaxWidth.md;
-      } else if (width >= _BootstrapBreakpoints.sm) {
+      } else if (width >= BootstrapBreakpoints.sm) {
         maxWidth = _BootstrapContainerMaxWidth.sm;
       } else {
         maxWidth = _BootstrapContainerMaxWidth.xs;
