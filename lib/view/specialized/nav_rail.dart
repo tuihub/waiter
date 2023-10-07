@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../helper/spacing.dart';
+
 class NavRail extends StatelessWidget {
   const NavRail(
       {super.key,
@@ -20,15 +22,7 @@ class NavRail extends StatelessWidget {
           children: [
             if (leading.isNotEmpty) ...leading,
             if (leading.isNotEmpty && body.isNotEmpty)
-              Divider(
-                height: 10,
-                indent: 20,
-                endIndent: 20,
-                thickness: 2,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).colorScheme.outline
-                    : Theme.of(context).colorScheme.outlineVariant,
-              ),
+              SpacingHelper.defaultDivider,
             if (body.isNotEmpty)
               Expanded(
                 child: ListView(
@@ -38,15 +32,7 @@ class NavRail extends StatelessWidget {
                 ),
               ),
             if ((leading.isNotEmpty || body.isNotEmpty) && body.isNotEmpty)
-              Divider(
-                height: 10,
-                indent: 20,
-                endIndent: 20,
-                thickness: 2,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).colorScheme.outline
-                    : Theme.of(context).colorScheme.outlineVariant,
-              ),
+              SpacingHelper.defaultDivider,
             if (trailing.isNotEmpty) ...trailing,
           ],
         ),

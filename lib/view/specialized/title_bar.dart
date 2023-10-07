@@ -39,7 +39,7 @@ class TitleBar extends StatelessWidget {
                 )
               : const SizedBox(),
         ),
-        for (var action in actions) action,
+        for (final action in actions) action,
         const SizedBox(
           width: 8,
         ),

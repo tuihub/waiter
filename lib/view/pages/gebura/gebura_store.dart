@@ -4,7 +4,9 @@ import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+
 import '../../../common/api/api_mixins.dart';
+import '../../helper/spacing.dart';
 import 'gebura_store_detail.dart';
 
 class GeburaStorePage extends StatefulWidget {
@@ -147,13 +149,13 @@ class StoreList extends StatelessWidget {
                           width: 384,
                           height: 128,
                           child: Material(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: SpacingHelper.defaultBorderRadius,
                             child: Ink(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: SpacingHelper.defaultBorderRadius,
                               ),
                               child: InkWell(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: SpacingHelper.defaultBorderRadius,
                                 onTap: () {
                                   openContainer();
                                 },
@@ -164,7 +166,7 @@ class StoreList extends StatelessWidget {
                                       Container(
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                              SpacingHelper.defaultBorderRadius,
                                           image: DecorationImage(
                                               image: CachedNetworkImageProvider(
                                                 app.heroImageUrl,

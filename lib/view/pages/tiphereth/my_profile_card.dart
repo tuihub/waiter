@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+
 import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
+import '../../helper/spacing.dart';
 
 class MyProfileCard extends StatefulWidget {
   const MyProfileCard({super.key});
@@ -49,10 +51,10 @@ class _MyProfileCardState extends State<MyProfileCard>
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: SpacingHelper.defaultBorderRadius,
       child: Ink(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: SpacingHelper.defaultBorderRadius,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),

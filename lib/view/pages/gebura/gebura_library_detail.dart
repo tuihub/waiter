@@ -12,6 +12,7 @@ import '../../../common/api/api_mixins.dart';
 import '../../../common/util/platform.dart';
 import '../../../repo/gebura/gebura_repo.dart';
 import '../../components/toast.dart';
+import '../../helper/spacing.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatefulWidget {
@@ -107,7 +108,7 @@ class AppDetails extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(
                         data.app.heroImageUrl,
@@ -201,15 +202,7 @@ class AppDetails extends StatelessWidget {
               ),
             ),
           ),
-          Divider(
-            height: 10,
-            indent: 20,
-            endIndent: 20,
-            thickness: 2,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.outline
-                : Theme.of(context).colorScheme.outlineVariant,
-          ),
+          SpacingHelper.defaultDivider,
           // Padding(
           //   padding: const EdgeInsets.all(8),
           //   child: Text(data.app.shortDescription),

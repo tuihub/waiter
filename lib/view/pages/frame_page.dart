@@ -14,14 +14,12 @@ class FramePage extends StatelessWidget {
     required this.selectedNav,
     required this.leftPart,
     this.rightPart,
-    this.onRight = false,
     this.leftPartWidth,
   });
 
   final String selectedNav;
   final Widget leftPart;
   final Widget? rightPart;
-  final bool onRight;
   final double? leftPartWidth;
 
   @override
@@ -48,19 +46,22 @@ class FramePage extends StatelessWidget {
                 ],
               );
 
-        if (PlatformHelper.isAndroid()) {
+        if (PlatformHelper.isWeb()) {
           content = rightPart != null
               ? OverlappingPanels(
                   left: Row(
                     children: [
                       _Nav(selectedNav: selectedNav),
                       SizedBox(
-                        width: width - 64,
+                        width: width - 128,
                         child: leftPart,
                       ),
                     ],
                   ),
-                  main: rightPart!,
+                  main: DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.white),
+                    child: rightPart,
+                  ),
                 )
               : OverlappingPanels(
                   main: Row(

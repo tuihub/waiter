@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../helper/spacing.dart';
+
 class ThemePresent extends StatelessWidget {
   final String title;
   final ColorScheme lightScheme;
@@ -139,7 +141,7 @@ class ThemePresent extends StatelessWidget {
                         width: 24,
                         margin: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: SpacingHelper.defaultBorderRadius,
                           color: theme.colorScheme.tertiaryContainer,
                         ),
                       ),

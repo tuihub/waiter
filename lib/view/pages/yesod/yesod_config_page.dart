@@ -11,6 +11,7 @@ import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
 import '../../components/toast.dart';
+import '../../helper/spacing.dart';
 import 'yesod_add/yesod_add.dart';
 import 'yesod_config_edit_dialog.dart';
 
@@ -83,7 +84,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                       child: item.feed.image.url.isNotEmpty
                           ? Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: SpacingHelper.defaultBorderRadius,
                                 image: DecorationImage(
                                     image: CachedNetworkImageProvider(
                                       item.feed.image.url,

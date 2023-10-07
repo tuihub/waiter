@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+
 import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
+import '../../helper/spacing.dart';
 import 'account_dialog.dart';
 
 class MyAccountsCard extends StatefulWidget {
@@ -86,13 +88,13 @@ class MyProfile extends StatelessWidget {
               width: 384,
               height: 128,
               child: Material(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: SpacingHelper.defaultBorderRadius,
                 child: Ink(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                     onTap: () {
                       unawaited(showDialog<void>(
                         context: context,
@@ -108,7 +110,7 @@ class MyProfile extends StatelessWidget {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: SpacingHelper.defaultBorderRadius,
                               image: DecorationImage(
                                   image: CachedNetworkImageProvider(
                                     account.avatarUrl,
@@ -169,10 +171,10 @@ class MyProfile extends StatelessWidget {
           if (data.accounts.length < accountPlatformCount)
             SizedBox(
               child: Material(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: SpacingHelper.defaultBorderRadius,
                 child: Ink(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

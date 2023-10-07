@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../helper/spacing.dart';
+
 class YesodPreviewCard extends StatelessWidget {
   const YesodPreviewCard({
     super.key,
@@ -22,14 +24,14 @@ class YesodPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: SpacingHelper.defaultBorderRadius,
       child: Ink(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: SpacingHelper.defaultBorderRadius,
           color: Theme.of(context).cardColor,
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: SpacingHelper.defaultBorderRadius,
           onTap: callback,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -96,7 +98,7 @@ class YesodPreviewCard extends StatelessWidget {
                       maxWidth: 406,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                       child: images!.length == 1
                           ? CachedNetworkImage(imageUrl: images![0])
                           : Wrap(

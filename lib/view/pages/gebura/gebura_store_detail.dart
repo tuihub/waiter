@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
+import '../../helper/spacing.dart';
 
 class GeburaStoreDetail extends StatefulWidget {
   const GeburaStoreDetail({super.key, required this.appID});
@@ -99,7 +101,7 @@ class AppDetails extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(
                         data.app.heroImageUrl,
@@ -180,15 +182,7 @@ class AppDetails extends StatelessWidget {
               ),
             ),
           ),
-          Divider(
-            height: 10,
-            indent: 20,
-            endIndent: 20,
-            thickness: 2,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.outline
-                : Theme.of(context).colorScheme.outlineVariant,
-          ),
+          SpacingHelper.defaultDivider,
           Padding(
             padding: const EdgeInsets.all(8),
             child: HtmlWidget(

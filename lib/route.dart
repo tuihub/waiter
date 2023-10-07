@@ -10,19 +10,19 @@ import 'common/api/client.dart';
 import 'common/util/stream_listener.dart';
 import 'consts.dart';
 import 'view/pages/frame_page.dart';
-import 'view/pages/gebura/gebura_frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
+import 'view/pages/gebura/gebura_nav.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/login_page.dart';
 import 'view/pages/settings/app/app_manage_page.dart';
 import 'view/pages/settings/app_package/app_package_manage_page.dart';
 import 'view/pages/settings/client_setting_page.dart';
-import 'view/pages/settings/settings_frame_page.dart';
+import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
-import 'view/pages/yesod/yesod_frame_page.dart';
+import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_timeline_page.dart';
 
@@ -101,11 +101,11 @@ GoRouter getRouter() {
               final function = state.params['function'] ?? 'recent';
               return NoTransitionPage(
                 child: FramePage(
-                  selectedNav: '',
-                  leftPart: YesodFramePage(
+                  selectedNav: 'Yesod',
+                  leftPart: YesodNav(
                     function: function,
-                    functionPage: child,
                   ),
+                  rightPart: child,
                 ),
               );
             },
@@ -134,14 +134,12 @@ GoRouter getRouter() {
               final appID = state.queryParams['id'] ?? '0';
               return NoTransitionPage(
                 child: FramePage(
-                  selectedNav: '',
-                  leftPart: GeburaFramePage(
+                  selectedNav: 'Gebura',
+                  leftPart: GeburaNav(
                     function: function,
-                    functionPage: const SizedBox(),
                     selectedAppID: appID,
                   ),
                   rightPart: child,
-                  onRight: true,
                 ),
               );
             },
@@ -178,11 +176,11 @@ GoRouter getRouter() {
               final function = state.params['function'] ?? 'client';
               return NoTransitionPage(
                 child: FramePage(
-                  selectedNav: '',
-                  leftPart: SettingsFramePage(
+                  selectedNav: 'Settings',
+                  leftPart: SettingsNav(
                     function: function,
-                    functionPage: child,
                   ),
+                  rightPart: child,
                 ),
               );
             },

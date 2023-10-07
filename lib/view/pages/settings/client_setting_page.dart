@@ -78,7 +78,7 @@ class ClientSettingPage extends StatelessWidget {
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
                                     children: [
-                                      for (var theme in themeData)
+                                      for (final theme in themeData)
                                         ThemePresent(
                                           title: theme.name,
                                           lightScheme: FlexColorScheme.light(

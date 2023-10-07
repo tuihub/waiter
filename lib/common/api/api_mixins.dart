@@ -32,7 +32,7 @@ mixin SingleRequestMixin<M extends StatefulWidget, T> on State<M> {
       {Future<T> Function(
               LibrarianSephirahServiceClient client, CallOptions option)?
           request}) async {
-    if (loading == true) return;
+    if (loading) return;
     setState(() {
       loading = true;
     });

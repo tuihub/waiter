@@ -155,7 +155,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  for (var server in newServerList)
+                  for (final server in newServerList)
                     ServerConnectivityWidget(
                       config: server,
                       callback: () {

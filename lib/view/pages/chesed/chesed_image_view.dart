@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../helper/spacing.dart';
+
 class ChesedImageViewWidget extends StatelessWidget {
   final String imageUrl;
 
@@ -15,7 +17,7 @@ class ChesedImageViewWidget extends StatelessWidget {
         },
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: SpacingHelper.defaultBorderRadius,
             image: DecorationImage(
               image: CachedNetworkImageProvider(
                 imageUrl,

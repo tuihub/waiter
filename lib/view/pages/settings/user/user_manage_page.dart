@@ -6,8 +6,10 @@ import 'package:get_it/get_it.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../../common/api/api_helper.dart';
 import '../../../../common/api/l10n.dart';
+import '../../../helper/spacing.dart';
 import 'user_create_dialog.dart';
 import 'user_update_dialog.dart';
 
@@ -41,7 +43,7 @@ class _UserManagePageState extends State<UserManagePage> {
                 DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
                   child: MultiSelectDialogField(
                     title: const Text('按用户类型筛选'),
@@ -67,7 +69,7 @@ class _UserManagePageState extends State<UserManagePage> {
                       paginatorController.goToFirstPage();
                     },
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                     ),
                   ),
                 ),
@@ -77,7 +79,7 @@ class _UserManagePageState extends State<UserManagePage> {
                 DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
                   child: MultiSelectDialogField(
                     title: const Text('按用户状态筛选'),
@@ -99,7 +101,7 @@ class _UserManagePageState extends State<UserManagePage> {
                       paginatorController.goToFirstPage();
                     },
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                     ),
                   ),
                 ),

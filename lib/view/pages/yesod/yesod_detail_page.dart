@@ -7,6 +7,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../helper/spacing.dart';
 
 class YesodDetailPage extends StatefulWidget {
   const YesodDetailPage({super.key, required this.itemId});
@@ -34,13 +35,13 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: SpacingHelper.defaultBorderRadius,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            borderRadius: SpacingHelper.defaultBorderRadius,
             child: AppBar(
               title: Text(item.title),
             ),

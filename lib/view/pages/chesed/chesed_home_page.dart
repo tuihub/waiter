@@ -8,6 +8,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../components/toast.dart';
+import '../../helper/spacing.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
@@ -36,7 +37,7 @@ class ChesedHome extends StatelessWidget {
               Ink(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: SpacingHelper.defaultBorderRadius,
                   // color: Theme.of(context).colorScheme.secondaryContainer,
                 ),
                 child: LayoutBuilder(builder: (context, constrains) {
@@ -100,7 +101,7 @@ class ChesedHome extends StatelessWidget {
                         if (index == state.resp.length) {
                           return Ink(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: SpacingHelper.defaultBorderRadius,
                               color: Theme.of(context)
                                   .colorScheme
                                   .secondaryContainer,
@@ -122,7 +123,7 @@ class ChesedHome extends StatelessWidget {
                             },
                             child: Ink(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: SpacingHelper.defaultBorderRadius,
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
                                     item.downloadUrl,
@@ -134,7 +135,7 @@ class ChesedHome extends StatelessWidget {
                       }
                       return Ink(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: SpacingHelper.defaultBorderRadius,
                           color:
                               Theme.of(context).colorScheme.secondaryContainer,
                         ),

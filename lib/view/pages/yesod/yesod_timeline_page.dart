@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../common/api/api_mixins.dart';
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../helper/spacing.dart';
 import '../../layout/grid_delegated.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
@@ -297,10 +298,10 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
                 height: widget.cardHeight,
                 width: widget.cardWith,
                 child: Material(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: SpacingHelper.defaultBorderRadius,
                   child: Ink(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                     ),
                     child: const Padding(
                       padding: EdgeInsets.all(16.0),

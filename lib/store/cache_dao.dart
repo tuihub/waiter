@@ -17,7 +17,7 @@ class CacheDao {
 
   String require<T>(String key) {
     if (_cacheBox.containsKey(key)) {
-      return _cacheBox.get(key) as String;
+      return _cacheBox.get(key)!;
     }
     throw CacheMissException(
       'cache data $key is required before cached',

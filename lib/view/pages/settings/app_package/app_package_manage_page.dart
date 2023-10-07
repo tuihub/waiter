@@ -6,8 +6,10 @@ import 'package:get_it/get_it.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../../common/api/api_helper.dart';
 import '../../../../common/api/l10n.dart';
+import '../../../helper/spacing.dart';
 import 'app_package_create_dialog.dart';
 import 'app_package_update_dialog.dart';
 
@@ -41,7 +43,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
                 DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
                   child: MultiSelectDialogField(
                     title: const Text('按数据来源筛选'),
@@ -63,7 +65,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
                       paginatorController.goToFirstPage();
                     },
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                     ),
                   ),
                 ),
