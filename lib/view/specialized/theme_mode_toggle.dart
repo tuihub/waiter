@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../bloc/app_setting/app_setting_bloc.dart';
+
+import '../../bloc/app_setting/app_setting_bloc.dart';
 
 class ThemeModeToggle extends StatelessWidget {
   const ThemeModeToggle({super.key});

@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
 import '../../consts.dart';
-import '../widgets/bootstrap/toasts.dart';
-import '../widgets/connectivity.dart';
-import '../widgets/form_field.dart';
-import '../widgets/title_bar.dart';
+import '../components/toast.dart';
+import '../form/form_field.dart';
+import '../specialized/connectivity.dart';
+import '../specialized/title_bar.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
       child: BlocConsumer<UserBloc, UserLoginState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
-            const BootstrapToast(title: '', message: '欢迎').show(context);
+            const Toast(title: '', message: '欢迎').show(context);
           }
         },
         builder: (context, state) {
@@ -302,8 +302,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     final password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
-      const BootstrapToast(title: '', message: '用户名或密码为空, 请修改后重试')
-          .show(context);
+      const Toast(title: '', message: '用户名或密码为空, 请修改后重试').show(context);
     } else {
       context.read<UserBloc>().add(
             UserLoginEvent(username, password),
@@ -321,7 +320,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     return BlocConsumer<UserBloc, UserLoginState>(
       listener: (context, state) {
         if (state is UserLoginFailed) {
-          BootstrapToast(
+          Toast(
             title: '',
             message: '登录失败,${state.message}',
             action: SnackBarAction(

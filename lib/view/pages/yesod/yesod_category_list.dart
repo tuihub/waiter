@@ -6,8 +6,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
-import '../../widgets/expand_rail_tile.dart';
-import '../../widgets/rail_tile.dart';
+import '../../components/expand_rail_tile.dart';
+import '../../components/rail_tile.dart';
 
 class YesodCategoryListPage extends StatefulWidget {
   const YesodCategoryListPage({super.key, required this.selectedAppID});

@@ -4,8 +4,8 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../../common/api/api_mixins.dart';
-import '../../../common/util/input_formatters.dart';
-import '../../widgets/form_field.dart';
+import '../../form/form_field.dart';
+import '../../form/input_formatters.dart';
 
 class YesodConfigEditDialog extends StatefulWidget {
   final void Function() callback;

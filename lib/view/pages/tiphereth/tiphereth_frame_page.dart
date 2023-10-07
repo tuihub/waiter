@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../bloc/user_login/user_bloc.dart';
-import '../../widgets/bootstrap/toasts.dart';
+import '../../components/toast.dart';
 import 'my_accounts_card.dart';
 import 'my_profile_card.dart';
 
@@ -47,7 +47,7 @@ class _LogoutDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            const BootstrapToast(title: '', message: '已退出登录').show(context);
+            const Toast(title: '', message: '已退出登录').show(context);
             context.read<UserBloc>().add(UserLogoutEvent());
             GoRouter.of(context).go(
               '/login',

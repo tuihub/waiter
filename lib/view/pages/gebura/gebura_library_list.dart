@@ -8,7 +8,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
-import '../../widgets/rail_tile.dart';
+import '../../components/rail_tile.dart';
 
 class GeburaLibraryListPage extends StatefulWidget {
   const GeburaLibraryListPage({super.key, required this.selectedAppID});

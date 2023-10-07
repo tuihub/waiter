@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../consts.dart';
-import '../widgets/actions/theme_mode_toggle.dart';
-import '../widgets/bootstrap/layout.dart';
-import '../widgets/nav_rail.dart';
-import '../widgets/title_bar.dart';
+import '../components/nav_rail.dart';
+import '../layout/bootstrap_breakpoints.dart';
+import '../specialized/theme_mode_toggle.dart';
+import '../specialized/title_bar.dart';
 
 class FramePage extends StatelessWidget {
   const FramePage({

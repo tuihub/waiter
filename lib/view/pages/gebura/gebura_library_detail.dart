@@ -11,7 +11,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../../common/util/platform.dart';
 import '../../../repo/gebura/gebura_repo.dart';
-import '../../widgets/bootstrap/toasts.dart';
+import '../../components/toast.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatefulWidget {
@@ -164,8 +164,7 @@ class AppDetails extends StatelessWidget {
                             .getLauncherSetting(data.app.id.id.toInt());
                         if (setting == null || setting.path.isEmpty) {
                           if (context.mounted) {
-                            const BootstrapToast(
-                                    title: '', message: '未设置应用路径，请完成设置')
+                            const Toast(title: '', message: '未设置应用路径，请完成设置')
                                 .show(context);
                           }
                         } else {

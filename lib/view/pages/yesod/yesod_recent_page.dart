@@ -9,7 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../common/api/api_helper.dart';
 import '../../../repo/yesod/yesod_repo.dart';
-import '../../widgets/bootstrap/layout.dart';
+import '../../layout/bootstrap_container.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 

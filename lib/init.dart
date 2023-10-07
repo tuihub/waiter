@@ -16,7 +16,7 @@ import 'store/setting_dao.dart';
 
 final GetIt getIt = GetIt.instance;
 
-Future<void> setup() async {
+Future<void> init() async {
   // dao
 
   // https://github.com/hivedb/hive/issues/1044

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
-import '../widgets/bootstrap/toasts.dart';
-import '../widgets/title_bar.dart';
+import '../components/toast.dart';
+import '../specialized/title_bar.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({super.key});
@@ -19,7 +19,7 @@ class InitPage extends StatelessWidget {
       child: BlocConsumer<UserBloc, UserLoginState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
-            const BootstrapToast(title: '', message: '欢迎回来').show(context);
+            const Toast(title: '', message: '欢迎回来').show(context);
           }
         },
         builder: (context, state) {

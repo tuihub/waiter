@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../bloc/user_login/user_bloc.dart';
-import '../../widgets/expand_rail_tile.dart';
-import '../../widgets/rail_tile.dart';
+import '../../components/expand_rail_tile.dart';
+import '../../components/rail_tile.dart';
 
 class SettingsFramePage extends StatelessWidget {
   const SettingsFramePage(

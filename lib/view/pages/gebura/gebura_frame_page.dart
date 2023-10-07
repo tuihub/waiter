@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../widgets/rail_tile.dart';
+import '../../components/rail_tile.dart';
 import 'gebura_library_list.dart';
 
 class GeburaFramePage extends StatelessWidget {

@@ -36,8 +36,7 @@ class OverlappingPanels extends StatefulWidget {
       this.right,
       this.restWidth = 40,
       this.onSideChange,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   static OverlappingPanelsState? of(BuildContext context) {
     return context.findAncestorStateOfType<OverlappingPanelsState>();

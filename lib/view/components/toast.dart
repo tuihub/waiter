@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'layout.dart';
+import '../layout/bootstrap_container.dart';
 
-class BootstrapToast {
-  const BootstrapToast({
+class Toast {
+  const Toast({
     required this.title,
     required this.message,
     this.action,

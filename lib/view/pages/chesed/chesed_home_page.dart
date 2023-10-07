@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
-import '../../widgets/bootstrap/toasts.dart';
+import '../../components/toast.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
@@ -163,7 +163,7 @@ class ChesedHome extends StatelessWidget {
                   builder: (context) {
                     return ChesedUpload(
                       callback: () {
-                        const BootstrapToast(
+                        const Toast(
                           title: '',
                           message: '上传成功',
                         ).show(context);

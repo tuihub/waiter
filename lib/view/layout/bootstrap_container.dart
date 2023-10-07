@@ -1,22 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class BootstrapBreakpoints {
-  static const int xs = 0;
-  static const int sm = 576;
-  static const int md = 768;
-  static const int lg = 992;
-  static const int xl = 1200;
-  static const int xxl = 1400;
-}
-
-class _BootstrapContainerMaxWidth {
-  static const double xs = double.infinity;
-  static const double sm = 540;
-  static const double md = 720;
-  static const double lg = 960;
-  static const double xl = 1140;
-  static const double xxl = 1320;
-}
+import 'bootstrap_breakpoints.dart';
 
 class BootstrapContainer extends StatelessWidget {
   const BootstrapContainer(
@@ -32,17 +16,17 @@ class BootstrapContainer extends StatelessWidget {
       late double maxWidth;
 
       if (width >= BootstrapBreakpoints.xxl) {
-        maxWidth = _BootstrapContainerMaxWidth.xxl;
+        maxWidth = BootstrapContainerMaxWidth.xxl;
       } else if (width >= BootstrapBreakpoints.xl) {
-        maxWidth = _BootstrapContainerMaxWidth.xl;
+        maxWidth = BootstrapContainerMaxWidth.xl;
       } else if (width >= BootstrapBreakpoints.lg) {
-        maxWidth = _BootstrapContainerMaxWidth.lg;
+        maxWidth = BootstrapContainerMaxWidth.lg;
       } else if (width >= BootstrapBreakpoints.md) {
-        maxWidth = _BootstrapContainerMaxWidth.md;
+        maxWidth = BootstrapContainerMaxWidth.md;
       } else if (width >= BootstrapBreakpoints.sm) {
-        maxWidth = _BootstrapContainerMaxWidth.sm;
+        maxWidth = BootstrapContainerMaxWidth.sm;
       } else {
-        maxWidth = _BootstrapContainerMaxWidth.xs;
+        maxWidth = BootstrapContainerMaxWidth.xs;
       }
       return _InheritedBootstrapContainer(
         width: maxWidth,
@@ -147,23 +131,23 @@ class BootstrapColumn extends StatelessWidget {
         xxl_ = xl_;
       }
 
-      if (containerWidth == _BootstrapContainerMaxWidth.xs ||
-          containerWidth < _BootstrapContainerMaxWidth.sm) {
+      if (containerWidth == BootstrapContainerMaxWidth.xs ||
+          containerWidth < BootstrapContainerMaxWidth.sm) {
         late double maxWidth = constraints.biggest.width;
         if (maxWidth == double.infinity) {
-          maxWidth = _BootstrapContainerMaxWidth.sm;
+          maxWidth = BootstrapContainerMaxWidth.sm;
         }
         columnWidth = maxWidth * xs_ / 12;
-      } else if (containerWidth < _BootstrapContainerMaxWidth.md) {
-        columnWidth = _BootstrapContainerMaxWidth.sm * sm_ / 12;
-      } else if (containerWidth < _BootstrapContainerMaxWidth.lg) {
-        columnWidth = _BootstrapContainerMaxWidth.md * md_ / 12;
-      } else if (containerWidth < _BootstrapContainerMaxWidth.xl) {
-        columnWidth = _BootstrapContainerMaxWidth.lg * lg_ / 12;
-      } else if (containerWidth < _BootstrapContainerMaxWidth.xxl) {
-        columnWidth = _BootstrapContainerMaxWidth.xl * xl_ / 12;
+      } else if (containerWidth < BootstrapContainerMaxWidth.md) {
+        columnWidth = BootstrapContainerMaxWidth.sm * sm_ / 12;
+      } else if (containerWidth < BootstrapContainerMaxWidth.lg) {
+        columnWidth = BootstrapContainerMaxWidth.md * md_ / 12;
+      } else if (containerWidth < BootstrapContainerMaxWidth.xl) {
+        columnWidth = BootstrapContainerMaxWidth.lg * lg_ / 12;
+      } else if (containerWidth < BootstrapContainerMaxWidth.xxl) {
+        columnWidth = BootstrapContainerMaxWidth.xl * xl_ / 12;
       } else {
-        columnWidth = _BootstrapContainerMaxWidth.xxl * xxl_ / 12;
+        columnWidth = BootstrapContainerMaxWidth.xxl * xxl_ / 12;
       }
 
       debugPrint('$containerWidth $xs_ $sm_ $md_ $lg_ $xl_ $xxl_ $columnWidth');
