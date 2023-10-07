@@ -144,6 +144,22 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   }
 
   @override
+  void didUpdateWidget(covariant OverlappingPanels oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.left == null) {
+      setState(() {
+        translate = 0;
+      });
+    } else {
+      final mediaWidth = MediaQuery.of(context).size.width;
+      setState(() {
+        translate = _calculateGoal(mediaWidth, 1);
+      });
+    }
+    _onApplyTranslation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(children: [
       Offstage(

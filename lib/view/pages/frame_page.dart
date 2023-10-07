@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../common/util/platform.dart';
 import '../../consts.dart';
-import '../components/nav_rail.dart';
-import '../layout/bootstrap_breakpoints.dart';
+import '../layout/overlapping_panels.dart';
+import '../specialized/nav_rail.dart';
 import '../specialized/theme_mode_toggle.dart';
 import '../specialized/title_bar.dart';
 
@@ -27,78 +26,68 @@ class FramePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const TitleBar(
-            actions: [ThemeModeToggle()],
-          ),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.biggest.width;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.biggest.width;
 
-                final stackView =
-                    rightPart != null && width < BootstrapBreakpoints.md;
-
-                final scrollController = ScrollController();
-
-                return WillPopScope(
-                  child: Scaffold(
-                    body: NotificationListener<ScrollNotification>(
-                      onNotification: (ScrollNotification notification) {
-                        if (notification is ScrollEndNotification) {
-                          if (scrollController.offset * 2 >
-                              scrollController.position.maxScrollExtent) {
-                            scrollController.animateTo(
-                                scrollController.position.maxScrollExtent,
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.linear);
-                          } else {
-                            scrollController.animateTo(0,
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.linear);
-                          }
-                        }
-                        return false;
-                      },
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        // physics: const NeverScrollableScrollPhysics(),
-                        controller: scrollController,
-                        child: SizedBox(
-                          width: stackView ? width * 2 - 64 : width,
-                          child: Row(
-                            children: [
-                              _Nav(selectedNav: selectedNav),
-                              SizedBox(
-                                width: stackView
-                                    ? width - 128
-                                    : leftPartWidth != null
-                                        ? min(leftPartWidth!, (width - 64) / 2)
-                                        : (width - 64) / 2,
-                                child: leftPart,
-                              ),
-                              if (rightPart != null)
-                                Expanded(
-                                  child: rightPart!,
-                                )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+        Widget content = rightPart != null
+            ? Row(
+                children: [
+                  _Nav(selectedNav: selectedNav),
+                  SizedBox(
+                    width: leftPartWidth != null ? leftPartWidth! - 64 : 256,
+                    child: leftPart,
                   ),
-                  onWillPop: () async {
-                    scrollController.jumpTo(0);
-                    return false;
-                  },
+                  Expanded(child: rightPart!),
+                ],
+              )
+            : Row(
+                children: [
+                  _Nav(selectedNav: selectedNav),
+                  Expanded(child: leftPart),
+                ],
+              );
+
+        if (PlatformHelper.isAndroid()) {
+          content = rightPart != null
+              ? OverlappingPanels(
+                  left: Row(
+                    children: [
+                      _Nav(selectedNav: selectedNav),
+                      SizedBox(
+                        width: width - 64,
+                        child: leftPart,
+                      ),
+                    ],
+                  ),
+                  main: rightPart!,
+                )
+              : OverlappingPanels(
+                  main: Row(
+                    children: [
+                      _Nav(selectedNav: selectedNav),
+                      SizedBox(
+                        width: width - 64,
+                        child: leftPart,
+                      ),
+                    ],
+                  ),
                 );
-              },
-            ),
+        }
+
+        return Scaffold(
+          body: Column(
+            children: [
+              const TitleBar(
+                actions: [ThemeModeToggle()],
+              ),
+              Expanded(
+                child: content,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
