@@ -88,7 +88,7 @@ dependencies:
   fixnum: ^1.1.0
   open_file: ^3.3.2
   cached_network_image: ^3.2.3
-  
+  universal_io: ^2.2.2
 
 
 dev_dependencies:

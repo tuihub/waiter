@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:file_sizes/file_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:universal_io/io.dart';
+
 import '../../consts.dart';
 
 class CacheSetting extends StatefulWidget {

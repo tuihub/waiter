@@ -1,6 +1,5 @@
-import 'dart:io' as io;
-
 import 'package:flutter/foundation.dart';
+import 'package:universal_io/io.dart' as io;
 
 final class PlatformHelper {
   static bool isAndroidApp() {
