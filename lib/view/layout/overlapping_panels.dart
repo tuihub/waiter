@@ -95,7 +95,10 @@ class OverlappingPanelsState extends State<OverlappingPanels>
       tween = Tween<double>(begin: translate, end: 0);
     }
 
-    final animation = tween.animate(animationController);
+    final animation = tween.animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastOutSlowIn,
+    ));
 
     animation.addListener(() {
       setState(() {
