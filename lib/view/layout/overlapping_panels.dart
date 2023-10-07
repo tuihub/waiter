@@ -62,7 +62,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     final mediaWidth = MediaQuery.of(context).size.width;
 
     final animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+        vsync: this, duration: const Duration(milliseconds: 160));
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -75,7 +75,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
       }
     });
 
-    Tween<double> tween;
+    double goal;
     if (pixelsPerSecond.dx.abs() > minPixelsPerSecond) {
       final multiplier = (translate > lastTranslate
           ? lastTranslate < 0
@@ -84,16 +84,18 @@ class OverlappingPanelsState extends State<OverlappingPanels>
           : lastTranslate > 0
               ? 0
               : -1);
-      final goal = _calculateGoal(mediaWidth, multiplier);
-      debugPrint('$goal');
-      tween = Tween(begin: translate, end: goal);
+      goal = _calculateGoal(mediaWidth, multiplier);
     } else if (translate.abs() >= mediaWidth / 2) {
       final multiplier = (translate > 0 ? 1 : -1);
-      final goal = _calculateGoal(mediaWidth, multiplier);
-      tween = Tween(begin: translate, end: goal);
+      goal = _calculateGoal(mediaWidth, multiplier);
     } else {
-      tween = Tween<double>(begin: translate, end: 0);
+      goal = 0;
     }
+
+    if (widget.left == null && goal > 0) goal = 0;
+    if (widget.right == null && goal < 0) goal = 0;
+
+    final Tween<double> tween = Tween<double>(begin: translate, end: goal);
 
     final animation = tween.animate(CurvedAnimation(
       parent: animationController,
