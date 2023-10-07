@@ -4,7 +4,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 
-const double bleedWidth = 20;
+const double minPixelsPerSecond = 240;
 
 /// Display sections
 enum RevealSide { left, right, main }
@@ -34,7 +34,7 @@ class OverlappingPanels extends StatefulWidget {
       {this.left,
       required this.main,
       this.right,
-      this.restWidth = 40,
+      this.restWidth = 64,
       this.onSideChange,
       super.key});
 
@@ -52,12 +52,13 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     with TickerProviderStateMixin {
   AnimationController? controller;
   double translate = 0;
+  double lastTranslate = 0;
 
   double _calculateGoal(double width, int multiplier) {
     return (multiplier * width) + (-multiplier * widget.restWidth);
   }
 
-  void _onApplyTranslation() {
+  void _onApplyTranslation(Offset pixelsPerSecond) {
     final mediaWidth = MediaQuery.of(context).size.width;
 
     final animationController = AnimationController(
@@ -74,28 +75,35 @@ class OverlappingPanelsState extends State<OverlappingPanels>
       }
     });
 
-    if (translate.abs() >= mediaWidth / 2) {
+    Tween<double> tween;
+    if (pixelsPerSecond.dx.abs() > minPixelsPerSecond) {
+      final multiplier = (translate > lastTranslate
+          ? lastTranslate < 0
+              ? 0
+              : 1
+          : lastTranslate > 0
+              ? 0
+              : -1);
+      final goal = _calculateGoal(mediaWidth, multiplier);
+      debugPrint('$goal');
+      tween = Tween(begin: translate, end: goal);
+    } else if (translate.abs() >= mediaWidth / 2) {
       final multiplier = (translate > 0 ? 1 : -1);
       final goal = _calculateGoal(mediaWidth, multiplier);
-      final Tween<double> tween = Tween(begin: translate, end: goal);
-
-      final animation = tween.animate(animationController);
-
-      animation.addListener(() {
-        setState(() {
-          translate = animation.value;
-        });
-      });
+      tween = Tween(begin: translate, end: goal);
     } else {
-      final animation =
-          Tween<double>(begin: translate, end: 0).animate(animationController);
-
-      animation.addListener(() {
-        setState(() {
-          translate = animation.value;
-        });
-      });
+      tween = Tween<double>(begin: translate, end: 0);
     }
+
+    final animation = tween.animate(animationController);
+
+    animation.addListener(() {
+      setState(() {
+        translate = animation.value;
+        lastTranslate = animation.value;
+      });
+    });
+    debugPrint('pixels ${pixelsPerSecond.dx} $translate $lastTranslate');
 
     animationController.forward();
   }
@@ -116,7 +124,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _onApplyTranslation();
+        _onApplyTranslation(Offset.zero);
         animationController.dispose();
       }
     });
@@ -156,7 +164,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
         translate = _calculateGoal(mediaWidth, 1);
       });
     }
-    _onApplyTranslation();
+    _onApplyTranslation(Offset.zero);
   }
 
   @override
@@ -180,7 +188,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
           onTranslate(details.delta.dx);
         },
         onHorizontalDragEnd: (details) {
-          _onApplyTranslation();
+          _onApplyTranslation(details.velocity.pixelsPerSecond);
         },
       ),
     ]);
