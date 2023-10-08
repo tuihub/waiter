@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
+import '../../common/util/platform.dart';
 import '../../consts.dart';
 import '../components/toast.dart';
 import '../form/form_field.dart';
+import '../layout/bootstrap_container.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/title_bar.dart';
 
@@ -30,31 +32,25 @@ class LoginPage extends StatelessWidget {
             context.read<UserBloc>().add(LoadLocalSettingEvent());
           }
           return Scaffold(
-            body: Column(children: [
-              const TitleBar(),
-              Expanded(
-                child: Scaffold(
-                  body: Center(
-                    child: Card(
-                      child: SizedBox(
-                        width: 540,
-                        height: 450,
+            body: SafeArea(
+              bottom: false,
+              maintainBottomViewPadding: true,
+              child: Column(children: [
+                if (PlatformHelper.isWindowsApp()) const TitleBar(),
+                Expanded(
+                  child: BootstrapContainer(children: [
+                    BootstrapColumn(
+                      xxs: 12,
+                      md: 8,
+                      lg: 6,
+                      child: Card(
                         child: getInitWidget(state),
                       ),
                     ),
-                  ),
+                  ]),
                 ),
-              ),
-            ]),
-            floatingActionButton: state is ServerSelected
-                ? FloatingActionButton.extended(
-                    onPressed: () {
-                      context.read<UserBloc>().add(ManualLoginEvent());
-                    },
-                    icon: const Icon(Icons.arrow_back),
-                    label: const Text('返回'),
-                  )
-                : Container(),
+              ]),
+            ),
           );
         },
       ),
@@ -63,9 +59,9 @@ class LoginPage extends StatelessWidget {
 
   Widget getInitWidget(UserLoginState state) {
     if (state is ServerSelected) {
-      return const LoginWidget();
+      return const SizedBox(height: 360, child: LoginWidget());
     }
-    return const ServerSelectWidget();
+    return const SizedBox(height: 550, child: ServerSelectWidget());
   }
 }
 
@@ -143,7 +139,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
               title: const Center(child: Text('选择服务器')),
               bottom: const TabBar(tabs: [
                 Tab(
-                  text: '输入服务器',
+                  text: '输入',
                 ),
                 Tab(
                   text: '内置',
@@ -208,6 +204,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextFormField(
               onSaved: (newValue) => host = newValue!,
@@ -243,7 +240,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             const SizedBox(
-              height: 16,
+              height: 8,
             ),
             SwitchFormField(
               onSaved: (newValue) => tls = newValue!,
@@ -251,9 +248,12 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
               initialValue: tls,
             ),
             const SizedBox(
-              height: 16,
+              height: 8,
             ),
-            TextButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(128, 32),
+              ),
               onPressed: submit,
               child: const Text('检查'),
             ),
@@ -347,6 +347,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () {
+                    context.read<UserBloc>().add(ManualLoginEvent());
+                  },
+                  child: const Text('< 返回'),
+                ),
+              ),
               TextField(
                 decoration: const InputDecoration(
                   labelText: '用户名',
@@ -363,7 +372,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 obscureText: hidePassword,
                 decoration: InputDecoration(
                   labelText: '密码',
-                  suffix: IconButton(
+                  suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
                         hidePassword = !hidePassword;

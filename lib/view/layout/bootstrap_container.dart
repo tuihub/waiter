@@ -25,8 +25,10 @@ class BootstrapContainer extends StatelessWidget {
         maxWidth = BootstrapContainerMaxWidth.md;
       } else if (width >= BootstrapBreakpoints.sm) {
         maxWidth = BootstrapContainerMaxWidth.sm;
-      } else {
+      } else if (width >= BootstrapBreakpoints.xs) {
         maxWidth = BootstrapContainerMaxWidth.xs;
+      } else {
+        maxWidth = BootstrapContainerMaxWidth.xxs;
       }
       return _InheritedBootstrapContainer(
         width: maxWidth,
@@ -39,6 +41,7 @@ class BootstrapContainer extends StatelessWidget {
             ),
             width: maxWidth,
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: children,
             ),
           ),
@@ -71,6 +74,7 @@ class BootstrapColumn extends StatelessWidget {
   const BootstrapColumn(
       {super.key,
       required this.child,
+      this.xxs = -1,
       this.xs = -1,
       this.sm = -1,
       this.md = -1,
@@ -79,6 +83,7 @@ class BootstrapColumn extends StatelessWidget {
       this.xxl = -1});
 
   final Widget child;
+  final int xxs;
   final int xs;
   final int sm;
   final int md;
@@ -88,6 +93,7 @@ class BootstrapColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int xxs_ = 0;
     int xs_ = 0;
     int sm_ = 0;
     int md_ = 0;
@@ -100,10 +106,15 @@ class BootstrapColumn extends StatelessWidget {
           _InheritedBootstrapContainer.of(context)?.width ?? double.infinity;
       late double columnWidth;
 
+      if (0 <= xxs && xxs <= 12) {
+        xxs_ = xxs;
+      } else {
+        xxs_ = 0;
+      }
       if (0 <= xs && xs <= 12) {
         xs_ = xs;
       } else {
-        xs_ = 0;
+        xs_ = xxs_;
       }
       if (0 <= sm && sm <= 12) {
         sm_ = sm;
@@ -131,13 +142,15 @@ class BootstrapColumn extends StatelessWidget {
         xxl_ = xl_;
       }
 
-      if (containerWidth == BootstrapContainerMaxWidth.xs ||
-          containerWidth < BootstrapContainerMaxWidth.sm) {
+      if (containerWidth == BootstrapContainerMaxWidth.xxs ||
+          containerWidth < BootstrapContainerMaxWidth.xs) {
         late double maxWidth = constraints.biggest.width;
         if (maxWidth == double.infinity) {
-          maxWidth = BootstrapContainerMaxWidth.sm;
+          maxWidth = BootstrapContainerMaxWidth.xs;
         }
-        columnWidth = maxWidth * xs_ / 12;
+        columnWidth = maxWidth * xxs_ / 12;
+      } else if (containerWidth < BootstrapContainerMaxWidth.sm) {
+        columnWidth = BootstrapContainerMaxWidth.xs * xs_ / 12;
       } else if (containerWidth < BootstrapContainerMaxWidth.md) {
         columnWidth = BootstrapContainerMaxWidth.sm * sm_ / 12;
       } else if (containerWidth < BootstrapContainerMaxWidth.lg) {
@@ -150,7 +163,8 @@ class BootstrapColumn extends StatelessWidget {
         columnWidth = BootstrapContainerMaxWidth.xxl * xxl_ / 12;
       }
 
-      debugPrint('$containerWidth $xs_ $sm_ $md_ $lg_ $xl_ $xxl_ $columnWidth');
+      debugPrint(
+          '$containerWidth $xxs_ $xs_ $sm_ $md_ $lg_ $xl_ $xxl_ $columnWidth');
 
       return SizedBox(
         width: columnWidth,

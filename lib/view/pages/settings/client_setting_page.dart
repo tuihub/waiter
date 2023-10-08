@@ -34,7 +34,7 @@ class ClientSettingPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       color: Theme.of(context).colorScheme.surfaceVariant,
                     ),
-                    height: 232,
+                    height: 240,
                     child: Column(
                       children: [
                         ListTile(

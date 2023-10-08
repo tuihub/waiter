@@ -210,7 +210,7 @@ GoRouter getRouter() {
                 return '/app/Yesod/recent';
               }
               if (appName == 'Gebura') {
-                return '/app/Gebura/library';
+                return '/app/Gebura/store';
               }
               if (appName == 'Settings') {
                 return '/app/Settings/client';

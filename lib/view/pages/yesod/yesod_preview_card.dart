@@ -23,113 +23,121 @@ class YesodPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: SpacingHelper.defaultBorderRadius,
-      child: Ink(
-        decoration: BoxDecoration(
-          borderRadius: SpacingHelper.defaultBorderRadius,
-          color: Theme.of(context).cardColor,
-        ),
-        child: InkWell(
-          borderRadius: SpacingHelper.defaultBorderRadius,
-          onTap: callback,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 18,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (iconUrl != null && iconUrl!.isNotEmpty)
-                        CachedNetworkImage(
-                          imageUrl: iconUrl!,
-                          height: 16,
-                          width: 16,
-                        ),
-                      if (iconUrl != null && iconUrl!.isNotEmpty)
-                        const SizedBox(
-                          width: 8,
-                        ),
-                      SizedBox(
-                        height: 18,
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).disabledColor,
+    return LayoutBuilder(builder: (context, constraints) {
+      const imgPadding = 8;
+      final double imgSize = constraints.biggest.width < 406
+          ? (constraints.biggest.width - 4 * imgPadding) / 3
+          : 130;
+      return Material(
+        borderRadius: SpacingHelper.defaultBorderRadius,
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: SpacingHelper.defaultBorderRadius,
+            color: Theme.of(context).cardColor,
+          ),
+          child: InkWell(
+            borderRadius: SpacingHelper.defaultBorderRadius,
+            onTap: callback,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 18,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (iconUrl != null && iconUrl!.isNotEmpty)
+                          CachedNetworkImage(
+                            imageUrl: iconUrl!,
+                            height: 16,
+                            width: 16,
+                          ),
+                        if (iconUrl != null && iconUrl!.isNotEmpty)
+                          const SizedBox(
+                            width: 8,
+                          ),
+                        SizedBox(
+                          height: 18,
+                          child: Text(
+                            name,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).disabledColor,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                if (description != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
                     child: Text(
-                      '${description!}...',
+                      title,
                       style: const TextStyle(
-                        fontSize: 15,
+                          fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  if (description != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Text(
+                        '${description!}...',
+                        style: const TextStyle(
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                if (images != null && images!.isNotEmpty)
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: images!.length == 1
-                          ? 260
-                          : images!.length <= 3
-                              ? 130
-                              : images!.length <= 6
-                                  ? 268
-                                  : 406,
-                      maxWidth: 406,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
-                      child: images!.length == 1
-                          ? CachedNetworkImage(imageUrl: images![0])
-                          : Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                for (final image in images!)
-                                  Container(
-                                    width: images!.length == 1
-                                        ? 406
-                                        : images!.length == 2
-                                            ? 260
-                                            : 130,
-                                    height: images!.length <= 3 ? 406 : 130,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image:
-                                            CachedNetworkImageProvider(image),
-                                        fit: BoxFit.cover,
+                  if (images != null && images!.isNotEmpty)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: images!.length == 1
+                            ? imgSize * 2
+                            : images!.length <= 3
+                                ? imgSize
+                                : images!.length <= 6
+                                    ? imgSize * 2 + imgPadding
+                                    : imgSize * 3 + imgPadding * 2,
+                        maxWidth: imgSize * 3 + imgPadding * 2,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        child: images!.length == 1
+                            ? CachedNetworkImage(imageUrl: images![0])
+                            : Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  for (final image in images!)
+                                    Container(
+                                      width: images!.length == 1
+                                          ? imgSize * 3 + imgPadding * 2
+                                          : images!.length == 2
+                                              ? imgSize * 2
+                                              : imgSize,
+                                      height: images!.length <= 3
+                                          ? imgSize * 3 + imgPadding * 2
+                                          : imgSize,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image:
+                                              CachedNetworkImageProvider(image),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            ),
+                                ],
+                              ),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

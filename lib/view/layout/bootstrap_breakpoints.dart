@@ -1,5 +1,6 @@
 class BootstrapBreakpoints {
-  static const int xs = 0;
+  static const int xxs = 0;
+  static const int xs = 344;
   static const int sm = 576;
   static const int md = 768;
   static const int lg = 992;
@@ -8,7 +9,8 @@ class BootstrapBreakpoints {
 }
 
 class BootstrapContainerMaxWidth {
-  static const double xs = double.infinity;
+  static const double xxs = double.infinity;
+  static const double xs = 320;
   static const double sm = 540;
   static const double md = 720;
   static const double lg = 960;

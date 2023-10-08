@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
+import '../../common/util/platform.dart';
 import '../components/toast.dart';
+import '../layout/bootstrap_container.dart';
 import '../specialized/title_bar.dart';
 
 class InitPage extends StatelessWidget {
@@ -27,22 +29,30 @@ class InitPage extends StatelessWidget {
             context.read<UserBloc>().add(LoadLocalSettingEvent());
           }
           return Scaffold(
-            body: Column(children: [
-              const TitleBar(),
-              Expanded(
-                child: Scaffold(
-                  body: Center(
-                    child: Card(
-                      child: SizedBox(
-                        width: 540,
-                        height: 320,
-                        child: getInitWidget(state),
+            body: SafeArea(
+              bottom: false,
+              maintainBottomViewPadding: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (PlatformHelper.isWindowsApp()) const TitleBar(),
+                  Expanded(
+                    child: BootstrapContainer(children: [
+                      BootstrapColumn(
+                        xxs: 12,
+                        md: 6,
+                        child: Card(
+                          child: SizedBox(
+                            height: 320,
+                            child: getInitWidget(state),
+                          ),
+                        ),
                       ),
-                    ),
+                    ]),
                   ),
-                ),
+                ],
               ),
-            ]),
+            ),
             floatingActionButton: state is! AutoLogging
                 ? FloatingActionButton.extended(
                     onPressed: () {
@@ -62,10 +72,11 @@ class InitPage extends StatelessWidget {
   }
 
   Widget getInitWidget(UserLoginState state) {
-    if (state is AutoLogging) {
-      return const InitWidget();
-    }
-    return const WelComeWidget();
+    return const InitWidget();
+    // if (state is AutoLogging) {
+    //   return const InitWidget();
+    // }
+    // return const WelComeWidget();
   }
 }
 
@@ -74,49 +85,65 @@ class InitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Tui',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              margin: const EdgeInsets.symmetric(horizontal: 2),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 145, 0),
-                borderRadius: BorderRadius.circular(4),
+    return BlocConsumer<UserBloc, UserLoginState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if (state is AppInitialize) {
+            context.read<UserBloc>().add(LoadLocalSettingEvent());
+          }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Tui',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'Hub',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text(
-                'Hub',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32,
-                  color: Colors.black,
+              const SizedBox(
+                height: 32,
+              ),
+              if (state is AutoLogging)
+                const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                )
+              else
+                const SizedBox(
+                  height: 24,
+                  child: Text(
+                    'CLICK LOGIN TO START',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 32,
-        ),
-        const SizedBox(
-          height: 24,
-          width: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-          ),
-        ),
-      ],
-    );
+            ],
+          );
+        });
   }
 }
 

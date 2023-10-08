@@ -100,87 +100,82 @@ class _YesodRecentListState extends State<YesodRecentList> {
     if (lastPageNum >= 0) {
       return BootstrapContainer(
         children: [
-          const BootstrapColumn(xs: 1, lg: 2, child: SizedBox()),
-          Expanded(
-            child: BootstrapColumn(
-              xs: 10,
-              lg: 8,
-              child: DynMouseScroll(
-                builder: (context, controller, physics) {
-                  controller.addListener(() {
-                    if (controller.position.pixels ==
-                        controller.position.maxScrollExtent) {
-                      if (items[lastPageNum] != null &&
-                          items[lastPageNum]!.isNotEmpty) {
-                        setState(() {
-                          lastPageNum++;
-                        });
-                      }
-                      if (items[lastPageNum] == null) {
-                        unawaited(loadData(lastPageNum));
-                      } else {
-                        setState(() {
-                          pageEnd = true;
-                        });
-                      }
+          BootstrapColumn(
+            xxs: 12,
+            md: 9,
+            lg: 7,
+            child: DynMouseScroll(
+              builder: (context, controller, physics) {
+                controller.addListener(() {
+                  if (controller.position.pixels ==
+                      controller.position.maxScrollExtent) {
+                    if (items[lastPageNum] != null &&
+                        items[lastPageNum]!.isNotEmpty) {
+                      setState(() {
+                        lastPageNum++;
+                      });
                     }
-                  });
+                    if (items[lastPageNum] == null) {
+                      unawaited(loadData(lastPageNum));
+                    } else {
+                      setState(() {
+                        pageEnd = true;
+                      });
+                    }
+                  }
+                });
 
-                  return ListView.builder(
-                    controller: controller,
-                    physics: physics,
-                    itemCount: flattenedItems.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < flattenedItems.length) {
-                        final item = flattenedItems[index];
+                return ListView.builder(
+                  controller: controller,
+                  physics: physics,
+                  itemCount: flattenedItems.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index < flattenedItems.length) {
+                      final item = flattenedItems[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: OpenContainer(
-                            openBuilder: (context, closedContainer) {
-                              return Container(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                child: YesodDetailPage(
-                                  itemId: item.itemId,
-                                ),
-                              );
-                            },
-                            openColor: theme.colorScheme.primary,
-                            closedShape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                            ),
-                            closedElevation: 0,
-                            closedColor: theme.cardColor,
-                            closedBuilder: (context, openContainer) {
-                              return YesodPreviewCard(
-                                name:
-                                    '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
-                                title: item.title,
-                                callback: openContainer,
-                                iconUrl: item.feedAvatarUrl,
-                                images: item.imageUrls,
-                                description: item.shortDescription,
-                              );
-                            },
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: OpenContainer(
+                          openBuilder: (context, closedContainer) {
+                            return Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              child: YesodDetailPage(
+                                itemId: item.itemId,
+                              ),
+                            );
+                          },
+                          openColor: theme.colorScheme.primary,
+                          closedShape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
-                        );
-                      } else {
-                        return const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Center(
-                            child: Text('加载中'),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-              ),
+                          closedElevation: 0,
+                          closedColor: theme.cardColor,
+                          closedBuilder: (context, openContainer) {
+                            return YesodPreviewCard(
+                              name:
+                                  '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
+                              title: item.title,
+                              callback: openContainer,
+                              iconUrl: item.feedAvatarUrl,
+                              images: item.imageUrls,
+                              description: item.shortDescription,
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: Text('加载中'),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
             ),
           ),
-          const BootstrapColumn(xs: 1, lg: 2, child: SizedBox()),
         ],
       );
     }

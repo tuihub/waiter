@@ -46,7 +46,7 @@ class FramePage extends StatelessWidget {
                 ],
               );
 
-        if (PlatformHelper.isWeb()) {
+        if (PlatformHelper.isAndroid()) {
           content = rightPart != null
               ? OverlappingPanels(
                   left: Row(
@@ -59,7 +59,8 @@ class FramePage extends StatelessWidget {
                     ],
                   ),
                   main: DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.white),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceVariant),
                     child: rightPart,
                   ),
                 )
@@ -77,15 +78,20 @@ class FramePage extends StatelessWidget {
         }
 
         return Scaffold(
-          body: Column(
-            children: [
-              const TitleBar(
-                actions: [ThemeModeToggle()],
-              ),
-              Expanded(
-                child: content,
-              ),
-            ],
+          body: SafeArea(
+            bottom: false,
+            maintainBottomViewPadding: true,
+            child: Column(
+              children: [
+                if (PlatformHelper.isWindowsApp())
+                  const TitleBar(
+                    actions: [ThemeModeToggle()],
+                  ),
+                Expanded(
+                  child: content,
+                ),
+              ],
+            ),
           ),
         );
       },

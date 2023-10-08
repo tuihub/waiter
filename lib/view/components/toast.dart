@@ -64,10 +64,10 @@ class Toast {
     return BootstrapContainer(
       alignment: Alignment.centerRight,
       children: [
-        const BootstrapColumn(xs: 0, sm: 6, md: 8, child: SizedBox()),
+        const BootstrapColumn(xxs: 0, sm: 6, md: 8, child: SizedBox()),
         Expanded(
           child: BootstrapColumn(
-            xs: 12,
+            xxs: 12,
             sm: 6,
             md: 4,
             child: Container(
