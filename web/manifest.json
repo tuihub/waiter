@@ -1,6 +1,6 @@
 {
-    "name": "waiter",
-    "short_name": "waiter",
+    "name": "TuiHub",
+    "short_name": "TuiHub",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
