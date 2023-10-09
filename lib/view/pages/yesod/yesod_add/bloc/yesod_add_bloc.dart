@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:favicon/favicon.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -43,14 +42,12 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
           debugPrint(data.title);
 
           debugPrint(data.description);
-          final icon = await FaviconFinder.getBest(Uri.parse(event.url).origin);
-          debugPrint(icon.toString());
 
           final subscription = RssSubscription(
               title: data.title!,
               link: event.url,
               description: data.description!,
-              iconUrl: icon!.url);
+              iconUrl: '');
 
           final item = data.items!.first;
 

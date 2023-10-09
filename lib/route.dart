@@ -46,7 +46,7 @@ GoRouter getRouter() {
         return '/login';
       }
       if (context.read<UserBloc>().state is PostLogin) {
-        if (state.location == '/login' || state.location == '/') {
+        if (state.uri.toString() == '/login' || state.uri.toString() == '/') {
           final userPath = context.read<AppSettingBloc>().userPath;
           if (userPath.startsWith('/app')) {
             return userPath;
@@ -56,7 +56,7 @@ GoRouter getRouter() {
           return '/app/Home';
         }
       }
-      context.read<AppSettingBloc>().userPath = state.location;
+      context.read<AppSettingBloc>().userPath = state.uri.toString();
       return null;
     },
     routes: [
@@ -71,8 +71,8 @@ GoRouter getRouter() {
       ShellRoute(
         navigatorKey: _appNavigateKey,
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          var appName = state.params['appName'] ?? '';
-          final fullPath = state.fullpath ?? '/app/Home';
+          var appName = state.pathParameters['appName'] ?? '';
+          final fullPath = state.fullPath ?? '/app/Home';
           if (appName == '' && fullPath.startsWith('/app')) {
             appName = fullPath.split('/')[2];
           }
@@ -98,7 +98,7 @@ GoRouter getRouter() {
             navigatorKey: _yesodNavigateKey,
             pageBuilder:
                 (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.params['function'] ?? 'recent';
+              final function = state.pathParameters['function'] ?? 'recent';
               return NoTransitionPage(
                 child: FramePage(
                   selectedNav: 'Yesod',
@@ -118,7 +118,7 @@ GoRouter getRouter() {
                     'timeline': const YesodTimelinePage(),
                     'config': const YesodConfigPage()
                   };
-                  final function = state.params['function'] ?? 'recent';
+                  final function = state.pathParameters['function'] ?? 'recent';
                   return NoTransitionPage(
                     child: yesodPages[function] ?? const SizedBox(),
                   );
@@ -130,8 +130,8 @@ GoRouter getRouter() {
             navigatorKey: _geburaNavigateKey,
             pageBuilder:
                 (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.params['function'] ?? 'library';
-              final appID = state.queryParams['id'] ?? '0';
+              final function = state.pathParameters['function'] ?? 'library';
+              final appID = state.uri.queryParameters['id'] ?? '0';
               return NoTransitionPage(
                 child: FramePage(
                   selectedNav: 'Gebura',
@@ -147,8 +147,9 @@ GoRouter getRouter() {
               GoRoute(
                 path: '/app/Gebura/:function',
                 pageBuilder: (context, state) {
-                  final function = state.params['function'] ?? 'library';
-                  final id = state.queryParams['id'] ?? '0';
+                  final function =
+                      state.pathParameters['function'] ?? 'library';
+                  final id = state.uri.queryParameters['id'] ?? '0';
                   final appID = int.tryParse(id) ?? 0;
                   if (function == 'library') {
                     if (appID != 0) {
@@ -173,7 +174,7 @@ GoRouter getRouter() {
             navigatorKey: _settingsNavigateKey,
             pageBuilder:
                 (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.params['function'] ?? 'client';
+              final function = state.pathParameters['function'] ?? 'client';
               return NoTransitionPage(
                 child: FramePage(
                   selectedNav: 'Settings',
@@ -194,7 +195,7 @@ GoRouter getRouter() {
                     'app': const AppManagePage(),
                     'appPackage': const AppPackageManagePage(),
                   };
-                  final function = state.params['function'] ?? 'client';
+                  final function = state.pathParameters['function'] ?? 'client';
                   return NoTransitionPage(
                     child: settingsPages[function] ?? const SizedBox(),
                   );
@@ -205,7 +206,7 @@ GoRouter getRouter() {
           GoRoute(
             path: '/app/:appName',
             redirect: (context, state) {
-              final appName = state.params['appName'];
+              final appName = state.pathParameters['appName'];
               if (appName == 'Yesod') {
                 return '/app/Yesod/recent';
               }
@@ -218,7 +219,7 @@ GoRouter getRouter() {
               return null;
             },
             pageBuilder: (context, state) {
-              final appName = state.params['appName'];
+              final appName = state.pathParameters['appName'];
               Widget page = const SizedBox();
 
               if (appName == 'Tiphereth') page = const TipherethFramePage();

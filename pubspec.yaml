@@ -47,12 +47,13 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/tuihub/protos.git
-      
+      ref: master
+
   # theme
   flex_color_scheme: ^7.0.0
-  
+
   # view tool
-  fl_chart: ^0.61.0
+  fl_chart: ^0.64.0
   lottie: ^2.2.0
   data_table_2: ^2.3.12
   animated_text_kit: ^4.2.2
@@ -69,15 +70,14 @@ dependencies:
 
   # rust bridge
   ffi: ^2.0.1
-  flutter_rust_bridge: 1.72.2
+  flutter_rust_bridge: 1.82.1 # use fixed version
   freezed_annotation: ^2.2.0
 
   # web
-  http: ^0.13.5
-  favicon: ^1.1.1
+  http: ^1.1.0
 
   # others
-  go_router: ^6.5.7
+  go_router: ^11.1.3
   file_picker: ^5.2.10
   screen_capturer: ^0.1.4
   file_sizes: ^1.0.6
@@ -101,9 +101,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  ffigen: ^8.0.2
+  ffigen: ^9.0.1
   build_runner: ^2.3.3
-  freezed: ^2.3.2
+  freezed: ^2.4.1
   floor_generator: ^1.4.2
 
 # For information on the generic Dart part of this file, see the
