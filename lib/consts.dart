@@ -1,8 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-import 'view/pages/home_page.dart';
-
 class App {
   final String name;
   final IconData icon;
@@ -12,7 +10,7 @@ class App {
 }
 
 final appList = [
-  App('Home', Icons.home, const HomePage()),
+  // App('Home', Icons.home, const HomePage()),
   App('Gebura', Icons.casino, const SizedBox()),
   App('Yesod', Icons.rss_feed, const SizedBox()),
   // App('Chesed', Icons.photo_album, ChesedHome()),

@@ -8,7 +8,6 @@ import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/api/client.dart';
 import 'common/util/stream_listener.dart';
-import 'consts.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
 import 'view/pages/gebura/gebura_nav.dart';
@@ -26,8 +25,8 @@ import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_timeline_page.dart';
 
-final GlobalKey<NavigatorState> _appNavigateKey = GlobalKey<NavigatorState>();
-
+final GlobalKey<NavigatorState> _tipherethNavigateKey =
+    GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _geburaNavigateKey =
     GlobalKey<NavigatorState>();
@@ -53,7 +52,7 @@ GoRouter getRouter() {
           }
 
           // return context.read<AppSettingBloc>().userPath;
-          return '/app/Home';
+          return '/app/Tiphereth';
         }
       }
       context.read<AppSettingBloc>().userPath = state.uri.toString();
@@ -68,11 +67,10 @@ GoRouter getRouter() {
         path: '/login',
         builder: (context, state) => const LoginPage(),
       ),
-      ShellRoute(
-        navigatorKey: _appNavigateKey,
+      StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
           var appName = state.pathParameters['appName'] ?? '';
-          final fullPath = state.fullPath ?? '/app/Home';
+          final fullPath = state.fullPath ?? '/app/Tiphereth';
           if (appName == '' && fullPath.startsWith('/app')) {
             appName = fullPath.split('/')[2];
           }
@@ -93,23 +91,32 @@ GoRouter getRouter() {
             },
           );
         },
-        routes: [
-          ShellRoute(
-            navigatorKey: _yesodNavigateKey,
-            pageBuilder:
-                (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.pathParameters['function'] ?? 'recent';
-              return NoTransitionPage(
-                child: FramePage(
-                  selectedNav: 'Yesod',
-                  leftPart: YesodNav(
-                    function: function,
-                  ),
-                  rightPart: child,
-                ),
-              );
-            },
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _tipherethNavigateKey,
             routes: [
+              GoRoute(
+                path: '/app/Tiphereth',
+                pageBuilder: (context, state) {
+                  return const NoTransitionPage(
+                    child: FramePage(
+                      selectedNav: 'Tiphereth',
+                      leftPart: TipherethFramePage(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _yesodNavigateKey,
+            routes: [
+              GoRoute(
+                path: '/app/Yesod',
+                redirect: (context, state) {
+                  return '/app/Yesod/recent';
+                },
+              ),
               GoRoute(
                 path: '/app/Yesod/:function',
                 pageBuilder: (context, state) {
@@ -120,30 +127,27 @@ GoRouter getRouter() {
                   };
                   final function = state.pathParameters['function'] ?? 'recent';
                   return NoTransitionPage(
-                    child: yesodPages[function] ?? const SizedBox(),
+                    child: FramePage(
+                      selectedNav: 'Yesod',
+                      leftPart: YesodNav(
+                        function: function,
+                      ),
+                      rightPart: yesodPages[function],
+                    ),
                   );
                 },
               ),
             ],
           ),
-          ShellRoute(
+          StatefulShellBranch(
             navigatorKey: _geburaNavigateKey,
-            pageBuilder:
-                (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.pathParameters['function'] ?? 'library';
-              final appID = state.uri.queryParameters['id'] ?? '0';
-              return NoTransitionPage(
-                child: FramePage(
-                  selectedNav: 'Gebura',
-                  leftPart: GeburaNav(
-                    function: function,
-                    selectedAppID: appID,
-                  ),
-                  rightPart: child,
-                ),
-              );
-            },
             routes: [
+              GoRoute(
+                path: '/app/Gebura',
+                redirect: (context, state) {
+                  return '/app/Gebura/store';
+                },
+              ),
               GoRoute(
                 path: '/app/Gebura/:function',
                 pageBuilder: (context, state) {
@@ -151,41 +155,31 @@ GoRouter getRouter() {
                       state.pathParameters['function'] ?? 'library';
                   final id = state.uri.queryParameters['id'] ?? '0';
                   final appID = int.tryParse(id) ?? 0;
-                  if (function == 'library') {
-                    if (appID != 0) {
-                      return NoTransitionPage(
-                        child: GeburaLibraryDetailPage(appID: appID),
-                      );
-                    }
-                  }
-                  if (function == 'store') {
-                    return const NoTransitionPage(
-                      child: GeburaStorePage(),
-                    );
-                  }
-                  return const NoTransitionPage(
-                    child: SizedBox(),
+                  return NoTransitionPage(
+                    child: FramePage(
+                      selectedNav: 'Gebura',
+                      leftPart: GeburaNav(
+                        function: function,
+                        selectedAppID: id,
+                      ),
+                      rightPart: function == 'store'
+                          ? const GeburaStorePage()
+                          : GeburaLibraryDetailPage(appID: appID),
+                    ),
                   );
                 },
               ),
             ],
           ),
-          ShellRoute(
+          StatefulShellBranch(
             navigatorKey: _settingsNavigateKey,
-            pageBuilder:
-                (BuildContext context, GoRouterState state, Widget child) {
-              final function = state.pathParameters['function'] ?? 'client';
-              return NoTransitionPage(
-                child: FramePage(
-                  selectedNav: 'Settings',
-                  leftPart: SettingsNav(
-                    function: function,
-                  ),
-                  rightPart: child,
-                ),
-              );
-            },
             routes: [
+              GoRoute(
+                path: '/app/Settings',
+                redirect: (context, state) {
+                  return '/app/Settings/client';
+                },
+              ),
               GoRoute(
                 path: '/app/Settings/:function',
                 pageBuilder: (context, state) {
@@ -197,41 +191,17 @@ GoRouter getRouter() {
                   };
                   final function = state.pathParameters['function'] ?? 'client';
                   return NoTransitionPage(
-                    child: settingsPages[function] ?? const SizedBox(),
+                    child: FramePage(
+                      selectedNav: 'Settings',
+                      leftPart: SettingsNav(
+                        function: function,
+                      ),
+                      rightPart: settingsPages[function] ?? const SizedBox(),
+                    ),
                   );
                 },
               ),
             ],
-          ),
-          GoRoute(
-            path: '/app/:appName',
-            redirect: (context, state) {
-              final appName = state.pathParameters['appName'];
-              if (appName == 'Yesod') {
-                return '/app/Yesod/recent';
-              }
-              if (appName == 'Gebura') {
-                return '/app/Gebura/store';
-              }
-              if (appName == 'Settings') {
-                return '/app/Settings/client';
-              }
-              return null;
-            },
-            pageBuilder: (context, state) {
-              final appName = state.pathParameters['appName'];
-              Widget page = const SizedBox();
-
-              if (appName == 'Tiphereth') page = const TipherethFramePage();
-
-              if (appMap.containsKey(appName)) page = appMap[appName]!.page;
-              return NoTransitionPage(
-                child: FramePage(
-                  selectedNav: '',
-                  leftPart: page,
-                ),
-              );
-            },
           ),
         ],
       ),
