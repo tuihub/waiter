@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
@@ -86,35 +87,42 @@ class _LibraryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          for (final app in data.apps)
-            RailTile(
-              selected: app.id.id.toString() == selectedAppID,
-              onTap: () {
-                GoRouter.of(context).go('/app/Gebura/library?id=${app.id.id}');
-              },
-              leading: Container(
-                decoration: app.iconImageUrl.isEmpty
-                    ? const BoxDecoration()
-                    : BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            app.iconImageUrl,
+    return DynMouseScroll(
+      builder: (context, controller, physics) {
+        return SingleChildScrollView(
+          controller: controller,
+          physics: physics,
+          child: Column(
+            children: [
+              for (final app in data.apps)
+                RailTile(
+                  selected: app.id.id.toString() == selectedAppID,
+                  onTap: () {
+                    GoRouter.of(context)
+                        .go('/app/Gebura/library?id=${app.id.id}');
+                  },
+                  leading: Container(
+                    decoration: app.iconImageUrl.isEmpty
+                        ? const BoxDecoration()
+                        : BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                app.iconImageUrl,
+                              ),
+                              fit: BoxFit.scaleDown,
+                            ),
                           ),
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                height: 24,
-                width: 24,
-              ),
-              title:
-                  Text(app.name.isEmpty ? app.id.id.toHexString() : app.name),
-            ),
-        ],
-      ),
+                    height: 24,
+                    width: 24,
+                  ),
+                  title: Text(
+                      app.name.isEmpty ? app.id.id.toHexString() : app.name),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

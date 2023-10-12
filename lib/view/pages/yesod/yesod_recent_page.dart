@@ -98,42 +98,42 @@ class _YesodRecentListState extends State<YesodRecentList> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     if (lastPageNum >= 0) {
-      return BootstrapContainer(
-        children: [
-          BootstrapColumn(
-            xxs: 12,
-            md: 9,
-            lg: 7,
-            child: DynMouseScroll(
-              builder: (context, controller, physics) {
-                controller.addListener(() {
-                  if (controller.position.pixels ==
-                      controller.position.maxScrollExtent) {
-                    if (items[lastPageNum] != null &&
-                        items[lastPageNum]!.isNotEmpty) {
-                      setState(() {
-                        lastPageNum++;
-                      });
-                    }
-                    if (items[lastPageNum] == null) {
-                      unawaited(loadData(lastPageNum));
-                    } else {
-                      setState(() {
-                        pageEnd = true;
-                      });
-                    }
-                  }
+      return DynMouseScroll(
+        builder: (context, controller, physics) {
+          controller.addListener(() {
+            if (controller.position.pixels ==
+                controller.position.maxScrollExtent) {
+              if (items[lastPageNum] != null &&
+                  items[lastPageNum]!.isNotEmpty) {
+                setState(() {
+                  lastPageNum++;
                 });
+              }
+              if (items[lastPageNum] == null) {
+                unawaited(loadData(lastPageNum));
+              } else {
+                setState(() {
+                  pageEnd = true;
+                });
+              }
+            }
+          });
 
-                return ListView.builder(
-                  controller: controller,
-                  physics: physics,
-                  itemCount: flattenedItems.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < flattenedItems.length) {
-                      final item = flattenedItems[index];
+          return ListView.builder(
+            controller: controller,
+            physics: physics,
+            itemCount: flattenedItems.length + 1,
+            itemBuilder: (context, index) {
+              if (index < flattenedItems.length) {
+                final item = flattenedItems[index];
 
-                      return Padding(
+                return BootstrapContainer(
+                  children: [
+                    BootstrapColumn(
+                      xxs: 12,
+                      md: 9,
+                      lg: 7,
+                      child: Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: OpenContainer(
                           openBuilder: (context, closedContainer) {
@@ -162,21 +162,21 @@ class _YesodRecentListState extends State<YesodRecentList> {
                             );
                           },
                         ),
-                      );
-                    } else {
-                      return const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Center(
-                          child: Text('加载中'),
-                        ),
-                      );
-                    }
-                  },
+                      ),
+                    ),
+                  ],
                 );
-              },
-            ),
-          ),
-        ],
+              } else {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(
+                    child: Text('加载中'),
+                  ),
+                );
+              }
+            },
+          );
+        },
       );
     }
     return const SizedBox();

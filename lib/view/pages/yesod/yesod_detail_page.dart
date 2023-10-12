@@ -8,6 +8,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../repo/yesod/yesod_repo.dart';
 import '../../helper/spacing.dart';
+import '../../layout/bootstrap_container.dart';
 
 class YesodDetailPage extends StatefulWidget {
   const YesodDetailPage({super.key, required this.itemId});
@@ -52,38 +53,44 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
                 return SingleChildScrollView(
                   controller: controller,
                   physics: physics,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    alignment: Alignment.topCenter,
-                    constraints: const BoxConstraints(
-                      maxWidth: 720,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 16,
+                  child: BootstrapContainer(
+                    children: [
+                      BootstrapColumn(
+                        xxs: 12,
+                        sm: 10,
+                        md: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          alignment: Alignment.topCenter,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                children: [
+                                  const Text('作者：'),
+                                  for (final author in item.authors)
+                                    Text(author.name),
+                                ],
+                              ),
+                              Text('发布日期：${item.publishedParsed.toDateTime()}'),
+                              if (!item.updatedParsed.toDateTime().isUtc)
+                                Text('更新日期：${item.updatedParsed.toDateTime()}'),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              HtmlWidget(
+                                item.description,
+                                renderMode: RenderMode.column,
+                                enableCaching: true,
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: [
-                            const Text('作者：'),
-                            for (final author in item.authors)
-                              Text(author.name),
-                          ],
-                        ),
-                        Text('发布日期：${item.publishedParsed.toDateTime()}'),
-                        if (!item.updatedParsed.toDateTime().isUtc)
-                          Text('更新日期：${item.updatedParsed.toDateTime()}'),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        HtmlWidget(
-                          item.description,
-                          renderMode: RenderMode.column,
-                          enableCaching: true,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

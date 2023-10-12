@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../common/api/api_mixins.dart';
@@ -134,123 +135,133 @@ class StoreList extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final app = data.apps.elementAt(index);
-                    return Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: OpenContainer(
-                        openBuilder: (context, closedContainer) {
-                          return Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            child: GeburaStoreDetail(appID: app.id),
-                          );
-                        },
-                        openColor: theme.colorScheme.primary,
-                        closedShape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                        closedElevation: 0,
-                        closedColor: theme.cardColor,
-                        closedBuilder: (context, openContainer) {
-                          return SizedBox(
-                            width: 384,
-                            height: 128,
-                            child: Material(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
-                              child: Ink(
-                                decoration: BoxDecoration(
+          child: DynMouseScroll(
+            builder: (context, controller, physics) {
+              return CustomScrollView(
+                controller: controller,
+                physics: physics,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final app = data.apps.elementAt(index);
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: OpenContainer(
+                            openBuilder: (context, closedContainer) {
+                              return Container(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                child: GeburaStoreDetail(appID: app.id),
+                              );
+                            },
+                            openColor: theme.colorScheme.primary,
+                            closedShape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            closedElevation: 0,
+                            closedColor: theme.cardColor,
+                            closedBuilder: (context, openContainer) {
+                              return SizedBox(
+                                width: 384,
+                                height: 128,
+                                child: Material(
                                   borderRadius:
                                       SpacingHelper.defaultBorderRadius,
-                                ),
-                                child: InkWell(
-                                  borderRadius:
-                                      SpacingHelper.defaultBorderRadius,
-                                  onTap: () {
-                                    openContainer();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: SpacingHelper
-                                                .defaultBorderRadius,
-                                            image: DecorationImage(
-                                                image:
-                                                    CachedNetworkImageProvider(
-                                                  app.heroImageUrl,
-                                                ),
-                                                fit: BoxFit.scaleDown),
-                                          ),
-                                          width: 200,
-                                          height: 100,
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          SpacingHelper.defaultBorderRadius,
+                                    ),
+                                    child: InkWell(
+                                      borderRadius:
+                                          SpacingHelper.defaultBorderRadius,
+                                      onTap: () {
+                                        openContainer();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: SpacingHelper
+                                                    .defaultBorderRadius,
+                                                image: DecorationImage(
+                                                    image:
+                                                        CachedNetworkImageProvider(
+                                                      app.heroImageUrl,
+                                                    ),
+                                                    fit: BoxFit.scaleDown),
+                                              ),
+                                              width: 200,
+                                              height: 100,
+                                            ),
+                                            const SizedBox(
+                                              width: 16,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    app.id.id.toHexString(),
+                                                    style: TextStyle(
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        fontSize: 10,
+                                                        color: Theme.of(context)
+                                                            .disabledColor),
+                                                    maxLines: 2,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Text(
+                                                    app.name,
+                                                    style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    maxLines: 2,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Text(
+                                                    app.shortDescription,
+                                                    style: const TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontSize: 10,
+                                                    ),
+                                                    maxLines: 3,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(
-                                          width: 16,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                app.id.id.toHexString(),
-                                                style: TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    fontSize: 10,
-                                                    color: Theme.of(context)
-                                                        .disabledColor),
-                                                maxLines: 2,
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                app.name,
-                                                style: const TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                maxLines: 2,
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                app.shortDescription,
-                                                style: const TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 10,
-                                                ),
-                                                maxLines: 3,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  childCount: data.apps.length,
-                ),
-              ),
-            ],
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      childCount: data.apps.length,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],

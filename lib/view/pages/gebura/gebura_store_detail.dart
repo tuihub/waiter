@@ -4,12 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../helper/spacing.dart';
+import '../../layout/bootstrap_container.dart';
 
 class GeburaStoreDetail extends StatefulWidget {
   const GeburaStoreDetail({super.key, required this.appID});
@@ -89,112 +91,127 @@ class AppDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 400,
-            child: Center(
-                child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        data.app.heroImageUrl,
+    return DynMouseScroll(
+      builder: (context, controller, physics) {
+        return SingleChildScrollView(
+          controller: controller,
+          physics: physics,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 400,
+                child: Center(
+                    child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            data.app.heroImageUrl,
+                          ),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      fit: BoxFit.cover,
+                      // margin: EdgeInsets.all(32),
+                      height: 400,
                     ),
-                  ),
-                  // margin: EdgeInsets.all(32),
-                  height: 400,
-                ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: FractionalOffset.center,
-                      end: FractionalOffset.bottomCenter,
-                      colors: [
-                        const Color.fromRGBO(0, 0, 0, 0),
-                        Theme.of(context).colorScheme.surface,
-                      ],
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: FractionalOffset.center,
+                          end: FractionalOffset.bottomCenter,
+                          colors: [
+                            const Color.fromRGBO(0, 0, 0, 0),
+                            Theme.of(context).colorScheme.surface,
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      data.app.name,
-                      style: TextStyle(
-                        fontSize: 52,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                              color: Theme.of(context).colorScheme.surface,
-                              blurRadius: 3)
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          data.app.name,
+                          style: TextStyle(
+                            fontSize: 52,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  blurRadius: 3)
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+              ),
+              SizedBox(
+                height: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          unawaited(showDialog<void>(
+                            context: context,
+                            builder: (_) {
+                              return BlocProvider.value(
+                                value: context.read<ApiRequestBloc>(),
+                                child: PurchaseAppDialog(
+                                  app: data.app,
+                                ),
+                              );
+                            },
+                          ));
+                        },
+                        child: const Text('添加至游戏库'),
+                      ),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('开发商：${data.app.details.developer}'),
+                          Text('发行商：${data.app.details.publisher}'),
+                          Text('发行日期：${data.app.details.releaseDate}'),
                         ],
                       ),
-                    ),
-                  ),
-                )
-              ],
-            )),
-          ),
-          SizedBox(
-            height: 100,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return BlocProvider.value(
-                            value: context.read<ApiRequestBloc>(),
-                            child: PurchaseAppDialog(
-                              app: data.app,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: const Text('添加至游戏库'),
-                  ),
-                  const SizedBox(
-                    width: 24,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('开发商：${data.app.details.developer}'),
-                      Text('发行商：${data.app.details.publisher}'),
-                      Text('发行日期：${data.app.details.releaseDate}'),
                     ],
+                  ),
+                ),
+              ),
+              SpacingHelper.defaultDivider,
+              BootstrapContainer(
+                children: [
+                  BootstrapColumn(
+                    xxs: 12,
+                    sm: 10,
+                    md: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: HtmlWidget(
+                        data.app.details.description,
+                        buildAsync: false,
+                        renderMode: RenderMode.column,
+                        onErrorBuilder: (context, element, error) =>
+                            Text('$element error: $error'),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-          SpacingHelper.defaultDivider,
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: HtmlWidget(
-              data.app.details.description,
-              buildAsync: false,
-              renderMode: RenderMode.column,
-              onErrorBuilder: (context, element, error) =>
-                  Text('$element error: $error'),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

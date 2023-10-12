@@ -308,7 +308,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             UserLoginEvent(username, password),
           );
       GoRouter.of(context).go(
-        '/app/Home',
+        '/app',
       );
     }
   }

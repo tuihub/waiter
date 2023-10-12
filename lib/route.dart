@@ -54,6 +54,9 @@ GoRouter getRouter() {
           // return context.read<AppSettingBloc>().userPath;
           return '/app/Tiphereth';
         }
+        if (state.uri.toString() == '/app') {
+          return '/app/Tiphereth';
+        }
       }
       context.read<AppSettingBloc>().userPath = state.uri.toString();
       return null;
