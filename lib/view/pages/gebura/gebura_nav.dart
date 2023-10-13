@@ -16,11 +16,16 @@ class GeburaNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: 64,
-            child: RailTile(
+      body: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceTint.withAlpha(24),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            RailTile(
               leading: const Icon(
                 Icons.shopping_cart,
               ),
@@ -31,12 +36,12 @@ class GeburaNav extends StatelessWidget {
               title: const Text('Store'),
               selected: function == 'store',
             ),
-          ),
-          SpacingHelper.defaultDivider,
-          Expanded(
-            child: GeburaLibraryListPage(selectedAppID: selectedAppID),
-          )
-        ],
+            SpacingHelper.defaultDivider,
+            Expanded(
+              child: GeburaLibraryListPage(selectedAppID: selectedAppID),
+            )
+          ],
+        ),
       ),
     );
   }

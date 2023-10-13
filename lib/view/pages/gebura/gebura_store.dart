@@ -61,61 +61,67 @@ class _GeburaStorePageState extends State<GeburaStorePage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: _buildStatePage(),
-      appBar: AppBar(
-        title: BootstrapContainer(
-          children: [
-            BootstrapColumn(
-              xxs: 12,
-              md: 6,
-              child: LayoutBuilder(builder: (context, constrains) {
-                final width = constrains.maxWidth; // 父级宽度
-                const height = 45.0;
-                return Container(
-                  width: width,
-                  height: height,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(height)),
-                  child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                        hintText: '搜索',
-                        hintStyle: const TextStyle(
-                            color: Colors.grey, fontSize: height / 3),
-                        contentPadding: const EdgeInsets.only(top: height / 5),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        fillColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        icon: Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 4),
-                            child: Icon(
-                              Icons.search,
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: _buildStatePage(),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          title: BootstrapContainer(
+            children: [
+              BootstrapColumn(
+                xxs: 12,
+                md: 6,
+                child: LayoutBuilder(builder: (context, constrains) {
+                  final width = constrains.maxWidth; // 父级宽度
+                  const height = 45.0;
+                  return Container(
+                    width: width,
+                    height: height,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(height)),
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                          hintText: '搜索',
+                          hintStyle: const TextStyle(
+                              color: Colors.grey, fontSize: height / 3),
+                          contentPadding:
+                              const EdgeInsets.only(top: height / 5),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          fillColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          icon: Padding(
+                              padding: const EdgeInsets.only(left: 10, top: 4),
+                              child: Icon(
+                                Icons.search,
+                                size: 18,
+                                color: Theme.of(context).primaryColor,
+                              )),
+                          suffixIcon: IconButton(
+                            icon: const Icon(
+                              Icons.close,
                               size: 18,
-                              color: Theme.of(context).primaryColor,
-                            )),
-                        suffixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            size: 18,
-                          ),
-                          onPressed: () {
-                            controller.text = '';
-                            loadStore();
-                          },
-                          splashColor: Theme.of(context).primaryColor,
-                          color: Theme.of(context).primaryColor,
-                        )),
-                    onEditingComplete: loadStore,
-                  ),
-                );
-              }),
-            )
-          ],
+                            ),
+                            onPressed: () {
+                              controller.text = '';
+                              loadStore();
+                            },
+                            splashColor: Theme.of(context).primaryColor,
+                            color: Theme.of(context).primaryColor,
+                          )),
+                      onEditingComplete: loadStore,
+                    ),
+                  );
+                }),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -146,7 +152,7 @@ class StoreList extends StatelessWidget {
                       (context, index) {
                         final app = data.apps.elementAt(index);
                         return Padding(
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.only(bottom: 8),
                           child: OpenContainer(
                             openBuilder: (context, closedContainer) {
                               return Container(

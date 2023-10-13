@@ -33,127 +33,125 @@ class _UserManagePageState extends State<UserManagePage> {
   @override
   Widget build(BuildContext context) {
     dataSource.context = context;
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(right: 8, bottom: 8),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: SpacingHelper.defaultBorderRadius,
-                  ),
-                  child: MultiSelectDialogField(
-                    title: const Text('按用户类型筛选'),
-                    buttonText: const Text('用户类型'),
-                    buttonIcon: const Icon(Icons.filter_alt_outlined),
-                    items: [
-                      MultiSelectItem(
-                        UserType.USER_TYPE_ADMIN,
-                        userTypeString(UserType.USER_TYPE_ADMIN),
-                      ),
-                      MultiSelectItem(
-                        UserType.USER_TYPE_NORMAL,
-                        userTypeString(UserType.USER_TYPE_NORMAL),
-                      ),
-                      MultiSelectItem(
-                        UserType.USER_TYPE_SENTINEL,
-                        userTypeString(UserType.USER_TYPE_SENTINEL),
-                      ),
-                    ],
-                    onConfirm: (values) {
-                      dataSource.typeFilter = values;
-                      dataSource.refreshDatasource();
-                      paginatorController.goToFirstPage();
-                    },
-                    decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).primaryColor),
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                ),
+                child: MultiSelectDialogField(
+                  title: const Text('按用户类型筛选'),
+                  buttonText: const Text('用户类型'),
+                  buttonIcon: const Icon(Icons.filter_alt_outlined),
+                  items: [
+                    MultiSelectItem(
+                      UserType.USER_TYPE_ADMIN,
+                      userTypeString(UserType.USER_TYPE_ADMIN),
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).primaryColor),
-                    borderRadius: SpacingHelper.defaultBorderRadius,
-                  ),
-                  child: MultiSelectDialogField(
-                    title: const Text('按用户状态筛选'),
-                    buttonText: const Text('用户状态'),
-                    buttonIcon: const Icon(Icons.filter_alt_outlined),
-                    items: [
-                      MultiSelectItem(
-                        UserStatus.USER_STATUS_ACTIVE,
-                        userStatusString(UserStatus.USER_STATUS_ACTIVE),
-                      ),
-                      MultiSelectItem(
-                        UserStatus.USER_STATUS_BLOCKED,
-                        userStatusString(UserStatus.USER_STATUS_BLOCKED),
-                      ),
-                    ],
-                    onConfirm: (values) {
-                      dataSource.statusFilter = values;
-                      dataSource.refreshDatasource();
-                      paginatorController.goToFirstPage();
-                    },
-                    decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+                    MultiSelectItem(
+                      UserType.USER_TYPE_NORMAL,
+                      userTypeString(UserType.USER_TYPE_NORMAL),
                     ),
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    unawaited(showDialog<void>(
-                      context: context,
-                      builder: (context) => UserCreateDialog(
-                        callback: () {
-                          dataSource.refreshDatasource();
-                          paginatorController.goToFirstPage();
-                        },
-                      ),
-                    ));
+                    MultiSelectItem(
+                      UserType.USER_TYPE_SENTINEL,
+                      userTypeString(UserType.USER_TYPE_SENTINEL),
+                    ),
+                  ],
+                  onConfirm: (values) {
+                    dataSource.typeFilter = values;
+                    dataSource.refreshDatasource();
+                    paginatorController.goToFirstPage();
                   },
-                  icon: const Icon(Icons.add),
-                  label: const Text('新增'),
+                  decoration: BoxDecoration(
+                    borderRadius: SpacingHelper.defaultBorderRadius,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).primaryColor),
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                ),
+                child: MultiSelectDialogField(
+                  title: const Text('按用户状态筛选'),
+                  buttonText: const Text('用户状态'),
+                  buttonIcon: const Icon(Icons.filter_alt_outlined),
+                  items: [
+                    MultiSelectItem(
+                      UserStatus.USER_STATUS_ACTIVE,
+                      userStatusString(UserStatus.USER_STATUS_ACTIVE),
+                    ),
+                    MultiSelectItem(
+                      UserStatus.USER_STATUS_BLOCKED,
+                      userStatusString(UserStatus.USER_STATUS_BLOCKED),
+                    ),
+                  ],
+                  onConfirm: (values) {
+                    dataSource.statusFilter = values;
+                    dataSource.refreshDatasource();
+                    paginatorController.goToFirstPage();
+                  },
+                  decoration: BoxDecoration(
+                    borderRadius: SpacingHelper.defaultBorderRadius,
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              FilledButton.tonalIcon(
+                onPressed: () {
+                  unawaited(showDialog<void>(
+                    context: context,
+                    builder: (context) => UserCreateDialog(
+                      callback: () {
+                        dataSource.refreshDatasource();
+                        paginatorController.goToFirstPage();
+                      },
+                    ),
+                  ));
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('新增'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: AsyncPaginatedDataTable2(
+              empty: const Center(child: Text('No data')),
+              errorBuilder: (e) {
+                return Center(child: Text('Load Failed: $e'));
+              },
+              rowsPerPage: pageSize,
+              columnSpacing: 12,
+              horizontalMargin: 12,
+              minWidth: 600,
+              controller: paginatorController,
+              columns: const [
+                DataColumn2(
+                  label: Text('Id'),
+                ),
+                DataColumn2(
+                  label: Text('用户名'),
+                ),
+                DataColumn2(
+                  label: Text('用户状态'),
+                ),
+                DataColumn2(
+                  label: Text('用户类型'),
                 ),
               ],
+              source: dataSource,
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: AsyncPaginatedDataTable2(
-                empty: const Center(child: Text('No data')),
-                errorBuilder: (e) {
-                  return Center(child: Text('Load Failed: $e'));
-                },
-                rowsPerPage: pageSize,
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                controller: paginatorController,
-                columns: const [
-                  DataColumn2(
-                    label: Text('Id'),
-                  ),
-                  DataColumn2(
-                    label: Text('用户名'),
-                  ),
-                  DataColumn2(
-                    label: Text('用户状态'),
-                  ),
-                  DataColumn2(
-                    label: Text('用户类型'),
-                  ),
-                ],
-                source: dataSource,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../common/api/api_helper.dart';
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
@@ -32,9 +33,23 @@ class _YesodRecentPageState extends State<YesodRecentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: YesodRecentList(
-        selectCallback: setSelectedItem,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceVariant,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text('最近更新'),
+            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          ),
+          body: YesodRecentList(
+            selectCallback: setSelectedItem,
+          ),
+        ),
       ),
     );
   }
@@ -137,11 +152,8 @@ class _YesodRecentListState extends State<YesodRecentList> {
                         padding: const EdgeInsets.only(bottom: 8),
                         child: OpenContainer(
                           openBuilder: (context, closedContainer) {
-                            return Container(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              child: YesodDetailPage(
-                                itemId: item.itemId,
-                              ),
+                            return YesodDetailPage(
+                              itemId: item.itemId,
                             );
                           },
                           openColor: theme.colorScheme.primary,
@@ -153,7 +165,7 @@ class _YesodRecentListState extends State<YesodRecentList> {
                           closedBuilder: (context, openContainer) {
                             return YesodPreviewCard(
                               name:
-                                  '${item.feedConfigName} ${item.publishedParsedTime.toDateTime().toIso8601String()}',
+                                  '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
                               title: item.title,
                               callback: openContainer,
                               iconUrl: item.feedAvatarUrl,

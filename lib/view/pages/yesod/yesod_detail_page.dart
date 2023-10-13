@@ -7,6 +7,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 
@@ -75,9 +76,13 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
                                     Text(author.name),
                                 ],
                               ),
-                              Text('发布日期：${item.publishedParsed.toDateTime()}'),
-                              if (!item.updatedParsed.toDateTime().isUtc)
-                                Text('更新日期：${item.updatedParsed.toDateTime()}'),
+                              Text(
+                                  '发布时间：${DurationHelper.recentString(item.publishedParsed.toDateTime())}'),
+                              if (item.updatedParsed
+                                  .toDateTime()
+                                  .isAfter(item.publishedParsed.toDateTime()))
+                                Text(
+                                    '更新时间：${DurationHelper.recentString(item.updatedParsed.toDateTime())}'),
                               const SizedBox(
                                 height: 16,
                               ),

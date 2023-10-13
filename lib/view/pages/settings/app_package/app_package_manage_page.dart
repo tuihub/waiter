@@ -33,95 +33,93 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
   @override
   Widget build(BuildContext context) {
     dataSource.context = context;
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(right: 8, bottom: 8),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                DecoratedBox(
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).primaryColor),
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                ),
+                child: MultiSelectDialogField(
+                  title: const Text('按数据来源筛选'),
+                  buttonText: const Text('数据来源'),
+                  buttonIcon: const Icon(Icons.filter_alt_outlined),
+                  items: [
+                    MultiSelectItem(
+                        AppPackageSource.APP_PACKAGE_SOURCE_MANUAL,
+                        appPackageSourceString(
+                            AppPackageSource.APP_PACKAGE_SOURCE_MANUAL)),
+                    MultiSelectItem(
+                        AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL,
+                        appPackageSourceString(
+                            AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL)),
+                  ],
+                  onConfirm: (values) {
+                    dataSource.sourceFilter = values;
+                    dataSource.refreshDatasource();
+                    paginatorController.goToFirstPage();
+                  },
                   decoration: BoxDecoration(
-                    border: Border.all(color: Theme.of(context).primaryColor),
                     borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
-                  child: MultiSelectDialogField(
-                    title: const Text('按数据来源筛选'),
-                    buttonText: const Text('数据来源'),
-                    buttonIcon: const Icon(Icons.filter_alt_outlined),
-                    items: [
-                      MultiSelectItem(
-                          AppPackageSource.APP_PACKAGE_SOURCE_MANUAL,
-                          appPackageSourceString(
-                              AppPackageSource.APP_PACKAGE_SOURCE_MANUAL)),
-                      MultiSelectItem(
-                          AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL,
-                          appPackageSourceString(
-                              AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL)),
-                    ],
-                    onConfirm: (values) {
-                      dataSource.sourceFilter = values;
-                      dataSource.refreshDatasource();
-                      paginatorController.goToFirstPage();
-                    },
-                    decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
-                    ),
-                  ),
                 ),
-                const Expanded(child: SizedBox()),
-                FilledButton.tonalIcon(
-                  onPressed: () {
-                    unawaited(showDialog<void>(
-                      context: context,
-                      builder: (context) => AppPackageCreateDialog(
-                        callback: () {
-                          dataSource.refreshDatasource();
-                          paginatorController.goToFirstPage();
-                        },
-                      ),
-                    ));
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('新增'),
+              ),
+              const Expanded(child: SizedBox()),
+              FilledButton.tonalIcon(
+                onPressed: () {
+                  unawaited(showDialog<void>(
+                    context: context,
+                    builder: (context) => AppPackageCreateDialog(
+                      callback: () {
+                        dataSource.refreshDatasource();
+                        paginatorController.goToFirstPage();
+                      },
+                    ),
+                  ));
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('新增'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: AsyncPaginatedDataTable2(
+              empty: const Center(child: Text('No data')),
+              errorBuilder: (e) {
+                return Center(child: Text('Load Failed: $e'));
+              },
+              rowsPerPage: pageSize,
+              columnSpacing: 12,
+              horizontalMargin: 12,
+              minWidth: 600,
+              controller: paginatorController,
+              columns: const [
+                DataColumn2(
+                  label: Text('Id'),
+                  size: ColumnSize.S,
+                ),
+                DataColumn2(
+                  label: Text('名称'),
+                  size: ColumnSize.L,
+                ),
+                DataColumn2(
+                  label: Text('数据来源'),
+                  size: ColumnSize.S,
+                ),
+                DataColumn2(
+                  label: Text('简介'),
+                  size: ColumnSize.S,
                 ),
               ],
+              source: dataSource,
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: AsyncPaginatedDataTable2(
-                empty: const Center(child: Text('No data')),
-                errorBuilder: (e) {
-                  return Center(child: Text('Load Failed: $e'));
-                },
-                rowsPerPage: pageSize,
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 600,
-                controller: paginatorController,
-                columns: const [
-                  DataColumn2(
-                    label: Text('Id'),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn2(
-                    label: Text('名称'),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn2(
-                    label: Text('数据来源'),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn2(
-                    label: Text('简介'),
-                    size: ColumnSize.S,
-                  ),
-                ],
-                source: dataSource,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

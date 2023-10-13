@@ -64,7 +64,7 @@ class _CacheSettingState extends State<CacheSetting> {
   Widget build(BuildContext context) {
     return Ink(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.all(8),

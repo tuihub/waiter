@@ -25,6 +25,8 @@ class FramePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double restWidth = 40;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.biggest.width;
@@ -50,18 +52,21 @@ class FramePage extends StatelessWidget {
         if (width <= BootstrapBreakpoints.sm) {
           content = rightPart != null
               ? OverlappingPanels(
+                  restWidth: restWidth,
                   left: Row(
                     children: [
                       _Nav(selectedNav: selectedNav),
                       SizedBox(
-                        width: width - 128,
+                        width: width - 64 - restWidth,
                         child: leftPart,
                       ),
                     ],
                   ),
                   main: DecoratedBox(
                     decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant),
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: rightPart,
                   ),
                 )
@@ -80,7 +85,6 @@ class FramePage extends StatelessWidget {
 
         return Scaffold(
           body: SafeArea(
-            bottom: false,
             maintainBottomViewPadding: true,
             child: Column(
               children: [

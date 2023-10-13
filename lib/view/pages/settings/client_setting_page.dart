@@ -12,19 +12,16 @@ class ClientSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+    return Padding(
       padding: const EdgeInsets.all(8),
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: const Text('设置'),
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         ),
         body: Material(
+          color: Colors.transparent,
           child: BlocBuilder<AppSettingBloc, AppSettingState>(
             builder: (context, state) {
               return ListView(
@@ -32,7 +29,7 @@ class ClientSettingPage extends StatelessWidget {
                   Ink(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                     height: 240,
                     child: Column(
@@ -60,20 +57,20 @@ class ClientSettingPage extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                ThemePresent(
-                                  title: state.theme.name,
-                                  lightScheme: FlexColorScheme.light(
-                                          scheme: state.theme.scheme)
-                                      .toScheme,
-                                  darkScheme: FlexColorScheme.dark(
-                                          scheme: state.theme.scheme)
-                                      .toScheme,
-                                  selected: true,
-                                  brightness: Theme.of(context).brightness,
-                                ),
-                                const VerticalDivider(
-                                  thickness: 2,
-                                ),
+                                // ThemePresent(
+                                //   title: state.theme.name,
+                                //   lightScheme: FlexColorScheme.light(
+                                //           scheme: state.theme.scheme)
+                                //       .toScheme,
+                                //   darkScheme: FlexColorScheme.dark(
+                                //           scheme: state.theme.scheme)
+                                //       .toScheme,
+                                //   selected: true,
+                                //   brightness: Theme.of(context).brightness,
+                                // ),
+                                // const VerticalDivider(
+                                //   thickness: 2,
+                                // ),
                                 Expanded(
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../common/api/api_mixins.dart';
+import '../../helper/duration_format.dart';
 
 class LinkAccountDialog extends StatefulWidget {
   const LinkAccountDialog({super.key, required this.callback});
@@ -219,9 +221,8 @@ class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
                 border: OutlineInputBorder(),
                 labelText: '上次更新时间',
               ),
-              initialValue: widget.account.latestUpdateTime
-                  .toDateTime()
-                  .toIso8601String(),
+              initialValue: DurationHelper.recentString(
+                  widget.account.latestUpdateTime.toDateTime()),
             ),
             const SizedBox(
               height: 16,

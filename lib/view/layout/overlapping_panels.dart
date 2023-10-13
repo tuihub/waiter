@@ -34,7 +34,7 @@ class OverlappingPanels extends StatefulWidget {
       {this.left,
       required this.main,
       this.right,
-      this.restWidth = 64,
+      this.restWidth = 40,
       this.onSideChange,
       super.key});
 

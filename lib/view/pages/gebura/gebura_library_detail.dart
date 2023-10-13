@@ -126,7 +126,7 @@ class AppDetails extends StatelessWidget {
                       end: FractionalOffset.bottomCenter,
                       colors: [
                         const Color.fromRGBO(0, 0, 0, 0),
-                        Theme.of(context).colorScheme.surface,
+                        Theme.of(context).colorScheme.surfaceVariant,
                       ],
                     ),
                   ),
