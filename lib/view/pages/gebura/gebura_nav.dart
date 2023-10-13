@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../components/rail_tile.dart';
 import '../../helper/spacing.dart';
+import '../../layout/overlapping_panels.dart';
 import 'gebura_library_list.dart';
 
 class GeburaNav extends StatelessWidget {
@@ -25,6 +26,7 @@ class GeburaNav extends StatelessWidget {
               ),
               onTap: () {
                 GoRouter.of(context).go('/app/Gebura/store');
+                OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: const Text('Store'),
               selected: function == 'store',

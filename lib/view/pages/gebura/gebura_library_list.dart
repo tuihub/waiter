@@ -10,6 +10,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../components/rail_tile.dart';
+import '../../layout/overlapping_panels.dart';
 
 class GeburaLibraryListPage extends StatefulWidget {
   const GeburaLibraryListPage({super.key, required this.selectedAppID});
@@ -100,6 +101,7 @@ class _LibraryList extends StatelessWidget {
                   onTap: () {
                     GoRouter.of(context)
                         .go('/app/Gebura/library?id=${app.id.id}');
+                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
                   },
                   leading: Container(
                     decoration: app.iconImageUrl.isEmpty

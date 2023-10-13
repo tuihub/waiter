@@ -6,6 +6,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../bloc/user_login/user_bloc.dart';
 import '../../components/expand_rail_tile.dart';
 import '../../components/rail_tile.dart';
+import '../../layout/overlapping_panels.dart';
 
 class SettingsNav extends StatelessWidget {
   const SettingsNav({super.key, required this.function});
@@ -37,6 +38,8 @@ class SettingsNav extends StatelessWidget {
                         RailTile(
                           onTap: () {
                             GoRouter.of(context).go('/app/Settings/client');
+                            OverlappingPanels.of(context)
+                                ?.reveal(RevealSide.main);
                           },
                           title: const Text('客户端设置'),
                           selected: function == 'client',
@@ -52,6 +55,8 @@ class SettingsNav extends StatelessWidget {
                                 title: const Text('用户管理'),
                                 onTap: () {
                                   GoRouter.of(context).go('/app/Settings/user');
+                                  OverlappingPanels.of(context)
+                                      ?.reveal(RevealSide.main);
                                 },
                                 selected: function == 'user',
                               ),
@@ -59,6 +64,8 @@ class SettingsNav extends StatelessWidget {
                                 title: const Text('应用管理'),
                                 onTap: () {
                                   GoRouter.of(context).go('/app/Settings/app');
+                                  OverlappingPanels.of(context)
+                                      ?.reveal(RevealSide.main);
                                 },
                                 selected: function == 'app',
                               ),
@@ -67,6 +74,8 @@ class SettingsNav extends StatelessWidget {
                                 onTap: () {
                                   GoRouter.of(context)
                                       .go('/app/Settings/appPackage');
+                                  OverlappingPanels.of(context)
+                                      ?.reveal(RevealSide.main);
                                 },
                                 selected: function == 'appPackage',
                               ),

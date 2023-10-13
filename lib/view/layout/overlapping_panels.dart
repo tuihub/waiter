@@ -53,24 +53,32 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   AnimationController? controller;
   double translate = 0;
   double lastTranslate = 0;
+  late double width;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(() {
+        translate = widget.left == null ? 0 : _calculateGoal(width, 1);
+      }),
+    );
+  }
 
   double _calculateGoal(double width, int multiplier) {
     return (multiplier * width) + (-multiplier * widget.restWidth);
   }
 
   void _onApplyTranslation(Offset pixelsPerSecond) {
-    final mediaWidth = MediaQuery.of(context).size.width;
-
     final animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 160));
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (widget.onSideChange != null) {
-          widget.onSideChange!(translate == 0
-              ? RevealSide.main
-              : (translate > 0 ? RevealSide.left : RevealSide.right));
-        }
+        widget.onSideChange?.call(translate == 0
+            ? RevealSide.main
+            : (translate > 0 ? RevealSide.left : RevealSide.right));
         animationController.dispose();
       }
     });
@@ -84,10 +92,10 @@ class OverlappingPanelsState extends State<OverlappingPanels>
           : lastTranslate > 0
               ? 0
               : -1);
-      goal = _calculateGoal(mediaWidth, multiplier);
-    } else if (translate.abs() >= mediaWidth / 2) {
+      goal = _calculateGoal(width, multiplier);
+    } else if (translate.abs() >= width / 2) {
       final multiplier = (translate > 0 ? 1 : -1);
-      goal = _calculateGoal(mediaWidth, multiplier);
+      goal = _calculateGoal(width, multiplier);
     } else {
       goal = 0;
     }
@@ -114,15 +122,12 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   }
 
   void reveal(RevealSide direction) {
-    // can only reveal when showing main
-    if (translate != 0) {
-      return;
-    }
-
-    final mediaWidth = MediaQuery.of(context).size.width;
-
     final multiplier = (direction == RevealSide.left ? 1 : -1);
-    final goal = _calculateGoal(mediaWidth, multiplier);
+    double goal =
+        direction == RevealSide.main ? 0 : _calculateGoal(width, multiplier);
+
+    if (widget.left == null && goal > 0) goal = 0;
+    if (widget.right == null && goal < 0) goal = 0;
 
     final animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
@@ -146,7 +151,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     animationController.forward();
   }
 
-  void onTranslate(double delta) {
+  void _onTranslate(double delta) {
     setState(() {
       final translate = this.translate + delta;
       if (translate < 0 && widget.right != null ||
@@ -157,45 +162,45 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   }
 
   @override
-  void didUpdateWidget(covariant OverlappingPanels oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.left == null) {
-      setState(() {
-        translate = 0;
-      });
-    } else {
-      final mediaWidth = MediaQuery.of(context).size.width;
-      setState(() {
-        translate = _calculateGoal(mediaWidth, 1);
-      });
-    }
-    _onApplyTranslation(Offset.zero);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Offstage(
-        offstage: translate < 0,
-        child: widget.left,
-      ),
-      Offstage(
-        offstage: translate > 0,
-        child: widget.right,
-      ),
-      Transform.translate(
-        offset: Offset(translate, 0),
-        child: widget.main,
-      ),
-      GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onHorizontalDragUpdate: (details) {
-          onTranslate(details.delta.dx);
+    return LayoutBuilder(builder: (context, constraints) {
+      width = constraints.biggest.width;
+
+      return WillPopScope(
+        onWillPop: () async {
+          if (translate < 0) {
+            reveal(RevealSide.main);
+          } else if (translate == 0) {
+            reveal(RevealSide.left);
+          } else {
+            return true;
+          }
+          return false;
         },
-        onHorizontalDragEnd: (details) {
-          _onApplyTranslation(details.velocity.pixelsPerSecond);
-        },
-      ),
-    ]);
+        child: Stack(children: [
+          Offstage(
+            offstage: translate < 0,
+            child: widget.left,
+          ),
+          Offstage(
+            offstage: translate > 0,
+            child: widget.right,
+          ),
+          Transform.translate(
+            offset: Offset(translate, 0),
+            child: widget.main,
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onHorizontalDragUpdate: (details) {
+              _onTranslate(details.delta.dx);
+            },
+            onHorizontalDragEnd: (details) {
+              _onApplyTranslation(details.velocity.pixelsPerSecond);
+            },
+          ),
+        ]),
+      );
+    });
   }
 }

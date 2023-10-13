@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../components/rail_tile.dart';
+import '../../layout/overlapping_panels.dart';
 import 'yesod_category_list.dart';
 
 class YesodNav extends StatelessWidget {
@@ -30,6 +31,7 @@ class YesodNav extends StatelessWidget {
                     ),
                     onTap: () {
                       GoRouter.of(context).go('/app/Yesod/recent');
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
                     },
                     title: const Text('Recent'),
                     selected: function == 'recent',
@@ -40,6 +42,7 @@ class YesodNav extends StatelessWidget {
                     ),
                     onTap: () {
                       GoRouter.of(context).go('/app/Yesod/timeline');
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
                     },
                     title: const Text('Timeline'),
                     selected: function == 'timeline',
@@ -62,6 +65,7 @@ class YesodNav extends StatelessWidget {
               ),
               onTap: () {
                 GoRouter.of(context).go('/app/Yesod/config');
+                OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: const Text('Feed Config'),
               selected: function == 'config',

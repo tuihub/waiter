@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../common/util/platform.dart';
 import '../../consts.dart';
+import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/nav_rail.dart';
 import '../specialized/theme_mode_toggle.dart';
@@ -46,7 +47,7 @@ class FramePage extends StatelessWidget {
                 ],
               );
 
-        if (PlatformHelper.isAndroid()) {
+        if (width <= BootstrapBreakpoints.sm) {
           content = rightPart != null
               ? OverlappingPanels(
                   left: Row(
