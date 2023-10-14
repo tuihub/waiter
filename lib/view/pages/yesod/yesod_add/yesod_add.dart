@@ -47,7 +47,7 @@ class YesodAdd extends StatelessWidget {
                                 YesodUrlValidateEvent(),
                               );
                         },
-                  child: const Text('验证')),
+                  child: const Text('预览')),
             if (state is YesodAddFirstState)
               TextButton(
                 onPressed: state.loadState == LoadState.loading

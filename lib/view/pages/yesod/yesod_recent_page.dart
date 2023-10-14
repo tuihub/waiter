@@ -23,11 +23,18 @@ class YesodRecentPage extends StatefulWidget {
 
 class _YesodRecentPageState extends State<YesodRecentPage> {
   FeedItem? selectedItem;
+  int listKey = 0;
 
   Future<void> setSelectedItem(InternalID id) async {
     final result = await GetIt.I<YesodRepo>().getFeedItem(id);
     setState(() {
       selectedItem = result;
+    });
+  }
+
+  void _reloadList() {
+    setState(() {
+      listKey++;
     });
   }
 
@@ -51,7 +58,12 @@ class _YesodRecentPageState extends State<YesodRecentPage> {
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         ),
         body: YesodRecentList(
+          key: ValueKey(listKey),
           selectCallback: setSelectedItem,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _reloadList,
+          child: const Icon(Icons.refresh),
         ),
       ),
     );

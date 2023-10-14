@@ -65,7 +65,9 @@ class YesodAddFirstStage extends StatelessWidget {
                   YesodPreviewCard(
                     iconUrl: state.example!.subscription.iconUrl,
                     name: state.example!.subscription.title,
-                    images: [state.example!.image!],
+                    images: state.example!.image != null
+                        ? [state.example!.image!]
+                        : null,
                     description: state.example!.description,
                     title: state.example!.title ?? '',
                     callback: () {},
