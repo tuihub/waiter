@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+
 import '../../../../common/api/api_mixins.dart';
 import '../../../../common/api/l10n.dart';
 
@@ -13,10 +14,10 @@ class UserCreateDialog extends StatefulWidget {
 
 class _UserCreateDialogState extends State<UserCreateDialog>
     with SingleRequestMixin<UserCreateDialog, CreateUserResponse> {
-  void submit() {
+  Future<void> submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      doRequest(
+      await doRequest(
         request: (client, option) {
           return client.createUser(
             CreateUserRequest(
@@ -132,7 +133,11 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                     child: Text(userTypeString(UserType.USER_TYPE_SENTINEL)),
                   ),
                 ],
-                onChanged: (select) {},
+                onChanged: (select) {
+                  setState(() {
+                    userType = select ?? UserType.USER_TYPE_NORMAL;
+                  });
+                },
               ),
               const SizedBox(
                 height: 16,
@@ -156,7 +161,11 @@ class _UserCreateDialogState extends State<UserCreateDialog>
                         Text(userStatusString(UserStatus.USER_STATUS_BLOCKED)),
                   ),
                 ],
-                onChanged: (select) {},
+                onChanged: (select) {
+                  setState(() {
+                    userStatus = select ?? UserStatus.USER_STATUS_ACTIVE;
+                  });
+                },
               ),
               const SizedBox(
                 height: 16,

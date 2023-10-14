@@ -35,10 +35,10 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
   late UserStatus userStatus;
   bool passwordSecure = true;
 
-  void submit() {
+  Future<void> submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      doRequest(
+      await doRequest(
         request: (client, option) {
           final req = User(
             id: widget.user.id,
@@ -47,7 +47,10 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
             status: userStatus,
           );
           if (newPassword.isEmpty) {
-            return client.updateUser(UpdateUserRequest(user: req));
+            return client.updateUser(
+              UpdateUserRequest(user: req),
+              options: option,
+            );
           } else {
             req.password = newPassword;
             return client.updateUser(
@@ -122,7 +125,11 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                     child: Text(userTypeString(UserType.USER_TYPE_SENTINEL)),
                   ),
                 ],
-                onChanged: (select) {},
+                onChanged: (select) {
+                  setState(() {
+                    userType = select ?? UserType.USER_TYPE_NORMAL;
+                  });
+                },
               ),
               const SizedBox(
                 height: 16,
@@ -146,7 +153,11 @@ class _UserUpdateDialogState extends State<UserUpdateDialog>
                         Text(userStatusString(UserStatus.USER_STATUS_BLOCKED)),
                   ),
                 ],
-                onChanged: (select) {},
+                onChanged: (select) {
+                  setState(() {
+                    userStatus = select ?? UserStatus.USER_STATUS_ACTIVE;
+                  });
+                },
               ),
               const SizedBox(
                 height: 16,
