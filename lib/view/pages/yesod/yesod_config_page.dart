@@ -77,8 +77,8 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                   color: bgColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.all(8),
                 child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
                   onTap: () {
                     unawaited(showDialog<void>(
                       context: context,
@@ -88,63 +88,66 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                       ),
                     ));
                   },
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: item.feed.image.url.isNotEmpty
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      SpacingHelper.defaultBorderRadius,
-                                  image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                        item.feed.image.url,
-                                      ),
-                                      fit: BoxFit.cover),
-                                ),
-                                width: 48,
-                                height: 48,
-                              )
-                            : const SizedBox(),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.config.feedUrl,
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                fontSize: 10,
-                                color: Theme.of(context).disabledColor),
-                            maxLines: 2,
-                          ),
-                          Text(item.config.name),
-                          Text(
-                              '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
-                          Text(
-                              '上次更新：${DurationHelper.recentString(item.config.latestUpdateTime.toDateTime())}')
-                        ],
-                      ),
-                      const Expanded(child: SizedBox()),
-                      SizedBox(
-                        width: 64,
-                        height: 64,
-                        child: IconButton(
-                          onPressed: () {
-                            unawaited(showDialog<void>(
-                              context: context,
-                              builder: (context) => YesodConfigEditDialog(
-                                callback: _loadConfig,
-                                config: item.config,
-                              ),
-                            ));
-                          },
-                          icon: const Icon(Icons.edit),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: item.feed.image.url.isNotEmpty
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        SpacingHelper.defaultBorderRadius,
+                                    image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                          item.feed.image.url,
+                                        ),
+                                        fit: BoxFit.cover),
+                                  ),
+                                  width: 48,
+                                  height: 48,
+                                )
+                              : const SizedBox(),
                         ),
-                      ),
-                    ],
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.config.feedUrl,
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: 10,
+                                  color: Theme.of(context).disabledColor),
+                              maxLines: 2,
+                            ),
+                            Text(item.config.name),
+                            Text(
+                                '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
+                            Text(
+                                '上次更新：${DurationHelper.recentString(item.config.latestUpdateTime.toDateTime())}')
+                          ],
+                        ),
+                        const Expanded(child: SizedBox()),
+                        SizedBox(
+                          width: 64,
+                          height: 64,
+                          child: IconButton(
+                            onPressed: () {
+                              unawaited(showDialog<void>(
+                                context: context,
+                                builder: (context) => YesodConfigEditDialog(
+                                  callback: _loadConfig,
+                                  config: item.config,
+                                ),
+                              ));
+                            },
+                            icon: const Icon(Icons.edit),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -164,54 +167,54 @@ class _YesodConfigPageState extends State<YesodConfigPage>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const SizedBox(width: 8),
-                  FilledButton.tonalIcon(
-                    onPressed: () async {
-                      await showDialog<bool>(
-                        context: context,
-                        builder: (context) {
-                          return const YesodAdd();
-                        },
-                      ).then((value) {
-                        if (value == null || !value) {
-                          return;
-                        }
-                        const Toast(
-                          title: '',
-                          message: '添加成功',
-                        ).show(context);
-                        _loadConfig(refresh: true);
-                      });
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('添加订阅'),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
-              Expanded(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                FilledButton.tonalIcon(
+                  onPressed: () async {
+                    await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        return const YesodAdd();
+                      },
+                    ).then((value) {
+                      if (value == null || !value) {
+                        return;
+                      }
+                      const Toast(
+                        title: '',
+                        message: '添加成功',
+                      ).show(context);
+                      _loadConfig(refresh: true);
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('添加订阅'),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
                 child: _buildStatePage(),
               ),
-              const SizedBox(
-                height: 8,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _loadConfig,
-          child: const Icon(Icons.refresh),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _loadConfig,
+        child: const Icon(Icons.refresh),
       ),
     );
   }

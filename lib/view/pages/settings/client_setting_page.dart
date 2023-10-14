@@ -12,15 +12,18 @@ class ClientSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: const Text('设置'),
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        body: Material(
+        title: const Text('设置'),
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Material(
           color: Colors.transparent,
           child: BlocBuilder<AppSettingBloc, AppSettingState>(
             builder: (context, state) {

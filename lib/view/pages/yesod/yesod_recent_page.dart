@@ -38,17 +38,20 @@ class _YesodRecentPageState extends State<YesodRecentPage> {
         color: Theme.of(context).colorScheme.surfaceVariant,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: const Text('最近更新'),
-            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8.0),
+              topRight: Radius.circular(8.0),
+            ),
           ),
-          body: YesodRecentList(
-            selectCallback: setSelectedItem,
-          ),
+          title: const Text('最近更新'),
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        ),
+        body: YesodRecentList(
+          selectCallback: setSelectedItem,
         ),
       ),
     );

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../components/rail_tile.dart';
 import '../../layout/overlapping_panels.dart';
-import 'yesod_category_list.dart';
 
 class YesodNav extends StatelessWidget {
   const YesodNav({super.key, required this.function});
@@ -47,7 +46,7 @@ class YesodNav extends StatelessWidget {
                   //   title: const Text('Timeline'),
                   //   selected: function == 'timeline',
                   // ),
-                  const YesodCategoryListPage(selectedAppID: ''),
+                  // const YesodCategoryListPage(selectedAppID: ''),
                   const Expanded(child: SizedBox()),
                 ],
               ),
