@@ -153,7 +153,7 @@ class StoreList extends StatelessWidget {
                       (context, index) {
                         final app = data.apps.elementAt(index);
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.only(top: 8),
                           child: OpenContainer(
                             openBuilder: (context, closedContainer) {
                               return Container(

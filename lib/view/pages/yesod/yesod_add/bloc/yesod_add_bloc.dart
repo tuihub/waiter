@@ -135,7 +135,7 @@ class YesodAddBloc extends Bloc<YesodAddEvent, YesodAddState> {
                       ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
                       : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
                   pullInterval: $duration.Duration(
-                    seconds: $fixnum.Int64(event.refreshInterval),
+                    seconds: $fixnum.Int64(event.refreshInterval * 60),
                   ),
                   category: event.category,
                 ),

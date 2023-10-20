@@ -46,7 +46,7 @@ class _YesodConfigEditDialogState extends State<YesodConfigEditDialog>
                     ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
                     : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
                 pullInterval: $duration.Duration(
-                  seconds: $fixnum.Int64(pullInterval),
+                  seconds: $fixnum.Int64(pullInterval * 60),
                 ),
                 category: category,
               ),
@@ -126,7 +126,7 @@ class _YesodConfigEditDialogState extends State<YesodConfigEditDialog>
                 decoration: const InputDecoration(
                   icon: Icon(Icons.timer),
                   border: OutlineInputBorder(),
-                  labelText: '刷新间隔(秒)',
+                  labelText: '刷新间隔(分钟)',
                 ),
                 inputFormatters: [IntInputFormatter()],
                 validator: (value) {

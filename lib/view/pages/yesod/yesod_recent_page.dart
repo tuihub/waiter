@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:keframe/keframe.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -149,59 +150,66 @@ class _YesodRecentListState extends State<YesodRecentList> {
             }
           });
 
-          return ListView.builder(
-            controller: controller,
-            physics: physics,
-            itemCount: flattenedItems.length + 1,
-            itemBuilder: (context, index) {
-              if (index < flattenedItems.length) {
-                final item = flattenedItems[index];
+          return SizeCacheWidget(
+            child: ListView.builder(
+              controller: controller,
+              physics: physics,
+              itemCount: flattenedItems.length + 1,
+              cacheExtent: MediaQuery.sizeOf(context).height * 2,
+              itemBuilder: (context, index) {
+                if (index < flattenedItems.length) {
+                  final item = flattenedItems[index];
 
-                return BootstrapContainer(
-                  children: [
-                    BootstrapColumn(
-                      xxs: 12,
-                      md: 9,
-                      lg: 7,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: OpenContainer(
-                          openBuilder: (context, closedContainer) {
-                            return YesodDetailPage(
-                              itemId: item.itemId,
-                            );
-                          },
-                          openColor: theme.colorScheme.primary,
-                          closedShape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                  return FrameSeparateWidget(
+                    index: index,
+                    child: BootstrapContainer(
+                      children: [
+                        BootstrapColumn(
+                          xxs: 12,
+                          md: 9,
+                          lg: 7,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: OpenContainer(
+                              openBuilder: (context, closedContainer) {
+                                return YesodDetailPage(
+                                  itemId: item.itemId,
+                                );
+                              },
+                              openColor: theme.colorScheme.primary,
+                              closedShape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                              ),
+                              closedElevation: 0,
+                              closedColor: theme.cardColor,
+                              closedBuilder: (context, openContainer) {
+                                return YesodPreviewCard(
+                                  name:
+                                      '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                                  title: item.title,
+                                  callback: openContainer,
+                                  iconUrl: item.feedAvatarUrl,
+                                  images: item.imageUrls,
+                                  description: item.shortDescription,
+                                );
+                              },
+                            ),
                           ),
-                          closedElevation: 0,
-                          closedColor: theme.cardColor,
-                          closedBuilder: (context, openContainer) {
-                            return YesodPreviewCard(
-                              name:
-                                  '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
-                              title: item.title,
-                              callback: openContainer,
-                              iconUrl: item.feedAvatarUrl,
-                              images: item.imageUrls,
-                              description: item.shortDescription,
-                            );
-                          },
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                );
-              } else {
-                return const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(
-                    child: Text('加载中'),
-                  ),
-                );
-              }
-            },
+                  );
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(
+                      child: Text('加载中'),
+                    ),
+                  );
+                }
+              },
+            ),
           );
         },
       );

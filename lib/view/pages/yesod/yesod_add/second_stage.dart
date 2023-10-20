@@ -79,7 +79,7 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.timer),
                       border: OutlineInputBorder(),
-                      labelText: '刷新间隔(秒)',
+                      labelText: '刷新间隔(分钟)',
                     ),
                     inputFormatters: [IntInputFormatter()],
                     // The validator receives the text that the user has entered.
