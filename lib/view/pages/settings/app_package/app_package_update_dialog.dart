@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+
 import '../../../../common/api/api_mixins.dart';
 import '../../../../common/api/l10n.dart';
 import 'app_package_assign_dialog.dart';
@@ -141,7 +142,7 @@ class _AppPackageUpdateDialogState extends State<AppPackageUpdateDialog>
           },
           child: const Text('绑定应用包'),
         ),
-        const Expanded(child: SizedBox()),
+        const SizedBox(),
         TextButton(
           onPressed: submit,
           child:
