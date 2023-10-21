@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
@@ -13,8 +14,9 @@ import '../../../l10n/l10n.dart';
 import '../../components/toast.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
+import '../../layout/overlapping_panels.dart';
+import '../frame_page.dart';
 import 'yesod_add/yesod_add.dart';
-import 'yesod_config_edit_dialog.dart';
 
 class YesodConfigPage extends StatefulWidget {
   const YesodConfigPage({super.key});
@@ -69,6 +71,13 @@ class _YesodConfigPageState extends State<YesodConfigPage>
       return ListView.builder(
         itemBuilder: (context, index) {
           final item = listData.elementAt(index);
+          void openEditPage() {
+            GoRouter.of(context)
+                .go('/app/Yesod/config?id=${item.config.id.id}');
+            OverlappingPanels.of(context)?.reveal(RevealSide.right);
+            FramePage.of(context)?.openDrawer();
+          }
+
           return SelectionArea(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -79,15 +88,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                 ),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(12),
-                  onTap: () {
-                    unawaited(showDialog<void>(
-                      context: context,
-                      builder: (context) => YesodConfigEditDialog(
-                        callback: _loadConfig,
-                        config: item.config,
-                      ),
-                    ));
-                  },
+                  onTap: openEditPage,
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Row(
@@ -134,15 +135,7 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                           width: 64,
                           height: 64,
                           child: IconButton(
-                            onPressed: () {
-                              unawaited(showDialog<void>(
-                                context: context,
-                                builder: (context) => YesodConfigEditDialog(
-                                  callback: _loadConfig,
-                                  config: item.config,
-                                ),
-                              ));
-                            },
+                            onPressed: openEditPage,
                             icon: const Icon(Icons.edit),
                           ),
                         ),

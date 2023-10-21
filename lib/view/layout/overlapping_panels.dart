@@ -27,16 +27,25 @@ class OverlappingPanels extends StatefulWidget {
   /// panel is revealed.
   final double restWidth;
 
+  /// Allow reveal to left
+  final bool gestureLeft;
+
+  /// Allow reveal to right
+  final bool gestureRight;
+
   /// A callback to notify when a panel reveal has completed.
   final ValueChanged<RevealSide>? onSideChange;
 
-  const OverlappingPanels(
-      {this.left,
-      required this.main,
-      this.right,
-      this.restWidth = 40,
-      this.onSideChange,
-      super.key});
+  const OverlappingPanels({
+    this.left,
+    required this.main,
+    this.right,
+    this.restWidth = 40,
+    this.onSideChange,
+    this.gestureLeft = true,
+    this.gestureRight = true,
+    super.key,
+  });
 
   static OverlappingPanelsState? of(BuildContext context) {
     return context.findAncestorStateOfType<OverlappingPanelsState>();
@@ -70,7 +79,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     return (multiplier * width) + (-multiplier * widget.restWidth);
   }
 
-  void _onApplyTranslation(Offset pixelsPerSecond) {
+  void _onApplyTranslation(Offset pixelsPerSecond, bool gestureEnd) {
     final animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 160));
 
@@ -103,6 +112,9 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     if (widget.left == null && goal > 0) goal = 0;
     if (widget.right == null && goal < 0) goal = 0;
 
+    if (!widget.gestureLeft && gestureEnd && goal > 0) goal = 0;
+    if (!widget.gestureRight && gestureEnd && goal < 0) goal = 0;
+
     final Tween<double> tween = Tween<double>(begin: translate, end: goal);
 
     final animation = tween.animate(CurvedAnimation(
@@ -116,7 +128,6 @@ class OverlappingPanelsState extends State<OverlappingPanels>
         lastTranslate = animation.value;
       });
     });
-    debugPrint('pixels ${pixelsPerSecond.dx} $translate $lastTranslate');
 
     animationController.forward();
   }
@@ -134,7 +145,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _onApplyTranslation(Offset.zero);
+        _onApplyTranslation(Offset.zero, false);
         animationController.dispose();
       }
     });
@@ -154,8 +165,8 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   void _onTranslate(double delta) {
     setState(() {
       final translate = this.translate + delta;
-      if (translate < 0 && widget.right != null ||
-          translate > 0 && widget.left != null) {
+      if ((widget.gestureRight && translate < 0 && widget.right != null) ||
+          (widget.gestureLeft && translate > 0 && widget.left != null)) {
         this.translate = translate;
       }
     });
@@ -188,7 +199,18 @@ class OverlappingPanelsState extends State<OverlappingPanels>
           ),
           Transform.translate(
             offset: Offset(translate, 0),
-            child: widget.main,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                if (translate != 0) {
+                  reveal(RevealSide.main);
+                }
+              },
+              child: IgnorePointer(
+                ignoring: translate != 0,
+                child: widget.main,
+              ),
+            ),
           ),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
@@ -196,7 +218,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
               _onTranslate(details.delta.dx);
             },
             onHorizontalDragEnd: (details) {
-              _onApplyTranslation(details.velocity.pixelsPerSecond);
+              _onApplyTranslation(details.velocity.pixelsPerSecond, true);
             },
           ),
         ]),

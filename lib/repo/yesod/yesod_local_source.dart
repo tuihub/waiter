@@ -50,4 +50,11 @@ class YesodLocalSource implements YesodSource {
   Future<List<String>> getFeedCategories() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<ListFeedConfigsResponse_FeedWithConfig>> listFeedConfigs(
+      Iterable<InternalID>? ids) {
+    // TODO: implement listFeedConfigs
+    throw UnimplementedError();
+  }
 }

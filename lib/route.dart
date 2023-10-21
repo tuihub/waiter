@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'view/pages/yesod/yesod_config_edit_page.dart';
 
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
@@ -129,13 +130,26 @@ GoRouter getRouter() {
                     'config': const YesodConfigPage()
                   };
                   final function = state.pathParameters['function'] ?? 'recent';
+                  final id = state.uri.queryParameters['id'];
+                  final feedConfigID = id != null ? int.tryParse(id) : null;
+
+                  final yesodRight = {
+                    'config': feedConfigID != null
+                        ? YesodConfigEditPage(
+                            key: ValueKey(feedConfigID),
+                            feedConfigID: feedConfigID)
+                        : const SizedBox(),
+                  };
+                  debugPrint(id);
                   return NoTransitionPage(
                     child: FramePage(
                       selectedNav: 'Yesod',
                       leftPart: YesodNav(
                         function: function,
                       ),
-                      rightPart: yesodPages[function],
+                      middlePart: yesodPages[function],
+                      rightPart: yesodRight[function],
+                      gestureRight: false,
                     ),
                   );
                 },
@@ -165,7 +179,7 @@ GoRouter getRouter() {
                         function: function,
                         selectedAppID: id,
                       ),
-                      rightPart: function == 'store'
+                      middlePart: function == 'store'
                           ? const GeburaStorePage()
                           : GeburaLibraryDetailPage(appID: appID),
                     ),
@@ -199,7 +213,7 @@ GoRouter getRouter() {
                       leftPart: SettingsNav(
                         function: function,
                       ),
-                      rightPart: settingsPages[function] ?? const SizedBox(),
+                      middlePart: settingsPages[function] ?? const SizedBox(),
                     ),
                   );
                 },

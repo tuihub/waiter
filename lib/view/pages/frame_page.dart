@@ -9,19 +9,40 @@ import '../specialized/nav_rail.dart';
 import '../specialized/theme_mode_toggle.dart';
 import '../specialized/title_bar.dart';
 
-class FramePage extends StatelessWidget {
+class FramePage extends StatefulWidget {
   const FramePage({
     super.key,
     required this.selectedNav,
     required this.leftPart,
-    this.rightPart,
     this.leftPartWidth,
+    this.middlePart,
+    this.rightPart,
+    this.rightPartWidth,
+    this.gestureRight = true,
   });
 
   final String selectedNav;
   final Widget leftPart;
-  final Widget? rightPart;
   final double? leftPartWidth;
+  final Widget? middlePart;
+  final Widget? rightPart;
+  final double? rightPartWidth;
+  final bool gestureRight;
+
+  static FramePageState? of(BuildContext context) {
+    return context.findAncestorStateOfType<FramePageState>();
+  }
+
+  @override
+  State<StatefulWidget> createState() => FramePageState();
+}
+
+class FramePageState extends State<FramePage> {
+  void openDrawer() {
+    _frameScaffold.currentState?.openEndDrawer();
+  }
+
+  final GlobalKey<ScaffoldState> _frameScaffold = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -31,34 +52,37 @@ class FramePage extends StatelessWidget {
       builder: (context, constraints) {
         final width = constraints.biggest.width;
 
-        Widget content = rightPart != null
+        Widget content = widget.middlePart != null
             ? Row(
                 children: [
-                  _Nav(selectedNav: selectedNav),
+                  _Nav(selectedNav: widget.selectedNav),
                   SizedBox(
-                    width: leftPartWidth != null ? leftPartWidth! - 64 : 256,
-                    child: leftPart,
+                    width: widget.leftPartWidth != null
+                        ? widget.leftPartWidth! - 64
+                        : 256,
+                    child: widget.leftPart,
                   ),
-                  Expanded(child: rightPart!),
+                  Expanded(child: widget.middlePart!),
                 ],
               )
             : Row(
                 children: [
-                  _Nav(selectedNav: selectedNav),
-                  Expanded(child: leftPart),
+                  _Nav(selectedNav: widget.selectedNav),
+                  Expanded(child: widget.leftPart),
                 ],
               );
 
-        if (width <= BootstrapBreakpoints.sm) {
-          content = rightPart != null
+        if (width <= BootstrapBreakpoints.md) {
+          content = widget.middlePart != null
               ? OverlappingPanels(
                   restWidth: restWidth,
+                  gestureRight: widget.gestureRight,
                   left: Row(
                     children: [
-                      _Nav(selectedNav: selectedNav),
+                      _Nav(selectedNav: widget.selectedNav),
                       SizedBox(
                         width: width - 64 - restWidth,
-                        child: leftPart,
+                        child: widget.leftPart,
                       ),
                     ],
                   ),
@@ -67,23 +91,43 @@ class FramePage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: rightPart,
+                    child: widget.middlePart,
                   ),
+                  right: widget.rightPart != null
+                      ? Align(
+                          alignment: Alignment.centerRight,
+                          child: SizedBox(
+                            width: width - 8 - restWidth,
+                            child: widget.rightPart,
+                          ),
+                        )
+                      : null,
                 )
               : OverlappingPanels(
+                  gestureRight: widget.gestureRight,
                   main: Row(
                     children: [
-                      _Nav(selectedNav: selectedNav),
+                      _Nav(selectedNav: widget.selectedNav),
                       SizedBox(
                         width: width - 64,
-                        child: leftPart,
+                        child: widget.leftPart,
                       ),
                     ],
                   ),
+                  right: widget.rightPart != null
+                      ? Align(
+                          alignment: Alignment.centerRight,
+                          child: SizedBox(
+                            width: width - 8 - restWidth,
+                            child: widget.rightPart,
+                          ),
+                        )
+                      : null,
                 );
         }
 
         return Scaffold(
+          key: _frameScaffold,
           body: SafeArea(
             maintainBottomViewPadding: true,
             child: Column(
@@ -98,6 +142,15 @@ class FramePage extends StatelessWidget {
               ],
             ),
           ),
+          endDrawer: width > BootstrapBreakpoints.md && widget.rightPart != null
+              ? Drawer(
+                  width: widget.rightPartWidth ?? 512,
+                  child: SafeArea(
+                    maintainBottomViewPadding: true,
+                    child: widget.rightPart!,
+                  ),
+                )
+              : null,
         );
       },
     );
