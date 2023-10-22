@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../common/util/platform.dart';
 import '../../consts.dart';
+import '../../route.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/nav_rail.dart';
@@ -21,7 +21,7 @@ class FramePage extends StatefulWidget {
     this.gestureRight = true,
   });
 
-  final String selectedNav;
+  final ModuleName selectedNav;
   final Widget leftPart;
   final double? leftPartWidth;
   final Widget? middlePart;
@@ -160,7 +160,7 @@ class FramePageState extends State<FramePage> {
 class _Nav extends StatelessWidget {
   const _Nav({required this.selectedNav});
 
-  final String selectedNav;
+  final ModuleName selectedNav;
 
   @override
   Widget build(BuildContext context) {
@@ -168,30 +168,28 @@ class _Nav extends StatelessWidget {
       leading: [
         IconMenuItem(
           icon: Icons.account_circle_sharp,
-          selected: 'Tiphereth' == selectedNav,
+          selected: ModuleName.tiphereth == selectedNav,
           onPressed: () {
-            GoRouter.of(context).go('/app/Tiphereth');
+            AppRoutes.tiphereth.go(context);
           },
         ),
       ],
       body: [
-        for (final app in appList)
+        for (final app in moduleList)
           IconMenuItem(
             icon: app.icon,
             selected: app.name == selectedNav,
             onPressed: () {
-              GoRouter.of(context).go(
-                '/app/${app.name}',
-              );
+              AppRoutes.module(app.name).go(context);
             },
           ),
       ],
       trailing: [
         IconMenuItem(
           icon: Icons.settings,
-          selected: 'Settings' == selectedNav,
+          selected: ModuleName.settings == selectedNav,
           onPressed: () {
-            GoRouter.of(context).go('/app/Settings');
+            AppRoutes.settings.go(context);
           },
         ),
       ],

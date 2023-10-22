@@ -1,4 +1,4 @@
-part of 'yesod_add.dart';
+part of 'yesod_config_add.dart';
 
 class YesodAddFirstStage extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'view/pages/yesod/yesod_config_edit_page.dart';
 
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
@@ -21,10 +20,108 @@ import 'view/pages/settings/client_setting_page.dart';
 import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
+import 'view/pages/yesod/yesod_config_add/yesod_config_add.dart';
+import 'view/pages/yesod/yesod_config_edit_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_timeline_page.dart';
+
+class AppRoutes {
+  const AppRoutes._(this.path);
+
+  final String path;
+  @override
+  String toString() => path;
+
+  void go(BuildContext context) {
+    GoRouter.of(context).go(path);
+  }
+
+  static const AppRoutes init = AppRoutes._('/');
+  static const AppRoutes login = AppRoutes._('/login');
+  static const String _module = '/module';
+  static AppRoutes module(ModuleName? moduleName) =>
+      AppRoutes._('$_module${moduleName != null ? '/$moduleName' : ''}');
+
+  static const AppRoutes tiphereth =
+      AppRoutes._('$_module/${ModuleName._tiphereth}');
+
+  static const String _yesod = '$_module/${ModuleName._yesod}';
+  static const AppRoutes yesod = AppRoutes._(_yesod);
+  static const AppRoutes yesodRecent =
+      AppRoutes._('$_yesod/${_YesodFunctions.yesodRecent}');
+  static const AppRoutes yesodTimeline =
+      AppRoutes._('$_yesod/${_YesodFunctions.yesodTimeline}');
+  static const AppRoutes yesodConfig =
+      AppRoutes._('$_yesod/${_YesodFunctions.yesodConfig}');
+  static AppRoutes yesodConfigEdit(int id) => AppRoutes._(
+      '$yesodConfig?action=${_YesodActions.yesodConfigEdit}&id=$id');
+  static AppRoutes yesodConfigAdd() =>
+      AppRoutes._('$yesodConfig?action=${_YesodActions.yesodConfigAdd}');
+
+  static const String _gebura = '$_module/${ModuleName._gebura}';
+  static const AppRoutes gebura = AppRoutes._(_gebura);
+  static const AppRoutes geburaStore =
+      AppRoutes._('$_gebura/${_GeburaFunctions.store}');
+  static const AppRoutes geburaLibrary =
+      AppRoutes._('$_gebura/${_GeburaFunctions.library}');
+  static AppRoutes geburaLibraryDetail(int id) =>
+      AppRoutes._('$geburaLibrary?id=$id');
+
+  static const String _settings = '$_module/${ModuleName._settings}';
+  static const AppRoutes settings = AppRoutes._(_settings);
+  static const AppRoutes settingsClient =
+      AppRoutes._('$_settings/${_SettingsFunctions.client}');
+  static const AppRoutes settingsUser =
+      AppRoutes._('$_settings/${_SettingsFunctions.user}');
+  static const AppRoutes settingsApp =
+      AppRoutes._('$_settings/${_SettingsFunctions.app}');
+  static const AppRoutes settingsAppPackage =
+      AppRoutes._('$_settings/${_SettingsFunctions.appPackage}');
+}
+
+enum ModuleName {
+  tiphereth._(_tiphereth),
+  yesod._(_yesod),
+  gebura._(_gebura),
+  settings._(_settings);
+
+  static const String _tiphereth = 'Tiphereth';
+  static const String _yesod = 'Yesod';
+  static const String _gebura = 'Gebura';
+  static const String _settings = 'Settings';
+
+  const ModuleName._(this.name);
+
+  final String name;
+
+  @override
+  String toString() => name;
+}
+
+class _YesodFunctions {
+  static const String yesodRecent = 'recent';
+  static const String yesodTimeline = 'timeline';
+  static const String yesodConfig = 'config';
+}
+
+class _YesodActions {
+  static const String yesodConfigEdit = 'editConfig';
+  static const String yesodConfigAdd = 'addConfig';
+}
+
+class _GeburaFunctions {
+  static const String store = 'store';
+  static const String library = 'library';
+}
+
+class _SettingsFunctions {
+  static const String client = 'client';
+  static const String user = 'user';
+  static const String app = 'app';
+  static const String appPackage = 'appPackage';
+}
 
 final GlobalKey<NavigatorState> _tipherethNavigateKey =
     GlobalKey<NavigatorState>();
@@ -36,27 +133,26 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
 
 GoRouter getRouter() {
   final router = GoRouter(
-    initialLocation: '/',
+    initialLocation: AppRoutes.init.toString(),
     refreshListenable: StreamListener(GetIt.I<UserBloc>().stream),
     redirect: (context, state) {
       if (context.read<UserBloc>().state is PreLogin) {
-        return '/';
+        return AppRoutes.init.toString();
       }
       if (context.read<UserBloc>().state is OnLogin) {
-        return '/login';
+        return AppRoutes.login.toString();
       }
       if (context.read<UserBloc>().state is PostLogin) {
-        if (state.uri.toString() == '/login' || state.uri.toString() == '/') {
+        if (state.uri.toString() == AppRoutes.login.toString() ||
+            state.uri.toString() == AppRoutes.init.toString()) {
           final userPath = context.read<AppSettingBloc>().userPath;
-          if (userPath.startsWith('/app')) {
+          if (userPath.startsWith(AppRoutes._module)) {
             return userPath;
           }
-
-          // return context.read<AppSettingBloc>().userPath;
-          return '/app/Tiphereth';
+          return AppRoutes.tiphereth.toString();
         }
-        if (state.uri.toString() == '/app') {
-          return '/app/Tiphereth';
+        if (state.uri.toString() == AppRoutes._module) {
+          return AppRoutes.tiphereth.toString();
         }
       }
       context.read<AppSettingBloc>().userPath = state.uri.toString();
@@ -64,20 +160,15 @@ GoRouter getRouter() {
     },
     routes: [
       GoRoute(
-        path: '/',
+        path: AppRoutes.init.toString(),
         builder: (context, state) => const InitPage(),
       ),
       GoRoute(
-        path: '/login',
+        path: AppRoutes.login.toString(),
         builder: (context, state) => const LoginPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          var appName = state.pathParameters['appName'] ?? '';
-          final fullPath = state.fullPath ?? '/app/Tiphereth';
-          if (appName == '' && fullPath.startsWith('/app')) {
-            appName = fullPath.split('/')[2];
-          }
           return BlocBuilder<UserBloc, UserLoginState>(
             builder: (context, blocState) {
               if (blocState is UserLoggedIn) {
@@ -100,11 +191,11 @@ GoRouter getRouter() {
             navigatorKey: _tipherethNavigateKey,
             routes: [
               GoRoute(
-                path: '/app/Tiphereth',
+                path: AppRoutes.tiphereth.toString(),
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
                     child: FramePage(
-                      selectedNav: 'Tiphereth',
+                      selectedNav: ModuleName.tiphereth,
                       leftPart: TipherethFramePage(),
                     ),
                   );
@@ -116,39 +207,40 @@ GoRouter getRouter() {
             navigatorKey: _yesodNavigateKey,
             routes: [
               GoRoute(
-                path: '/app/Yesod',
+                path: AppRoutes.yesod.toString(),
                 redirect: (context, state) {
-                  return '/app/Yesod/recent';
+                  return AppRoutes.yesodRecent.toString();
                 },
               ),
               GoRoute(
-                path: '/app/Yesod/:function',
+                path: '${AppRoutes.yesod}/:function',
                 pageBuilder: (context, state) {
                   final yesodPages = {
-                    'recent': const YesodRecentPage(),
-                    'timeline': const YesodTimelinePage(),
-                    'config': const YesodConfigPage()
+                    _YesodFunctions.yesodRecent: const YesodRecentPage(),
+                    _YesodFunctions.yesodTimeline: const YesodTimelinePage(),
+                    _YesodFunctions.yesodConfig: const YesodConfigPage()
                   };
-                  final function = state.pathParameters['function'] ?? 'recent';
-                  final id = state.uri.queryParameters['id'];
-                  final feedConfigID = id != null ? int.tryParse(id) : null;
+                  final function = state.pathParameters['function'] ??
+                      _YesodFunctions.yesodRecent;
+                  final action = state.uri.queryParameters['action'] ?? '';
+                  final idParam = state.uri.queryParameters['id'];
+                  final id = idParam != null ? int.tryParse(idParam) : null;
 
-                  final yesodRight = {
-                    'config': feedConfigID != null
+                  final yesodActions = {
+                    _YesodActions.yesodConfigEdit: id != null
                         ? YesodConfigEditPage(
-                            key: ValueKey(feedConfigID),
-                            feedConfigID: feedConfigID)
+                            key: ValueKey(id), feedConfigID: id)
                         : const SizedBox(),
+                    _YesodActions.yesodConfigAdd: const YesodConfigAdd(),
                   };
-                  debugPrint(id);
                   return NoTransitionPage(
                     child: FramePage(
-                      selectedNav: 'Yesod',
+                      selectedNav: ModuleName.yesod,
                       leftPart: YesodNav(
                         function: function,
                       ),
                       middlePart: yesodPages[function],
-                      rightPart: yesodRight[function],
+                      rightPart: yesodActions[action],
                       gestureRight: false,
                     ),
                   );
@@ -160,28 +252,31 @@ GoRouter getRouter() {
             navigatorKey: _geburaNavigateKey,
             routes: [
               GoRoute(
-                path: '/app/Gebura',
+                path: AppRoutes.gebura.toString(),
                 redirect: (context, state) {
-                  return '/app/Gebura/store';
+                  return AppRoutes.geburaStore.toString();
                 },
               ),
               GoRoute(
-                path: '/app/Gebura/:function',
+                path: '${AppRoutes.gebura}/:function',
                 pageBuilder: (context, state) {
-                  final function =
-                      state.pathParameters['function'] ?? 'library';
+                  final function = state.pathParameters['function'] ??
+                      AppRoutes.geburaStore.toString();
                   final id = state.uri.queryParameters['id'] ?? '0';
                   final appID = int.tryParse(id) ?? 0;
+                  final geburaPages = {
+                    _GeburaFunctions.store: const GeburaStorePage(),
+                    _GeburaFunctions.library:
+                        GeburaLibraryDetailPage(appID: appID),
+                  };
                   return NoTransitionPage(
                     child: FramePage(
-                      selectedNav: 'Gebura',
+                      selectedNav: ModuleName.gebura,
                       leftPart: GeburaNav(
                         function: function,
                         selectedAppID: id,
                       ),
-                      middlePart: function == 'store'
-                          ? const GeburaStorePage()
-                          : GeburaLibraryDetailPage(appID: appID),
+                      middlePart: geburaPages[function],
                     ),
                   );
                 },
@@ -192,24 +287,25 @@ GoRouter getRouter() {
             navigatorKey: _settingsNavigateKey,
             routes: [
               GoRoute(
-                path: '/app/Settings',
+                path: AppRoutes.settings.toString(),
                 redirect: (context, state) {
-                  return '/app/Settings/client';
+                  return AppRoutes.settingsClient.toString();
                 },
               ),
               GoRoute(
-                path: '/app/Settings/:function',
+                path: '${AppRoutes.settings}/:function',
                 pageBuilder: (context, state) {
                   final settingsPages = {
-                    'client': const ClientSettingPage(),
-                    'user': const UserManagePage(),
-                    'app': const AppManagePage(),
-                    'appPackage': const AppPackageManagePage(),
+                    _SettingsFunctions.client: const ClientSettingPage(),
+                    _SettingsFunctions.user: const UserManagePage(),
+                    _SettingsFunctions.app: const AppManagePage(),
+                    _SettingsFunctions.appPackage: const AppPackageManagePage(),
                   };
-                  final function = state.pathParameters['function'] ?? 'client';
+                  final function = state.pathParameters['function'] ??
+                      _SettingsFunctions.client;
                   return NoTransitionPage(
                     child: FramePage(
-                      selectedNav: 'Settings',
+                      selectedNav: ModuleName.settings,
                       leftPart: SettingsNav(
                         function: function,
                       ),

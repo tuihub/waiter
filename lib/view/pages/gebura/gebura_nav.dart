@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../route.dart';
 import '../../components/rail_tile.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
@@ -30,7 +30,7 @@ class GeburaNav extends StatelessWidget {
                 Icons.shopping_cart,
               ),
               onTap: () {
-                GoRouter.of(context).go('/app/Gebura/store');
+                AppRoutes.geburaStore.go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: const Text('Store'),

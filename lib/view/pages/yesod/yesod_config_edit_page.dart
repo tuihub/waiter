@@ -120,7 +120,7 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
         padding: const EdgeInsets.only(left: 32),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             ElevatedButton(
               onPressed: submit,
               child: loading

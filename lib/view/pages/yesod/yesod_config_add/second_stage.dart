@@ -1,4 +1,4 @@
-part of 'yesod_add.dart';
+part of 'yesod_config_add.dart';
 
 class YesodAddSecondStage extends StatefulWidget {
   const YesodAddSecondStage({super.key});

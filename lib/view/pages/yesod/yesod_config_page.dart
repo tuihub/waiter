@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
@@ -11,12 +10,11 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../common/api/api_mixins.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
-import '../../components/toast.dart';
+import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 import '../frame_page.dart';
-import 'yesod_add/yesod_add.dart';
 
 class YesodConfigPage extends StatefulWidget {
   const YesodConfigPage({super.key});
@@ -71,9 +69,9 @@ class _YesodConfigPageState extends State<YesodConfigPage>
       return ListView.builder(
         itemBuilder: (context, index) {
           final item = listData.elementAt(index);
+
           void openEditPage() {
-            GoRouter.of(context)
-                .go('/app/Yesod/config?id=${item.config.id.id}');
+            AppRoutes.yesodConfigEdit(item.config.id.id.toInt()).go(context);
             OverlappingPanels.of(context)?.reveal(RevealSide.right);
             FramePage.of(context)?.openDrawer();
           }
@@ -171,21 +169,25 @@ class _YesodConfigPageState extends State<YesodConfigPage>
                 const SizedBox(width: 8),
                 FilledButton.tonalIcon(
                   onPressed: () async {
-                    await showDialog<bool>(
-                      context: context,
-                      builder: (context) {
-                        return const YesodAdd();
-                      },
-                    ).then((value) {
-                      if (value == null || !value) {
-                        return;
-                      }
-                      const Toast(
-                        title: '',
-                        message: '添加成功',
-                      ).show(context);
-                      _loadConfig(refresh: true);
-                    });
+                    AppRoutes.yesodConfigAdd().go(context);
+                    OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                    FramePage.of(context)?.openDrawer();
+
+                    // await showDialog<bool>(
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return const YesodConfigAdd();
+                    //   },
+                    // ).then((value) {
+                    //   if (value == null || !value) {
+                    //     return;
+                    //   }
+                    //   const Toast(
+                    //     title: '',
+                    //     message: '添加成功',
+                    //   ).show(context);
+                    //   _loadConfig(refresh: true);
+                    // });
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('添加订阅'),

@@ -1,10 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
 import '../../common/util/platform.dart';
+import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
 import '../specialized/title_bar.dart';
@@ -57,9 +57,7 @@ class InitPage extends StatelessWidget {
                 ? FloatingActionButton.extended(
                     onPressed: () {
                       context.read<UserBloc>().add(ManualLoginEvent());
-                      GoRouter.of(context).go(
-                        '/login',
-                      );
+                      AppRoutes.login.go(context);
                     },
                     icon: const Icon(Icons.arrow_forward),
                     label: const Text('登录'),

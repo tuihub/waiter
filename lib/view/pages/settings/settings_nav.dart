@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../bloc/user_login/user_bloc.dart';
+import '../../../route.dart';
 import '../../components/expand_rail_tile.dart';
 import '../../components/rail_tile.dart';
 import '../../layout/overlapping_panels.dart';
@@ -37,7 +37,7 @@ class SettingsNav extends StatelessWidget {
                       children: [
                         RailTile(
                           onTap: () {
-                            GoRouter.of(context).go('/app/Settings/client');
+                            AppRoutes.settingsClient.go(context);
                             OverlappingPanels.of(context)
                                 ?.reveal(RevealSide.main);
                           },
@@ -54,7 +54,7 @@ class SettingsNav extends StatelessWidget {
                               RailTile(
                                 title: const Text('用户管理'),
                                 onTap: () {
-                                  GoRouter.of(context).go('/app/Settings/user');
+                                  AppRoutes.settingsUser.go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -63,7 +63,7 @@ class SettingsNav extends StatelessWidget {
                               RailTile(
                                 title: const Text('应用管理'),
                                 onTap: () {
-                                  GoRouter.of(context).go('/app/Settings/app');
+                                  AppRoutes.settingsApp.go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -72,8 +72,7 @@ class SettingsNav extends StatelessWidget {
                               RailTile(
                                 title: const Text('应用包管理'),
                                 onTap: () {
-                                  GoRouter.of(context)
-                                      .go('/app/Settings/appPackage');
+                                  AppRoutes.settingsAppPackage.go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },

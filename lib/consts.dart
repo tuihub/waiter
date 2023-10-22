@@ -1,23 +1,25 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
+import 'route.dart';
+
 class App {
-  final String name;
+  final ModuleName name;
   final IconData icon;
   final Widget page;
 
   App(this.name, this.icon, this.page);
 }
 
-final appList = [
+final moduleList = [
   // App('Home', Icons.home, const HomePage()),
-  App('Gebura', Icons.casino, const SizedBox()),
-  App('Yesod', Icons.rss_feed, const SizedBox()),
+  App(ModuleName.gebura, Icons.casino, const SizedBox()),
+  App(ModuleName.yesod, Icons.rss_feed, const SizedBox()),
   // App('Chesed', Icons.photo_album, ChesedHome()),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];
 
-final appMap = Map.fromEntries(appList.map((e) => MapEntry(e.name, e)));
+final moduleMap = Map.fromEntries(moduleList.map((e) => MapEntry(e.name, e)));
 
 const appDefaultAccentColor = Color.fromARGB(255, 255, 145, 0);
 // const AppBackgroudColor = Color.fromARGB(255, 32, 34, 37);

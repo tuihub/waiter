@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
 import '../../common/util/platform.dart';
 import '../../consts.dart';
+import '../../route.dart';
 import '../components/toast.dart';
 import '../form/form_field.dart';
 import '../layout/bootstrap_container.dart';
@@ -307,9 +307,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       context.read<UserBloc>().add(
             UserLoginEvent(username, password),
           );
-      GoRouter.of(context).go(
-        '/app',
-      );
+      AppRoutes.module(null).go(context);
     }
   }
 

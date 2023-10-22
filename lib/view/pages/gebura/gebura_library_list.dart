@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../bloc/api_request/api_request_bloc.dart';
 import '../../../common/api/api_mixins.dart';
+import '../../../route.dart';
 import '../../components/rail_tile.dart';
 import '../../layout/overlapping_panels.dart';
 
@@ -99,8 +99,8 @@ class _LibraryList extends StatelessWidget {
                 RailTile(
                   selected: app.id.id.toString() == selectedAppID,
                   onTap: () {
-                    GoRouter.of(context)
-                        .go('/app/Gebura/library?id=${app.id.id}');
+                    AppRoutes.geburaLibraryDetail(app.id.id.toInt())
+                        .go(context);
                     OverlappingPanels.of(context)?.reveal(RevealSide.main);
                   },
                   leading: Container(
