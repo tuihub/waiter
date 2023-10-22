@@ -33,7 +33,6 @@ class YesodAddFirstStage extends StatelessWidget {
                     labelText: '订阅地址',
                   ),
                   initialValue: state.url,
-                  // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '请输入订阅地址';

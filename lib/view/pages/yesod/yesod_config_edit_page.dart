@@ -25,6 +25,17 @@ class YesodConfigEditPage extends StatefulWidget {
 
 class _YesodConfigEditPageState extends State<YesodConfigEditPage>
     with SingleRequestMixin<YesodConfigEditPage, UpdateFeedConfigResponse> {
+  bool initialized = false;
+
+  final _formKey = GlobalKey<FormState>();
+
+  late FeedConfig config;
+  late String name;
+  late String feedUrl;
+  late int pullInterval;
+  late String category;
+  late bool feedEnabled;
+
   @override
   void initState() {
     super.initState();
@@ -46,9 +57,6 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
       });
     }));
   }
-
-  bool initialized = false;
-  late FeedConfig config;
 
   void submit() {
     if (_formKey.currentState!.validate()) {
@@ -76,20 +84,16 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
         },
       ).then((value) {
         if (isSuccess) {
-          const Toast(title: '', message: '已应用更新').show(context);
-          AppRoutes.yesodConfigEdit(0).pop(context);
+          const Toast(title: '', message: '已应用更改').show(context);
+          close(context);
         }
       }));
     }
   }
 
-  final _formKey = GlobalKey<FormState>();
-
-  late String name;
-  late String feedUrl;
-  late int pullInterval;
-  late String category;
-  late bool feedEnabled;
+  void close(BuildContext context) {
+    AppRoutes.yesodConfigEdit(0).pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +127,7 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
                   : const Text('应用更改'),
             ),
             ElevatedButton(
-              onPressed: () => AppRoutes.yesodConfigEdit(0).pop(context),
+              onPressed: () => close(context),
               child: const Text('取消'),
             ),
           ],

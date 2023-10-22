@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +33,7 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
   void submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      doRequest(
+      unawaited(doRequest(
         request: (client, option) {
           return client.assignAppPackage(
             AssignAppPackageRequest(
@@ -44,7 +46,7 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
       ).then((value) {
         widget.callback();
         Navigator.of(context).pop();
-      });
+      }));
     }
   }
 
@@ -73,6 +75,12 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '请输入应用ID';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(
                 height: 16,

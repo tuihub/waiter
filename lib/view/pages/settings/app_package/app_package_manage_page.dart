@@ -9,9 +9,10 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../common/api/api_helper.dart';
 import '../../../../common/api/l10n.dart';
+import '../../../../route.dart';
 import '../../../helper/spacing.dart';
-import 'app_package_create_dialog.dart';
-import 'app_package_update_dialog.dart';
+import '../../../layout/overlapping_panels.dart';
+import '../../frame_page.dart';
 
 class AppPackageManagePage extends StatefulWidget {
   const AppPackageManagePage({super.key});
@@ -71,15 +72,9 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
               const Expanded(child: SizedBox()),
               FilledButton.tonalIcon(
                 onPressed: () {
-                  unawaited(showDialog<void>(
-                    context: context,
-                    builder: (context) => AppPackageCreateDialog(
-                      callback: () {
-                        dataSource.refreshDatasource();
-                        paginatorController.goToFirstPage();
-                      },
-                    ),
-                  ));
+                  AppRoutes.settingsAppPackageAdd().go(context);
+                  OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -154,13 +149,10 @@ class AppPackageTableSource extends AsyncDataTableSource {
                 DataCell(Text(appPackage.description)),
               ],
               onTap: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) => AppPackageUpdateDialog(
-                    callback: refreshDatasource,
-                    appPackage: appPackage,
-                  ),
-                );
+                AppRoutes.settingsAppPackageEdit()
+                    .go(context, extra: appPackage);
+                OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

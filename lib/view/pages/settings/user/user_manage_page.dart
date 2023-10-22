@@ -9,9 +9,10 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../common/api/api_helper.dart';
 import '../../../../common/api/l10n.dart';
+import '../../../../route.dart';
 import '../../../helper/spacing.dart';
-import 'user_create_dialog.dart';
-import 'user_update_dialog.dart';
+import '../../../layout/overlapping_panels.dart';
+import '../../frame_page.dart';
 
 class UserManagePage extends StatefulWidget {
   const UserManagePage({super.key});
@@ -107,15 +108,9 @@ class _UserManagePageState extends State<UserManagePage> {
               const Expanded(child: SizedBox()),
               FilledButton.tonalIcon(
                 onPressed: () {
-                  unawaited(showDialog<void>(
-                    context: context,
-                    builder: (context) => UserCreateDialog(
-                      callback: () {
-                        dataSource.refreshDatasource();
-                        paginatorController.goToFirstPage();
-                      },
-                    ),
-                  ));
+                  AppRoutes.settingsUserAdd().go(context);
+                  OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -188,13 +183,9 @@ class AppPackageTableSource extends AsyncDataTableSource {
                 DataCell(Text(userStatusString(user.status))),
               ],
               onTap: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) => UserUpdateDialog(
-                    callback: refreshDatasource,
-                    user: user,
-                  ),
-                );
+                AppRoutes.settingsUserEdit().go(context, extra: user);
+                OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),
