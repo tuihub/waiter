@@ -63,18 +63,18 @@ class YesodConfigAdd extends StatelessWidget {
                                   );
                             },
                       child: const Text('预览')),
-                if (state is YesodAddFirstState)
+                if (state is! YesodAddSecondState)
                   ElevatedButton(
-                    onPressed: state.loadState == LoadState.loading
-                        ? null
-                        : () {
-                            context.read<YesodAddBloc>().add(
-                                  YesodAddSecondStageEvent(
-                                    state.example?.subscription.title ?? '',
-                                    state.url,
-                                  ),
-                                );
-                          },
+                    onPressed: () {
+                      context.read<YesodAddBloc>().add(
+                            YesodAddSecondStageEvent(
+                              state is YesodAddFirstState
+                                  ? state.example?.subscription.title ?? ''
+                                  : '',
+                              state.url,
+                            ),
+                          );
+                    },
                     child: const Text('下一步'),
                   ),
                 if (state is YesodAddSecondState)

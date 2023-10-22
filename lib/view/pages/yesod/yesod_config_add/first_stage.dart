@@ -46,19 +46,15 @@ class YesodAddFirstStage extends StatelessWidget {
                   },
                 ),
                 if (state.loadState == LoadState.loading)
-                  const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  const Center(
+                    child: CircularProgressIndicator(),
                   ),
                 const SizedBox(
                   height: 16,
                 ),
                 if (state.loadState == LoadState.failure)
-                  Expanded(
-                    child: Center(
-                      child: Text(state.errorMessage),
-                    ),
+                  Center(
+                    child: Text(state.errorMessage),
                   ),
                 if (state is YesodAddFirstState && state.example != null)
                   YesodPreviewCard(

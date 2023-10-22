@@ -21,16 +21,20 @@ class YesodDetailPage extends StatefulWidget {
 }
 
 class _YesodDetailPageState extends State<YesodDetailPage> {
+  bool initialized = false;
+  late FeedItem item;
+
   @override
   void initState() {
     super.initState();
     item = FeedItem();
-    unawaited(GetIt.I<YesodRepo>()
-        .getFeedItem(widget.itemId)
-        .then((value) => item = value));
+    unawaited(GetIt.I<YesodRepo>().getFeedItem(widget.itemId).then((value) {
+      setState(() {
+        item = value;
+        initialized = true;
+      });
+    }));
   }
-
-  late FeedItem item;
 
   @override
   Widget build(BuildContext context) {
@@ -45,62 +49,69 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
           ClipRRect(
             borderRadius: SpacingHelper.defaultBorderRadius,
             child: AppBar(
-              title: Text(item.title),
+              title: Text(initialized ? item.title : '加载中...'),
             ),
           ),
-          Expanded(
-            child: DynMouseScroll(
-              builder: (context, controller, physics) {
-                return SingleChildScrollView(
-                  controller: controller,
-                  physics: physics,
-                  child: BootstrapContainer(
-                    children: [
-                      BootstrapColumn(
-                        xxs: 12,
-                        sm: 10,
-                        md: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              Row(
-                                children: [
-                                  const Text('作者：'),
-                                  for (final author in item.authors)
-                                    Text(author.name),
-                                ],
-                              ),
-                              Text(
-                                  '发布时间：${DurationHelper.recentString(item.publishedParsed.toDateTime())}'),
-                              if (item.updatedParsed
-                                  .toDateTime()
-                                  .isAfter(item.publishedParsed.toDateTime()))
+          if (initialized)
+            Expanded(
+              child: DynMouseScroll(
+                builder: (context, controller, physics) {
+                  return SingleChildScrollView(
+                    controller: controller,
+                    physics: physics,
+                    child: BootstrapContainer(
+                      children: [
+                        BootstrapColumn(
+                          xxs: 12,
+                          sm: 10,
+                          md: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            alignment: Alignment.topCenter,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Row(
+                                  children: [
+                                    const Text('作者：'),
+                                    for (final author in item.authors)
+                                      Text(author.name),
+                                  ],
+                                ),
                                 Text(
-                                    '更新时间：${DurationHelper.recentString(item.updatedParsed.toDateTime())}'),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              HtmlWidget(
-                                item.description,
-                                renderMode: RenderMode.column,
-                                enableCaching: true,
-                              ),
-                            ],
+                                    '发布时间：${DurationHelper.recentString(item.publishedParsed.toDateTime())}'),
+                                if (item.updatedParsed
+                                    .toDateTime()
+                                    .isAfter(item.publishedParsed.toDateTime()))
+                                  Text(
+                                      '更新时间：${DurationHelper.recentString(item.updatedParsed.toDateTime())}'),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                HtmlWidget(
+                                  item.content.isNotEmpty
+                                      ? item.content
+                                      : item.description,
+                                  renderMode: RenderMode.column,
+                                  enableCaching: true,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )
+          else
+            const Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
         ],
       ),
     );
