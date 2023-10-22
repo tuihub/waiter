@@ -23,7 +23,7 @@ class YesodAddSecondStageState extends State<YesodAddSecondStage> {
       listener: (context, state) {
         if (state is YesodAddSecondState) {
           if (state.loadState == LoadState.success) {
-            Navigator.pop(context, true);
+            AppRoutes.yesodConfigAdd().pop(context);
           }
         }
       },

@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+
 import '../../common/util/platform.dart';
 import 'window_button.dart';
 
@@ -10,6 +11,9 @@ class TitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (PlatformHelper.isAndroidApp()) {
+      return const SizedBox();
+    }
     return Row(
       children: [
         const SizedBox(
@@ -37,7 +41,9 @@ class TitleBar extends StatelessWidget {
               ? WindowTitleBarBox(
                   child: MoveWindow(),
                 )
-              : const SizedBox(),
+              : PlatformHelper.isWeb()
+                  ? const Align(child: Text('网页版功能受限，仅供评估使用'))
+                  : const SizedBox(),
         ),
         for (final action in actions) action,
         const SizedBox(

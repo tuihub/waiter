@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../model/common_model.dart';
+import '../../../../route.dart';
 import '../../../form/form_field.dart';
 import '../../../form/input_formatters.dart';
 import '../yesod_preview_card.dart';
@@ -97,7 +98,7 @@ class YesodConfigAdd extends StatelessWidget {
                   ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context, false); //close Dialog
+                    AppRoutes.yesodConfigAdd().pop(context);
                   },
                   child: const Text('取消'),
                 ),

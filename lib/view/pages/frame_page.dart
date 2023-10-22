@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../common/util/platform.dart';
 import '../../consts.dart';
 import '../../route.dart';
 import '../layout/bootstrap_breakpoints.dart';
@@ -132,10 +131,9 @@ class FramePageState extends State<FramePage> {
             maintainBottomViewPadding: true,
             child: Column(
               children: [
-                if (PlatformHelper.isWindowsApp())
-                  const TitleBar(
-                    actions: [ThemeModeToggle()],
-                  ),
+                const TitleBar(
+                  actions: [ThemeModeToggle()],
+                ),
                 Expanded(
                   child: content,
                 ),
@@ -175,12 +173,12 @@ class _Nav extends StatelessWidget {
         ),
       ],
       body: [
-        for (final app in moduleList)
+        for (final module in moduleList)
           IconMenuItem(
-            icon: app.icon,
-            selected: app.name == selectedNav,
+            icon: module.icon,
+            selected: module.name == selectedNav,
             onPressed: () {
-              AppRoutes.module(app.name).go(context);
+              AppRoutes.module(module.name).go(context);
             },
           ),
       ],

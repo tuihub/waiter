@@ -13,13 +13,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/util/platform.dart';
-import 'init.dart' as di;
+import 'init.dart';
 import 'l10n/l10n.dart';
 
 void main() async {
   await Hive.initFlutter();
 
-  await di.init();
+  await init();
 
   runApp(const MyApp());
 

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
-import '../../common/util/platform.dart';
 import '../../consts.dart';
 import '../../route.dart';
 import '../components/toast.dart';
@@ -36,7 +35,7 @@ class LoginPage extends StatelessWidget {
               bottom: false,
               maintainBottomViewPadding: true,
               child: Column(children: [
-                if (PlatformHelper.isWindowsApp()) const TitleBar(),
+                const TitleBar(),
                 Expanded(
                   child: BootstrapContainer(children: [
                     BootstrapColumn(

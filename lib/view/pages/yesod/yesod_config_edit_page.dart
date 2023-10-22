@@ -9,10 +9,10 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../common/api/api_mixins.dart';
 import '../../../repo/yesod/yesod_repo.dart';
+import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
-import '../../layout/overlapping_panels.dart';
 
 class YesodConfigEditPage extends StatefulWidget {
   const YesodConfigEditPage({super.key, required this.feedConfigID});
@@ -77,15 +77,10 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
       ).then((value) {
         if (isSuccess) {
           const Toast(title: '', message: '已应用更新').show(context);
-          close();
+          AppRoutes.yesodConfigEdit(0).pop(context);
         }
       }));
     }
-  }
-
-  void close() {
-    final o = OverlappingPanels.of(context);
-    o != null ? o.reveal(RevealSide.main) : Navigator.pop(context, true);
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -128,7 +123,7 @@ class _YesodConfigEditPageState extends State<YesodConfigEditPage>
                   : const Text('应用更改'),
             ),
             ElevatedButton(
-              onPressed: close,
+              onPressed: () => AppRoutes.yesodConfigEdit(0).pop(context),
               child: const Text('取消'),
             ),
           ],

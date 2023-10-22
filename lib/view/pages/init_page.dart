@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
-import '../../common/util/platform.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
@@ -35,7 +34,7 @@ class InitPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (PlatformHelper.isWindowsApp()) const TitleBar(),
+                  const TitleBar(),
                   Expanded(
                     child: BootstrapContainer(children: [
                       BootstrapColumn(

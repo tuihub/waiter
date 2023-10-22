@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'view/layout/overlapping_panels.dart';
 
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
@@ -28,14 +29,24 @@ import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_timeline_page.dart';
 
 class AppRoutes {
-  const AppRoutes._(this.path);
+  const AppRoutes._(this.path, {this.isAction = false});
 
   final String path;
+  final bool isAction;
   @override
   String toString() => path;
 
   void go(BuildContext context) {
     GoRouter.of(context).go(path);
+  }
+
+  void pop(BuildContext context) {
+    if (isAction) {
+      final o = OverlappingPanels.of(context);
+      o != null ? o.reveal(RevealSide.main) : Navigator.of(context).pop();
+    } else {
+      GoRouter.of(context).pop();
+    }
   }
 
   static const AppRoutes init = AppRoutes._('/');
@@ -56,9 +67,13 @@ class AppRoutes {
   static const AppRoutes yesodConfig =
       AppRoutes._('$_yesod/${_YesodFunctions.yesodConfig}');
   static AppRoutes yesodConfigEdit(int id) => AppRoutes._(
-      '$yesodConfig?action=${_YesodActions.yesodConfigEdit}&id=$id');
-  static AppRoutes yesodConfigAdd() =>
-      AppRoutes._('$yesodConfig?action=${_YesodActions.yesodConfigAdd}');
+        '$yesodConfig?action=${_YesodActions.yesodConfigEdit}&id=$id',
+        isAction: true,
+      );
+  static AppRoutes yesodConfigAdd() => AppRoutes._(
+        '$yesodConfig?action=${_YesodActions.yesodConfigAdd}',
+        isAction: true,
+      );
 
   static const String _gebura = '$_module/${ModuleName._gebura}';
   static const AppRoutes gebura = AppRoutes._(_gebura);
