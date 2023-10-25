@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +62,7 @@ class LoginPage extends StatelessWidget {
     if (state is ServerSelected) {
       return const SizedBox(height: 360, child: LoginWidget());
     }
-    return const SizedBox(height: 550, child: ServerSelectWidget());
+    return const SizedBox(height: 450, child: ServerSelectWidget());
   }
 }
 
@@ -71,7 +73,8 @@ class ServerSelectWidget extends StatefulWidget {
   State<ServerSelectWidget> createState() => _ServerSelectWidgetState();
 }
 
-class _ServerSelectWidgetState extends State<ServerSelectWidget> {
+class _ServerSelectWidgetState extends State<ServerSelectWidget>
+    with AutomaticKeepAliveClientMixin {
   late TextEditingController _controller;
 
   @override
@@ -79,6 +82,9 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
     super.initState();
     _controller = TextEditingController();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -111,61 +117,50 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserBloc, UserLoginState>(
-      listener: (context, state) {
-        // if (state is ServerConnectFailed) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text(
-        //         "无法连接到服务器,${state.message}",
-        //         style: const TextStyle(color: Colors.white),
-        //       ),
-        //       action: SnackBarAction(
-        //         label: "重试",
-        //         onPressed: () {
-        //           submitUrl();
-        //         },
-        //       ),
-        //     ),
-        //   );
-        // }
-      },
-      builder: (context, state) {
-        return DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Center(child: Text('选择服务器')),
-              bottom: const TabBar(tabs: [
-                Tab(
-                  text: '输入',
-                ),
-                Tab(
-                  text: '内置',
-                ),
-              ]),
-            ),
-            body: TabBarView(children: [
-              ServerSelectForm(callback: () {}),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  for (final server in newServerList)
-                    ServerConnectivityWidget(
-                      config: server,
-                      callback: () {
-                        context.read<UserBloc>().add(
-                              ConnectToServerEvent(server),
-                            );
+    super.build(context);
+    return Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          toolbarHeight: 96,
+          title: const Center(child: Text('连接服务器')),
+          backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.input),
+              onPressed: () {
+                unawaited(showDialog<void>(
+                  context: context,
+                  builder: (context) {
+                    return BlocConsumer<UserBloc, UserLoginState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        return AlertDialog(
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text('内置服务器配置'),
+                              for (final server in newServerList)
+                                ServerConnectivityWidget(
+                                  config: server,
+                                  callback: () {
+                                    context.read<UserBloc>().add(
+                                          ConnectToServerEvent(server),
+                                        );
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                            ],
+                          ),
+                        );
                       },
-                    ),
-                ],
-              ),
-            ]),
-          ),
-        );
-      },
-    );
+                    );
+                  },
+                ));
+              },
+            ),
+          ],
+        ),
+        body: ServerSelectForm(callback: () {}));
   }
 }
 
@@ -345,11 +340,14 @@ class _LoginWidgetState extends State<LoginWidget> {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () {
-                    context.read<UserBloc>().add(ManualLoginEvent());
-                  },
-                  child: const Text('< 返回'),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<UserBloc>().add(ManualLoginEvent());
+                    },
+                    child: const Text('< 返回'),
+                  ),
                 ),
               ),
               TextField(

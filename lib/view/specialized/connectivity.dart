@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
+
 import '../../common/api/client.dart';
 import '../../consts.dart';
 
@@ -99,7 +100,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
                     child: SizedBox(),
                   ),
                   Text(
-                    status ? '↑ ${deTime}ms  ↓ ${reTime}ms' : '',
+                    status ? '↑↓ ${deTime + reTime}ms' : '',
                     style: TextStyle(
                       color: getStatusColor(),
                     ),
