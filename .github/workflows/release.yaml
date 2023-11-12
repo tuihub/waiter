@@ -4,8 +4,6 @@ on:
   release:
     types: [ released ]
 
-  workflow_dispatch:
-
 env:
   APP_NAME: Waiter
 
@@ -21,7 +19,7 @@ jobs:
       - name: Build
         run: |
           flutter config --enable-windows-desktop
-          flutter build windows
+          flutter build windows --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
           Compress-Archive -Path .\build\windows\runner\Release\* -DestinationPath ${{ env.APP_NAME }}-windows.zip
 
       - name: Release
@@ -47,7 +45,7 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter build web
+          flutter build web --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
           tar -zcvf ${{ env.APP_NAME }}-web.tar.gz ./build/web/*
 
       - name: Release
@@ -77,7 +75,7 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter build apk
+          flutter build apk --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
           mv ./build/app/outputs/flutter-apk/app-release.apk ${{ env.APP_NAME }}.apk
           mv ./build/app/outputs/flutter-apk/app-release.apk.sha1 ${{ env.APP_NAME }}.apk.sha1
 
