@@ -20,19 +20,19 @@ jobs:
         run: |
           flutter config --enable-windows-desktop
           flutter build windows --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
-          Compress-Archive -Path .\build\windows\runner\Release\* -DestinationPath ${{ env.APP_NAME }}-windows.zip
+          Compress-Archive -Path .\build\windows\runner\Release\* -DestinationPath ${{ env.APP_NAME }}-windows-$GITHUB_REF_NAME.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{ env.APP_NAME }}-windows.zip
+            ${{ env.APP_NAME }}-windows-$GITHUB_REF_NAME.zip
 
       - uses: actions/upload-artifact@v3
         with:
           name: windows
-          path: ${{ env.APP_NAME }}-windows.zip
+          path: ${{ env.APP_NAME }}-windows-$GITHUB_REF_NAME.zip
 
   build-web:
     runs-on: ubuntu-latest
@@ -46,19 +46,19 @@ jobs:
         run: |
           flutter pub get
           flutter build web --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
-          tar -zcvf ${{ env.APP_NAME }}-web.tar.gz ./build/web/*
+          tar -zcvf ${{ env.APP_NAME }}-web-$GITHUB_REF_NAME.tar.gz ./build/web/*
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{ env.APP_NAME }}-web.tar.gz
+            ${{ env.APP_NAME }}-web-$GITHUB_REF_NAME.tar.gz
 
       - uses: actions/upload-artifact@v3
         with:
           name: web
-          path: ${{ env.APP_NAME }}-web.tar.gz
+          path: ${{ env.APP_NAME }}-web-$GITHUB_REF_NAME.tar.gz
 
   build-android:
     runs-on: ubuntu-latest
@@ -76,18 +76,18 @@ jobs:
         run: |
           flutter pub get
           flutter build apk --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
-          mv ./build/app/outputs/flutter-apk/app-release.apk ${{ env.APP_NAME }}.apk
-          mv ./build/app/outputs/flutter-apk/app-release.apk.sha1 ${{ env.APP_NAME }}.apk.sha1
+          mv ./build/app/outputs/flutter-apk/app-release.apk ${{ env.APP_NAME }}-$GITHUB_REF_NAME.apk
+          mv ./build/app/outputs/flutter-apk/app-release.apk.sha1 ${{ env.APP_NAME }}-$GITHUB_REF_NAME.apk.sha1
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{ env.APP_NAME }}.apk
-            ${{ env.APP_NAME }}.apk.sha1
+            ${{ env.APP_NAME }}-$GITHUB_REF_NAME.apk
+            ${{ env.APP_NAME }}-$GITHUB_REF_NAME.apk.sha1
 
       - uses: actions/upload-artifact@v3
         with:
           name: android
-          path: ${{ env.APP_NAME }}.apk
+          path: ${{ env.APP_NAME }}-$GITHUB_REF_NAME.apk
