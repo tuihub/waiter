@@ -11,73 +11,70 @@ import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
+import 'yesod_preview_card.dart';
 
-class YesodConfigEditPage extends StatelessWidget {
-  const YesodConfigEditPage({super.key});
+class YesodConfigAddPage extends StatelessWidget {
+  const YesodConfigAddPage({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.yesodConfigEdit().pop(context);
+    AppRoutes.yesodConfigAdd().pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    var url = '';
+    var name = '';
+    var category = '';
+    var refreshInterval = 60;
+    var enabled = true;
+
     return BlocConsumer<YesodCubit, YesodState>(
       listener: (context, state) {
         if (state.configEditStatus.code == YesodRequestStatusCode.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          const Toast(title: '', message: '添加成功').show(context);
           close(context);
         }
       },
-      buildWhen: (previous, current) =>
-          previous.feedConfigEditIndex != current.feedConfigEditIndex,
       builder: (context, state) {
-        final formKey = GlobalKey<FormState>();
-
-        final config = state.feedConfigEditIndex != null
-            ? state.feedConfigs[state.feedConfigEditIndex!].config
-            : FeedConfig();
-        var name = config.name;
-        var feedUrl = config.feedUrl;
-        var feedEnabled =
-            config.status == FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE;
-        var pullInterval = config.pullInterval.seconds.toInt() ~/ 60;
-        var category = config.category;
-
         return Scaffold(
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            title: const Text('订阅详情'),
+            title: const Text('添加订阅'),
           ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Text(state.configEditStatus.code ==
+                  if (state.feedPreview != null &&
+                      state.feedPreview!.link != null)
+                    YesodPreviewCard(
+                      iconUrl: state.feedPreview!.subscription.iconUrl,
+                      name: state.feedPreview!.subscription.title ?? '',
+                      images: state.feedPreview!.image != null
+                          ? [state.feedPreview!.image!]
+                          : null,
+                      description: state.feedPreview!.description,
+                      title: state.feedPreview!.title ?? '',
+                      callback: () {},
+                    ),
+                  Text(state.configPreviewStatus.code ==
                           YesodRequestStatusCode.failed
-                      ? state.configEditStatus.msg ?? ''
+                      ? state.configPreviewStatus.msg ?? ''
                       : ''),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Form(
                     key: formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         TextFormField(
-                          initialValue: config.id.id.toString(),
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'ID',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
-                          initialValue: feedUrl,
-                          onSaved: (newValue) => feedUrl = newValue!,
+                          onChanged: (newValue) => url = newValue,
                           decoration: const InputDecoration(
                             icon: Icon(Icons.rss_feed),
                             border: OutlineInputBorder(),
@@ -85,36 +82,30 @@ class YesodConfigEditPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 8,
                         ),
                         TextFormField(
-                          initialValue: name,
-                          onSaved: (newValue) => name = newValue!,
+                          onChanged: (newValue) => name = newValue,
                           decoration: const InputDecoration(
                             icon: Icon(Icons.text_fields),
                             border: OutlineInputBorder(),
-                            labelText: '名称',
+                            label: Text('名称'),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '请输入名称';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(
-                          height: 16,
+                          height: 8,
                         ),
                         TextFormField(
-                          initialValue: pullInterval.toString(),
-                          onSaved: (newValue) =>
-                              pullInterval = int.parse(newValue!),
+                          onChanged: (newValue) =>
+                              refreshInterval = int.parse(newValue),
+                          initialValue: refreshInterval.toString(),
                           decoration: const InputDecoration(
                             icon: Icon(Icons.timer),
                             border: OutlineInputBorder(),
                             labelText: '刷新间隔(分钟)',
                           ),
                           inputFormatters: [IntInputFormatter()],
+                          // The validator receives the text that the user has entered.
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return '请输入刷新间隔';
@@ -126,8 +117,7 @@ class YesodConfigEditPage extends StatelessWidget {
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: category,
-                          onSaved: (newValue) => category = newValue!,
+                          onChanged: (newValue) => category = newValue,
                           decoration: const InputDecoration(
                             icon: Icon(Icons.category),
                             border: OutlineInputBorder(),
@@ -137,18 +127,21 @@ class YesodConfigEditPage extends StatelessWidget {
                         const SizedBox(
                           height: 16,
                         ),
+                        const Divider(
+                          height: 8,
+                        ),
                         SwitchFormField(
-                          initialValue: feedEnabled,
-                          onSaved: (newValue) => feedEnabled = newValue!,
-                          title: const Text('启用'),
+                          onSaved: (newValue) => enabled = newValue ?? false,
+                          title: const Text('立即启用'),
+                          initialValue: enabled,
                         ),
                         AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          height: state.configEditStatus.code ==
+                          duration: const Duration(milliseconds: 200),
+                          height: state.configAddStatus.code ==
                                   YesodRequestStatusCode.failed
                               ? 48
                               : 0,
-                          child: state.configEditStatus.code ==
+                          child: state.configAddStatus.code ==
                                   YesodRequestStatusCode.failed
                               ? Ink(
                                   decoration: BoxDecoration(
@@ -163,12 +156,14 @@ class YesodConfigEditPage extends StatelessWidget {
                                       const SizedBox(
                                         width: 24,
                                       ),
-                                      Text(
-                                          state.configEditStatus.msg ?? '未知错误'),
+                                      Text(state.configAddStatus.msg ?? ''),
                                     ],
                                   ),
                                 )
                               : const SizedBox(),
+                        ),
+                        const SizedBox(
+                          height: 32,
                         ),
                       ],
                     ),
@@ -186,28 +181,39 @@ class YesodConfigEditPage extends StatelessWidget {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      unawaited(context.read<YesodCubit>().editFeedConfig(
-                            FeedConfig(
-                              id: config.id,
-                              name: name,
-                              feedUrl: feedUrl,
-                              source: config.source,
-                              status: feedEnabled
-                                  ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
-                                  : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
-                              pullInterval: $duration.Duration(
-                                seconds: $fixnum.Int64(pullInterval * 60),
-                              ),
-                              category: category,
-                              latestUpdateTime: config.latestUpdateTime,
+                      unawaited(context
+                          .read<YesodCubit>()
+                          .addFeedConfig(FeedConfig(
+                            name: name,
+                            feedUrl: url,
+                            source: FeedConfigSource.FEED_CONFIG_SOURCE_COMMON,
+                            status: enabled
+                                ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
+                                : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
+                            pullInterval: $duration.Duration(
+                              seconds: $fixnum.Int64(refreshInterval * 60),
                             ),
-                          ));
+                            category: category,
+                          )));
                     }
                   },
-                  child: state.configEditStatus.code ==
+                  child: state.configAddStatus.code ==
                           YesodRequestStatusCode.processing
                       ? const CircularProgressIndicator()
-                      : const Text('应用更改'),
+                      : const Text('确定'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      unawaited(
+                          context.read<YesodCubit>().previewFeedConfig(url));
+                    }
+                  },
+                  child: state.configPreviewStatus.code ==
+                          YesodRequestStatusCode.processing
+                      ? const CircularProgressIndicator()
+                      : const Text('加载预览'),
                 ),
                 ElevatedButton(
                   onPressed: () => close(context),

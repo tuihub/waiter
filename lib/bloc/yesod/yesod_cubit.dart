@@ -1,13 +1,21 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
+import 'package:html/parser.dart';
+import 'package:http/http.dart' as http;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:webfeed_revised/domain/rss_feed.dart';
 
 import '../../common/api/api_helper.dart';
+import '../../model/yesod_model.dart';
 
 class YesodState {
   final List<ListFeedConfigsResponse_FeedWithConfig> feedConfigs;
   final int? feedConfigEditIndex;
+  final RssPostItem? feedPreview;
   final YesodRequestStatus configLoadStatus;
+  final YesodRequestStatus configPreviewStatus;
+  final YesodRequestStatus configAddStatus;
   final YesodRequestStatus configEditStatus;
 
   final List<FeedItemDigest> feedItemDigests;
@@ -16,7 +24,10 @@ class YesodState {
   YesodState(
     this.feedConfigs,
     this.feedConfigEditIndex,
+    this.feedPreview,
     this.configLoadStatus,
+    this.configPreviewStatus,
+    this.configAddStatus,
     this.configEditStatus,
     this.feedItemDigests,
     this.feedItems,
@@ -25,7 +36,10 @@ class YesodState {
   YesodState copyWith({
     List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
     int? feedConfigEditIndex,
+    RssPostItem? feedPreview,
     YesodRequestStatus? configLoadStatus,
+    YesodRequestStatus? configPreviewStatus,
+    YesodRequestStatus? configAddStatus,
     YesodRequestStatus? configEditStatus,
     List<FeedItemDigest>? feedItemDigests,
     Map<InternalID, FeedItem>? feedItems,
@@ -33,7 +47,10 @@ class YesodState {
     return YesodState(
       feedConfigs ?? this.feedConfigs,
       feedConfigEditIndex ?? this.feedConfigEditIndex,
+      feedPreview ?? this.feedPreview,
       configLoadStatus ?? this.configLoadStatus,
+      configPreviewStatus ?? this.configPreviewStatus,
+      configAddStatus ?? this.configAddStatus,
       configEditStatus ?? this.configEditStatus,
       feedItemDigests ?? this.feedItemDigests,
       feedItems ?? this.feedItems,
@@ -59,6 +76,9 @@ enum YesodRequestStatusCode {
 YesodState _initialState() => YesodState(
       [],
       null,
+      null,
+      YesodRequestStatus(YesodRequestStatusCode.initial),
+      YesodRequestStatus(YesodRequestStatusCode.initial),
       YesodRequestStatus(YesodRequestStatusCode.initial),
       YesodRequestStatus(YesodRequestStatusCode.initial),
       [],
@@ -131,6 +151,108 @@ class YesodCubit extends Cubit<YesodState> {
             : YesodRequestStatusCode.partlySuccess),
       ));
     }
+  }
+
+  Future<void> previewFeedConfig(String url) async {
+    emit(state.copyWith(
+      feedPreview: null,
+      configPreviewStatus:
+          YesodRequestStatus(YesodRequestStatusCode.processing),
+    ));
+    try {
+      final response = await http.get(Uri.parse(url));
+      final data = RssFeed.parse(response.body);
+
+      debugPrint(data.title);
+
+      debugPrint(data.description);
+
+      final subscription = RssSubscription(
+          title: data.title!,
+          link: url,
+          description: data.description!,
+          iconUrl: '');
+
+      final item = data.items!.first;
+
+      String? imgUrl;
+
+      String description = '';
+      if (item.description != null) {
+        try {
+          final doc = parse(item.description);
+          final imgElements = doc.getElementsByTagName('img');
+          if (imgElements.isNotEmpty) {
+            imgUrl = imgElements.first.attributes['src'];
+          }
+          doc.querySelectorAll('p,h1,h2,h3,h4,h5,span').forEach((element) {
+            description = description + element.text;
+          });
+          description.replaceAll('\n', ' ');
+          debugPrint(description);
+        } catch (e) {
+          description = item.description!;
+        }
+      }
+
+      final example = RssPostItem(
+        title: item.title,
+        link: item.link,
+        description: description,
+        subscription: subscription,
+        image: imgUrl,
+      );
+      emit(state.copyWith(
+        feedPreview: example,
+        configPreviewStatus: YesodRequestStatus(YesodRequestStatusCode.success),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        feedPreview: RssPostItem(
+            subscription: RssSubscription(
+                title: '', link: '', iconUrl: '', description: '')),
+        configPreviewStatus: YesodRequestStatus(
+          YesodRequestStatusCode.failed,
+          msg: '解析失败, $e',
+        ),
+      ));
+    }
+  }
+
+  Future<void> addFeedConfig(FeedConfig config) async {
+    emit(state.copyWith(
+      configAddStatus: YesodRequestStatus(YesodRequestStatusCode.processing),
+    ));
+    final index = state.feedConfigEditIndex;
+    if (index == null) {
+      return;
+    }
+    final resp = await api.doRequest((client, option) {
+      return client.createFeedConfig(
+        CreateFeedConfigRequest(
+          config: config,
+        ),
+        options: option,
+      );
+    });
+    if (resp.status != ApiStatus.success) {
+      emit(state.copyWith(
+        configAddStatus:
+            YesodRequestStatus(YesodRequestStatusCode.failed, msg: resp.error),
+      ));
+      return;
+    }
+    final configs = [
+      ListFeedConfigsResponse_FeedWithConfig(
+        config: config,
+        feed: null,
+      )
+    ];
+    configs.addAll(state.feedConfigs);
+    emit(state.copyWith(
+      feedConfigs: configs,
+      configAddStatus: YesodRequestStatus(YesodRequestStatusCode.success),
+    ));
   }
 
   void setFeedConfigEditIndex(int index) {

@@ -32,7 +32,7 @@ import 'view/pages/settings/user/user_add_page.dart';
 import 'view/pages/settings/user/user_edit_page.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
-import 'view/pages/yesod/yesod_config_add/yesod_config_add.dart';
+import 'view/pages/yesod/yesod_config_add_page.dart';
 import 'view/pages/yesod/yesod_config_edit_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
@@ -288,7 +288,7 @@ GoRouter getRouter() {
 
                   final yesodActions = {
                     _YesodActions.configEdit: const YesodConfigEditPage(),
-                    _YesodActions.configAdd: const YesodConfigAdd(),
+                    _YesodActions.configAdd: const YesodConfigAddPage(),
                   };
                   return NoTransitionPage(
                     child: BlocProvider(
