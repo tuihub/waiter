@@ -8,9 +8,12 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
+import 'bloc/yesod/yesod_cubit.dart';
+import 'common/api/api_helper.dart';
 import 'common/api/client.dart';
 import 'common/util/stream_listener.dart';
 import 'view/layout/overlapping_panels.dart';
+import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
 import 'view/pages/gebura/gebura_nav.dart';
@@ -74,8 +77,8 @@ class AppRoutes {
       AppRoutes._('$_yesod/${_YesodFunctions.timeline}');
   static const AppRoutes yesodConfig =
       AppRoutes._('$_yesod/${_YesodFunctions.config}');
-  static AppRoutes yesodConfigEdit(int id) => AppRoutes._(
-        '$yesodConfig?action=${_YesodActions.configEdit}&id=$id',
+  static AppRoutes yesodConfigEdit() => AppRoutes._(
+        '$yesodConfig?action=${_YesodActions.configEdit}',
         isAction: true,
       );
   static AppRoutes yesodConfigAdd() => AppRoutes._(
@@ -91,6 +94,9 @@ class AppRoutes {
       AppRoutes._('$_gebura/${_GeburaFunctions.library}');
   static AppRoutes geburaLibraryDetail(int id) =>
       AppRoutes._('$geburaLibrary?id=$id');
+
+  static const String _chesed = '$_module/${ModuleName._chesed}';
+  static const AppRoutes chesed = AppRoutes._(_chesed);
 
   static const String _settings = '$_module/${ModuleName._settings}';
   static const AppRoutes settings = AppRoutes._(_settings);
@@ -126,11 +132,13 @@ enum ModuleName {
   tiphereth._(_tiphereth),
   yesod._(_yesod),
   gebura._(_gebura),
+  chesed._(_chesed),
   settings._(_settings);
 
   static const String _tiphereth = 'Tiphereth';
   static const String _yesod = 'Yesod';
   static const String _gebura = 'Gebura';
+  static const String _chesed = 'Chesed';
   static const String _settings = 'Settings';
 
   const ModuleName._(this.name);
@@ -177,6 +185,8 @@ final GlobalKey<NavigatorState> _tipherethNavigateKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _geburaNavigateKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _chesedNavigateKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
@@ -275,27 +285,23 @@ GoRouter getRouter() {
                       _YesodFunctions.recent;
                   final action = state.uri.queryParameters['action'] ??
                       _YesodActions.configAdd;
-                  final idParam = state.uri.queryParameters['id'];
-                  final id = idParam != null ? int.tryParse(idParam) : null;
 
                   final yesodActions = {
-                    _YesodActions.configEdit: id != null
-                        ? YesodConfigEditPage(
-                            key: ValueKey(id),
-                            feedConfigID: id,
-                          )
-                        : const SizedBox(),
+                    _YesodActions.configEdit: const YesodConfigEditPage(),
                     _YesodActions.configAdd: const YesodConfigAdd(),
                   };
                   return NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.yesod,
-                      leftPart: YesodNav(
-                        function: function,
+                    child: BlocProvider(
+                      create: (context) => YesodCubit(GetIt.I<ApiHelper>()),
+                      child: FramePage(
+                        selectedNav: ModuleName.yesod,
+                        leftPart: YesodNav(
+                          function: function,
+                        ),
+                        middlePart: yesodPages[function],
+                        rightPart: yesodActions[action],
+                        gestureRight: false,
                       ),
-                      middlePart: yesodPages[function],
-                      rightPart: yesodActions[action],
-                      gestureRight: false,
                     ),
                   );
                 },
@@ -331,6 +337,22 @@ GoRouter getRouter() {
                         selectedAppID: id,
                       ),
                       middlePart: geburaPages[function],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _chesedNavigateKey,
+            routes: [
+              GoRoute(
+                path: AppRoutes.chesed.toString(),
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: FramePage(
+                      selectedNav: ModuleName.chesed,
+                      leftPart: ChesedHome(),
                     ),
                   );
                 },

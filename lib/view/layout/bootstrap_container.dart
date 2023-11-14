@@ -163,9 +163,6 @@ class BootstrapColumn extends StatelessWidget {
         columnWidth = BootstrapContainerMaxWidth.xxl * xxl_ / 12;
       }
 
-      debugPrint(
-          '$containerWidth $xxs_ $xs_ $sm_ $md_ $lg_ $xl_ $xxl_ $columnWidth');
-
       return SizedBox(
         width: columnWidth,
         child: child,

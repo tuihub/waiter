@@ -13,6 +13,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:universal_io/io.dart';
 
 import '../../../common/api/api_mixins.dart';
+import '../../../common/util/platform.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;
@@ -74,11 +75,8 @@ class ChesedUploadState extends State<ChesedUpload>
           Navigator.pop(context);
         }
       });
-      // ignore: avoid_print
-      // print(_lastCapturedData!.toJson());
     } else {
-      // ignore: avoid_print
-      print('User canceled capture');
+      debugPrint('User canceled capture');
     }
   }
 
@@ -92,11 +90,13 @@ class ChesedUploadState extends State<ChesedUpload>
           child:
               loading ? const CircularProgressIndicator() : const Text('选择文件'),
         ),
-        TextButton(
-          onPressed: captureSubmit,
-          child:
-              loading ? const CircularProgressIndicator() : const Text('截取屏幕'),
-        ),
+        if (PlatformHelper.isWindowsApp())
+          TextButton(
+            onPressed: captureSubmit,
+            child: loading
+                ? const CircularProgressIndicator()
+                : const Text('截取屏幕'),
+          ),
         TextButton(
           onPressed: () {
             Navigator.pop(context); //close Dialog

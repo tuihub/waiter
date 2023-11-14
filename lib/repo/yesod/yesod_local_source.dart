@@ -53,7 +53,7 @@ class YesodLocalSource implements YesodSource {
 
   @override
   Future<List<ListFeedConfigsResponse_FeedWithConfig>> listFeedConfigs(
-      Iterable<InternalID>? ids) {
+      PagingRequest? paging, Iterable<InternalID>? ids) {
     // TODO: implement listFeedConfigs
     throw UnimplementedError();
   }

@@ -48,6 +48,7 @@ dependencies:
     git:
       url: https://github.com/tuihub/protos.git
       ref: master
+  fixnum: ^1.1.0
 
   # theme
   flex_color_scheme: ^7.0.0
@@ -68,6 +69,7 @@ dependencies:
   multi_select_flutter: ^4.1.3
   smooth_scroll_multiplatform: ^1.0.8
   keframe: ^3.0.0
+  cached_network_image: ^3.2.3
 
   # rust bridge
   ffi: ^2.0.1
@@ -86,9 +88,7 @@ dependencies:
   html: ^0.15.4
   path_provider: ^2.1.0
   intl: ^0.18.0
-  fixnum: ^1.1.0
   open_file: ^3.3.2
-  cached_network_image: ^3.2.3
   universal_io: ^2.2.2
 
 

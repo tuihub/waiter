@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/api/api_mixins.dart';
+import '../../../bloc/yesod/yesod_cubit.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
@@ -16,62 +13,32 @@ import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 import '../frame_page.dart';
 
-class YesodConfigPage extends StatefulWidget {
+class YesodConfigPage extends StatelessWidget {
   const YesodConfigPage({super.key});
 
-  @override
-  State<YesodConfigPage> createState() => _YesodConfigPageState();
-}
-
-class _YesodConfigPageState extends State<YesodConfigPage>
-    with SingleRequestMixin<YesodConfigPage, ListFeedConfigsResponse> {
-  int page = 0;
-  int totalPage = 0;
-
-  late ListFeedConfigsResponse data;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadConfig();
-  }
-
-  @override
-  Future<ListFeedConfigsResponse> request(
-      LibrarianSephirahServiceClient client, CallOptions option) async {
-    return await client.listFeedConfigs(
-      ListFeedConfigsRequest(
-        paging: PagingRequest(
-          pageSize: 100,
-          pageNum: page + 1,
-        ),
-      ),
-      options: option,
-    );
-  }
-
-  void _loadConfig({bool refresh = false}) {
-    if (refresh) {
-      page = 0;
-    }
-    unawaited(doRequest());
-  }
-
-  Widget _buildStatePage() {
-    if (loading) {
+  Widget _buildStatePage(BuildContext context, YesodState state) {
+    if (state.configLoadStatus.code == YesodRequestStatusCode.initial) {
+      unawaited(context.read<YesodCubit>().loadFeedConfigs());
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
-    if (isSuccess) {
-      final listData = response.getData().feedsWithConfig;
+    if (state.configLoadStatus.code == YesodRequestStatusCode.processing) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (state.configLoadStatus.code == YesodRequestStatusCode.success ||
+        state.configLoadStatus.code == YesodRequestStatusCode.partlySuccess) {
+      final listData = state.feedConfigs;
       final bgColor = Theme.of(context).colorScheme.surface;
       return ListView.builder(
         itemBuilder: (context, index) {
           final item = listData.elementAt(index);
 
           void openEditPage() {
-            AppRoutes.yesodConfigEdit(item.config.id.id.toInt()).go(context);
+            context.read<YesodCubit>().setFeedConfigEditIndex(index);
+            AppRoutes.yesodConfigEdit().go(context);
             OverlappingPanels.of(context)?.reveal(RevealSide.right);
             FramePage.of(context)?.openDrawer();
           }
@@ -148,9 +115,9 @@ class _YesodConfigPageState extends State<YesodConfigPage>
         itemCount: listData.length,
       );
     }
-    if (isError) {
+    if (state.configLoadStatus.code == YesodRequestStatusCode.failed) {
       return Center(
-        child: Text('加载失败: ${response.error}'),
+        child: Text('加载失败: ${state.configLoadStatus.msg}'),
       );
     }
     return const SizedBox();
@@ -158,59 +125,47 @@ class _YesodConfigPageState extends State<YesodConfigPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const SizedBox(width: 8),
-                FilledButton.tonalIcon(
-                  onPressed: () async {
-                    AppRoutes.yesodConfigAdd().go(context);
-                    OverlappingPanels.of(context)?.reveal(RevealSide.right);
-                    FramePage.of(context)?.openDrawer();
-
-                    // await showDialog<bool>(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return const YesodConfigAdd();
-                    //   },
-                    // ).then((value) {
-                    //   if (value == null || !value) {
-                    //     return;
-                    //   }
-                    //   const Toast(
-                    //     title: '',
-                    //     message: '添加成功',
-                    //   ).show(context);
-                    //   _loadConfig(refresh: true);
-                    // });
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('添加订阅'),
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: _buildStatePage(),
+    return BlocBuilder<YesodCubit, YesodState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const SizedBox(width: 8),
+                  FilledButton.tonalIcon(
+                    onPressed: () async {
+                      AppRoutes.yesodConfigAdd().go(context);
+                      OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                      FramePage.of(context)?.openDrawer();
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('添加订阅'),
+                  ),
+                  const SizedBox(width: 8),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-          ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: _buildStatePage(context, state),
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _loadConfig,
-        child: const Icon(Icons.refresh),
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            unawaited(context.read<YesodCubit>().loadFeedConfigs());
+          },
+          child: const Icon(Icons.refresh),
+        ),
+      );
+    });
   }
 }

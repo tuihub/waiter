@@ -59,6 +59,10 @@ class ChesedHome extends StatelessWidget {
                             contentPadding:
                                 const EdgeInsets.only(bottom: height / 3),
                             border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            fillColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
                             icon: Padding(
                                 padding:
                                     const EdgeInsets.only(left: 10, top: 5),
