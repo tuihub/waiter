@@ -93,6 +93,21 @@ class YesodConfigEditState extends YesodState with YesodRequest {
   final YesodRequestStatusCode statusCode;
 }
 
+class YesodFeedItemDigestLoadState extends YesodState with YesodRequest {
+  YesodFeedItemDigestLoadState(YesodState state, this.statusCode,
+      {this.currentPage, this.maxPage, this.msg})
+      : super() {
+    _from(state);
+  }
+
+  final int? currentPage;
+  final int? maxPage;
+  @override
+  final String? msg;
+  @override
+  final YesodRequestStatusCode statusCode;
+}
+
 mixin YesodRequest on YesodState {
   YesodRequestStatusCode get statusCode;
   String? get msg;

@@ -217,4 +217,40 @@ class YesodCubit extends Cubit<YesodState> {
       YesodRequestStatusCode.success,
     ));
   }
+
+  Future<void> loadFeedItemDigests(int pageNum) async {
+    debugPrint('loadFeedItemDigests $pageNum');
+    emit(YesodFeedItemDigestLoadState(
+      state,
+      YesodRequestStatusCode.processing,
+    ));
+    const pageSize = 10;
+    final resp = await api.doRequest<ListFeedItemsResponse>(
+      (client, option) => client.listFeedItems(
+        ListFeedItemsRequest(
+          paging: PagingRequest(
+            pageSize: pageSize,
+            pageNum: pageNum,
+          ),
+        ),
+        options: option,
+      ),
+    );
+    if (resp.status != ApiStatus.success) {
+      emit(YesodFeedItemDigestLoadState(
+        state,
+        YesodRequestStatusCode.failed,
+        msg: resp.error,
+      ));
+      return;
+    }
+    final digests = state.feedItemDigests ?? [];
+    digests.addAll(resp.getData().items);
+    emit(YesodFeedItemDigestLoadState(
+      state.copyWith(feedItemDigests: digests),
+      YesodRequestStatusCode.success,
+      currentPage: pageNum,
+      maxPage: ((resp.getData().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
+    ));
+  }
 }

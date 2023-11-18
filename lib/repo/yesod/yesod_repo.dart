@@ -12,8 +12,6 @@ part 'yesod_remote_source.dart';
 
 abstract class YesodSource {
   Future<List<FeedItem>> getBatchFeedItems(Iterable<InternalID>? ids);
-  Future<List<ListFeedConfigsResponse_FeedWithConfig>> listFeedConfigs(
-      PagingRequest? paging, Iterable<InternalID>? ids);
 
   Future<List<String>> getFeedCategories();
 }
@@ -38,21 +36,6 @@ class YesodRepo {
     final remoteItems = await _remoteSource.getBatchFeedItems(remoteIds);
     _localSource.cacheFeedItems(remoteItems);
     return [...cachedItems, ...remoteItems];
-  }
-
-  Future<ListFeedConfigsResponse_FeedWithConfig> getFeedConfig(
-      InternalID id) async {
-    final item = await getBatchFeedConfigs(
-      PagingRequest(pageNum: 1, pageSize: 1),
-      [id].reversed,
-    );
-    return item[0];
-  }
-
-  Future<List<ListFeedConfigsResponse_FeedWithConfig>> getBatchFeedConfigs(
-      PagingRequest? paging, Iterable<InternalID>? ids) async {
-    final remoteItems = await _remoteSource.listFeedConfigs(paging, ids);
-    return remoteItems;
   }
 
   Future<List<String>> getFeedCategories() async {

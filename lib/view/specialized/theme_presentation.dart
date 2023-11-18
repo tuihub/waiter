@@ -24,11 +24,9 @@ class ThemePresent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = brightness == Brightness.light
         ? ThemeData.light().copyWith(
-            useMaterial3: true,
             colorScheme: lightScheme,
           )
         : ThemeData.dark().copyWith(
-            useMaterial3: true,
             colorScheme: darkScheme,
           );
     return Column(

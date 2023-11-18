@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -191,10 +190,10 @@ final GlobalKey<NavigatorState> _chesedNavigateKey =
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 
-GoRouter getRouter() {
-  final router = GoRouter(
+GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
+  return GoRouter(
     initialLocation: AppRoutes.init.toString(),
-    refreshListenable: StreamListener(GetIt.I<UserBloc>().stream),
+    refreshListenable: StreamListener(userBloc.stream),
     debugLogDiagnostics: true,
     redirect: (context, state) {
       if (context.read<UserBloc>().state is PreLogin) {
@@ -292,7 +291,7 @@ GoRouter getRouter() {
                   };
                   return NoTransitionPage(
                     child: BlocProvider(
-                      create: (context) => YesodCubit(GetIt.I<ApiHelper>()),
+                      create: (context) => YesodCubit(apiHelper),
                       child: FramePage(
                         selectedNav: ModuleName.yesod,
                         leftPart: YesodNav(
@@ -419,5 +418,4 @@ GoRouter getRouter() {
       ),
     ],
   );
-  return router;
 }

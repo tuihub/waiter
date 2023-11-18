@@ -35,25 +35,4 @@ class YesodRemoteSource implements YesodSource {
     );
     return response.data?.categories ?? [];
   }
-
-  @override
-  Future<List<ListFeedConfigsResponse_FeedWithConfig>> listFeedConfigs(
-      PagingRequest? paging, Iterable<InternalID>? ids) async {
-    final response = await GetIt.I<ApiHelper>().doRequest(
-      (client, option) {
-        return client.listFeedConfigs(
-          ListFeedConfigsRequest(
-            paging: paging ??
-                PagingRequest(
-                  pageSize: ids?.length ?? 1,
-                  pageNum: 1,
-                ),
-            idFilter: ids,
-          ),
-          options: option,
-        );
-      },
-    );
-    return response.data?.feedsWithConfig ?? [];
-  }
 }

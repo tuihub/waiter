@@ -9,19 +9,25 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
+import 'common/api/api_helper.dart';
 import 'common/util/platform.dart';
-import 'init.dart';
+import 'consts.dart';
 import 'l10n/l10n.dart';
+import 'repo/gebura/gebura_repo.dart';
+import 'repo/yesod/yesod_repo.dart';
+import 'route.dart';
+import 'store/setting_dao.dart';
+
+part 'init.dart';
 
 void main() async {
-  await Hive.initFlutter();
+  final app = await init();
 
-  await init();
-
-  runApp(const MyApp());
+  runApp(app);
 
   if (PlatformHelper.isWindowsApp()) {
     doWhenWindowReady(() {
@@ -42,19 +48,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp(this.router, this.userBloc, this.appSettingBloc, {super.key});
+
+  final GoRouter router;
+  final UserBloc userBloc;
+  final AppSettingBloc appSettingBloc;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => GetIt.I<UserBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => GetIt.I<AppSettingBloc>(),
-        ),
+        BlocProvider(create: (context) => userBloc),
+        BlocProvider(create: (context) => appSettingBloc),
       ],
       child: BlocBuilder<AppSettingBloc, AppSettingState>(
         builder: (context, state) {
@@ -100,7 +106,7 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: state.themeMode,
             // Use dark or light theme based on system setting.
-            routerConfig: GetIt.I<GoRouter>(),
+            routerConfig: router,
           );
         },
       ),
