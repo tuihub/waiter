@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
-import '../../../bloc/yesod/yesod_cubit.dart';
+import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
@@ -21,7 +19,7 @@ class YesodConfigEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<YesodCubit, YesodState>(
+    return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodConfigEditState && state.success) {
           const Toast(title: '', message: '已应用更改').show(context);
@@ -183,7 +181,7 @@ class YesodConfigEditPage extends StatelessWidget {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      unawaited(context.read<YesodCubit>().editFeedConfig(
+                      context.read<YesodBloc>().add(YesodConfigEditEvent(
                             FeedConfig(
                               id: config.id,
                               name: name,

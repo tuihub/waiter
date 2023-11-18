@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
-import '../../../bloc/yesod/yesod_cubit.dart';
+import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
@@ -29,7 +27,7 @@ class YesodConfigAddPage extends StatelessWidget {
     var refreshInterval = 60;
     var enabled = true;
 
-    return BlocConsumer<YesodCubit, YesodState>(
+    return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodConfigAddState && state.success) {
           const Toast(title: '', message: '添加成功').show(context);
@@ -178,9 +176,9 @@ class YesodConfigAddPage extends StatelessWidget {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      unawaited(context
-                          .read<YesodCubit>()
-                          .addFeedConfig(FeedConfig(
+                      context
+                          .read<YesodBloc>()
+                          .add(YesodConfigAddEvent(FeedConfig(
                             name: name,
                             feedUrl: url,
                             source: FeedConfigSource.FEED_CONFIG_SOURCE_COMMON,
@@ -202,8 +200,9 @@ class YesodConfigAddPage extends StatelessWidget {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      unawaited(
-                          context.read<YesodCubit>().previewFeedConfig(url));
+                      context
+                          .read<YesodBloc>()
+                          .add(YesodConfigPreviewEvent(url));
                     }
                   },
                   child: state is YesodConfigAddState && state.processing

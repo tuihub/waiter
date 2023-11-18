@@ -1,4 +1,4 @@
-part of 'yesod_cubit.dart';
+part of 'yesod_bloc.dart';
 
 class YesodState {
   late List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs;

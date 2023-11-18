@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
-import 'bloc/yesod/yesod_cubit.dart';
+import 'bloc/yesod/yesod_bloc.dart';
 import 'common/api/api_helper.dart';
 import 'common/api/client.dart';
 import 'common/util/stream_listener.dart';
@@ -291,7 +291,7 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                   };
                   return NoTransitionPage(
                     child: BlocProvider(
-                      create: (context) => YesodCubit(apiHelper),
+                      create: (context) => YesodBloc(apiHelper),
                       child: FramePage(
                         selectedNav: ModuleName.yesod,
                         leftPart: YesodNav(

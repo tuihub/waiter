@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/yesod/yesod_cubit.dart';
+import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
@@ -20,7 +18,7 @@ class YesodConfigPage extends StatelessWidget {
     final listData = state.feedConfigs ?? [];
     final bgColor = Theme.of(context).colorScheme.surface;
     if (state.feedConfigs == null) {
-      unawaited(context.read<YesodCubit>().loadFeedConfigs());
+      context.read<YesodBloc>().add(YesodConfigLoadEvent());
     }
     return Stack(children: [
       if (state is YesodConfigLoadState && state.processing)
@@ -38,7 +36,9 @@ class YesodConfigPage extends StatelessWidget {
             final item = listData.elementAt(index);
 
             void openEditPage() {
-              context.read<YesodCubit>().setFeedConfigEditIndex(index);
+              context
+                  .read<YesodBloc>()
+                  .add(YesodSetConfigEditIndexEvent(index));
               AppRoutes.yesodConfigEdit().go(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.right);
               FramePage.of(context)?.openDrawer();
@@ -117,7 +117,7 @@ class YesodConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<YesodCubit, YesodState>(builder: (context, state) {
+    return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(
@@ -153,7 +153,7 @@ class YesodConfigPage extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            unawaited(context.read<YesodCubit>().loadFeedConfigs());
+            context.read<YesodBloc>().add(YesodConfigLoadEvent());
           },
           child: const Icon(Icons.refresh),
         ),

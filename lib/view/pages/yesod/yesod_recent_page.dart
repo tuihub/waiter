@@ -8,7 +8,7 @@ import 'package:keframe/keframe.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../bloc/yesod/yesod_cubit.dart';
+import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../repo/yesod/yesod_repo.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
@@ -82,9 +82,9 @@ class YesodRecentList extends StatelessWidget {
     var lastPageNum = 0;
     var lastStatus = YesodRequestStatusCode.processing;
 
-    return BlocBuilder<YesodCubit, YesodState>(builder: (context, state) {
+    return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       if (state.feedItemDigests == null) {
-        unawaited(context.read<YesodCubit>().loadFeedItemDigests(1));
+        context.read<YesodBloc>().add(YesodFeedItemDigestsLoadEvent(1));
       }
       if (state is YesodFeedItemDigestLoadState) {
         lastStatus = state.statusCode;
@@ -100,9 +100,9 @@ class YesodRecentList extends StatelessWidget {
             if (controller.position.pixels ==
                 controller.position.maxScrollExtent) {
               if (lastStatus == YesodRequestStatusCode.success) {
-                unawaited(context
-                    .read<YesodCubit>()
-                    .loadFeedItemDigests(lastPageNum + 1));
+                context
+                    .read<YesodBloc>()
+                    .add(YesodFeedItemDigestsLoadEvent(lastPageNum + 1));
               }
             }
           });
