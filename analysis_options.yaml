@@ -1,4 +1,4 @@
-# RydMike LINTER Preferences v2.0.1
+# RydMike LINTER Preferences v2.1.0
 #
 # Get this file here: https://gist.github.com/rydmike/fdb53ddd933c37d20e6f3188a936cd4c
 #
@@ -45,6 +45,10 @@ analyzer:
     # We explicitly enabled even conflicting rules and are fixing the conflicts in this file.
     # Put it to warning temporarily if you need to troubleshoot lint rule settings.
     included_file_warning: ignore
+
+    # Needed for using Freezed together with Json serializable and meta.
+    # For more info see: https://pub.dev/packages/freezed#install
+    invalid_annotation_target: ignore
 
     # Treat missing required parameters as an error, not as a hint or a warning.
     missing_required_param: error
