@@ -31,7 +31,7 @@ class YesodConfigAddPage extends StatelessWidget {
 
     return BlocConsumer<YesodCubit, YesodState>(
       listener: (context, state) {
-        if (state.configEditStatus.code == YesodRequestStatusCode.success) {
+        if (state is YesodConfigAddState && state.success) {
           const Toast(title: '', message: '添加成功').show(context);
           close(context);
         }
@@ -61,9 +61,8 @@ class YesodConfigAddPage extends StatelessWidget {
                       title: state.feedPreview!.title ?? '',
                       callback: () {},
                     ),
-                  Text(state.configPreviewStatus.code ==
-                          YesodRequestStatusCode.failed
-                      ? state.configPreviewStatus.msg ?? ''
+                  Text(state is YesodConfigPreviewState && state.failed
+                      ? state.msg ?? ''
                       : ''),
                   const SizedBox(
                     height: 8,
@@ -137,12 +136,10 @@ class YesodConfigAddPage extends StatelessWidget {
                         ),
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          height: state.configAddStatus.code ==
-                                  YesodRequestStatusCode.failed
+                          height: state is YesodConfigAddState && state.failed
                               ? 48
                               : 0,
-                          child: state.configAddStatus.code ==
-                                  YesodRequestStatusCode.failed
+                          child: state is YesodConfigAddState && state.failed
                               ? Ink(
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
@@ -156,7 +153,7 @@ class YesodConfigAddPage extends StatelessWidget {
                                       const SizedBox(
                                         width: 24,
                                       ),
-                                      Text(state.configAddStatus.msg ?? ''),
+                                      Text(state.msg ?? ''),
                                     ],
                                   ),
                                 )
@@ -197,8 +194,7 @@ class YesodConfigAddPage extends StatelessWidget {
                           )));
                     }
                   },
-                  child: state.configAddStatus.code ==
-                          YesodRequestStatusCode.processing
+                  child: state is YesodConfigAddState && state.processing
                       ? const CircularProgressIndicator()
                       : const Text('确定'),
                 ),
@@ -210,8 +206,7 @@ class YesodConfigAddPage extends StatelessWidget {
                           context.read<YesodCubit>().previewFeedConfig(url));
                     }
                   },
-                  child: state.configPreviewStatus.code ==
-                          YesodRequestStatusCode.processing
+                  child: state is YesodConfigAddState && state.processing
                       ? const CircularProgressIndicator()
                       : const Text('加载预览'),
                 ),

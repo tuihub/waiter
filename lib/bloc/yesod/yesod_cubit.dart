@@ -9,81 +9,7 @@ import 'package:webfeed_revised/domain/rss_feed.dart';
 import '../../common/api/api_helper.dart';
 import '../../model/yesod_model.dart';
 
-class YesodState {
-  final List<ListFeedConfigsResponse_FeedWithConfig> feedConfigs;
-  final int? feedConfigEditIndex;
-  final RssPostItem? feedPreview;
-  final YesodRequestStatus configLoadStatus;
-  final YesodRequestStatus configPreviewStatus;
-  final YesodRequestStatus configAddStatus;
-  final YesodRequestStatus configEditStatus;
-
-  final List<FeedItemDigest> feedItemDigests;
-  final Map<InternalID, FeedItem> feedItems;
-
-  YesodState(
-    this.feedConfigs,
-    this.feedConfigEditIndex,
-    this.feedPreview,
-    this.configLoadStatus,
-    this.configPreviewStatus,
-    this.configAddStatus,
-    this.configEditStatus,
-    this.feedItemDigests,
-    this.feedItems,
-  );
-
-  YesodState copyWith({
-    List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
-    int? feedConfigEditIndex,
-    RssPostItem? feedPreview,
-    YesodRequestStatus? configLoadStatus,
-    YesodRequestStatus? configPreviewStatus,
-    YesodRequestStatus? configAddStatus,
-    YesodRequestStatus? configEditStatus,
-    List<FeedItemDigest>? feedItemDigests,
-    Map<InternalID, FeedItem>? feedItems,
-  }) {
-    return YesodState(
-      feedConfigs ?? this.feedConfigs,
-      feedConfigEditIndex ?? this.feedConfigEditIndex,
-      feedPreview ?? this.feedPreview,
-      configLoadStatus ?? this.configLoadStatus,
-      configPreviewStatus ?? this.configPreviewStatus,
-      configAddStatus ?? this.configAddStatus,
-      configEditStatus ?? this.configEditStatus,
-      feedItemDigests ?? this.feedItemDigests,
-      feedItems ?? this.feedItems,
-    );
-  }
-}
-
-class YesodRequestStatus {
-  final YesodRequestStatusCode code;
-  final String? msg;
-
-  YesodRequestStatus(this.code, {this.msg});
-}
-
-enum YesodRequestStatusCode {
-  initial,
-  processing,
-  success,
-  partlySuccess,
-  failed;
-}
-
-YesodState _initialState() => YesodState(
-      [],
-      null,
-      null,
-      YesodRequestStatus(YesodRequestStatusCode.initial),
-      YesodRequestStatus(YesodRequestStatusCode.initial),
-      YesodRequestStatus(YesodRequestStatusCode.initial),
-      YesodRequestStatus(YesodRequestStatusCode.initial),
-      [],
-      {},
-    );
+part 'yesod_state.dart';
 
 class YesodCubit extends Cubit<YesodState> {
   final ApiHelper api;
@@ -91,9 +17,7 @@ class YesodCubit extends Cubit<YesodState> {
   YesodCubit(this.api) : super(_initialState());
 
   Future<void> loadFeedConfigs() async {
-    emit(state.copyWith(
-      configLoadStatus: YesodRequestStatus(YesodRequestStatusCode.processing),
-    ));
+    emit(YesodConfigLoadState(state, YesodRequestStatusCode.processing));
     final List<ListFeedConfigsResponse_FeedWithConfig> configs = [];
 
     final resp = await api.doRequest<ListFeedConfigsResponse>(
@@ -108,10 +32,8 @@ class YesodCubit extends Cubit<YesodState> {
       ),
     );
     if (resp.status != ApiStatus.success) {
-      emit(state.copyWith(
-        configLoadStatus:
-            YesodRequestStatus(YesodRequestStatusCode.failed, msg: resp.error),
-      ));
+      emit(YesodConfigLoadState(state, YesodRequestStatusCode.failed,
+          msg: resp.error));
       return;
     }
 
@@ -139,25 +61,22 @@ class YesodCubit extends Cubit<YesodState> {
     }
 
     if (configs.isEmpty) {
-      emit(state.copyWith(
-        configLoadStatus:
-            YesodRequestStatus(YesodRequestStatusCode.failed, msg: resp.error),
-      ));
+      emit(YesodConfigLoadState(state, YesodRequestStatusCode.failed,
+          msg: resp.error));
     } else {
-      emit(state.copyWith(
-        feedConfigs: configs,
-        configLoadStatus: YesodRequestStatus(failCount == 0
+      emit(YesodConfigLoadState(
+        state.copyWith(feedConfigs: configs),
+        failCount == 0
             ? YesodRequestStatusCode.success
-            : YesodRequestStatusCode.partlySuccess),
+            : YesodRequestStatusCode.partlySuccess,
       ));
     }
   }
 
   Future<void> previewFeedConfig(String url) async {
-    emit(state.copyWith(
-      feedPreview: null,
-      configPreviewStatus:
-          YesodRequestStatus(YesodRequestStatusCode.processing),
+    emit(YesodConfigPreviewState(
+      state.copyWith(feedPreview: null),
+      YesodRequestStatusCode.processing,
     ));
     try {
       final response = await http.get(Uri.parse(url));
@@ -202,26 +121,27 @@ class YesodCubit extends Cubit<YesodState> {
         subscription: subscription,
         image: imgUrl,
       );
-      emit(state.copyWith(
-        feedPreview: example,
-        configPreviewStatus: YesodRequestStatus(YesodRequestStatusCode.success),
+      emit(YesodConfigPreviewState(
+        state.copyWith(feedPreview: example),
+        YesodRequestStatusCode.success,
       ));
     } catch (e) {
-      emit(state.copyWith(
-        feedPreview: RssPostItem(
-            subscription: RssSubscription(
-                title: '', link: '', iconUrl: '', description: '')),
-        configPreviewStatus: YesodRequestStatus(
-          YesodRequestStatusCode.failed,
-          msg: '解析失败, $e',
+      emit(YesodConfigPreviewState(
+        state.copyWith(
+          feedPreview: RssPostItem(
+              subscription: RssSubscription(
+                  title: '', link: '', iconUrl: '', description: '')),
         ),
+        YesodRequestStatusCode.failed,
+        msg: '解析失败, $e',
       ));
     }
   }
 
   Future<void> addFeedConfig(FeedConfig config) async {
-    emit(state.copyWith(
-      configAddStatus: YesodRequestStatus(YesodRequestStatusCode.processing),
+    emit(YesodConfigAddState(
+      state,
+      YesodRequestStatusCode.processing,
     ));
     final index = state.feedConfigEditIndex;
     if (index == null) {
@@ -236,9 +156,10 @@ class YesodCubit extends Cubit<YesodState> {
       );
     });
     if (resp.status != ApiStatus.success) {
-      emit(state.copyWith(
-        configAddStatus:
-            YesodRequestStatus(YesodRequestStatusCode.failed, msg: resp.error),
+      emit(YesodConfigAddState(
+        state,
+        YesodRequestStatusCode.failed,
+        msg: resp.error,
       ));
       return;
     }
@@ -248,10 +169,10 @@ class YesodCubit extends Cubit<YesodState> {
         feed: null,
       )
     ];
-    configs.addAll(state.feedConfigs);
-    emit(state.copyWith(
-      feedConfigs: configs,
-      configAddStatus: YesodRequestStatus(YesodRequestStatusCode.success),
+    configs.addAll(state.feedConfigs ?? []);
+    emit(YesodConfigAddState(
+      state.copyWith(feedConfigs: configs),
+      YesodRequestStatusCode.success,
     ));
   }
 
@@ -262,8 +183,9 @@ class YesodCubit extends Cubit<YesodState> {
   }
 
   Future<void> editFeedConfig(FeedConfig config) async {
-    emit(state.copyWith(
-      configEditStatus: YesodRequestStatus(YesodRequestStatusCode.processing),
+    emit(YesodConfigEditState(
+      state,
+      YesodRequestStatusCode.processing,
     ));
     final index = state.feedConfigEditIndex;
     if (index == null) {
@@ -278,20 +200,21 @@ class YesodCubit extends Cubit<YesodState> {
       );
     });
     if (resp.status != ApiStatus.success) {
-      emit(state.copyWith(
-        configEditStatus:
-            YesodRequestStatus(YesodRequestStatusCode.failed, msg: resp.error),
+      emit(YesodConfigEditState(
+        state,
+        YesodRequestStatusCode.failed,
+        msg: resp.error,
       ));
       return;
     }
-    final configs = state.feedConfigs;
+    final configs = state.feedConfigs ?? [];
     configs[index] = ListFeedConfigsResponse_FeedWithConfig(
       config: config,
       feed: configs[index].feed,
     );
-    emit(state.copyWith(
-      feedConfigs: configs,
-      configEditStatus: YesodRequestStatus(YesodRequestStatusCode.success),
+    emit(YesodConfigEditState(
+      state.copyWith(feedConfigs: configs),
+      YesodRequestStatusCode.success,
     ));
   }
 }

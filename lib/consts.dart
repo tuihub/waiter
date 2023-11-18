@@ -1,22 +1,20 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'view/pages/chesed/chesed_home_page.dart';
 
 import 'route.dart';
 
 class App {
   final ModuleName name;
   final IconData icon;
-  final Widget page;
 
-  App(this.name, this.icon, this.page);
+  App(this.name, this.icon);
 }
 
 final moduleList = [
   // App('Home', Icons.home, const HomePage()),
-  App(ModuleName.gebura, Icons.casino, const SizedBox()),
-  App(ModuleName.yesod, Icons.rss_feed, const SizedBox()),
-  App(ModuleName.chesed, Icons.photo_album, ChesedHome()),
+  App(ModuleName.gebura, Icons.casino),
+  App(ModuleName.yesod, Icons.rss_feed),
+  App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];
 

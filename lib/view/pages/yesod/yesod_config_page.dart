@@ -17,47 +17,47 @@ class YesodConfigPage extends StatelessWidget {
   const YesodConfigPage({super.key});
 
   Widget _buildStatePage(BuildContext context, YesodState state) {
-    if (state.configLoadStatus.code == YesodRequestStatusCode.initial) {
+    final listData = state.feedConfigs ?? [];
+    final bgColor = Theme.of(context).colorScheme.surface;
+    if (state.feedConfigs == null) {
       unawaited(context.read<YesodCubit>().loadFeedConfigs());
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
     }
-    if (state.configLoadStatus.code == YesodRequestStatusCode.processing) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    if (state.configLoadStatus.code == YesodRequestStatusCode.success ||
-        state.configLoadStatus.code == YesodRequestStatusCode.partlySuccess) {
-      final listData = state.feedConfigs;
-      final bgColor = Theme.of(context).colorScheme.surface;
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          final item = listData.elementAt(index);
+    return Stack(children: [
+      if (state is YesodConfigLoadState && state.processing)
+        const Center(
+          child: CircularProgressIndicator(),
+        ),
+      if (state is YesodConfigLoadState && state.failed)
+        Center(
+          child: Text('加载失败: ${state.msg}'),
+        )
+      else
+        ListView.builder(
+          itemCount: listData.length,
+          itemBuilder: (context, index) {
+            final item = listData.elementAt(index);
 
-          void openEditPage() {
-            context.read<YesodCubit>().setFeedConfigEditIndex(index);
-            AppRoutes.yesodConfigEdit().go(context);
-            OverlappingPanels.of(context)?.reveal(RevealSide.right);
-            FramePage.of(context)?.openDrawer();
-          }
+            void openEditPage() {
+              context.read<YesodCubit>().setFeedConfigEditIndex(index);
+              AppRoutes.yesodConfigEdit().go(context);
+              OverlappingPanels.of(context)?.reveal(RevealSide.right);
+              FramePage.of(context)?.openDrawer();
+            }
 
-          return SelectionArea(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: openEditPage,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
+            return SelectionArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: openEditPage,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(children: [
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: item.feed.image.url.isNotEmpty
@@ -104,23 +104,15 @@ class YesodConfigPage extends StatelessWidget {
                             icon: const Icon(Icons.edit),
                           ),
                         ),
-                      ],
+                      ]),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-        itemCount: listData.length,
-      );
-    }
-    if (state.configLoadStatus.code == YesodRequestStatusCode.failed) {
-      return Center(
-        child: Text('加载失败: ${state.configLoadStatus.msg}'),
-      );
-    }
-    return const SizedBox();
+            );
+          },
+        ),
+    ]);
   }
 
   @override

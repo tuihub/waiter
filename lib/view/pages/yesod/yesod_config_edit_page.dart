@@ -23,7 +23,7 @@ class YesodConfigEditPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<YesodCubit, YesodState>(
       listener: (context, state) {
-        if (state.configEditStatus.code == YesodRequestStatusCode.success) {
+        if (state is YesodConfigEditState && state.success) {
           const Toast(title: '', message: '已应用更改').show(context);
           close(context);
         }
@@ -33,9 +33,10 @@ class YesodConfigEditPage extends StatelessWidget {
       builder: (context, state) {
         final formKey = GlobalKey<FormState>();
 
-        final config = state.feedConfigEditIndex != null
-            ? state.feedConfigs[state.feedConfigEditIndex!].config
-            : FeedConfig();
+        final config =
+            state.feedConfigEditIndex != null && state.feedConfigs != null
+                ? state.feedConfigs![state.feedConfigEditIndex!].config
+                : FeedConfig();
         var name = config.name;
         var feedUrl = config.feedUrl;
         var feedEnabled =
@@ -55,9 +56,8 @@ class YesodConfigEditPage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Text(state.configEditStatus.code ==
-                          YesodRequestStatusCode.failed
-                      ? state.configEditStatus.msg ?? ''
+                  Text(state is YesodConfigEditState && state.failed
+                      ? state.msg ?? ''
                       : ''),
                   Form(
                     key: formKey,
@@ -144,12 +144,10 @@ class YesodConfigEditPage extends StatelessWidget {
                         ),
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          height: state.configEditStatus.code ==
-                                  YesodRequestStatusCode.failed
+                          height: state is YesodConfigEditState && state.failed
                               ? 48
                               : 0,
-                          child: state.configEditStatus.code ==
-                                  YesodRequestStatusCode.failed
+                          child: state is YesodConfigEditState && state.failed
                               ? Ink(
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
@@ -163,8 +161,7 @@ class YesodConfigEditPage extends StatelessWidget {
                                       const SizedBox(
                                         width: 24,
                                       ),
-                                      Text(
-                                          state.configEditStatus.msg ?? '未知错误'),
+                                      Text(state.msg ?? '未知错误'),
                                     ],
                                   ),
                                 )
@@ -204,8 +201,7 @@ class YesodConfigEditPage extends StatelessWidget {
                           ));
                     }
                   },
-                  child: state.configEditStatus.code ==
-                          YesodRequestStatusCode.processing
+                  child: state is YesodConfigEditState && state.processing
                       ? const CircularProgressIndicator()
                       : const Text('应用更改'),
                 ),
