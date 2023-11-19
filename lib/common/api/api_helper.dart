@@ -41,7 +41,50 @@ class ApiHelper {
     );
   }
 
-  Future<ApiResponse<T>> doRequest<T>(
+  Future<ApiResponse<Res>> doRequestWithOptions<Req, Res>(
+    ResponseFuture<Res> Function(Req, {CallOptions? options}) Function(
+            LibrarianSephirahServiceClient client)
+        requestBuilder,
+    Req req,
+    CallOptions? opt,
+  ) async {
+    final requestFunc = requestBuilder(client);
+    final option = opt != null ? this.option.mergedWith(opt) : this.option;
+    try {
+      final resp = await requestFunc(req, options: option);
+      return ApiResponse(resp, ApiStatus.success, null);
+    } catch (e) {
+      if (e is GrpcError &&
+          e.code == StatusCode.unauthenticated &&
+          await doRefresh()) {
+        try {
+          final resp = await requestFunc(req, options: option);
+          return ApiResponse(resp, ApiStatus.success, null);
+        } catch (e) {
+          if (e is GrpcError) {
+            return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+          }
+          return ApiResponse(null, ApiStatus.error, e.toString());
+        }
+      }
+      debugPrint(e.toString());
+      if (e is GrpcError) {
+        return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+      }
+      return ApiResponse(null, ApiStatus.error, e.toString());
+    }
+  }
+
+  Future<ApiResponse<Res>> doRequest<Req, Res>(
+    ResponseFuture<Res> Function(Req, {CallOptions? options}) Function(
+            LibrarianSephirahServiceClient client)
+        requestBuilder,
+    Req req,
+  ) async {
+    return doRequestWithOptions<Req, Res>(requestBuilder, req, null);
+  }
+
+  Future<ApiResponse<T>> doRequestDeprecated<T>(
       Future<T> Function(
               LibrarianSephirahServiceClient client, CallOptions option)
           request) async {

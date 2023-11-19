@@ -7,14 +7,10 @@ class YesodRemoteSource implements YesodSource {
       return [];
     }
     final response = await GetIt.I<ApiHelper>().doRequest(
-      (client, option) {
-        return client.getBatchFeedItems(
-          GetBatchFeedItemsRequest(
-            ids: ids,
-          ),
-          options: option,
-        );
-      },
+      (client) => client.getBatchFeedItems,
+      GetBatchFeedItemsRequest(
+        ids: ids,
+      ),
     );
     if (kDebugMode) {
       print(
@@ -26,12 +22,8 @@ class YesodRemoteSource implements YesodSource {
   @override
   Future<List<String>> getFeedCategories() async {
     final response = await GetIt.I<ApiHelper>().doRequest(
-      (client, option) {
-        return client.listFeedConfigCategories(
-          ListFeedConfigCategoriesRequest(),
-          options: option,
-        );
-      },
+      (client) => client.listFeedConfigCategories,
+      ListFeedConfigCategoriesRequest(),
     );
     return response.data?.categories ?? [];
   }

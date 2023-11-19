@@ -124,15 +124,14 @@ class AppTableSource extends AsyncDataTableSource {
 
   @override
   Future<AsyncRowsResponse> getRows(int start, int end) async {
-    final resp = await GetIt.I<ApiHelper>().doRequest((client, option) async {
-      return client.listApps(
-          ListAppsRequest(
-            paging: PagingRequest(
-                pageSize: pageSize, pageNum: start ~/ pageSize + 1),
-            sourceFilter: sourceFilter,
-          ),
-          options: option);
-    });
+    final resp = await GetIt.I<ApiHelper>().doRequest(
+      (client) => client.listApps,
+      ListAppsRequest(
+        paging:
+            PagingRequest(pageSize: pageSize, pageNum: start ~/ pageSize + 1),
+        sourceFilter: sourceFilter,
+      ),
+    );
     return AsyncRowsResponse(
       resp.getData().paging.totalSize.toInt(),
       resp.getData().apps.map(

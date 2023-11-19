@@ -21,15 +21,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       emit(YesodConfigLoadState(state, YesodRequestStatusCode.processing));
       final List<ListFeedConfigsResponse_FeedWithConfig> configs = [];
 
-      final resp = await api.doRequest<ListFeedConfigsResponse>(
-        (client, option) => client.listFeedConfigs(
-          ListFeedConfigsRequest(
-            paging: PagingRequest(
-              pageSize: 1,
-              pageNum: 1,
-            ),
+      final resp = await api.doRequest(
+        (client) => client.listFeedConfigs,
+        ListFeedConfigsRequest(
+          paging: PagingRequest(
+            pageSize: 1,
+            pageNum: 1,
           ),
-          options: option,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -43,15 +41,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       var failCount = 0;
 
       for (var pageNum = 1; (pageNum - 1) * pageSize < totalSize; pageNum++) {
-        final resp = await api.doRequest<ListFeedConfigsResponse>(
-          (client, option) => client.listFeedConfigs(
-            ListFeedConfigsRequest(
-              paging: PagingRequest(
-                pageSize: pageSize,
-                pageNum: pageNum,
-              ),
+        final resp = await api.doRequest(
+          (client) => client.listFeedConfigs,
+          ListFeedConfigsRequest(
+            paging: PagingRequest(
+              pageSize: pageSize,
+              pageNum: pageNum,
             ),
-            options: option,
           ),
         );
         if (resp.status == ApiStatus.success) {
@@ -148,14 +144,12 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (index == null) {
         return;
       }
-      final resp = await api.doRequest((client, option) {
-        return client.createFeedConfig(
-          CreateFeedConfigRequest(
-            config: event.config,
-          ),
-          options: option,
-        );
-      });
+      final resp = await api.doRequest(
+        (client) => client.createFeedConfig,
+        CreateFeedConfigRequest(
+          config: event.config,
+        ),
+      );
       if (resp.status != ApiStatus.success) {
         emit(YesodConfigAddState(
           state,
@@ -192,14 +186,12 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (index == null) {
         return;
       }
-      final resp = await api.doRequest((client, option) {
-        return client.updateFeedConfig(
-          UpdateFeedConfigRequest(
-            config: event.config,
-          ),
-          options: option,
-        );
-      });
+      final resp = await api.doRequest(
+        (client) => client.updateFeedConfig,
+        UpdateFeedConfigRequest(
+          config: event.config,
+        ),
+      );
       if (resp.status != ApiStatus.success) {
         emit(YesodConfigEditState(
           state,
@@ -232,15 +224,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             : state,
         YesodRequestStatusCode.processing,
       ));
-      final resp = await api.doRequest<ListFeedItemsResponse>(
-        (client, option) => client.listFeedItems(
-          ListFeedItemsRequest(
-            paging: PagingRequest(
-              pageSize: pageSize,
-              pageNum: pageNum,
-            ),
+      final resp = await api.doRequest(
+        (client) => client.listFeedItems,
+        ListFeedItemsRequest(
+          paging: PagingRequest(
+            pageSize: pageSize,
+            pageNum: pageNum,
           ),
-          options: option,
         ),
       );
       if (resp.status != ApiStatus.success) {
