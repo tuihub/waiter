@@ -31,6 +31,9 @@ final class YesodConfigEditEvent extends YesodEvent {
 
 final class YesodFeedItemDigestsLoadEvent extends YesodEvent {
   final int pageNum;
+  final bool? refresh;
 
-  YesodFeedItemDigestsLoadEvent(this.pageNum);
+  YesodFeedItemDigestsLoadEvent(this.pageNum, {this.refresh});
 }
+
+final class YesodFeedItemDigestsResetEvent extends YesodEvent {}

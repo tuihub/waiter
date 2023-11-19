@@ -220,18 +220,24 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     }, transformer: droppable());
 
     on<YesodFeedItemDigestsLoadEvent>((event, emit) async {
-      debugPrint('loadFeedItemDigests ${event.pageNum}');
+      final refresh = event.refresh ?? false;
+      const pageSize = 10;
+      final pageNum = refresh ? 1 : event.pageNum;
+
       emit(YesodFeedItemDigestLoadState(
-        state,
+        refresh
+            ? state.copyWith(
+                feedItemDigests: [],
+              )
+            : state,
         YesodRequestStatusCode.processing,
       ));
-      const pageSize = 10;
       final resp = await api.doRequest<ListFeedItemsResponse>(
         (client, option) => client.listFeedItems(
           ListFeedItemsRequest(
             paging: PagingRequest(
               pageSize: pageSize,
-              pageNum: event.pageNum,
+              pageNum: pageNum,
             ),
           ),
           options: option,
@@ -245,12 +251,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ));
         return;
       }
-      final digests = state.feedItemDigests ?? [];
+      final List<FeedItemDigest> digests =
+          refresh ? [] : state.feedItemDigests ?? [];
       digests.addAll(resp.getData().items);
       emit(YesodFeedItemDigestLoadState(
         state.copyWith(feedItemDigests: digests),
         YesodRequestStatusCode.success,
-        currentPage: event.pageNum,
+        currentPage: pageNum,
         maxPage:
             ((resp.getData().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
       ));
