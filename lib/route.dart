@@ -289,14 +289,18 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                   };
                   final function = state.pathParameters['function'] ??
                       _YesodFunctions.recent;
-                  final action = state.uri.queryParameters['action'] ??
+                  var action = state.uri.queryParameters['action'] ??
                       _YesodActions.configAdd;
+                  if (function == _YesodFunctions.recent) {
+                    action = _YesodActions.recentFilter;
+                  }
 
                   final yesodActions = {
                     _YesodActions.configEdit: const YesodConfigEditPage(),
                     _YesodActions.configAdd: const YesodConfigAddPage(),
                     _YesodActions.recentFilter: const YesodRecentFilterPage(),
                   };
+                  final gestureRight = function != _YesodFunctions.config;
                   return NoTransitionPage(
                     child: BlocProvider(
                       create: (context) => YesodBloc(apiHelper),
@@ -307,7 +311,7 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                         ),
                         middlePart: yesodPages[function],
                         rightPart: yesodActions[action],
-                        gestureRight: false,
+                        gestureRight: gestureRight,
                       ),
                     ),
                   );

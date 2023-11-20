@@ -25,6 +25,9 @@ import 'store/setting_dao.dart';
 part 'init.dart';
 
 void main() async {
+  // Required for Android App
+  await Hive.initFlutter();
+
   final app = await init();
 
   runApp(app);
