@@ -11,7 +11,6 @@ import '../components/toast.dart';
 import '../form/form_field.dart';
 import '../layout/bootstrap_container.dart';
 import '../specialized/connectivity.dart';
-import '../specialized/title_bar.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -33,25 +32,16 @@ class LoginPage extends StatelessWidget {
             context.read<UserBloc>().add(LoadLocalSettingEvent());
           }
           return Scaffold(
-            body: SafeArea(
-              bottom: false,
-              maintainBottomViewPadding: true,
-              child: Column(children: [
-                const TitleBar(),
-                Expanded(
-                  child: BootstrapContainer(children: [
-                    BootstrapColumn(
-                      xxs: 12,
-                      md: 8,
-                      lg: 6,
-                      child: Card(
-                        child: getInitWidget(state),
-                      ),
-                    ),
-                  ]),
+            body: BootstrapContainer(children: [
+              BootstrapColumn(
+                xxs: 12,
+                md: 8,
+                lg: 6,
+                child: Card(
+                  child: getInitWidget(state),
                 ),
-              ]),
-            ),
+              ),
+            ]),
           );
         },
       ),

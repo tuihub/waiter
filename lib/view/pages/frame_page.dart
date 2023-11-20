@@ -5,8 +5,6 @@ import '../../route.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/nav_rail.dart';
-import '../specialized/theme_mode_toggle.dart';
-import '../specialized/title_bar.dart';
 
 class FramePage extends StatefulWidget {
   const FramePage({
@@ -127,19 +125,7 @@ class FramePageState extends State<FramePage> {
 
         return Scaffold(
           key: _frameScaffold,
-          body: SafeArea(
-            maintainBottomViewPadding: true,
-            child: Column(
-              children: [
-                const TitleBar(
-                  actions: [ThemeModeToggle()],
-                ),
-                Expanded(
-                  child: content,
-                ),
-              ],
-            ),
-          ),
+          body: content,
           endDrawer: width > BootstrapBreakpoints.md && widget.rightPart != null
               ? Drawer(
                   width: widget.rightPartWidth ?? 512,

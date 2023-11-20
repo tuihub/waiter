@@ -6,7 +6,6 @@ import '../../bloc/user_login/user_bloc.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import '../specialized/title_bar.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({super.key});
@@ -28,30 +27,18 @@ class InitPage extends StatelessWidget {
             context.read<UserBloc>().add(LoadLocalSettingEvent());
           }
           return Scaffold(
-            body: SafeArea(
-              bottom: false,
-              maintainBottomViewPadding: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const TitleBar(),
-                  Expanded(
-                    child: BootstrapContainer(children: [
-                      BootstrapColumn(
-                        xxs: 12,
-                        md: 6,
-                        child: Card(
-                          child: SizedBox(
-                            height: 320,
-                            child: getInitWidget(state),
-                          ),
-                        ),
-                      ),
-                    ]),
+            body: BootstrapContainer(children: [
+              BootstrapColumn(
+                xxs: 12,
+                md: 6,
+                child: Card(
+                  child: SizedBox(
+                    height: 320,
+                    child: getInitWidget(state),
                   ),
-                ],
+                ),
               ),
-            ),
+            ]),
             floatingActionButton: state is! AutoLogging
                 ? FloatingActionButton.extended(
                     onPressed: () {

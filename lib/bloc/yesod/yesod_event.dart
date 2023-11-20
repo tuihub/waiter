@@ -3,6 +3,8 @@ part of 'yesod_bloc.dart';
 @immutable
 sealed class YesodEvent {}
 
+final class YesodInitEvent extends YesodEvent {}
+
 final class YesodConfigLoadEvent extends YesodEvent {}
 
 final class YesodConfigPreviewEvent extends YesodEvent {
@@ -36,4 +38,8 @@ final class YesodFeedItemDigestsLoadEvent extends YesodEvent {
   YesodFeedItemDigestsLoadEvent(this.pageNum, {this.refresh});
 }
 
-final class YesodFeedItemDigestsResetEvent extends YesodEvent {}
+final class YesodFeedItemDigestsSetFilterEvent extends YesodEvent {
+  final YesodFeedItemFilter filter;
+
+  YesodFeedItemDigestsSetFilterEvent(this.filter);
+}

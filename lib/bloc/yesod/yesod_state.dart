@@ -8,6 +8,7 @@ class YesodState {
   late List<FeedItemDigest>? feedItemDigests;
   late Map<InternalID, FeedItem>? feedItems;
   late InternalID? selectedFeedItemID;
+  late YesodFeedItemFilter? feedItemFilter;
 
   YesodState({
     this.feedConfigs,
@@ -16,6 +17,7 @@ class YesodState {
     this.feedItemDigests,
     this.feedItems,
     this.selectedFeedItemID,
+    this.feedItemFilter,
   });
 
   YesodState copyWith({
@@ -25,6 +27,7 @@ class YesodState {
     List<FeedItemDigest>? feedItemDigests,
     Map<InternalID, FeedItem>? feedItems,
     InternalID? selectedFeedItemID,
+    YesodFeedItemFilter? feedItemFilter,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
@@ -33,6 +36,7 @@ class YesodState {
       feedItemDigests: feedItemDigests ?? this.feedItemDigests,
       feedItems: feedItems ?? this.feedItems,
       selectedFeedItemID: selectedFeedItemID ?? this.selectedFeedItemID,
+      feedItemFilter: feedItemFilter ?? this.feedItemFilter,
     );
   }
 
@@ -43,6 +47,7 @@ class YesodState {
     feedItemDigests = other.feedItemDigests;
     feedItems = other.feedItems;
     selectedFeedItemID = other.selectedFeedItemID;
+    feedItemFilter = other.feedItemFilter;
   }
 }
 
@@ -132,4 +137,18 @@ enum YesodRequestStatusCode {
   failed;
 }
 
-YesodState _initialState() => YesodState();
+class YesodFeedItemFilter {
+  final Iterable<InternalID>? feedIdFilter;
+  final Iterable<InternalID>? authorIdFilter;
+  final Iterable<String>? publishPlatformFilter;
+  final Iterable<String>? categoryFilter;
+  final TimeRange? publishTimeRange;
+
+  YesodFeedItemFilter({
+    this.feedIdFilter,
+    this.authorIdFilter,
+    this.publishPlatformFilter,
+    this.categoryFilter,
+    this.publishTimeRange,
+  });
+}

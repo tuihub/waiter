@@ -5,8 +5,11 @@ import 'package:keframe/keframe.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../layout/overlapping_panels.dart';
+import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
@@ -21,7 +24,7 @@ class YesodRecentPage extends StatelessWidget {
 
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       if (state.feedItemDigests == null) {
-        context.read<YesodBloc>().add(YesodFeedItemDigestsLoadEvent(1));
+        context.read<YesodBloc>().add(YesodInitEvent());
       }
       if (state is YesodFeedItemDigestLoadState) {
         lastStatus = state.statusCode;
@@ -47,6 +50,16 @@ class YesodRecentPage extends StatelessWidget {
             ),
             title: const Text('最近更新'),
             backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  AppRoutes.yesodRecentFilter().go(context);
+                  OverlappingPanels.of(context)?.reveal(RevealSide.right);
+                  FramePage.of(context)?.openDrawer();
+                },
+                icon: const Icon(Icons.filter_alt_outlined),
+              ),
+            ],
           ),
           body: DynMouseScroll(
             builder: (context, controller, physics) {

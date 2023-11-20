@@ -11,6 +11,7 @@ import 'bloc/yesod/yesod_bloc.dart';
 import 'common/api/api_helper.dart';
 import 'common/api/client.dart';
 import 'common/util/stream_listener.dart';
+import 'main_window.dart';
 import 'view/layout/overlapping_panels.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
@@ -35,6 +36,7 @@ import 'view/pages/yesod/yesod_config_add_page.dart';
 import 'view/pages/yesod/yesod_config_edit_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
+import 'view/pages/yesod/yesod_recent_filter_page.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_timeline_page.dart';
 
@@ -82,6 +84,10 @@ class AppRoutes {
       );
   static AppRoutes yesodConfigAdd() => AppRoutes._(
         '$yesodConfig?action=${_YesodActions.configAdd}',
+        isAction: true,
+      );
+  static AppRoutes yesodRecentFilter() => AppRoutes._(
+        '$yesodRecent?action=${_YesodActions.recentFilter}',
         isAction: true,
       );
 
@@ -157,6 +163,7 @@ class _YesodFunctions {
 class _YesodActions {
   static const String configEdit = 'editConfig';
   static const String configAdd = 'addConfig';
+  static const String recentFilter = 'filterRecent';
 }
 
 class _GeburaFunctions {
@@ -221,11 +228,11 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
-        builder: (context, state) => const InitPage(),
+        builder: (context, state) => const MainWindow(child: InitPage()),
       ),
       GoRoute(
         path: AppRoutes.login.toString(),
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => const MainWindow(child: LoginPage()),
       ),
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
@@ -239,7 +246,7 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                       config: blocState.serverConfig,
                     ),
                   ),
-                  child: child,
+                  child: MainWindow(child: child),
                 );
               }
               return const Center(child: CircularProgressIndicator());
@@ -288,6 +295,7 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                   final yesodActions = {
                     _YesodActions.configEdit: const YesodConfigEditPage(),
                     _YesodActions.configAdd: const YesodConfigAddPage(),
+                    _YesodActions.recentFilter: const YesodRecentFilterPage(),
                   };
                   return NoTransitionPage(
                     child: BlocProvider(

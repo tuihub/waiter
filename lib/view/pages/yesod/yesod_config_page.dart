@@ -18,7 +18,7 @@ class YesodConfigPage extends StatelessWidget {
     final listData = state.feedConfigs ?? [];
     final bgColor = Theme.of(context).colorScheme.surface;
     if (state.feedConfigs == null) {
-      context.read<YesodBloc>().add(YesodConfigLoadEvent());
+      context.read<YesodBloc>().add(YesodInitEvent());
     }
     return Stack(children: [
       if (state is YesodConfigLoadState && state.processing)

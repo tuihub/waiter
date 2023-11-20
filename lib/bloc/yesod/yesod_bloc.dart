@@ -16,7 +16,16 @@ part 'yesod_state.dart';
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
   final ApiHelper api;
 
-  YesodBloc(this.api) : super(_initialState()) {
+  YesodBloc(this.api) : super(YesodState()) {
+    on<YesodInitEvent>((event, emit) async {
+      if (state.feedConfigs == null) {
+        add(YesodConfigLoadEvent());
+      }
+      if (state.feedItemDigests == null) {
+        add(YesodFeedItemDigestsLoadEvent(1));
+      }
+    }, transformer: restartable());
+
     on<YesodConfigLoadEvent>((event, emit) async {
       emit(YesodConfigLoadState(state, YesodRequestStatusCode.processing));
       final List<ListFeedConfigsResponse_FeedWithConfig> configs = [];
@@ -175,7 +184,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       emit(state.copyWith(
         feedConfigEditIndex: event.index,
       ));
-    });
+    }, transformer: restartable());
 
     on<YesodConfigEditEvent>((event, emit) async {
       emit(YesodConfigEditState(
@@ -231,6 +240,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             pageSize: pageSize,
             pageNum: pageNum,
           ),
+          feedIdFilter: state.feedItemFilter?.feedIdFilter,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -252,5 +262,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             ((resp.getData().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
       ));
     }, transformer: droppable());
+
+    on<YesodFeedItemDigestsSetFilterEvent>((event, emit) async {
+      emit(state.copyWith(feedItemFilter: event.filter));
+      add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
+    }, transformer: restartable());
   }
 }

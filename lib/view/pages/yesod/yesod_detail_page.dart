@@ -41,7 +41,6 @@ class _YesodDetailPageState extends State<YesodDetailPage> {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: SpacingHelper.defaultBorderRadius,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
