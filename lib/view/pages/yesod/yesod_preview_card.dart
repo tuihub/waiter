@@ -84,7 +84,7 @@ class YesodPreviewCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4.0),
                       child: Text(
-                        '${description!}...',
+                        '${description!.length < 200 ? description! : description!.substring(0, 200)}...',
                         style: const TextStyle(
                           fontSize: 15,
                         ),

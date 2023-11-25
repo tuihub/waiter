@@ -5,6 +5,7 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../model/yesod_model.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
@@ -26,12 +27,16 @@ class YesodConfigAddPage extends StatelessWidget {
     var category = '';
     var refreshInterval = 60;
     var enabled = true;
+    RssPostItem? feedPreview;
 
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodConfigAddState && state.success) {
           const Toast(title: '', message: '添加成功').show(context);
           close(context);
+        }
+        if (state is YesodConfigPreviewState && state.success) {
+          feedPreview = state.feedPreview;
         }
       },
       builder: (context, state) {
@@ -47,16 +52,15 @@ class YesodConfigAddPage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  if (state.feedPreview != null &&
-                      state.feedPreview!.link != null)
+                  if (feedPreview != null && feedPreview!.link != null)
                     YesodPreviewCard(
-                      iconUrl: state.feedPreview!.subscription.iconUrl,
-                      name: state.feedPreview!.subscription.title ?? '',
-                      images: state.feedPreview!.image != null
-                          ? [state.feedPreview!.image!]
+                      iconUrl: feedPreview!.subscription.iconUrl,
+                      name: feedPreview!.subscription.title ?? '',
+                      images: feedPreview!.image != null
+                          ? [feedPreview!.image!]
                           : null,
-                      description: state.feedPreview!.description,
-                      title: state.feedPreview!.title ?? '',
+                      description: feedPreview!.description,
+                      title: feedPreview!.title ?? '',
                       callback: () {},
                     ),
                   Text(state is YesodConfigPreviewState && state.failed
