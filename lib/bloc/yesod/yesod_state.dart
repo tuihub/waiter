@@ -9,6 +9,7 @@ class YesodState {
   late Map<InternalID, FeedItem>? feedItems;
   late InternalID? selectedFeedItemID;
   late YesodFeedItemFilter? feedItemFilter;
+  late List<String>? feedCategories;
 
   YesodState({
     this.feedConfigs,
@@ -18,6 +19,7 @@ class YesodState {
     this.feedItems,
     this.selectedFeedItemID,
     this.feedItemFilter,
+    this.feedCategories,
   });
 
   YesodState copyWith({
@@ -28,6 +30,7 @@ class YesodState {
     Map<InternalID, FeedItem>? feedItems,
     InternalID? selectedFeedItemID,
     YesodFeedItemFilter? feedItemFilter,
+    List<String>? feedCategories,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
@@ -37,6 +40,7 @@ class YesodState {
       feedItems: feedItems ?? this.feedItems,
       selectedFeedItemID: selectedFeedItemID ?? this.selectedFeedItemID,
       feedItemFilter: feedItemFilter ?? this.feedItemFilter,
+      feedCategories: feedCategories ?? this.feedCategories,
     );
   }
 
@@ -48,6 +52,7 @@ class YesodState {
     feedItems = other.feedItems;
     selectedFeedItemID = other.selectedFeedItemID;
     feedItemFilter = other.feedItemFilter;
+    feedCategories = other.feedCategories;
   }
 }
 
@@ -107,6 +112,18 @@ class YesodFeedItemDigestLoadState extends YesodState with YesodRequest {
 
   final int? currentPage;
   final int? maxPage;
+  @override
+  final String? msg;
+  @override
+  final YesodRequestStatusCode statusCode;
+}
+
+class YesodFeedCategoriesLoadState extends YesodState with YesodRequest {
+  YesodFeedCategoriesLoadState(YesodState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
   @override
   final String? msg;
   @override

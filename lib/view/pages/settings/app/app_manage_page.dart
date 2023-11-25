@@ -11,8 +11,6 @@ import '../../../../common/api/api_helper.dart';
 import '../../../../common/api/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
-import '../../../layout/overlapping_panels.dart';
-import '../../frame_page.dart';
 
 class AppManagePage extends StatefulWidget {
   const AppManagePage({super.key});
@@ -69,8 +67,6 @@ class _AppManagePageState extends State<AppManagePage> {
               FilledButton.tonalIcon(
                 onPressed: () {
                   AppRoutes.settingsAppAdd().go(context);
-                  OverlappingPanels.of(context)?.reveal(RevealSide.right);
-                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -145,8 +141,6 @@ class AppTableSource extends AsyncDataTableSource {
               ],
               onTap: () {
                 AppRoutes.settingsAppEdit().go(context, extra: app);
-                OverlappingPanels.of(context)?.reveal(RevealSide.right);
-                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

@@ -93,12 +93,6 @@ class YesodConfigEditPage extends StatelessWidget {
                             border: OutlineInputBorder(),
                             labelText: '名称',
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '请输入名称';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(
                           height: 16,

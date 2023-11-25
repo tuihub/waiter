@@ -8,8 +8,6 @@ import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
-import '../../layout/overlapping_panels.dart';
-import '../frame_page.dart';
 
 class YesodConfigPage extends StatelessWidget {
   const YesodConfigPage({super.key});
@@ -40,8 +38,6 @@ class YesodConfigPage extends StatelessWidget {
                   .read<YesodBloc>()
                   .add(YesodSetConfigEditIndexEvent(index));
               AppRoutes.yesodConfigEdit().go(context);
-              OverlappingPanels.of(context)?.reveal(RevealSide.right);
-              FramePage.of(context)?.openDrawer();
             }
 
             return SelectionArea(
@@ -125,13 +121,12 @@ class YesodConfigPage extends StatelessWidget {
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const SizedBox(width: 8),
                   FilledButton.tonalIcon(
                     onPressed: () async {
                       AppRoutes.yesodConfigAdd().go(context);
-                      OverlappingPanels.of(context)?.reveal(RevealSide.right);
-                      FramePage.of(context)?.openDrawer();
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加订阅'),

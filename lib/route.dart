@@ -50,6 +50,10 @@ class AppRoutes {
 
   void go(BuildContext context, {Object? extra}) {
     GoRouter.of(context).go(path, extra: extra);
+    if (isAction) {
+      OverlappingPanels.of(context)?.reveal(RevealSide.right);
+      FramePage.of(context)?.openDrawer();
+    }
   }
 
   void pop(BuildContext context) {

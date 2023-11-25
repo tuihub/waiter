@@ -8,8 +8,6 @@ import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
-import '../../layout/overlapping_panels.dart';
-import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
@@ -21,6 +19,7 @@ class YesodRecentPage extends StatelessWidget {
     final theme = Theme.of(context);
     var lastPageNum = 0;
     var lastStatus = YesodRequestStatusCode.processing;
+    int? maxPageNum;
 
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       if (state.feedItemDigests == null) {
@@ -31,6 +30,7 @@ class YesodRecentPage extends StatelessWidget {
         if (state.currentPage != null) {
           lastPageNum = state.currentPage!;
         }
+        maxPageNum = state.maxPage;
       }
       final items = state.feedItemDigests ?? [];
 
@@ -54,8 +54,6 @@ class YesodRecentPage extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   AppRoutes.yesodRecentFilter().go(context);
-                  OverlappingPanels.of(context)?.reveal(RevealSide.right);
-                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.filter_alt_outlined),
               ),
@@ -66,7 +64,8 @@ class YesodRecentPage extends StatelessWidget {
               controller.addListener(() {
                 if (controller.position.pixels ==
                     controller.position.maxScrollExtent) {
-                  if (lastStatus == YesodRequestStatusCode.success) {
+                  if (lastStatus == YesodRequestStatusCode.success &&
+                      (maxPageNum == null || lastPageNum < maxPageNum!)) {
                     context
                         .read<YesodBloc>()
                         .add(YesodFeedItemDigestsLoadEvent(lastPageNum + 1));
@@ -123,10 +122,12 @@ class YesodRecentPage extends StatelessWidget {
                         ]),
                       );
                     } else {
-                      return const Padding(
-                        padding: EdgeInsets.all(16),
+                      return Padding(
+                        padding: const EdgeInsets.all(16),
                         child: Center(
-                          child: Text('加载中'),
+                          child: maxPageNum != null && maxPageNum == lastPageNum
+                              ? const Text('没有了')
+                              : const Text('加载中'),
                         ),
                       );
                     }

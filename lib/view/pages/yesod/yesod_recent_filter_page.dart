@@ -19,9 +19,13 @@ class YesodRecentFilterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<InternalID> feedIDFilter = [];
+    List<String> categoryFilter = [];
 
     return BlocBuilder<YesodBloc, YesodState>(
       builder: (context, state) {
+        feedIDFilter = state.feedItemFilter?.feedIdFilter?.toList() ?? [];
+        categoryFilter = state.feedItemFilter?.categoryFilter?.toList() ?? [];
+
         return Scaffold(
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
@@ -47,11 +51,26 @@ class YesodRecentFilterPage extends StatelessWidget {
                                 ? config.feed.title
                                 : config.config.feedUrl),
                     ],
-                    initialValue:
-                        state.feedItemFilter?.feedIdFilter?.toList() ??
-                            feedIDFilter,
+                    initialValue: feedIDFilter,
                     onConfirm: (values) {
                       feedIDFilter = values;
+                    },
+                    decoration: BoxDecoration(
+                      borderRadius: SpacingHelper.defaultBorderRadius,
+                    ),
+                  ),
+                  MultiSelectDialogField(
+                    title: const Text('按分类筛选'),
+                    buttonText: const Text('分类'),
+                    buttonIcon: const Icon(Icons.filter_alt_outlined),
+                    items: [
+                      for (final String category in state.feedCategories ?? [])
+                        MultiSelectItem(
+                            category, category.isNotEmpty ? category : '未分类'),
+                    ],
+                    initialValue: categoryFilter,
+                    onConfirm: (values) {
+                      categoryFilter = values;
                     },
                     decoration: BoxDecoration(
                       borderRadius: SpacingHelper.defaultBorderRadius,
@@ -69,8 +88,13 @@ class YesodRecentFilterPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     context.read<YesodBloc>().add(
-                        YesodFeedItemDigestsSetFilterEvent(
-                            YesodFeedItemFilter(feedIdFilter: feedIDFilter)));
+                          YesodFeedItemDigestsSetFilterEvent(
+                            YesodFeedItemFilter(
+                              feedIdFilter: feedIDFilter,
+                              categoryFilter: categoryFilter,
+                            ),
+                          ),
+                        );
                     close(context);
                   },
                   child: const Text('确定'),

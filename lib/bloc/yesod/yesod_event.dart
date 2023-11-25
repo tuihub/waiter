@@ -43,3 +43,5 @@ final class YesodFeedItemDigestsSetFilterEvent extends YesodEvent {
 
   YesodFeedItemDigestsSetFilterEvent(this.filter);
 }
+
+final class YesodFeedCategoriesLoadEvent extends YesodEvent {}

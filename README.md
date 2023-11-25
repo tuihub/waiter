@@ -12,7 +12,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [ ] `Gebura` Game save file manage (UploadGameSaveFile, ListGameSaveFiles, DownloadGameSaveFile)
     - [ ] `Gebura` App package run time record (AddAppPackageRunTime, GetAppPackageRunTime)
   - [ ] Feed
-    - [ ] `Yesod` Feed category settings (WIP)
+    - [x] `Yesod` Feed item list filter. by feed & by category
     - [ ] `Yesod` Use bilibili as feed source (WIP)
     - [ ] `Yesod` Generate feed and let server serving rss protocol (WIP)
     - [ ] `Netzach` Push generated feed to Telegram (WIP)

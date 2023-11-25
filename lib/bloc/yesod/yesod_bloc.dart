@@ -24,6 +24,9 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (state.feedItemDigests == null) {
         add(YesodFeedItemDigestsLoadEvent(1));
       }
+      if (state.feedCategories == null) {
+        add(YesodFeedCategoriesLoadEvent());
+      }
     }, transformer: restartable());
 
     on<YesodConfigLoadEvent>((event, emit) async {
@@ -241,6 +244,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             pageNum: pageNum,
           ),
           feedIdFilter: state.feedItemFilter?.feedIdFilter,
+          categoryFilter: state.feedItemFilter?.categoryFilter,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -267,5 +271,28 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       emit(state.copyWith(feedItemFilter: event.filter));
       add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
     }, transformer: restartable());
+
+    on<YesodFeedCategoriesLoadEvent>((event, emit) async {
+      emit(YesodFeedCategoriesLoadState(
+        state,
+        YesodRequestStatusCode.processing,
+      ));
+      final resp = await api.doRequest(
+        (client) => client.listFeedConfigCategories,
+        ListFeedConfigCategoriesRequest(),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(YesodFeedCategoriesLoadState(
+          state,
+          YesodRequestStatusCode.failed,
+          msg: resp.error,
+        ));
+        return;
+      }
+      emit(YesodFeedCategoriesLoadState(
+        state.copyWith(feedCategories: resp.getData().categories),
+        YesodRequestStatusCode.success,
+      ));
+    }, transformer: droppable());
   }
 }
