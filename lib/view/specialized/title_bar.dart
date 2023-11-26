@@ -1,7 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/util/platform.dart';
+import '../../common/platform.dart';
 import 'window_button.dart';
 
 class TitleBar extends StatelessWidget {

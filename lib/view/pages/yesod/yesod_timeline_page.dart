@@ -7,8 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../common/api/api_mixins.dart';
-import '../../../repo/yesod/yesod_repo.dart';
+import '../../../repo/grpc/api_mixins.dart';
+import '../../../repo/local/yesod_repo.dart';
 import '../../helper/spacing.dart';
 import '../../layout/grid_delegated.dart';
 import 'yesod_detail_page.dart';

@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../repo/yesod/yesod_repo.dart';
+import '../../../repo/local/yesod_repo.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';

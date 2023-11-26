@@ -13,14 +13,14 @@ import 'package:path_provider/path_provider.dart';
 
 import 'bloc/app_setting/app_setting_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
-import 'common/api/api_helper.dart';
-import 'common/util/platform.dart';
+import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
-import 'repo/gebura/gebura_repo.dart';
-import 'repo/yesod/yesod_repo.dart';
+import 'repo/grpc/api_helper.dart';
+import 'repo/local/gebura.dart';
+import 'repo/local/store/setting_dao.dart';
+import 'repo/local/yesod_repo.dart';
 import 'route.dart';
-import 'store/setting_dao.dart';
 
 part 'init.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../common/api/api_mixins.dart';
+import '../../../repo/grpc/api_mixins.dart';
 import '../../helper/duration_format.dart';
 
 class LinkAccountDialog extends StatefulWidget {

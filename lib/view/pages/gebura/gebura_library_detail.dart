@@ -7,8 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:open_file/open_file.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../../common/util/platform.dart';
-import '../../../repo/gebura/gebura_repo.dart';
+import '../../../common/platform.dart';
+import '../../../repo/local/gebura.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import 'gebura_app_launcher_setting_dialog.dart';

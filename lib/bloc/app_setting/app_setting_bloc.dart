@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../consts.dart';
-import '../../store/setting_dao.dart';
+import '../../repo/local/store/setting_dao.dart';
 
 part 'app_setting_event.dart';
 part 'app_setting_state.dart';

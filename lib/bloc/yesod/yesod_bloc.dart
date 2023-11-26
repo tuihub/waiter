@@ -7,8 +7,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 
-import '../../common/api/api_helper.dart';
 import '../../model/yesod_model.dart';
+import '../../repo/grpc/api_helper.dart';
 
 part 'yesod_event.dart';
 part 'yesod_state.dart';

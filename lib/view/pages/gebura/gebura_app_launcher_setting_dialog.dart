@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../model/gebura_model.dart';
-import '../../../repo/gebura/gebura_repo.dart';
+import '../../../repo/local/gebura.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
   final int appID;

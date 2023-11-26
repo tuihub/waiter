@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
-import '../../../common/api/api_mixins.dart';
-import '../../../common/api/l10n.dart';
+import '../../../repo/grpc/api_mixins.dart';
+import '../../../repo/grpc/l10n.dart';
 import '../../helper/spacing.dart';
 
 class MyProfileCard extends StatefulWidget {

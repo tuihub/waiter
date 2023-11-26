@@ -7,8 +7,8 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../common/api/api_helper.dart';
-import '../../../../common/api/l10n.dart';
+import '../../../../repo/grpc/api_helper.dart';
+import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:file_picker/file_picker.dart' as file_picker;
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 import 'package:http/http.dart' as http;
@@ -12,8 +13,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:universal_io/io.dart';
 
-import '../../../common/api/api_mixins.dart';
-import '../../../common/util/platform.dart';
+import '../../../common/platform.dart';
+import '../../../repo/grpc/api_mixins.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;
@@ -114,7 +115,7 @@ class ChesedUploadState extends State<ChesedUpload>
         UploadImageRequest(
           fileMetadata: FileMetadata(
             name: name,
-            // size: $fixnum.Int64(file.lengthSync()),
+            sizeBytes: $fixnum.Int64(file.lengthSync()),
             type: FileType.FILE_TYPE_CHESED_IMAGE,
           ),
           name: name,

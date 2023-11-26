@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../common/api/api_mixins.dart';
-import '../../../../common/api/l10n.dart';
+import '../../../../repo/grpc/api_mixins.dart';
+import '../../../../repo/grpc/l10n.dart';
 
 class AppPackageAssignDialog extends StatefulWidget {
   final void Function() callback;

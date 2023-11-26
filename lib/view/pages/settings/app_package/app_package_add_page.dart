@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../common/api/api_mixins.dart';
+import '../../../../repo/grpc/api_mixins.dart';
 import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';

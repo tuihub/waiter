@@ -21,10 +21,10 @@ class ApiRequestInitial extends ApiRequestState {}
 //
 //   UserTableFailed(this.code, this.message);
 // }
-
-class GeburaState extends ApiRequestState {}
-
-class GeburaRefreshLibrary extends GeburaState {}
+//
+// class GeburaState extends ApiRequestState {}
+//
+// class GeburaRefreshLibrary extends GeburaState {}
 
 class ChesedState extends ApiRequestState {}
 

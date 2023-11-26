@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
-import '../../common/api/client.dart';
 import '../../consts.dart';
+import '../../repo/grpc/client.dart';
 
 class ServerConnectivityWidget extends StatefulWidget {
   final ServerConfig config;

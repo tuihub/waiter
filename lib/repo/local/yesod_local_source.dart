@@ -1,4 +1,4 @@
-part of 'yesod_repo.dart';
+part of '../local/yesod_repo.dart';
 
 class YesodLocalSource implements YesodSource {
   late CacheDao _cacheDao;

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../common/api/api_helper.dart';
+import '../../repo/grpc/api_helper.dart';
 
 part 'gebura_event.dart';
 part 'gebura_state.dart';

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 
 import '../../model/gebura_model.dart';
-import '../../store/app_launcher_dao.dart';
+import 'store/app_launcher_dao.dart';
 
 class GeburaRepo {
   late AppLauncherDao _dao;

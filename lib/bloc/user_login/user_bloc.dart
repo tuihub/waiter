@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
-import '../../common/api/api_helper.dart';
-import '../../common/api/client.dart';
 import '../../consts.dart';
-import '../../store/setting_dao.dart';
+import '../../repo/grpc/api_helper.dart';
+import '../../repo/grpc/client.dart';
+import '../../repo/local/store/setting_dao.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

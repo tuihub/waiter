@@ -45,9 +45,9 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
       //     emit(UserTableFailed(-1, '发生未知错误'));
       //   }
       // }
-      if (event is GeburaLibraryRefreshEvent) {
-        emit(GeburaRefreshLibrary());
-      }
+      // if (event is GeburaLibraryRefreshEvent) {
+      //   emit(GeburaRefreshLibrary());
+      // }
       if (event is ChesedLoadEvent) {
         emit(ChesedLoading());
         try {

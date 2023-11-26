@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
-import '../../../common/api/l10n.dart';
 import '../../../l10n/l10n.dart';
+import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
