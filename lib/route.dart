@@ -6,6 +6,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/app_setting/app_setting_bloc.dart';
+import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'common/api/api_helper.dart';
@@ -337,21 +338,20 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                 pageBuilder: (context, state) {
                   final function = state.pathParameters['function'] ??
                       AppRoutes.geburaStore.toString();
-                  final id = state.uri.queryParameters['id'] ?? '0';
-                  final appID = int.tryParse(id) ?? 0;
                   final geburaPages = {
                     _GeburaFunctions.store: const GeburaStorePage(),
-                    _GeburaFunctions.library:
-                        GeburaLibraryDetailPage(appID: appID),
+                    _GeburaFunctions.library: const GeburaLibraryDetailPage(),
                   };
                   return NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.gebura,
-                      leftPart: GeburaNav(
-                        function: function,
-                        selectedAppID: id,
+                    child: BlocProvider(
+                      create: (context) => GeburaBloc(apiHelper),
+                      child: FramePage(
+                        selectedNav: ModuleName.gebura,
+                        leftPart: GeburaNav(
+                          function: function,
+                        ),
+                        middlePart: geburaPages[function],
                       ),
-                      middlePart: geburaPages[function],
                     ),
                   );
                 },

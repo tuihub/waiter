@@ -140,13 +140,6 @@ mixin YesodRequest on YesodState {
   bool get failed => statusCode == YesodRequestStatusCode.failed;
 }
 
-class YesodRequestStatus {
-  final YesodRequestStatusCode code;
-  final String? msg;
-
-  YesodRequestStatus(this.code, {this.msg});
-}
-
 enum YesodRequestStatusCode {
   processing,
   success,
