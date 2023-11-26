@@ -202,7 +202,8 @@ final GlobalKey<NavigatorState> _chesedNavigateKey =
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 
-GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
+GoRouter getRouter(
+    UserBloc userBloc, GeburaBloc geburaBloc, ApiHelper apiHelper) {
   return GoRouter(
     initialLocation: AppRoutes.init.toString(),
     refreshListenable: StreamListener(userBloc.stream),
@@ -344,7 +345,7 @@ GoRouter getRouter(UserBloc userBloc, ApiHelper apiHelper) {
                   };
                   return NoTransitionPage(
                     child: BlocProvider(
-                      create: (context) => GeburaBloc(apiHelper),
+                      create: (context) => geburaBloc,
                       child: FramePage(
                         selectedNav: ModuleName.gebura,
                         leftPart: GeburaNav(

@@ -75,7 +75,7 @@ dependencies:
   # rust bridge
   ffi: ^2.0.1
   flutter_rust_bridge: 1.82.1 # use fixed version
-  freezed_annotation: ^2.2.0
+  freezed_annotation: ^2.4.1
 
   # web
   http: ^1.1.0
@@ -91,6 +91,7 @@ dependencies:
   intl: ^0.18.0
   open_file: ^3.3.2
   universal_io: ^2.2.2
+  json_annotation: ^4.8.1
 
 
 dev_dependencies:
@@ -104,9 +105,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   ffigen: ^9.0.1
-  build_runner: ^2.3.3
-  freezed: ^2.4.1
+  build_runner: ^2.4.6
+  freezed: ^2.4.5
   floor_generator: ^1.4.2
+  json_serializable: ^6.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

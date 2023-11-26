@@ -3,22 +3,31 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 
 import '../../model/gebura_model.dart';
-import 'store/app_launcher_dao.dart';
+
+const _appSettingsFile = 'gebura_app_settings';
 
 class GeburaRepo {
-  late AppLauncherDao _dao;
+  late Box<String> _appSettings;
 
-  GeburaRepo(Box<Object> box) {
-    _dao = AppLauncherDao(box);
+  GeburaRepo._init(Box<String> box) {
+    _appSettings = box;
   }
 
-  Future<void> saveLauncherSetting(AppLauncherSetting setting) async {
-    await _dao.set(setting.appID.toString(), jsonEncode(setting.toJson()));
+  static Future<GeburaRepo> init(String path) async {
+    final box = await Hive.openBox<String>(_appSettingsFile, path: path);
+    return GeburaRepo._init(box);
   }
 
-  Future<AppLauncherSetting?> getLauncherSetting(int appID) async {
-    final setting = _dao.get(appID.toString());
-    if (setting != null && setting is String) {
+  Future<void> setAppLauncherSetting(AppLauncherSetting setting) async {
+    await _appSettings.put(
+      setting.appID.toString(),
+      jsonEncode(setting.toJson()),
+    );
+  }
+
+  Future<AppLauncherSetting?> getAppLauncherSetting(int appID) async {
+    final setting = _appSettings.get(appID.toString());
+    if (setting != null) {
       return AppLauncherSetting.fromJson(
           jsonDecode(setting) as Map<String, dynamic>);
     }

@@ -4,15 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
+import '../../repo/local/gebura.dart';
 
 part 'gebura_event.dart';
 part 'gebura_state.dart';
 
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   final ApiHelper api;
+  final GeburaRepo repo;
 
-  GeburaBloc(this.api) : super(GeburaState()) {
+  GeburaBloc(this.api, this.repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
       if (state.purchasedApps == null) {
         add(GeburaPurchasedAppsLoadEvent());
@@ -88,5 +91,18 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           msg: resp.error));
       add(GeburaPurchasedAppsLoadEvent());
     }, transformer: droppable());
+
+    on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
+      await repo.setAppLauncherSetting(event.setting);
+      emit(GeburaSetAppLauncherSettingState(
+          state, GeburaRequestStatusCode.success));
+    });
+
+    on<GeburaGetAppLauncherSettingEvent>((event, emit) async {
+      final setting = await repo.getAppLauncherSetting(event.id.id.toInt());
+      emit(GeburaGetAppLauncherSettingState(
+          state, GeburaRequestStatusCode.success,
+          setting: setting));
+    });
   }
 }

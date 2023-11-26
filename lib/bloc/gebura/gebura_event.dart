@@ -24,3 +24,15 @@ final class GeburaPurchaseEvent extends GeburaEvent {
 
   GeburaPurchaseEvent(this.id);
 }
+
+final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
+  final AppLauncherSetting setting;
+
+  GeburaSetAppLauncherSettingEvent(this.setting);
+}
+
+final class GeburaGetAppLauncherSettingEvent extends GeburaEvent {
+  final InternalID id;
+
+  GeburaGetAppLauncherSettingEvent(this.id);
+}

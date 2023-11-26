@@ -74,6 +74,36 @@ class GeburaPurchaseState extends GeburaState with GeburaRequest {
   final String? msg;
 }
 
+class GeburaSetAppLauncherSettingState extends GeburaState with GeburaRequest {
+  GeburaSetAppLauncherSettingState(GeburaState state, this.statusCode,
+      {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final GeburaRequestStatusCode? statusCode;
+
+  @override
+  final String? msg;
+}
+
+class GeburaGetAppLauncherSettingState extends GeburaState with GeburaRequest {
+  GeburaGetAppLauncherSettingState(GeburaState state, this.statusCode,
+      {this.msg, this.setting})
+      : super() {
+    _from(state);
+  }
+
+  final AppLauncherSetting? setting;
+
+  @override
+  final GeburaRequestStatusCode? statusCode;
+
+  @override
+  final String? msg;
+}
+
 mixin GeburaRequest on GeburaState {
   GeburaRequestStatusCode? get statusCode;
   String? get msg;

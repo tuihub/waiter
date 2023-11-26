@@ -1,18 +1,15 @@
-class AppLauncherSetting {
-  final int appID;
-  final String path;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  AppLauncherSetting({
-    required this.appID,
-    required this.path,
-  });
+part 'gebura_model.freezed.dart';
+part 'gebura_model.g.dart';
 
-  AppLauncherSetting.fromJson(Map<String, dynamic> json)
-      : appID = json['appID'] as int,
-        path = json['path'] as String;
+@freezed
+class AppLauncherSetting with _$AppLauncherSetting {
+  const factory AppLauncherSetting({
+    required int appID,
+    required String path,
+  }) = _AppLauncherSetting;
 
-  Map<String, dynamic> toJson() => {
-        'appID': appID,
-        'path': path,
-      };
+  factory AppLauncherSetting.fromJson(Map<String, Object?> json) =>
+      _$AppLauncherSettingFromJson(json);
 }

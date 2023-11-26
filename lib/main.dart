@@ -12,6 +12,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'bloc/app_setting/app_setting_bloc.dart';
+import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/user_login/user_bloc.dart';
 import 'common/platform.dart';
 import 'consts.dart';
