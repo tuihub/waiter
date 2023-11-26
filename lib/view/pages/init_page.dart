@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/user_login/user_bloc.dart';
+import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
@@ -16,15 +16,16 @@ class InitPage extends StatelessWidget {
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
-      child: BlocConsumer<UserBloc, UserLoginState>(
+      child: BlocConsumer<TipherethBloc, TipherethState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
+            AppRoutes.tiphereth.go(context);
             const Toast(title: '', message: '欢迎回来').show(context);
           }
         },
         builder: (context, state) {
           if (state is AppInitialize) {
-            context.read<UserBloc>().add(LoadLocalSettingEvent());
+            context.read<TipherethBloc>().add(LoadLocalSettingEvent());
           }
           return Scaffold(
             body: BootstrapContainer(children: [
@@ -42,7 +43,7 @@ class InitPage extends StatelessWidget {
             floatingActionButton: state is! AutoLogging
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      context.read<UserBloc>().add(ManualLoginEvent());
+                      context.read<TipherethBloc>().add(ManualLoginEvent());
                       AppRoutes.login.go(context);
                     },
                     icon: const Icon(Icons.arrow_forward),
@@ -55,7 +56,7 @@ class InitPage extends StatelessWidget {
     );
   }
 
-  Widget getInitWidget(UserLoginState state) {
+  Widget getInitWidget(TipherethState state) {
     return const InitWidget();
     // if (state is AutoLogging) {
     //   return const InitWidget();
@@ -69,11 +70,11 @@ class InitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserBloc, UserLoginState>(
+    return BlocConsumer<TipherethBloc, TipherethState>(
         listener: (context, state) {},
         builder: (context, state) {
           if (state is AppInitialize) {
-            context.read<UserBloc>().add(LoadLocalSettingEvent());
+            context.read<TipherethBloc>().add(LoadLocalSettingEvent());
           }
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,

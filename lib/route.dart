@@ -5,11 +5,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import 'bloc/api_request/api_request_bloc.dart';
-import 'bloc/app_setting/app_setting_bloc.dart';
-import 'bloc/gebura/gebura_bloc.dart';
-import 'bloc/user_login/user_bloc.dart';
-import 'bloc/yesod/yesod_bloc.dart';
-import 'common/stream_listener.dart';
+import 'bloc/main_bloc.dart';
+import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/grpc/client.dart';
@@ -202,35 +199,34 @@ final GlobalKey<NavigatorState> _chesedNavigateKey =
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 
-GoRouter getRouter(
-    UserBloc userBloc, GeburaBloc geburaBloc, ApiHelper apiHelper) {
+GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
     initialLocation: AppRoutes.init.toString(),
-    refreshListenable: StreamListener(userBloc.stream),
+    // refreshListenable: StreamListener(mainBloc.tipherethBloc.stream),
     debugLogDiagnostics: true,
-    redirect: (context, state) {
-      if (context.read<UserBloc>().state is PreLogin) {
-        return AppRoutes.init.toString();
-      }
-      if (context.read<UserBloc>().state is OnLogin) {
-        return AppRoutes.login.toString();
-      }
-      if (context.read<UserBloc>().state is PostLogin) {
-        if (state.uri.toString() == AppRoutes.login.toString() ||
-            state.uri.toString() == AppRoutes.init.toString()) {
-          final userPath = context.read<AppSettingBloc>().userPath;
-          if (userPath.startsWith(AppRoutes._module)) {
-            return userPath;
-          }
-          return AppRoutes.tiphereth.toString();
-        }
-        if (state.uri.toString() == AppRoutes._module) {
-          return AppRoutes.tiphereth.toString();
-        }
-      }
-      context.read<AppSettingBloc>().userPath = state.uri.toString();
-      return null;
-    },
+    // redirect: (context, state) {
+    //   if (context.read<TipherethBloc>().state is PreLogin) {
+    //     return AppRoutes.init.toString();
+    //   }
+    //   if (context.read<TipherethBloc>().state is OnLogin) {
+    //     return AppRoutes.login.toString();
+    //   }
+    //   if (context.read<TipherethBloc>().state is PostLogin) {
+    //     if (state.uri.toString() == AppRoutes.login.toString() ||
+    //         state.uri.toString() == AppRoutes.init.toString()) {
+    //       final userPath = context.read<ClientSettingBloc>().userPath;
+    //       if (userPath.startsWith(AppRoutes._module)) {
+    //         return userPath;
+    //       }
+    //       return AppRoutes.tiphereth.toString();
+    //     }
+    //     if (state.uri.toString() == AppRoutes._module) {
+    //       return AppRoutes.tiphereth.toString();
+    //     }
+    //   }
+    //   context.read<ClientSettingBloc>().userPath = state.uri.toString();
+    //   return null;
+    // },
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
@@ -242,14 +238,14 @@ GoRouter getRouter(
       ),
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          return BlocBuilder<UserBloc, UserLoginState>(
-            builder: (context, blocState) {
-              if (blocState is UserLoggedIn) {
+          return BlocBuilder<TipherethBloc, TipherethState>(
+            builder: (context, state) {
+              if (state is UserLoggedIn) {
                 return BlocProvider(
                   create: (context) => ApiRequestBloc(
-                    accessToken: blocState.acessToken,
+                    accessToken: state.accessToken,
                     client: clientFactory(
-                      config: blocState.serverConfig,
+                      config: state.serverConfig,
                     ),
                   ),
                   child: MainWindow(child: child),
@@ -309,7 +305,7 @@ GoRouter getRouter(
                   final gestureRight = function != _YesodFunctions.config;
                   return NoTransitionPage(
                     child: BlocProvider(
-                      create: (context) => YesodBloc(apiHelper),
+                      create: (context) => mainBloc.yesodBloc,
                       child: FramePage(
                         selectedNav: ModuleName.yesod,
                         leftPart: YesodNav(
@@ -331,7 +327,21 @@ GoRouter getRouter(
               GoRoute(
                 path: AppRoutes.gebura.toString(),
                 redirect: (context, state) {
-                  return AppRoutes.geburaStore.toString();
+                  if (context
+                          .read<MainBloc>()
+                          .geburaBloc
+                          .state
+                          .selectedPurchasedAppIndex !=
+                      null) {
+                    return AppRoutes.geburaLibraryDetail(context
+                            .read<MainBloc>()
+                            .geburaBloc
+                            .state
+                            .selectedPurchasedAppIndex!)
+                        .toString();
+                  } else {
+                    return AppRoutes.geburaStore.toString();
+                  }
                 },
               ),
               GoRoute(
@@ -345,7 +355,7 @@ GoRouter getRouter(
                   };
                   return NoTransitionPage(
                     child: BlocProvider(
-                      create: (context) => geburaBloc,
+                      create: (context) => mainBloc.geburaBloc,
                       child: FramePage(
                         selectedNav: ModuleName.gebura,
                         leftPart: GeburaNav(

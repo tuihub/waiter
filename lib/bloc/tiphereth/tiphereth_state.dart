@@ -1,36 +1,19 @@
-part of 'user_bloc.dart';
+part of 'tiphereth_bloc.dart';
 
 @immutable
-abstract class UserLoginState {}
+abstract class TipherethState {}
 
-class PreLogin extends UserLoginState {}
+class PreLogin extends TipherethState {}
 
-class OnLogin extends UserLoginState {}
+class OnLogin extends TipherethState {}
 
-class PostLogin extends UserLoginState {}
+class PostLogin extends TipherethState {}
 
 class AppInitialize extends PreLogin {}
 
 class AutoLogging extends PreLogin {}
 
 class AutoLoginFailed extends PreLogin {}
-
-// class ServerConnectBase extends OnLogin {
-//   final ServerConfig serverConfig;
-//
-//   ServerConnectBase(this.serverConfig);
-// }
-
-// class ServerConnectLoading extends ServerConnectBase {
-//   ServerConnectLoading(super.serverUrl);
-// }
-//
-// class ServerConnectFailed extends ServerConnectBase {
-//   final int errorCode;
-//   final String message;
-//
-//   ServerConnectFailed(super.serverUrl, this.errorCode, this.message);
-// }
 
 class ServerSelecting extends OnLogin {}
 
@@ -64,12 +47,12 @@ class UserLoginFailed extends ServerSelected {
 
 class UserLoggedIn extends PostLogin {
   final ServerConfig serverConfig;
-  final String acessToken;
+  final String accessToken;
   final User user;
 
   UserLoggedIn(
     this.serverConfig,
-    this.acessToken,
+    this.accessToken,
     this.user,
   );
 }

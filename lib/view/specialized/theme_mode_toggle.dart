@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/app_setting/app_setting_bloc.dart';
+import '../../bloc/client_setting/client_setting_bloc.dart';
 
 class ThemeModeToggle extends StatelessWidget {
   const ThemeModeToggle({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppSettingBloc, AppSettingState>(
+    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
       builder: (context, state) {
         return IconButton(
           style: const ButtonStyle(
@@ -21,7 +21,7 @@ class ThemeModeToggle extends StatelessWidget {
           ),
           padding: EdgeInsets.zero,
           onPressed: () {
-            context.read<AppSettingBloc>().add(ToggleThemeModeEvent());
+            context.read<ClientSettingBloc>().add(ToggleThemeModeEvent());
           },
           icon: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),

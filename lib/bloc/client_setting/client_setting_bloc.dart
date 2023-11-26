@@ -5,17 +5,17 @@ import 'package:flutter/material.dart';
 import '../../consts.dart';
 import '../../repo/local/common.dart';
 
-part 'app_setting_event.dart';
-part 'app_setting_state.dart';
+part 'client_setting_event.dart';
+part 'client_setting_state.dart';
 
-class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
+class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
   final ClientCommonRepo repo;
   String userPath = '/';
 
-  AppSettingBloc(this.repo) : super(DefaultAppState()) {
+  ClientSettingBloc(this.repo) : super(DefaultAppState()) {
     final common = repo.get();
 
-    on<InitAppSettingEvent>((event, emit) async {
+    on<InitClientSettingEvent>((event, emit) async {
       if (common.theme != null) {
         final theme = themeData[common.theme!];
         debugPrint(theme.name);

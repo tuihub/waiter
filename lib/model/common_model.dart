@@ -1,61 +1,30 @@
-enum LoadState {
-  /// 初始状态
-  initial,
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  /// 加载中
-  loading,
+part 'common_model.freezed.dart';
+part 'common_model.g.dart';
 
-  /// 加载完成
-  success,
+@freezed
+class ServerConfig with _$ServerConfig {
+  const factory ServerConfig(
+    String host,
+    int port,
+    bool tls,
+    String name, {
+    String? refreshToken,
+  }) = _ServerConfig;
 
-  /// 加载失败
-  failure,
+  factory ServerConfig.fromJson(Map<String, Object?> json) =>
+      _$ServerConfigFromJson(json);
 }
 
-class ServerConfig {
-  final String host;
-  final int port;
-  final bool tls;
-  final String name;
-  final String? refreshToken;
+@freezed
+class ClientCommonData with _$ClientCommonData {
+  const factory ClientCommonData({
+    ServerConfig? server,
+    int? theme,
+    int? themeMode,
+  }) = _ClientCommonData;
 
-  const ServerConfig(this.host, this.port, this.tls,
-      {this.refreshToken, this.name = ''});
-
-  ServerConfig copyWith({
-    String? host,
-    int? port,
-    bool? tls,
-    String? name,
-    String? refreshToken,
-  }) {
-    return ServerConfig(
-      host ?? this.host,
-      port ?? this.port,
-      tls ?? this.tls,
-      name: name ?? this.name,
-      refreshToken: refreshToken ?? this.refreshToken,
-    );
-  }
-
-  Map<String, Object?> toMap() {
-    return {
-      'host': host,
-      'port': port,
-      'tls': tls,
-      'name': name,
-      'refreshToken': refreshToken,
-    };
-  }
-
-  factory ServerConfig.fromMap(Map<dynamic, dynamic> map) {
-    return ServerConfig(
-      map['host'] != null ? map['host']! as String : '',
-      map['port'] != null ? map['port']! as int : 0,
-      map['tls'] != null ? map['tls']! as bool : false,
-      name: map['name'] != null ? map['name']! as String : '',
-      refreshToken:
-          map['refreshToken'] != null ? map['refreshToken']! as String : null,
-    );
-  }
+  factory ClientCommonData.fromJson(Map<String, Object?> json) =>
+      _$ClientCommonDataFromJson(json);
 }

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';

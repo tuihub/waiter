@@ -11,9 +11,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'bloc/app_setting/app_setting_bloc.dart';
+import 'bloc/client_setting/client_setting_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
-import 'bloc/user_login/user_bloc.dart';
+import 'bloc/main_bloc.dart';
+import 'bloc/tiphereth/tiphereth_bloc.dart';
+import 'bloc/yesod/yesod_bloc.dart';
 import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
@@ -52,24 +54,24 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp(this.router, this.userBloc, this.appSettingBloc, {super.key});
+  const MyApp(this.router, this.mainBloc, {super.key});
 
   final GoRouter router;
-  final UserBloc userBloc;
-  final AppSettingBloc appSettingBloc;
+  final MainBloc mainBloc;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => userBloc),
-        BlocProvider(create: (context) => appSettingBloc),
+        BlocProvider(create: (context) => mainBloc),
+        BlocProvider(create: (context) => mainBloc.tipherethBloc),
+        BlocProvider(create: (context) => mainBloc.clientSettingBloc),
       ],
-      child: BlocBuilder<AppSettingBloc, AppSettingState>(
+      child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
           if (state is DefaultAppState) {
-            context.read<AppSettingBloc>().add(InitAppSettingEvent());
+            context.read<ClientSettingBloc>().add(InitClientSettingEvent());
           }
           return MaterialApp.router(
             onGenerateTitle: (context) => S.of(context).title,

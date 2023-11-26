@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../model/common_model.dart';
@@ -8,13 +7,14 @@ import '../../repo/grpc/api_helper.dart';
 import '../../repo/grpc/client.dart';
 import '../../repo/local/common.dart';
 
-part 'user_event.dart';
-part 'user_state.dart';
+part 'tiphereth_event.dart';
+part 'tiphereth_state.dart';
 
-class UserBloc extends Bloc<UserEvent, UserLoginState> {
+class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
+  final ApiHelper api;
   final ClientCommonRepo repo;
 
-  UserBloc(this.repo) : super(AppInitialize()) {
+  TipherethBloc(this.api, this.repo) : super(AppInitialize()) {
     final common = repo.get();
 
     on<LoadLocalSettingEvent>((event, emit) async {
@@ -24,6 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
           common.server!.host,
           common.server!.port,
           common.server!.tls,
+          '',
         );
         final client = clientFactory(config: config);
         if (common.server!.refreshToken != null) {
@@ -33,8 +34,7 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
                 options: withAuth(refreshToken));
             final user = await client.getUser(GetUserRequest(),
                 options: withAuth(resp.accessToken));
-            GetIt.I<ApiHelper>()
-                .init(client, resp.accessToken, resp.refreshToken);
+            api.init(client, resp.accessToken, resp.refreshToken);
             emit(UserLoggedIn(config, resp.accessToken, user.user));
             return;
           } catch (e) {
@@ -90,10 +90,11 @@ class UserBloc extends Bloc<UserEvent, UserLoginState> {
             config.host,
             config.port,
             config.tls,
+            '',
             refreshToken: resp.refreshToken,
           ),
         ));
-        GetIt.I<ApiHelper>().init(client, resp.accessToken, resp.refreshToken);
+        api.init(client, resp.accessToken, resp.refreshToken);
         emit(UserLoggedIn(
           config,
           resp.accessToken,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/user_login/user_bloc.dart';
+import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../consts.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
@@ -22,16 +22,14 @@ class LoginPage extends StatelessWidget {
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
-      child: BlocConsumer<UserBloc, UserLoginState>(
+      child: BlocConsumer<TipherethBloc, TipherethState>(
         listener: (context, state) {
           if (state is UserLoggedIn) {
+            AppRoutes.tiphereth.go(context);
             const Toast(title: '', message: '欢迎').show(context);
           }
         },
         builder: (context, state) {
-          if (state is AppInitialize) {
-            context.read<UserBloc>().add(LoadLocalSettingEvent());
-          }
           return Scaffold(
             body: BootstrapContainer(children: [
               BootstrapColumn(
@@ -49,7 +47,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget getInitWidget(UserLoginState state) {
+  Widget getInitWidget(TipherethState state) {
     if (state is ServerSelected) {
       return const SizedBox(height: 360, child: LoginWidget());
     }
@@ -122,7 +120,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
                 unawaited(showDialog<void>(
                   context: context,
                   builder: (context) {
-                    return BlocConsumer<UserBloc, UserLoginState>(
+                    return BlocConsumer<TipherethBloc, TipherethState>(
                       listener: (context, state) {},
                       builder: (context, state) {
                         return AlertDialog(
@@ -134,7 +132,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
                                 ServerConnectivityWidget(
                                   config: server,
                                   callback: () {
-                                    context.read<UserBloc>().add(
+                                    context.read<TipherethBloc>().add(
                                           ConnectToServerEvent(server),
                                         );
                                     Navigator.of(context).pop();
@@ -170,13 +168,13 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
   int port = 0;
   bool tls = false;
   final String name = '确定';
-  ServerConfig server = const ServerConfig('', 0, true);
+  ServerConfig server = const ServerConfig('', 0, true, '');
 
   void submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
-        server = ServerConfig(host, port, tls, name: name);
+        server = ServerConfig(host, port, tls, name);
       });
     }
   }
@@ -244,7 +242,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             ServerConnectivityWidget(
               config: server,
               callback: () {
-                context.read<UserBloc>().add(
+                context.read<TipherethBloc>().add(
                       ConnectToServerEvent(server),
                     );
               },
@@ -288,10 +286,9 @@ class _LoginWidgetState extends State<LoginWidget> {
     if (username.isEmpty || password.isEmpty) {
       const Toast(title: '', message: '用户名或密码为空, 请修改后重试').show(context);
     } else {
-      context.read<UserBloc>().add(
+      context.read<TipherethBloc>().add(
             UserLoginEvent(username, password),
           );
-      AppRoutes.module(null).go(context);
     }
   }
 
@@ -299,7 +296,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserBloc, UserLoginState>(
+    return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is UserLoginFailed) {
           Toast(
@@ -310,6 +307,9 @@ class _LoginWidgetState extends State<LoginWidget> {
               onPressed: submitUrl,
             ),
           ).show(context);
+        }
+        if (state is UserLoggedIn) {
+          AppRoutes.tiphereth.go(context);
         }
       },
       builder: (context, state) {
@@ -335,7 +335,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextButton(
                     onPressed: () {
-                      context.read<UserBloc>().add(ManualLoginEvent());
+                      context.read<TipherethBloc>().add(ManualLoginEvent());
                     },
                     child: const Text('< 返回'),
                   ),

@@ -2,7 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/app_setting/app_setting_bloc.dart';
+import '../../../bloc/client_setting/client_setting_bloc.dart';
 import '../../../consts.dart';
 import '../../specialized/cache_setting.dart';
 import '../../specialized/theme_presentation.dart';
@@ -25,7 +25,7 @@ class ClientSettingPage extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Material(
           color: Colors.transparent,
-          child: BlocBuilder<AppSettingBloc, AppSettingState>(
+          child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
             builder: (context, state) {
               return ListView(
                 children: [
@@ -42,7 +42,7 @@ class ClientSettingPage extends StatelessWidget {
                           trailing: IconButton(
                             onPressed: () {
                               context
-                                  .read<AppSettingBloc>()
+                                  .read<ClientSettingBloc>()
                                   .add(ToggleThemeModeEvent());
                             },
                             icon: AnimatedSwitcher(
@@ -90,7 +90,7 @@ class ClientSettingPage extends StatelessWidget {
                                           selected: false,
                                           onTap: () {
                                             context
-                                                .read<AppSettingBloc>()
+                                                .read<ClientSettingBloc>()
                                                 .add(ChangeThemeEvent(theme));
                                           },
                                           brightness:

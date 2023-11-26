@@ -31,14 +31,20 @@ Future<MyApp> init() async {
   getIt.registerSingleton<ApiHelper>(api);
 
   // bloc
-  final userBloc = UserBloc(common);
-  getIt.registerSingleton<UserBloc>(userBloc);
-  final appSettingBloc = AppSettingBloc(common);
-  getIt.registerSingleton<AppSettingBloc>(appSettingBloc);
+  final tipherethBloc = TipherethBloc(api, common);
+  final clientSettingBloc = ClientSettingBloc(common);
   final geburaBloc = GeburaBloc(api, geburaRepo);
+  final yesodBloc = YesodBloc(api);
+
+  final mainBloc = MainBloc(
+    clientSettingBloc,
+    tipherethBloc,
+    geburaBloc,
+    yesodBloc,
+  );
 
   // router
-  final router = getRouter(userBloc, geburaBloc, api);
+  final router = getRouter(mainBloc, api);
 
-  return MyApp(router, userBloc, appSettingBloc);
+  return MyApp(router, mainBloc);
 }

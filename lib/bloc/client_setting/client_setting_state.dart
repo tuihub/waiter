@@ -1,16 +1,16 @@
-part of 'app_setting_bloc.dart';
+part of 'client_setting_bloc.dart';
 
-class AppSettingState extends Equatable {
+class ClientSettingState extends Equatable {
   final ThemeMode themeMode;
   final AppTheme theme;
 
-  const AppSettingState(this.themeMode, this.theme);
+  const ClientSettingState(this.themeMode, this.theme);
 
-  AppSettingState copyWith({
+  ClientSettingState copyWith({
     ThemeMode? themeMode,
     AppTheme? theme,
   }) {
-    return AppSettingState(
+    return ClientSettingState(
       themeMode ?? this.themeMode,
       theme ?? this.theme,
     );
@@ -20,6 +20,6 @@ class AppSettingState extends Equatable {
   List<Object> get props => [themeMode, theme];
 }
 
-class DefaultAppState extends AppSettingState {
+class DefaultAppState extends ClientSettingState {
   DefaultAppState() : super(ThemeMode.system, themeData[0]);
 }
