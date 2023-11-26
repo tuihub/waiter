@@ -3,107 +3,111 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
-import '../../consts.dart';
+import '../../model/common_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/grpc/client.dart';
-import '../../repo/local/store/setting_dao.dart';
+import '../../repo/local/common.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserLoginState> {
-  final SettingDao _dao;
+  final ClientCommonRepo repo;
 
-  UserBloc(this._dao) : super(AppInitialize()) {
-    on<UserEvent>((event, emit) async {
-      if (event is LoadLocalSettingEvent) {
-        emit(AutoLogging());
-        if (_dao.exist(SettingKey.serverHost) &&
-            _dao.exist(SettingKey.serverPort) &&
-            _dao.exist(SettingKey.serverTls)) {
-          final config = ServerConfig(
-            _dao.require<String>(SettingKey.serverHost),
-            _dao.require<int>(SettingKey.serverPort),
-            _dao.require<bool>(SettingKey.serverTls),
-          );
-          final client = clientFactory(config: config);
-          if (_dao.exist(SettingKey.refreshToken)) {
-            final refreshToken =
-                _dao.require(SettingKey.refreshToken) as String;
-            try {
-              final resp = await client.refreshToken(RefreshTokenRequest(),
-                  options: withAuth(refreshToken));
-              final user = await client.getUser(GetUserRequest(),
-                  options: withAuth(resp.accessToken));
-              GetIt.I<ApiHelper>()
-                  .init(client, resp.accessToken, resp.refreshToken);
-              emit(UserLoggedIn(config, resp.accessToken, user.user));
-              return;
-            } catch (e) {
-              debugPrint('login by refresh token failed');
-            }
+  UserBloc(this.repo) : super(AppInitialize()) {
+    final common = repo.get();
+
+    on<LoadLocalSettingEvent>((event, emit) async {
+      emit(AutoLogging());
+      if (common.server != null) {
+        final config = ServerConfig(
+          common.server!.host,
+          common.server!.port,
+          common.server!.tls,
+        );
+        final client = clientFactory(config: config);
+        if (common.server!.refreshToken != null) {
+          final refreshToken = common.server!.refreshToken!;
+          try {
+            final resp = await client.refreshToken(RefreshTokenRequest(),
+                options: withAuth(refreshToken));
+            final user = await client.getUser(GetUserRequest(),
+                options: withAuth(resp.accessToken));
+            GetIt.I<ApiHelper>()
+                .init(client, resp.accessToken, resp.refreshToken);
+            emit(UserLoggedIn(config, resp.accessToken, user.user));
+            return;
+          } catch (e) {
+            debugPrint('login by refresh token failed');
           }
         }
-        emit(AutoLoginFailed());
       }
-      if (event is ManualLoginEvent) {
-        emit(ServerSelecting());
-      }
-      if (event is ConnectToServerEvent) {
-        // emit(ServerConnectLoading(event.config));
+      emit(AutoLoginFailed());
+    });
 
-        // final grpcProvider = newGrpc("theam-grpc.gyx.moe", port: 443);
-        // final resp = await grpcProvider
-        //     .getToken(GetTokenRequest(username: "", password: ""));
-        await _dao.set(SettingKey.serverHost, event.config.host);
-        await _dao.set(SettingKey.serverPort, event.config.port);
-        await _dao.set(SettingKey.serverTls, event.config.tls);
-        emit(ServerSelected(event.config));
-      }
-      if (event is UserLogoutEvent) {
-        await _dao.pure(SettingKey.serverHost);
-        await _dao.pure(SettingKey.serverPort);
-        await _dao.pure(SettingKey.serverTls);
-        await _dao.pure(SettingKey.refreshToken);
-        emit(ServerSelecting());
-      }
+    on<ManualLoginEvent>((event, emit) async {
+      emit(ServerSelecting());
+    });
+
+    on<ConnectToServerEvent>((event, emit) async {
+      await repo.set(common.copyWith(
+        server: event.config,
+      ));
+      emit(ServerSelected(event.config));
+    });
+
+    on<UserLogoutEvent>((event, emit) async {
+      await repo.set(ClientCommonData(
+        server: null,
+        theme: common.theme,
+        themeMode: common.themeMode,
+      ));
+      emit(ServerSelecting());
+    });
+
+    on<UserLoginEvent>((event, emit) async {
       if (state is! ServerSelected) {
         return;
       }
+
       final config = (state as ServerSelected).serverConfig;
       final client = clientFactory(config: config);
 
-      if (event is UserLoginEvent) {
-        emit(UserLoginLoading(
+      emit(UserLoginLoading(
+        event.username,
+        event.password,
+        config,
+      ));
+      try {
+        final resp = await client.getToken(
+          GetTokenRequest(username: event.username, password: event.password),
+        );
+        debugPrint(resp.toDebugString());
+        final user = await client.getUser(GetUserRequest(),
+            options: withAuth(resp.accessToken));
+        await repo.set(common.copyWith(
+          server: ServerConfig(
+            config.host,
+            config.port,
+            config.tls,
+            refreshToken: resp.refreshToken,
+          ),
+        ));
+        GetIt.I<ApiHelper>().init(client, resp.accessToken, resp.refreshToken);
+        emit(UserLoggedIn(
+          config,
+          resp.accessToken,
+          user.user,
+        ));
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(UserLoginFailed(
           event.username,
           event.password,
           config,
+          10,
+          e.toString(),
         ));
-        try {
-          final resp = await client.getToken(
-            GetTokenRequest(username: event.username, password: event.password),
-          );
-          debugPrint(resp.toDebugString());
-          final user = await client.getUser(GetUserRequest(),
-              options: withAuth(resp.accessToken));
-          await _dao.set(SettingKey.refreshToken, resp.refreshToken);
-          GetIt.I<ApiHelper>()
-              .init(client, resp.accessToken, resp.refreshToken);
-          emit(UserLoggedIn(
-            config,
-            resp.accessToken,
-            user.user,
-          ));
-        } catch (e) {
-          debugPrint(e.toString());
-          emit(UserLoginFailed(
-            event.username,
-            event.password,
-            config,
-            10,
-            e.toString(),
-          ));
-        }
       }
     });
   }

@@ -17,8 +17,8 @@ import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
 import 'repo/grpc/api_helper.dart';
+import 'repo/local/common.dart';
 import 'repo/local/gebura.dart';
-import 'repo/local/store/setting_dao.dart';
 import 'repo/local/yesod_repo.dart';
 import 'route.dart';
 

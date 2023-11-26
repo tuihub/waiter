@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/user_login/user_bloc.dart';
 import '../../consts.dart';
+import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../form/form_field.dart';

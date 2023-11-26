@@ -22,18 +22,18 @@ Future<MyApp> init() async {
       instanceName: yesodCacheBoxKey);
   getIt.registerSingleton<Box<Object>>(appLauncherSettingsBox,
       instanceName: appLauncherSettingsBoxKey);
-  getIt.registerSingleton(SettingDao(getIt(instanceName: settingBoxKey)));
 
   // repo
   getIt.registerLazySingleton<YesodRepo>(
       () => YesodRepo(getIt(instanceName: yesodCacheBoxKey)));
   getIt.registerLazySingleton<GeburaRepo>(
       () => GeburaRepo(getIt(instanceName: appLauncherSettingsBoxKey)));
+  final common = await ClientCommonRepo.init();
 
   // bloc
-  final userBloc = UserBloc(getIt());
+  final userBloc = UserBloc(common);
   getIt.registerSingleton<UserBloc>(userBloc);
-  final appSettingBloc = AppSettingBloc(getIt());
+  final appSettingBloc = AppSettingBloc(common);
   getIt.registerSingleton<AppSettingBloc>(appSettingBloc);
 
   // api

@@ -3,50 +3,49 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../consts.dart';
-import '../../repo/local/store/setting_dao.dart';
+import '../../repo/local/common.dart';
 
 part 'app_setting_event.dart';
 part 'app_setting_state.dart';
 
 class AppSettingBloc extends Bloc<AppSettingEvent, AppSettingState> {
-  final SettingDao _dao;
+  final ClientCommonRepo repo;
   String userPath = '/';
 
-  AppSettingBloc(this._dao) : super(DefaultAppState()) {
-    on<AppSettingEvent>((event, emit) async {
-      if (event is InitAppSettingEvent) {
-        if (_dao.exist(SettingKey.theme)) {
-          final theme = themeData[_dao.require(SettingKey.theme)];
-          debugPrint(theme.name);
-          emit(state.copyWith(theme: theme));
-        }
-        if (_dao.exist(SettingKey.themeMode)) {
-          final themeMode =
-              ThemeMode.values[_dao.require(SettingKey.themeMode)];
-          emit(state.copyWith(themeMode: themeMode));
-        }
-        return;
+  AppSettingBloc(this.repo) : super(DefaultAppState()) {
+    final common = repo.get();
+
+    on<InitAppSettingEvent>((event, emit) async {
+      if (common.theme != null) {
+        final theme = themeData[common.theme!];
+        debugPrint(theme.name);
+        emit(state.copyWith(theme: theme));
       }
-      if (event is ChangeThemeEvent) {
-        emit(state.copyWith(theme: event.theme));
-        await _dao.set(SettingKey.themeMode, state.themeMode.index);
-        return;
+      if (common.themeMode != null) {
+        final themeMode = ThemeMode.values[common.themeMode!];
+        emit(state.copyWith(themeMode: themeMode));
       }
-      if (event is ChangeBrightnessEvent) {
-        emit(state.copyWith(themeMode: event.themeMode));
-      }
-      if (event is ToggleThemeModeEvent) {
-        if (state.themeMode == ThemeMode.system) {
-          emit(state.copyWith(themeMode: ThemeMode.dark));
+    });
+
+    on<ChangeThemeEvent>((event, emit) async {
+      emit(state.copyWith(theme: event.theme));
+      await repo.set(common.copyWith(themeMode: event.theme.index));
+    });
+
+    on<ChangeBrightnessEvent>((event, emit) async {
+      emit(state.copyWith(themeMode: event.themeMode));
+    });
+
+    on<ToggleThemeModeEvent>((event, emit) async {
+      if (state.themeMode == ThemeMode.system) {
+        emit(state.copyWith(themeMode: ThemeMode.dark));
+      } else {
+        if (state.themeMode == ThemeMode.dark) {
+          emit(state.copyWith(themeMode: ThemeMode.light));
         } else {
-          if (state.themeMode == ThemeMode.dark) {
-            emit(state.copyWith(themeMode: ThemeMode.light));
-          } else {
-            emit(state.copyWith(themeMode: ThemeMode.system));
-          }
+          emit(state.copyWith(themeMode: ThemeMode.system));
         }
       }
-      await _dao.set(SettingKey.theme, state.theme.index);
     });
   }
 }
