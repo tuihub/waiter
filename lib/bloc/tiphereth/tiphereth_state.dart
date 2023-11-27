@@ -1,58 +1,79 @@
 part of 'tiphereth_bloc.dart';
 
-@immutable
-abstract class TipherethState {}
+class TipherethState {
+  late ServerConfig? serverConfig;
+  late String? accessToken;
+  late User? currentUser;
 
-class PreLogin extends TipherethState {}
-
-class OnLogin extends TipherethState {}
-
-class PostLogin extends TipherethState {}
-
-class AppInitialize extends PreLogin {}
-
-class AutoLogging extends PreLogin {}
-
-class AutoLoginFailed extends PreLogin {}
-
-class ServerSelecting extends OnLogin {}
-
-class ServerSelected extends OnLogin {
-  final ServerConfig serverConfig;
-
-  ServerSelected(this.serverConfig);
-}
-
-class UserLoginLoading extends ServerSelected {
-  final String username;
-  final String password;
-
-  UserLoginLoading(this.username, this.password, super.serverConfig);
-}
-
-class UserLoginFailed extends ServerSelected {
-  final String username;
-  final String password;
-  final int errorCode;
-  final String message;
-
-  UserLoginFailed(
-    this.username,
-    this.password,
-    super.serverConfig,
-    this.errorCode,
-    this.message,
-  );
-}
-
-class UserLoggedIn extends PostLogin {
-  final ServerConfig serverConfig;
-  final String accessToken;
-  final User user;
-
-  UserLoggedIn(
+  TipherethState({
     this.serverConfig,
     this.accessToken,
-    this.user,
-  );
+    this.currentUser,
+  });
+
+  TipherethState copyWith({
+    ServerConfig? serverConfig,
+    String? accessToken,
+    User? currentUser,
+  }) {
+    return TipherethState(
+      serverConfig: serverConfig ?? this.serverConfig,
+      accessToken: accessToken ?? this.accessToken,
+      currentUser: currentUser ?? this.currentUser,
+    );
+  }
+
+  void _from(TipherethState other) {
+    serverConfig = other.serverConfig;
+    accessToken = other.accessToken;
+    currentUser = other.currentUser;
+  }
+}
+
+class TipherethAutoLoginState extends TipherethState with EventStatusMixin {
+  TipherethAutoLoginState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethManualLoginState extends TipherethState with EventStatusMixin {
+  TipherethManualLoginState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethAddUserState extends TipherethState with EventStatusMixin {
+  TipherethAddUserState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethEditUserState extends TipherethState with EventStatusMixin {
+  TipherethEditUserState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
 }

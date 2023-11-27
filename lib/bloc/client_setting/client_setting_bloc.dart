@@ -9,11 +9,10 @@ part 'client_setting_event.dart';
 part 'client_setting_state.dart';
 
 class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
-  final ClientCommonRepo repo;
-  String userPath = '/';
+  final ClientCommonRepo _repo;
 
-  ClientSettingBloc(this.repo) : super(DefaultAppState()) {
-    final common = repo.get();
+  ClientSettingBloc(this._repo) : super(DefaultAppState()) {
+    final common = _repo.get();
 
     on<InitClientSettingEvent>((event, emit) async {
       if (common.theme != null) {
@@ -29,7 +28,7 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
 
     on<ChangeThemeEvent>((event, emit) async {
       emit(state.copyWith(theme: event.theme));
-      await repo.set(common.copyWith(themeMode: event.theme.index));
+      await _repo.set(common.copyWith(themeMode: event.theme.index));
     });
 
     on<ChangeBrightnessEvent>((event, emit) async {

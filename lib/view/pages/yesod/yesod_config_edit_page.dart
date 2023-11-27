@@ -148,13 +148,11 @@ class YesodConfigEditPage extends StatelessWidget {
                                     borderRadius:
                                         BorderRadius.circular(kToolbarHeight),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 24,
-                                      ),
-                                      Text(state.msg ?? '未知错误'),
-                                    ],
+                                  child: Center(
+                                    child: Text(
+                                      state.msg ?? '未知错误',
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 )
                               : const SizedBox(),

@@ -29,11 +29,11 @@ class MainBloc extends Cubit<MainState> {
       context.read<MainBloc>().yesodBloc;
 
   int cacheSize() {
-    return yesodBloc.repo.cacheSize();
+    return yesodBloc.cacheSize();
   }
 
   Future<void> clearCache() async {
-    await yesodBloc.repo.clearCache();
+    await yesodBloc.clearCache();
   }
 }
 

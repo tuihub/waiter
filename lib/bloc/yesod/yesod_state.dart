@@ -56,7 +56,7 @@ class YesodState {
   }
 }
 
-class YesodConfigLoadState extends YesodState with YesodRequest {
+class YesodConfigLoadState extends YesodState with EventStatusMixin {
   YesodConfigLoadState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
@@ -65,10 +65,10 @@ class YesodConfigLoadState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodConfigPreviewState extends YesodState with YesodRequest {
+class YesodConfigPreviewState extends YesodState with EventStatusMixin {
   YesodConfigPreviewState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
@@ -77,10 +77,10 @@ class YesodConfigPreviewState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodConfigAddState extends YesodState with YesodRequest {
+class YesodConfigAddState extends YesodState with EventStatusMixin {
   YesodConfigAddState(YesodState state, this.statusCode, {this.msg}) : super() {
     _from(state);
   }
@@ -88,10 +88,10 @@ class YesodConfigAddState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodConfigEditState extends YesodState with YesodRequest {
+class YesodConfigEditState extends YesodState with EventStatusMixin {
   YesodConfigEditState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
@@ -100,10 +100,10 @@ class YesodConfigEditState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodFeedItemDigestLoadState extends YesodState with YesodRequest {
+class YesodFeedItemDigestLoadState extends YesodState with EventStatusMixin {
   YesodFeedItemDigestLoadState(YesodState state, this.statusCode,
       {this.currentPage, this.maxPage, this.msg})
       : super() {
@@ -115,10 +115,10 @@ class YesodFeedItemDigestLoadState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodFeedItemLoadState extends YesodState with YesodRequest {
+class YesodFeedItemLoadState extends YesodState with EventStatusMixin {
   YesodFeedItemLoadState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
@@ -127,10 +127,10 @@ class YesodFeedItemLoadState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
+  final EventStatus statusCode;
 }
 
-class YesodFeedCategoriesLoadState extends YesodState with YesodRequest {
+class YesodFeedCategoriesLoadState extends YesodState with EventStatusMixin {
   YesodFeedCategoriesLoadState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
@@ -139,24 +139,7 @@ class YesodFeedCategoriesLoadState extends YesodState with YesodRequest {
   @override
   final String? msg;
   @override
-  final YesodRequestStatusCode statusCode;
-}
-
-mixin YesodRequest on YesodState {
-  YesodRequestStatusCode get statusCode;
-  String? get msg;
-
-  bool get processing => statusCode == YesodRequestStatusCode.processing;
-  bool get success => statusCode == YesodRequestStatusCode.success;
-  bool get partlySuccess => statusCode == YesodRequestStatusCode.partlySuccess;
-  bool get failed => statusCode == YesodRequestStatusCode.failed;
-}
-
-enum YesodRequestStatusCode {
-  processing,
-  success,
-  partlySuccess,
-  failed;
+  final EventStatus statusCode;
 }
 
 class YesodFeedItemFilter {

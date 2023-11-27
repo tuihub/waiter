@@ -94,13 +94,11 @@ class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
                           color: Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(kToolbarHeight),
                         ),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 24,
-                            ),
-                            Text(response.error ?? '未知错误'),
-                          ],
+                        child: Center(
+                          child: Text(
+                            response.error ?? '未知错误',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       )
                     : const SizedBox(),

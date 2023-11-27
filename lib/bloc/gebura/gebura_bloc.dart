@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import '../../common/bloc_event_status_mixin.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
@@ -12,10 +13,10 @@ part 'gebura_event.dart';
 part 'gebura_state.dart';
 
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
-  final ApiHelper api;
-  final GeburaRepo repo;
+  final ApiHelper _api;
+  final GeburaRepo _repo;
 
-  GeburaBloc(this.api, this.repo) : super(GeburaState()) {
+  GeburaBloc(this._api, this._repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
       if (state.purchasedApps == null) {
         add(GeburaPurchasedAppsLoadEvent());
@@ -24,20 +25,19 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
 
     on<GeburaPurchasedAppsLoadEvent>((event, emit) async {
       debugPrint('GeburaPurchasedAppsLoadEvent');
-      emit(GeburaPurchasedAppsLoadState(
-          state, GeburaRequestStatusCode.processing));
-      final resp = await api.doRequest(
+      emit(GeburaPurchasedAppsLoadState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
         (client) => client.getPurchasedApps,
         GetPurchasedAppsRequest(),
       );
       if (resp.status != ApiStatus.success) {
-        emit(GeburaPurchasedAppsLoadState(state, GeburaRequestStatusCode.failed,
+        emit(GeburaPurchasedAppsLoadState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       emit(GeburaPurchasedAppsLoadState(
           state.copyWith(purchasedApps: resp.getData().apps),
-          GeburaRequestStatusCode.success,
+          EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
 
@@ -48,8 +48,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaSearchAppsEvent>((event, emit) async {
-      emit(GeburaSearchAppsState(state, GeburaRequestStatusCode.processing));
-      final resp = await api.doRequest(
+      emit(GeburaSearchAppsState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
         (client) => client.searchApps,
         SearchAppsRequest(
           paging: PagingRequest(
@@ -60,8 +60,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(GeburaSearchAppsState(state, GeburaRequestStatusCode.failed,
-            msg: resp.error));
+        emit(GeburaSearchAppsState(state, EventStatus.failed, msg: resp.error));
         return;
       }
       final appMap = state.storeApps ?? <InternalID, App>{};
@@ -70,38 +69,123 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       }
       emit(GeburaSearchAppsState(
         state.copyWith(storeApps: appMap),
-        GeburaRequestStatusCode.success,
+        EventStatus.success,
         msg: resp.error,
         apps: resp.getData().apps,
       ));
     }, transformer: droppable());
 
     on<GeburaPurchaseEvent>((event, emit) async {
-      emit(GeburaPurchaseState(state, GeburaRequestStatusCode.processing));
-      final resp = await api.doRequest(
+      emit(GeburaPurchaseState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
         (client) => client.purchaseApp,
         PurchaseAppRequest(
           appId: event.id,
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(GeburaPurchaseState(state, GeburaRequestStatusCode.failed,
-            msg: resp.error));
+        emit(GeburaPurchaseState(state, EventStatus.failed, msg: resp.error));
         return;
       }
-      emit(GeburaPurchaseState(state, GeburaRequestStatusCode.success,
-          msg: resp.error));
+      emit(GeburaPurchaseState(state, EventStatus.success, msg: resp.error));
       add(GeburaPurchasedAppsLoadEvent());
     }, transformer: droppable());
 
     on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
-      await repo.setAppLauncherSetting(event.setting);
-      emit(GeburaSetAppLauncherSettingState(
-          state, GeburaRequestStatusCode.success));
+      await _repo.setAppLauncherSetting(event.setting);
+      emit(GeburaSetAppLauncherSettingState(state, EventStatus.success));
     });
+
+    on<GeburaAddAppEvent>((event, emit) async {
+      emit(GeburaAddAppState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.createApp,
+        CreateAppRequest(
+          app: event.app,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaAddAppState(state, EventStatus.failed, msg: resp.error));
+        return;
+      }
+      emit(GeburaAddAppState(state, EventStatus.success, msg: resp.error));
+    }, transformer: droppable());
+
+    on<GeburaEditAppEvent>((event, emit) async {
+      emit(GeburaEditAppState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.updateApp,
+        UpdateAppRequest(
+          app: event.app,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaEditAppState(state, EventStatus.failed, msg: resp.error));
+        return;
+      }
+      emit(GeburaEditAppState(state, EventStatus.success, msg: resp.error));
+    }, transformer: droppable());
+
+    on<GeburaAddAppPackageEvent>((event, emit) async {
+      emit(GeburaAddAppPackageState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.createAppPackage,
+        CreateAppPackageRequest(
+          appPackage: event.appPackage,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaAddAppPackageState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaAddAppPackageState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<GeburaEditAppPackageEvent>((event, emit) async {
+      emit(GeburaEditAppPackageState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.updateAppPackage,
+        UpdateAppPackageRequest(
+          appPackage: event.appPackage,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaEditAppPackageState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaEditAppPackageState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {
-    return repo.getAppLauncherSetting(id.id.toInt());
+    return _repo.getAppLauncherSetting(id.id.toInt());
+  }
+
+  Future<ListAppsResponse> listApps(
+      int pageSize, int pageNum, List<AppSource> sourceFilter) async {
+    final resp = await _api.doRequest(
+      (client) => client.listApps,
+      ListAppsRequest(
+        paging: PagingRequest(pageSize: pageSize, pageNum: pageNum),
+        sourceFilter: sourceFilter,
+      ),
+    );
+    return resp.getData();
+  }
+
+  Future<ListAppPackagesResponse> listAppPackages(
+      int pageSize, int pageNum, List<AppPackageSource> sourceFilter) async {
+    final resp = await _api.doRequest(
+      (client) => client.listAppPackages,
+      ListAppPackagesRequest(
+        paging: PagingRequest(pageSize: pageSize, pageNum: pageNum),
+        sourceFilter: sourceFilter,
+      ),
+    );
+    return resp.getData();
   }
 }

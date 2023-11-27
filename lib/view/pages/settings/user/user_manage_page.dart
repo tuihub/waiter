@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../repo/grpc/api_helper.dart';
+import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
@@ -156,19 +155,16 @@ class AppPackageTableSource extends AsyncDataTableSource {
   late List<UserStatus> statusFilter = [];
 
   @override
-  Future<AsyncRowsResponse> getRows(int start, int end) async {
-    final resp = await GetIt.I<ApiHelper>().doRequest(
-      (client) => client.listUsers,
-      ListUsersRequest(
-        paging:
-            PagingRequest(pageSize: pageSize, pageNum: start ~/ pageSize + 1),
-        typeFilter: typeFilter,
-        statusFilter: statusFilter,
-      ),
-    );
+  Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
+    final data = await context.read<TipherethBloc>().listUsers(
+          pageSize,
+          startIndex ~/ pageSize + 1,
+          typeFilter,
+          statusFilter,
+        );
     return AsyncRowsResponse(
-      resp.getData().paging.totalSize.toInt(),
-      resp.getData().users.map(
+      data.paging.totalSize.toInt(),
+      data.users.map(
         (user) {
           return DataRow2(
               cells: [

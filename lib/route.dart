@@ -240,18 +240,19 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
         builder: (BuildContext context, GoRouterState state, Widget child) {
           return BlocBuilder<TipherethBloc, TipherethState>(
             builder: (context, state) {
-              if (state is UserLoggedIn) {
+              if (state.currentUser != null) {
                 return BlocProvider(
                   create: (context) => ApiRequestBloc(
-                    accessToken: state.accessToken,
+                    accessToken: state.accessToken!,
                     client: clientFactory(
-                      config: state.serverConfig,
+                      config: state.serverConfig!,
                     ),
                   ),
                   child: MainWindow(child: child),
                 );
               }
-              return const Center(child: CircularProgressIndicator());
+              return const MainWindow(
+                  child: Center(child: CircularProgressIndicator()));
             },
           );
         },
@@ -432,8 +433,24 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       leftPart: SettingsNav(
                         function: function,
                       ),
-                      middlePart: settingsPages[function],
-                      rightPart: settingsActions[action],
+                      middlePart: MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                              create: (context) => mainBloc.tipherethBloc),
+                          BlocProvider(
+                              create: (context) => mainBloc.geburaBloc),
+                        ],
+                        child: settingsPages[function] ?? Container(),
+                      ),
+                      rightPart: MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                              create: (context) => mainBloc.tipherethBloc),
+                          BlocProvider(
+                              create: (context) => mainBloc.geburaBloc),
+                        ],
+                        child: settingsActions[action] ?? Container(),
+                      ),
                       gestureRight: false,
                     ),
                   );

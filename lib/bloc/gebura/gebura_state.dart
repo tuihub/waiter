@@ -32,20 +32,19 @@ class GeburaState {
   }
 }
 
-class GeburaPurchasedAppsLoadState extends GeburaState with GeburaRequest {
+class GeburaPurchasedAppsLoadState extends GeburaState with EventStatusMixin {
   GeburaPurchasedAppsLoadState(GeburaState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
 
   @override
-  final GeburaRequestStatusCode? statusCode;
-
+  final EventStatus? statusCode;
   @override
   final String? msg;
 }
 
-class GeburaSearchAppsState extends GeburaState with GeburaRequest {
+class GeburaSearchAppsState extends GeburaState with EventStatusMixin {
   GeburaSearchAppsState(GeburaState state, this.statusCode,
       {this.msg, this.apps})
       : super() {
@@ -55,26 +54,25 @@ class GeburaSearchAppsState extends GeburaState with GeburaRequest {
   final List<App>? apps;
 
   @override
-  final GeburaRequestStatusCode? statusCode;
-
+  final EventStatus? statusCode;
   @override
   final String? msg;
 }
 
-class GeburaPurchaseState extends GeburaState with GeburaRequest {
+class GeburaPurchaseState extends GeburaState with EventStatusMixin {
   GeburaPurchaseState(GeburaState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
 
   @override
-  final GeburaRequestStatusCode? statusCode;
-
+  final EventStatus? statusCode;
   @override
   final String? msg;
 }
 
-class GeburaSetAppLauncherSettingState extends GeburaState with GeburaRequest {
+class GeburaSetAppLauncherSettingState extends GeburaState
+    with EventStatusMixin {
   GeburaSetAppLauncherSettingState(GeburaState state, this.statusCode,
       {this.msg})
       : super() {
@@ -82,23 +80,53 @@ class GeburaSetAppLauncherSettingState extends GeburaState with GeburaRequest {
   }
 
   @override
-  final GeburaRequestStatusCode? statusCode;
-
+  final EventStatus? statusCode;
   @override
   final String? msg;
 }
 
-mixin GeburaRequest on GeburaState {
-  GeburaRequestStatusCode? get statusCode;
-  String? get msg;
+class GeburaAddAppState extends GeburaState with EventStatusMixin {
+  GeburaAddAppState(GeburaState state, this.statusCode, {this.msg}) : super() {
+    _from(state);
+  }
 
-  bool get processing => statusCode == GeburaRequestStatusCode.processing;
-  bool get success => statusCode == GeburaRequestStatusCode.success;
-  bool get failed => statusCode == GeburaRequestStatusCode.failed;
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
 }
 
-enum GeburaRequestStatusCode {
-  processing,
-  success,
-  failed,
+class GeburaEditAppState extends GeburaState with EventStatusMixin {
+  GeburaEditAppState(GeburaState state, this.statusCode, {this.msg}) : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaAddAppPackageState extends GeburaState with EventStatusMixin {
+  GeburaAddAppPackageState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaEditAppPackageState extends GeburaState with EventStatusMixin {
+  GeburaEditAppPackageState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
 }

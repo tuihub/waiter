@@ -10,12 +10,17 @@ part 'api_request_event.dart';
 part 'api_request_state.dart';
 
 class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
-  final LibrarianSephirahServiceClient client;
-  final String accessToken;
-  ApiRequestBloc({required this.client, required this.accessToken})
-      : super(ApiRequestInitial()) {
+  final LibrarianSephirahServiceClient _client;
+  final String _accessToken;
+
+  ApiRequestBloc(
+      {required LibrarianSephirahServiceClient client,
+      required String accessToken})
+      : _accessToken = accessToken,
+        _client = client,
+        super(ApiRequestInitial()) {
     final option =
-        CallOptions(metadata: {'Authorization': 'Bearer $accessToken'});
+        CallOptions(metadata: {'Authorization': 'Bearer $_accessToken'});
     on<ApiRequestEvent>((event, emit) async {
       // if (event is UserTableLoadEvent) {
       //   emit(UserTableLoading());
@@ -53,24 +58,24 @@ class ApiRequestBloc extends Bloc<ApiRequestEvent, ApiRequestState> {
         try {
           var ids = List<InternalID>.empty();
           if (event.request.keywords.isEmpty) {
-            final resp = await client.listImages(
+            final resp = await _client.listImages(
                 ListImagesRequest(paging: event.request.paging),
                 options: option);
             ids = resp.ids;
           } else {
             final resp =
-                await client.searchImages(event.request, options: option);
+                await _client.searchImages(event.request, options: option);
             ids = resp.ids;
           }
           final res = List<PresignedDownloadFileResponse>.empty(growable: true);
           for (final id in ids) {
             try {
-              final resp = await client
+              final resp = await _client
                   .downloadImage(DownloadImageRequest(id: id), options: option);
               debugPrint(resp.toString());
               final downloadOption = CallOptions(
                   metadata: {'Authorization': 'Bearer ${resp.downloadToken}'});
-              final downloadResp = await client.presignedDownloadFile(
+              final downloadResp = await _client.presignedDownloadFile(
                   PresignedDownloadFileRequest(),
                   options: downloadOption);
               res.add(downloadResp);

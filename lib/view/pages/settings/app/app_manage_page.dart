@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../repo/grpc/api_helper.dart';
+import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
@@ -119,18 +118,13 @@ class AppTableSource extends AsyncDataTableSource {
   late List<AppSource> sourceFilter = [];
 
   @override
-  Future<AsyncRowsResponse> getRows(int start, int end) async {
-    final resp = await GetIt.I<ApiHelper>().doRequest(
-      (client) => client.listApps,
-      ListAppsRequest(
-        paging:
-            PagingRequest(pageSize: pageSize, pageNum: start ~/ pageSize + 1),
-        sourceFilter: sourceFilter,
-      ),
-    );
+  Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
+    final data = await context
+        .read<GeburaBloc>()
+        .listApps(pageSize, startIndex ~/ pageSize + 1, sourceFilter);
     return AsyncRowsResponse(
-      resp.getData().paging.totalSize.toInt(),
-      resp.getData().apps.map(
+      data.paging.totalSize.toInt(),
+      data.apps.map(
         (app) {
           return DataRow2(
               cells: [

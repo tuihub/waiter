@@ -18,81 +18,75 @@ class SettingsNav extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (state is UserLoggedIn) {
-          return Scaffold(
-            body: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withAlpha(24),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        RailTile(
-                          onTap: () {
-                            AppRoutes.settingsClient.go(context);
-                            OverlappingPanels.of(context)
-                                ?.reveal(RevealSide.main);
-                          },
-                          title: const Text('客户端设置'),
-                          selected: function == 'client',
-                        ),
-                        if (state.user.type == UserType.USER_TYPE_ADMIN)
-                          ExpandRailTile(
-                            title: const Text(
-                              '管理区域',
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).colorScheme.surfaceTint.withAlpha(24),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      RailTile(
+                        onTap: () {
+                          AppRoutes.settingsClient.go(context);
+                          OverlappingPanels.of(context)
+                              ?.reveal(RevealSide.main);
+                        },
+                        title: const Text('客户端设置'),
+                        selected: function == 'client',
+                      ),
+                      if (state.currentUser!.type == UserType.USER_TYPE_ADMIN)
+                        ExpandRailTile(
+                          title: const Text(
+                            '管理区域',
+                          ),
+                          childrenPadding: const EdgeInsets.only(left: 12),
+                          children: [
+                            RailTile(
+                              title: const Text('用户管理'),
+                              onTap: () {
+                                AppRoutes.settingsUser.go(context);
+                                OverlappingPanels.of(context)
+                                    ?.reveal(RevealSide.main);
+                              },
+                              selected: function == 'user',
                             ),
-                            childrenPadding: const EdgeInsets.only(left: 12),
-                            children: [
-                              RailTile(
-                                title: const Text('用户管理'),
-                                onTap: () {
-                                  AppRoutes.settingsUser.go(context);
-                                  OverlappingPanels.of(context)
-                                      ?.reveal(RevealSide.main);
-                                },
-                                selected: function == 'user',
-                              ),
-                              RailTile(
-                                title: const Text('应用管理'),
-                                onTap: () {
-                                  AppRoutes.settingsApp.go(context);
-                                  OverlappingPanels.of(context)
-                                      ?.reveal(RevealSide.main);
-                                },
-                                selected: function == 'app',
-                              ),
-                              RailTile(
-                                title: const Text('应用包管理'),
-                                onTap: () {
-                                  AppRoutes.settingsAppPackage.go(context);
-                                  OverlappingPanels.of(context)
-                                      ?.reveal(RevealSide.main);
-                                },
-                                selected: function == 'appPackage',
-                              ),
-                            ],
-                          )
-                        else
-                          const SizedBox(),
-                        const Expanded(child: SizedBox()),
-                      ],
-                    ),
+                            RailTile(
+                              title: const Text('应用管理'),
+                              onTap: () {
+                                AppRoutes.settingsApp.go(context);
+                                OverlappingPanels.of(context)
+                                    ?.reveal(RevealSide.main);
+                              },
+                              selected: function == 'app',
+                            ),
+                            RailTile(
+                              title: const Text('应用包管理'),
+                              onTap: () {
+                                AppRoutes.settingsAppPackage.go(context);
+                                OverlappingPanels.of(context)
+                                    ?.reveal(RevealSide.main);
+                              },
+                              selected: function == 'appPackage',
+                            ),
+                          ],
+                        )
+                      else
+                        const SizedBox(),
+                      const Expanded(child: SizedBox()),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          );
-        }
-
-        throw UnimplementedError();
+              ),
+            ],
+          ),
+        );
       },
     );
   }

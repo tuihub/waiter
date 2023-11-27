@@ -1,23 +1,34 @@
 part of 'tiphereth_bloc.dart';
 
 @immutable
-abstract class TipherethEvent {}
+sealed class TipherethEvent {}
 
-class ManualLoginEvent extends TipherethEvent {}
+class TipherethAutoLoginEvent extends TipherethEvent {}
 
-class ConnectToServerEvent extends TipherethEvent {
+class TipherethSetServerConfigEvent extends TipherethEvent {
   final ServerConfig config;
 
-  ConnectToServerEvent(this.config);
+  TipherethSetServerConfigEvent(this.config);
 }
 
-class UserLoginEvent extends TipherethEvent {
+class TipherethManualLoginEvent extends TipherethEvent {
   final String username;
   final String password;
 
-  UserLoginEvent(this.username, this.password);
+  TipherethManualLoginEvent(this.username, this.password);
 }
 
-class UserLogoutEvent extends TipherethEvent {}
+class TipherethLogoutEvent extends TipherethEvent {}
 
-class LoadLocalSettingEvent extends TipherethEvent {}
+class TipherethAddUserEvent extends TipherethEvent {
+  final User user;
+
+  TipherethAddUserEvent(this.user);
+}
+
+class TipherethEditUserEvent extends TipherethEvent {
+  final User user;
+  final String? password;
+
+  TipherethEditUserEvent(this.user, {this.password});
+}

@@ -30,3 +30,27 @@ final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
 
   GeburaSetAppLauncherSettingEvent(this.setting);
 }
+
+final class GeburaAddAppEvent extends GeburaEvent {
+  final App app;
+
+  GeburaAddAppEvent(this.app);
+}
+
+final class GeburaEditAppEvent extends GeburaEvent {
+  final App app;
+
+  GeburaEditAppEvent(this.app);
+}
+
+final class GeburaAddAppPackageEvent extends GeburaEvent {
+  final AppPackage appPackage;
+
+  GeburaAddAppPackageEvent(this.appPackage);
+}
+
+final class GeburaEditAppPackageEvent extends GeburaEvent {
+  final AppPackage appPackage;
+
+  GeburaEditAppPackageEvent(this.appPackage);
+}

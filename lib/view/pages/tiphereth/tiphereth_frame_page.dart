@@ -48,7 +48,7 @@ class _LogoutDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             const Toast(title: '', message: '已退出登录').show(context);
-            context.read<TipherethBloc>().add(UserLogoutEvent());
+            context.read<TipherethBloc>().add(TipherethLogoutEvent());
             AppRoutes.login.go(context);
           },
           child: const Text('确定'),

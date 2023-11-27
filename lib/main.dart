@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,7 @@ import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
+import 'common/bloc_observer.dart';
 import 'common/platform.dart';
 import 'l10n/l10n.dart';
 import 'repo/grpc/api_helper.dart';

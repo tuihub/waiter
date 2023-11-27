@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../repo/grpc/api_mixins.dart';
+import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../components/toast.dart';
@@ -18,8 +16,7 @@ class AppEditPage extends StatefulWidget {
   State<AppEditPage> createState() => _AppEditPageState();
 }
 
-class _AppEditPageState extends State<AppEditPage>
-    with SingleRequestMixin<AppEditPage, UpdateAppResponse> {
+class _AppEditPageState extends State<AppEditPage> {
   final _formKey = GlobalKey<FormState>();
 
   late String name;
@@ -40,163 +37,154 @@ class _AppEditPageState extends State<AppEditPage>
     readOnly = widget.app.source != AppSource.APP_SOURCE_INTERNAL;
   }
 
-  void submit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      unawaited(doRequest(
-        request: (client, option) {
-          return client.updateApp(
-            UpdateAppRequest(
-              app: App(
-                id: widget.app.id,
-                source: widget.app.source,
-                sourceAppId: widget.app.sourceAppId,
-                sourceUrl: widget.app.sourceUrl,
-                name: name,
-                type: widget.app.type,
-                shortDescription: shortDescription,
-                iconImageUrl: iconImageUrl,
-                heroImageUrl: heroImageUrl,
-                details: widget.app.details,
-              ),
-            ),
-            options: option,
-          );
-        },
-      ).then((value) {
-        if (isSuccess) {
-          const Toast(title: '', message: '已应用更改').show(context);
-          close(context);
-        }
-      }));
-    }
-  }
-
   void close(BuildContext context) {
     AppRoutes.settingsAppEdit().pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return RightPanelForm(
-      title: const Text('应用详情'),
-      form: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('ID: ${widget.app.id.id.toHexString()}'),
-            Text('Source: ${appSourceString(widget.app.source)}'),
-            Text('SourceUrl: ${widget.app.sourceUrl}'),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              initialValue: widget.app.id.id.toString(),
-              readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'ID',
+    return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
+      if (state is GeburaEditAppState && state.success) {
+        const Toast(title: '', message: '已应用更改').show(context);
+        close(context);
+      }
+    }, builder: (BuildContext context, GeburaState state) {
+      return RightPanelForm(
+        title: const Text('应用详情'),
+        form: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('ID: ${widget.app.id.id.toHexString()}'),
+              Text('Source: ${appSourceString(widget.app.source)}'),
+              Text('SourceUrl: ${widget.app.sourceUrl}'),
+              const SizedBox(
+                height: 16,
               ),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              initialValue: name,
-              readOnly: readOnly,
-              onSaved: (newValue) => name = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
+              TextFormField(
+                initialValue: widget.app.id.id.toString(),
+                readOnly: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'ID',
+                ),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '请输入名称';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              initialValue: shortDescription,
-              readOnly: readOnly,
-              onSaved: (newValue) => shortDescription = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '描述',
+              const SizedBox(
+                height: 16,
               ),
-              maxLines: null,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              initialValue: iconImageUrl,
-              readOnly: readOnly,
-              onSaved: (newValue) => iconImageUrl = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '图标链接',
+              TextFormField(
+                initialValue: name,
+                readOnly: readOnly,
+                onSaved: (newValue) => name = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '名称',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '请输入名称';
+                  }
+                  return null;
+                },
               ),
-              maxLines: null,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              initialValue: heroImageUrl,
-              readOnly: readOnly,
-              onSaved: (newValue) => heroImageUrl = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '图片链接',
+              const SizedBox(
+                height: 16,
               ),
-              maxLines: null,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: isError && !loading ? 48 : 0,
-              child: isError && !loading
-                  ? Ink(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(kToolbarHeight),
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 24,
+              TextFormField(
+                initialValue: shortDescription,
+                readOnly: readOnly,
+                onSaved: (newValue) => shortDescription = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '描述',
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                initialValue: iconImageUrl,
+                readOnly: readOnly,
+                onSaved: (newValue) => iconImageUrl = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '图标链接',
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                initialValue: heroImageUrl,
+                readOnly: readOnly,
+                onSaved: (newValue) => heroImageUrl = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '图片链接',
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: state is GeburaEditAppState && state.failed ? 48 : 0,
+                child: state is GeburaEditAppState && state.failed
+                    ? Ink(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(kToolbarHeight),
+                        ),
+                        child: Center(
+                          child: Text(
+                            state.msg ?? '未知错误',
+                            textAlign: TextAlign.center,
                           ),
-                          Text(response.error ?? '未知错误'),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(),
-            ),
-          ],
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ),
         ),
-      ),
-      actions: [
-        if (!readOnly)
+        actions: [
+          if (!readOnly)
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  context.read<GeburaBloc>().add(GeburaEditAppEvent(
+                        App(
+                          id: widget.app.id,
+                          source: widget.app.source,
+                          sourceAppId: widget.app.sourceAppId,
+                          sourceUrl: widget.app.sourceUrl,
+                          name: name,
+                          type: widget.app.type,
+                          shortDescription: shortDescription,
+                          iconImageUrl: iconImageUrl,
+                          heroImageUrl: heroImageUrl,
+                          details: widget.app.details,
+                        ),
+                      ));
+                }
+              },
+              child: state is GeburaEditAppState && state.processing
+                  ? const CircularProgressIndicator()
+                  : const Text('应用更改'),
+            )
+          else
+            Text('数据来自${appSourceString(widget.app.source)}，无法修改'),
           ElevatedButton(
-            onPressed: submit,
-            child: loading
-                ? const CircularProgressIndicator()
-                : const Text('应用更改'),
+            onPressed: () => close(context),
+            child: const Text('取消'),
           )
-        else
-          Text('数据来自${appSourceString(widget.app.source)}，无法修改'),
-        ElevatedButton(
-          onPressed: () => close(context),
-          child: const Text('取消'),
-        )
-      ],
-    );
+        ],
+      );
+    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:keframe/keframe.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../common/bloc_event_status_mixin.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
@@ -18,7 +19,7 @@ class YesodRecentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     var lastPageNum = 0;
-    var lastStatus = YesodRequestStatusCode.processing;
+    var lastStatus = EventStatus.processing;
     int? maxPageNum;
 
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
@@ -64,7 +65,7 @@ class YesodRecentPage extends StatelessWidget {
               controller.addListener(() {
                 if (controller.position.pixels ==
                     controller.position.maxScrollExtent) {
-                  if (lastStatus == YesodRequestStatusCode.success &&
+                  if (lastStatus == EventStatus.success &&
                       (maxPageNum == null || lastPageNum < maxPageNum!)) {
                     context
                         .read<YesodBloc>()

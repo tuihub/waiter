@@ -12,20 +12,22 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var firstBuild = true;
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
       child: BlocConsumer<TipherethBloc, TipherethState>(
         listener: (context, state) {
-          if (state is UserLoggedIn) {
+          if (state is TipherethAutoLoginState && state.success) {
             AppRoutes.tiphereth.go(context);
             const Toast(title: '', message: '欢迎回来').show(context);
           }
         },
         builder: (context, state) {
-          if (state is AppInitialize) {
-            context.read<TipherethBloc>().add(LoadLocalSettingEvent());
+          if (firstBuild) {
+            firstBuild = false;
+            context.read<TipherethBloc>().add(TipherethAutoLoginEvent());
           }
           return Scaffold(
             body: BootstrapContainer(children: [
@@ -40,16 +42,16 @@ class InitPage extends StatelessWidget {
                 ),
               ),
             ]),
-            floatingActionButton: state is! AutoLogging
-                ? FloatingActionButton.extended(
-                    onPressed: () {
-                      context.read<TipherethBloc>().add(ManualLoginEvent());
-                      AppRoutes.login.go(context);
-                    },
-                    icon: const Icon(Icons.arrow_forward),
-                    label: const Text('登录'),
-                  )
-                : Container(),
+            floatingActionButton:
+                state is TipherethAutoLoginState && state.failed
+                    ? FloatingActionButton.extended(
+                        onPressed: () {
+                          AppRoutes.login.go(context);
+                        },
+                        icon: const Icon(Icons.arrow_forward),
+                        label: const Text('登录'),
+                      )
+                    : Container(),
           );
         },
       ),
@@ -70,65 +72,61 @@ class InitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TipherethBloc, TipherethState>(
-        listener: (context, state) {},
+    return BlocBuilder<TipherethBloc, TipherethState>(
         builder: (context, state) {
-          if (state is AppInitialize) {
-            context.read<TipherethBloc>().add(LoadLocalSettingEvent());
-          }
-          return Column(
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Tui',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'Hub',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
+              const Text(
+                'Tui',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
               ),
               const SizedBox(
-                height: 32,
+                width: 4,
               ),
-              if (state is AutoLogging)
-                const SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ),
-                )
-              else
-                const SizedBox(
-                  height: 24,
-                  child: Text(
-                    'CLICK LOGIN TO START',
-                    style: TextStyle(fontSize: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  'Hub',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32,
+                    color: Colors.black,
                   ),
                 ),
+              ),
             ],
-          );
-        });
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          if (state is TipherethAutoLoginState && state.processing)
+            const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            )
+          else
+            const SizedBox(
+              height: 24,
+              child: Text(
+                'CLICK LOGIN TO START',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+        ],
+      );
+    });
   }
 }
 

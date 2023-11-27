@@ -24,6 +24,9 @@ Future<MyApp> init() async {
   getIt.registerSingleton<ApiHelper>(api);
 
   // bloc
+  if (kDebugMode) {
+    Bloc.observer = SimpleBlocObserver();
+  }
   final tipherethBloc = TipherethBloc(api, common);
   final clientSettingBloc = ClientSettingBloc(common);
   final geburaBloc = GeburaBloc(api, geburaRepo);

@@ -7,6 +7,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 
+import '../../common/bloc_event_status_mixin.dart';
 import '../../model/yesod_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/yesod.dart';
@@ -15,10 +16,10 @@ part 'yesod_event.dart';
 part 'yesod_state.dart';
 
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
-  final ApiHelper api;
-  final YesodRepo repo;
+  final ApiHelper _api;
+  final YesodRepo _repo;
 
-  YesodBloc(this.api, this.repo) : super(YesodState()) {
+  YesodBloc(this._api, this._repo) : super(YesodState()) {
     on<YesodInitEvent>((event, emit) async {
       if (state.feedConfigs == null) {
         add(YesodConfigLoadEvent());
@@ -32,10 +33,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     }, transformer: restartable());
 
     on<YesodConfigLoadEvent>((event, emit) async {
-      emit(YesodConfigLoadState(state, YesodRequestStatusCode.processing));
+      emit(YesodConfigLoadState(state, EventStatus.processing));
       final List<ListFeedConfigsResponse_FeedWithConfig> configs = [];
 
-      final resp = await api.doRequest(
+      final resp = await _api.doRequest(
         (client) => client.listFeedConfigs,
         ListFeedConfigsRequest(
           paging: PagingRequest(
@@ -45,8 +46,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(YesodConfigLoadState(state, YesodRequestStatusCode.failed,
-            msg: resp.error));
+        emit(YesodConfigLoadState(state, EventStatus.failed, msg: resp.error));
         return;
       }
 
@@ -55,7 +55,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       var failCount = 0;
 
       for (var pageNum = 1; (pageNum - 1) * pageSize < totalSize; pageNum++) {
-        final resp = await api.doRequest(
+        final resp = await _api.doRequest(
           (client) => client.listFeedConfigs,
           ListFeedConfigsRequest(
             paging: PagingRequest(
@@ -72,14 +72,11 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
 
       if (configs.isEmpty) {
-        emit(YesodConfigLoadState(state, YesodRequestStatusCode.failed,
-            msg: resp.error));
+        emit(YesodConfigLoadState(state, EventStatus.failed, msg: resp.error));
       } else {
         emit(YesodConfigLoadState(
           state.copyWith(feedConfigs: configs),
-          failCount == 0
-              ? YesodRequestStatusCode.success
-              : YesodRequestStatusCode.partlySuccess,
+          failCount == 0 ? EventStatus.success : EventStatus.success,
         ));
       }
     }, transformer: droppable());
@@ -87,7 +84,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodConfigPreviewEvent>((event, emit) async {
       emit(YesodConfigPreviewState(
         state.copyWith(feedPreview: null),
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
       try {
         final response = await http.get(Uri.parse(event.url));
@@ -134,7 +131,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         );
         emit(YesodConfigPreviewState(
           state.copyWith(feedPreview: example),
-          YesodRequestStatusCode.success,
+          EventStatus.success,
         ));
       } catch (e) {
         emit(YesodConfigPreviewState(
@@ -143,7 +140,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
                 subscription: RssSubscription(
                     title: '', link: '', iconUrl: '', description: '')),
           ),
-          YesodRequestStatusCode.failed,
+          EventStatus.failed,
           msg: '解析失败, $e',
         ));
       }
@@ -152,13 +149,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodConfigAddEvent>((event, emit) async {
       emit(YesodConfigAddState(
         state,
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
       final index = state.feedConfigEditIndex;
       if (index == null) {
         return;
       }
-      final resp = await api.doRequest(
+      final resp = await _api.doRequest(
         (client) => client.createFeedConfig,
         CreateFeedConfigRequest(
           config: event.config,
@@ -167,7 +164,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (resp.status != ApiStatus.success) {
         emit(YesodConfigAddState(
           state,
-          YesodRequestStatusCode.failed,
+          EventStatus.failed,
           msg: resp.error,
         ));
         return;
@@ -181,7 +178,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       configs.addAll(state.feedConfigs ?? []);
       emit(YesodConfigAddState(
         state.copyWith(feedConfigs: configs),
-        YesodRequestStatusCode.success,
+        EventStatus.success,
       ));
     }, transformer: droppable());
 
@@ -194,13 +191,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodConfigEditEvent>((event, emit) async {
       emit(YesodConfigEditState(
         state,
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
       final index = state.feedConfigEditIndex;
       if (index == null) {
         return;
       }
-      final resp = await api.doRequest(
+      final resp = await _api.doRequest(
         (client) => client.updateFeedConfig,
         UpdateFeedConfigRequest(
           config: event.config,
@@ -209,7 +206,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (resp.status != ApiStatus.success) {
         emit(YesodConfigEditState(
           state,
-          YesodRequestStatusCode.failed,
+          EventStatus.failed,
           msg: resp.error,
         ));
         return;
@@ -221,7 +218,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       );
       emit(YesodConfigEditState(
         state.copyWith(feedConfigs: configs),
-        YesodRequestStatusCode.success,
+        EventStatus.success,
       ));
     }, transformer: droppable());
 
@@ -236,9 +233,9 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
                 feedItemDigests: [],
               )
             : state,
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
-      final resp = await api.doRequest(
+      final resp = await _api.doRequest(
         (client) => client.listFeedItems,
         ListFeedItemsRequest(
           paging: PagingRequest(
@@ -252,7 +249,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (resp.status != ApiStatus.success) {
         emit(YesodFeedItemDigestLoadState(
           state,
-          YesodRequestStatusCode.failed,
+          EventStatus.failed,
           msg: resp.error,
         ));
         return;
@@ -262,7 +259,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       digests.addAll(resp.getData().items);
       emit(YesodFeedItemDigestLoadState(
         state.copyWith(feedItemDigests: digests),
-        YesodRequestStatusCode.success,
+        EventStatus.success,
         currentPage: pageNum,
         maxPage:
             ((resp.getData().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
@@ -277,16 +274,16 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodFeedItemLoadEvent>((event, emit) async {
       emit(YesodFeedItemLoadState(
         state,
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
-      if (repo.existFeedItem(event.id)) {
+      if (_repo.existFeedItem(event.id)) {
         state.feedItems ??= {};
-        final item = repo.getFeedItem(event.id);
+        final item = _repo.getFeedItem(event.id);
         if (item != null) {
           state.feedItems![event.id] = item;
         }
       } else {
-        final resp = await api.doRequest(
+        final resp = await _api.doRequest(
           (client) => client.getFeedItem,
           GetFeedItemRequest(
             id: event.id,
@@ -295,18 +292,18 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         if (resp.status != ApiStatus.success) {
           emit(YesodFeedItemLoadState(
             state,
-            YesodRequestStatusCode.failed,
+            EventStatus.failed,
             msg: resp.error,
           ));
           return;
         } else {
           final item = resp.getData().item;
-          await repo.setFeedItem(event.id, item);
+          await _repo.setFeedItem(event.id, item);
           state.feedItems ??= {};
           state.feedItems![event.id] = item;
           emit(YesodFeedItemLoadState(
             state,
-            YesodRequestStatusCode.success,
+            EventStatus.success,
           ));
         }
       }
@@ -315,24 +312,32 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodFeedCategoriesLoadEvent>((event, emit) async {
       emit(YesodFeedCategoriesLoadState(
         state,
-        YesodRequestStatusCode.processing,
+        EventStatus.processing,
       ));
-      final resp = await api.doRequest(
+      final resp = await _api.doRequest(
         (client) => client.listFeedConfigCategories,
         ListFeedConfigCategoriesRequest(),
       );
       if (resp.status != ApiStatus.success) {
         emit(YesodFeedCategoriesLoadState(
           state,
-          YesodRequestStatusCode.failed,
+          EventStatus.failed,
           msg: resp.error,
         ));
         return;
       }
       emit(YesodFeedCategoriesLoadState(
         state.copyWith(feedCategories: resp.getData().categories),
-        YesodRequestStatusCode.success,
+        EventStatus.success,
       ));
     }, transformer: droppable());
+  }
+
+  int cacheSize() {
+    return _repo.cacheSize();
+  }
+
+  Future<void> clearCache() async {
+    await _repo.clearCache();
   }
 }
