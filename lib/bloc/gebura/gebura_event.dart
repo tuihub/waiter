@@ -8,7 +8,7 @@ final class GeburaInitEvent extends GeburaEvent {}
 final class GeburaPurchasedAppsLoadEvent extends GeburaEvent {}
 
 final class GeburaSetPurchasedAppIndexEvent extends GeburaEvent {
-  final int index;
+  final int? index;
 
   GeburaSetPurchasedAppIndexEvent(this.index);
 }

@@ -42,7 +42,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     }, transformer: droppable());
 
     on<GeburaSetPurchasedAppIndexEvent>((event, emit) async {
-      emit(state.copyWith(selectedPurchasedAppIndex: event.index));
+      final newState = state.copyWith();
+      newState.selectedPurchasedAppIndex = event.index;
+      emit(newState);
     });
 
     on<GeburaSearchAppsEvent>((event, emit) async {

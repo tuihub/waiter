@@ -39,7 +39,7 @@ class GeburaNav extends StatelessWidget {
                 onTap: () {
                   context
                       .read<GeburaBloc>()
-                      .add(GeburaSetPurchasedAppIndexEvent(-1));
+                      .add(GeburaSetPurchasedAppIndexEvent(null));
                   AppRoutes.geburaStore.go(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
                 },
