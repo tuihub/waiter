@@ -25,7 +25,7 @@ class GeburaRepo {
     );
   }
 
-  Future<AppLauncherSetting?> getAppLauncherSetting(int appID) async {
+  AppLauncherSetting? getAppLauncherSetting(int appID) {
     final setting = _appSettings.get(appID.toString());
     if (setting != null) {
       return AppLauncherSetting.fromJson(

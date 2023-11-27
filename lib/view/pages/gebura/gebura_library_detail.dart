@@ -7,7 +7,6 @@ import 'package:open_file/open_file.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/platform.dart';
-import '../../../model/gebura_model.dart';
 import '../../helper/spacing.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
@@ -16,33 +15,21 @@ class GeburaLibraryDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppLauncherSetting? setting;
     int? lastIndex;
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
-        if (state is GeburaGetAppLauncherSettingState &&
-            state.setting != null) {
-          setting = state.setting;
-        }
         if (state.selectedPurchasedAppIndex != lastIndex) {
           lastIndex = state.selectedPurchasedAppIndex;
-          setting = null;
-          final app = state.purchasedApps != null &&
-                  state.selectedPurchasedAppIndex != null
-              ? state.purchasedApps![state.selectedPurchasedAppIndex!]
-              : null;
-
-          if (app != null && setting == null) {
-            context
-                .read<GeburaBloc>()
-                .add(GeburaGetAppLauncherSettingEvent(app.id));
-          }
         }
       },
       builder: (context, state) {
         final app = state.purchasedApps != null &&
                 state.selectedPurchasedAppIndex != null
             ? state.purchasedApps![state.selectedPurchasedAppIndex!]
+            : null;
+
+        final setting = app != null
+            ? context.read<GeburaBloc>().getAppLauncherSetting(app.id)
             : null;
 
         return Scaffold(
@@ -118,17 +105,17 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           child: Row(
                             children: [
                               if (PlatformHelper.isWindowsApp())
-                                if (setting != null && setting!.path.isNotEmpty)
+                                if (setting != null && setting.path.isNotEmpty)
                                   ElevatedButton(
                                     onPressed: () async {
-                                      await OpenFile.open(setting!.path);
+                                      await OpenFile.open(setting.path);
                                     },
-                                    child: const Text('启动游戏'),
+                                    child: const Text('启动'),
                                   )
                                 else
                                   const ElevatedButton(
                                     onPressed: null,
-                                    child: Text('启动游戏'),
+                                    child: Text('启动'),
                                   ),
                               const SizedBox(
                                 width: 24,

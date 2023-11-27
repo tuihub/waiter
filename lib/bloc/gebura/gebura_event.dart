@@ -30,9 +30,3 @@ final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
 
   GeburaSetAppLauncherSettingEvent(this.setting);
 }
-
-final class GeburaGetAppLauncherSettingEvent extends GeburaEvent {
-  final InternalID id;
-
-  GeburaGetAppLauncherSettingEvent(this.id);
-}

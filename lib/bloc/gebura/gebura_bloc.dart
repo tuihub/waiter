@@ -97,12 +97,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaSetAppLauncherSettingState(
           state, GeburaRequestStatusCode.success));
     });
+  }
 
-    on<GeburaGetAppLauncherSettingEvent>((event, emit) async {
-      final setting = await repo.getAppLauncherSetting(event.id.id.toInt());
-      emit(GeburaGetAppLauncherSettingState(
-          state, GeburaRequestStatusCode.success,
-          setting: setting));
-    });
+  AppLauncherSetting? getAppLauncherSetting(InternalID id) {
+    return repo.getAppLauncherSetting(id.id.toInt());
   }
 }
