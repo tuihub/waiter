@@ -32,11 +32,14 @@ Future<MyApp> init() async {
   final geburaBloc = GeburaBloc(api, geburaRepo);
   final yesodBloc = YesodBloc(api, yesodRepo);
 
+  WidgetsFlutterBinding.ensureInitialized();
+  final packageInfo = await PackageInfo.fromPlatform();
   final mainBloc = MainBloc(
     clientSettingBloc,
     tipherethBloc,
     geburaBloc,
     yesodBloc,
+    packageInfo,
   );
 
   // router

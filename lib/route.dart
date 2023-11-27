@@ -18,6 +18,7 @@ import 'view/pages/gebura/gebura_nav.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/login_page.dart';
+import 'view/pages/settings/about_page.dart';
 import 'view/pages/settings/app/app_add_page.dart';
 import 'view/pages/settings/app/app_edit_page.dart';
 import 'view/pages/settings/app/app_manage_page.dart';
@@ -133,6 +134,8 @@ class AppRoutes {
   static AppRoutes settingsAppPackageAdd() => AppRoutes._(
       '$settingsAppPackage?action=${_SettingsActions.appPackageAdd}',
       isAction: true);
+  static const AppRoutes settingsAbout =
+      AppRoutes._('$_settings/${_SettingsFunctions.about}');
 }
 
 enum ModuleName {
@@ -178,6 +181,7 @@ class _SettingsFunctions {
   static const String user = 'user';
   static const String app = 'app';
   static const String appPackage = 'appPackage';
+  static const String about = 'about';
 }
 
 class _SettingsActions {
@@ -403,6 +407,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                     _SettingsFunctions.user: const UserManagePage(),
                     _SettingsFunctions.app: const AppManagePage(),
                     _SettingsFunctions.appPackage: const AppPackageManagePage(),
+                    _SettingsFunctions.about: const AboutPage(),
                   };
                   final action = state.uri.queryParameters['action'] ??
                       _SettingsActions.userAdd;

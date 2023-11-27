@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'client_setting/client_setting_bloc.dart';
 import 'gebura/gebura_bloc.dart';
@@ -11,12 +12,14 @@ class MainBloc extends Cubit<MainState> {
   final TipherethBloc tipherethBloc;
   final GeburaBloc geburaBloc;
   final YesodBloc yesodBloc;
+  final PackageInfo packageInfo;
 
   MainBloc(
     this.clientSettingBloc,
     this.tipherethBloc,
     this.geburaBloc,
     this.yesodBloc,
+    this.packageInfo,
   ) : super(MainState());
 
   static ClientSettingBloc clientSetting(BuildContext context) =>

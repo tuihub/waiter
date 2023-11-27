@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/common_model.dart';
+import '../../model/tiphereth_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/grpc/client.dart';
 import '../../repo/local/common.dart';
@@ -39,6 +41,9 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
                 options: withAuth(refreshToken));
             final user = await client.getUser(GetUserRequest(),
                 options: withAuth(resp.accessToken));
+            final info = await client.getServerInformation(
+                GetServerInformationRequest(),
+                options: withAuth(resp.accessToken));
             await _repo.set(common.copyWith(
               server: ServerConfig(
                 config.host,
@@ -49,11 +54,17 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
               ),
             ));
             _api.init(client, resp.accessToken, resp.refreshToken);
-            debugPrint('login by refresh token success ${user.user}');
             emit(TipherethAutoLoginState(
                 state.copyWith(
                   accessToken: resp.accessToken,
                   currentUser: user.user,
+                  serverInfo: ServerInformation(
+                    sourceCodeAddress:
+                        info.serverBinarySummary.sourceCodeAddress,
+                    buildVersion: info.serverBinarySummary.buildVersion,
+                    buildDate: info.serverBinarySummary.buildDate,
+                    protocolVersion: info.protocolSummary.version,
+                  ),
                 ),
                 EventStatus.success));
             return;
@@ -84,6 +95,9 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         );
         final user = await client.getUser(GetUserRequest(),
             options: withAuth(resp.accessToken));
+        final info = await client.getServerInformation(
+            GetServerInformationRequest(),
+            options: withAuth(resp.accessToken));
         await _repo.set(common.copyWith(
           server: ServerConfig(
             config.host,
@@ -98,6 +112,12 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           state.copyWith(
             accessToken: resp.accessToken,
             currentUser: user.user,
+            serverInfo: ServerInformation(
+              sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
+              buildVersion: info.serverBinarySummary.buildVersion,
+              buildDate: info.serverBinarySummary.buildDate,
+              protocolVersion: info.protocolSummary.version,
+            ),
           ),
           EventStatus.success,
         ));

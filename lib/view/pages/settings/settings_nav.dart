@@ -80,6 +80,15 @@ class SettingsNav extends StatelessWidget {
                       else
                         const SizedBox(),
                       const Expanded(child: SizedBox()),
+                      RailTile(
+                        onTap: () {
+                          AppRoutes.settingsAbout.go(context);
+                          OverlappingPanels.of(context)
+                              ?.reveal(RevealSide.main);
+                        },
+                        title: const Text('关于'),
+                        selected: function == 'about',
+                      ),
                     ],
                   ),
                 ),
