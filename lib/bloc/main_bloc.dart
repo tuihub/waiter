@@ -27,6 +27,14 @@ class MainBloc extends Cubit<MainState> {
       context.read<MainBloc>().geburaBloc;
   static YesodBloc yesod(BuildContext context) =>
       context.read<MainBloc>().yesodBloc;
+
+  int cacheSize() {
+    return yesodBloc.repo.cacheSize();
+  }
+
+  Future<void> clearCache() async {
+    await yesodBloc.repo.clearCache();
+  }
 }
 
 class MainState {}

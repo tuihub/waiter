@@ -2,10 +2,10 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/client_setting/client_setting_bloc.dart';
-import '../../../consts.dart';
-import '../../specialized/cache_setting.dart';
-import '../../specialized/theme_presentation.dart';
+import '../../../../bloc/client_setting/client_setting_bloc.dart';
+import '../../../../consts.dart';
+import '../../../specialized/theme_presentation.dart';
+import 'cache_setting.dart';
 
 class ClientSettingPage extends StatelessWidget {
   const ClientSettingPage({super.key});

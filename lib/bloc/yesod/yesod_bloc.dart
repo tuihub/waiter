@@ -9,14 +9,16 @@ import 'package:webfeed_revised/domain/rss_feed.dart';
 
 import '../../model/yesod_model.dart';
 import '../../repo/grpc/api_helper.dart';
+import '../../repo/local/yesod.dart';
 
 part 'yesod_event.dart';
 part 'yesod_state.dart';
 
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
   final ApiHelper api;
+  final YesodRepo repo;
 
-  YesodBloc(this.api) : super(YesodState()) {
+  YesodBloc(this.api, this.repo) : super(YesodState()) {
     on<YesodInitEvent>((event, emit) async {
       if (state.feedConfigs == null) {
         add(YesodConfigLoadEvent());
@@ -271,6 +273,44 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       emit(state.copyWith(feedItemFilter: event.filter));
       add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
     }, transformer: restartable());
+
+    on<YesodFeedItemLoadEvent>((event, emit) async {
+      emit(YesodFeedItemLoadState(
+        state,
+        YesodRequestStatusCode.processing,
+      ));
+      if (repo.existFeedItem(event.id)) {
+        state.feedItems ??= {};
+        final item = repo.getFeedItem(event.id);
+        if (item != null) {
+          state.feedItems![event.id] = item;
+        }
+      } else {
+        final resp = await api.doRequest(
+          (client) => client.getFeedItem,
+          GetFeedItemRequest(
+            id: event.id,
+          ),
+        );
+        if (resp.status != ApiStatus.success) {
+          emit(YesodFeedItemLoadState(
+            state,
+            YesodRequestStatusCode.failed,
+            msg: resp.error,
+          ));
+          return;
+        } else {
+          final item = resp.getData().item;
+          await repo.setFeedItem(event.id, item);
+          state.feedItems ??= {};
+          state.feedItems![event.id] = item;
+          emit(YesodFeedItemLoadState(
+            state,
+            YesodRequestStatusCode.success,
+          ));
+        }
+      }
+    }, transformer: droppable());
 
     on<YesodFeedCategoriesLoadEvent>((event, emit) async {
       emit(YesodFeedCategoriesLoadState(

@@ -44,4 +44,10 @@ final class YesodFeedItemDigestsSetFilterEvent extends YesodEvent {
   YesodFeedItemDigestsSetFilterEvent(this.filter);
 }
 
+final class YesodFeedItemLoadEvent extends YesodEvent {
+  final InternalID id;
+
+  YesodFeedItemLoadEvent(this.id);
+}
+
 final class YesodFeedCategoriesLoadEvent extends YesodEvent {}

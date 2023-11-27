@@ -12,16 +12,9 @@ Future<MyApp> init() async {
     await Hive.initFlutter((await getApplicationSupportDirectory()).path);
   }
 
-  final settingBox = await Hive.openBox<Object>(settingBoxKey);
-  final yesodCacheBox = await Hive.openBox<String>(yesodCacheBoxKey);
-
-  getIt.registerSingleton<Box<Object>>(settingBox, instanceName: settingBoxKey);
-  getIt.registerSingleton<Box<String>>(yesodCacheBox,
-      instanceName: yesodCacheBoxKey);
-
   // repo
-  getIt.registerLazySingleton<YesodRepo>(
-      () => YesodRepo(getIt(instanceName: yesodCacheBoxKey)));
+  final yesodRepo =
+      await YesodRepo.init((await getApplicationSupportDirectory()).path);
   final geburaRepo =
       await GeburaRepo.init((await getApplicationSupportDirectory()).path);
   final common = await ClientCommonRepo.init();
@@ -34,7 +27,7 @@ Future<MyApp> init() async {
   final tipherethBloc = TipherethBloc(api, common);
   final clientSettingBloc = ClientSettingBloc(common);
   final geburaBloc = GeburaBloc(api, geburaRepo);
-  final yesodBloc = YesodBloc(api);
+  final yesodBloc = YesodBloc(api, yesodRepo);
 
   final mainBloc = MainBloc(
     clientSettingBloc,

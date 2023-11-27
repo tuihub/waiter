@@ -45,10 +45,6 @@ const themeData = [
   ),
 ];
 
-const settingBoxKey = 'setting';
-const yesodCacheBoxKey = 'yesodCache';
-const appLauncherSettingsBoxKey = 'appLauncherSettings';
-
 const List<ServerConfig> newServerList = [
   ServerConfig('theam-grpc.gyx.moe', 443, true, 'cf 代理'),
   ServerConfig('theam-grpc.gyx1.cn', 443, true, '直连'),

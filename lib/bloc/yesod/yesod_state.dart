@@ -118,6 +118,18 @@ class YesodFeedItemDigestLoadState extends YesodState with YesodRequest {
   final YesodRequestStatusCode statusCode;
 }
 
+class YesodFeedItemLoadState extends YesodState with YesodRequest {
+  YesodFeedItemLoadState(YesodState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final String? msg;
+  @override
+  final YesodRequestStatusCode statusCode;
+}
+
 class YesodFeedCategoriesLoadState extends YesodState with YesodRequest {
   YesodFeedCategoriesLoadState(YesodState state, this.statusCode, {this.msg})
       : super() {

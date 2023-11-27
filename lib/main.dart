@@ -17,12 +17,11 @@ import 'bloc/main_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'common/platform.dart';
-import 'consts.dart';
 import 'l10n/l10n.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/local/common.dart';
 import 'repo/local/gebura.dart';
-import 'repo/local/yesod_repo.dart';
+import 'repo/local/yesod.dart';
 import 'route.dart';
 
 part 'init.dart';

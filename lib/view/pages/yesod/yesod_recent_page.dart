@@ -93,9 +93,12 @@ class YesodRecentPage extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: OpenContainer(
-                                openBuilder: (context, closedContainer) {
-                                  return YesodDetailPage(
-                                    itemId: item.itemId,
+                                openBuilder: (_, closedContainer) {
+                                  return BlocProvider.value(
+                                    value: context.read<YesodBloc>(),
+                                    child: YesodDetailPage(
+                                      itemId: item.itemId,
+                                    ),
                                   );
                                 },
                                 openColor: theme.colorScheme.primary,

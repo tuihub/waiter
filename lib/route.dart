@@ -24,7 +24,7 @@ import 'view/pages/settings/app/app_manage_page.dart';
 import 'view/pages/settings/app_package/app_package_add_page.dart';
 import 'view/pages/settings/app_package/app_package_edit_page.dart';
 import 'view/pages/settings/app_package/app_package_manage_page.dart';
-import 'view/pages/settings/client_setting_page.dart';
+import 'view/pages/settings/client/client_setting_page.dart';
 import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_add_page.dart';
 import 'view/pages/settings/user/user_edit_page.dart';

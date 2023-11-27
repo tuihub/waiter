@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:animations/animations.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../repo/grpc/api_mixins.dart';
-import '../../../repo/local/yesod_repo.dart';
 import '../../helper/spacing.dart';
 import '../../layout/grid_delegated.dart';
 import 'yesod_detail_page.dart';
@@ -234,22 +232,22 @@ class _YesodFeedGroupState extends State<YesodFeedGroup> {
     setState(() {
       loaded = true;
     });
-    try {
-      final result = await GetIt.I<YesodRepo>()
-          .getBatchFeedItems(widget.group.items.map((e) => e.itemId).toList());
-      setState(() {
-        loading = false;
-        isSuccess = true;
-        feedItems = result;
-        loaded = true;
-      });
-    } catch (e) {
-      setState(() {
-        loading = false;
-        isSuccess = false;
-        loaded = true;
-      });
-    }
+    // try {
+    //   final result = await GetIt.I<YesodRepo>()
+    //       .getBatchFeedItems(widget.group.items.map((e) => e.itemId).toList());
+    //   setState(() {
+    //     loading = false;
+    //     isSuccess = true;
+    //     feedItems = result;
+    //     loaded = true;
+    //   });
+    // } catch (e) {
+    //   setState(() {
+    //     loading = false;
+    //     isSuccess = false;
+    //     loaded = true;
+    //   });
+    // }
   }
 
   @override
