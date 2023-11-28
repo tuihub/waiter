@@ -1,27 +1,21 @@
 part of 'main.dart';
 
-final GetIt getIt = GetIt.instance;
-
 Future<MyApp> init() async {
   // dao
 
   // https://github.com/hivedb/hive/issues/1044
-  if (PlatformHelper.isWeb()) {
-    await Hive.initFlutter();
-  } else {
-    await Hive.initFlutter((await getApplicationSupportDirectory()).path);
-  }
+  final path = PlatformHelper.isWeb()
+      ? null
+      : (await getApplicationSupportDirectory()).path;
+  await Hive.initFlutter(path);
 
   // repo
-  final yesodRepo =
-      await YesodRepo.init((await getApplicationSupportDirectory()).path);
-  final geburaRepo =
-      await GeburaRepo.init((await getApplicationSupportDirectory()).path);
+  final yesodRepo = await YesodRepo.init(path);
+  final geburaRepo = await GeburaRepo.init(path);
   final common = await ClientCommonRepo.init();
 
   // api
   final api = ApiHelper();
-  getIt.registerSingleton<ApiHelper>(api);
 
   // bloc
   if (kDebugMode) {
@@ -31,6 +25,7 @@ Future<MyApp> init() async {
   final clientSettingBloc = ClientSettingBloc(common);
   final geburaBloc = GeburaBloc(api, geburaRepo);
   final yesodBloc = YesodBloc(api, yesodRepo);
+  final chesedBloc = ChesedBloc(api);
 
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
@@ -39,6 +34,7 @@ Future<MyApp> init() async {
     tipherethBloc,
     geburaBloc,
     yesodBloc,
+    chesedBloc,
     packageInfo,
   );
 

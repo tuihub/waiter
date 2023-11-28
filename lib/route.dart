@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import 'bloc/api_request/api_request_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
-import 'repo/grpc/client.dart';
 import 'view/layout/overlapping_panels.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
@@ -37,7 +35,6 @@ import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_filter_page.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
-import 'view/pages/yesod/yesod_timeline_page.dart';
 
 class AppRoutes {
   const AppRoutes._(this.path, {this.isAction = false});
@@ -245,18 +242,13 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           return BlocBuilder<TipherethBloc, TipherethState>(
             builder: (context, state) {
               if (state.currentUser != null) {
-                return BlocProvider(
-                  create: (context) => ApiRequestBloc(
-                    accessToken: state.accessToken!,
-                    client: clientFactory(
-                      config: state.serverConfig!,
-                    ),
-                  ),
-                  child: MainWindow(child: child),
+                return MainWindow(
+                  child: child,
                 );
               }
               return const MainWindow(
-                  child: Center(child: CircularProgressIndicator()));
+                child: Center(child: CircularProgressIndicator()),
+              );
             },
           );
         },
@@ -291,7 +283,6 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 pageBuilder: (context, state) {
                   final yesodPages = {
                     _YesodFunctions.recent: const YesodRecentPage(),
-                    _YesodFunctions.timeline: const YesodTimelinePage(),
                     _YesodFunctions.config: const YesodConfigPage()
                   };
                   final function = state.pathParameters['function'] ??
@@ -309,17 +300,14 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   };
                   final gestureRight = function != _YesodFunctions.config;
                   return NoTransitionPage(
-                    child: BlocProvider(
-                      create: (context) => mainBloc.yesodBloc,
-                      child: FramePage(
-                        selectedNav: ModuleName.yesod,
-                        leftPart: YesodNav(
-                          function: function,
-                        ),
-                        middlePart: yesodPages[function],
-                        rightPart: yesodActions[action],
-                        gestureRight: gestureRight,
+                    child: FramePage(
+                      selectedNav: ModuleName.yesod,
+                      leftPart: YesodNav(
+                        function: function,
                       ),
+                      middlePart: yesodPages[function],
+                      rightPart: yesodActions[action],
+                      gestureRight: gestureRight,
                     ),
                   );
                 },
@@ -359,15 +347,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                     _GeburaFunctions.library: const GeburaLibraryDetailPage(),
                   };
                   return NoTransitionPage(
-                    child: BlocProvider(
-                      create: (context) => mainBloc.geburaBloc,
-                      child: FramePage(
-                        selectedNav: ModuleName.gebura,
-                        leftPart: GeburaNav(
-                          function: function,
-                        ),
-                        middlePart: geburaPages[function],
+                    child: FramePage(
+                      selectedNav: ModuleName.gebura,
+                      leftPart: GeburaNav(
+                        function: function,
                       ),
+                      middlePart: geburaPages[function],
                     ),
                   );
                 },
@@ -380,7 +365,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
               GoRoute(
                 path: AppRoutes.chesed.toString(),
                 pageBuilder: (context, state) {
-                  return NoTransitionPage(
+                  return const NoTransitionPage(
                     child: FramePage(
                       selectedNav: ModuleName.chesed,
                       leftPart: ChesedHome(),
@@ -438,24 +423,8 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       leftPart: SettingsNav(
                         function: function,
                       ),
-                      middlePart: MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                              create: (context) => mainBloc.tipherethBloc),
-                          BlocProvider(
-                              create: (context) => mainBloc.geburaBloc),
-                        ],
-                        child: settingsPages[function] ?? Container(),
-                      ),
-                      rightPart: MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                              create: (context) => mainBloc.tipherethBloc),
-                          BlocProvider(
-                              create: (context) => mainBloc.geburaBloc),
-                        ],
-                        child: settingsActions[action] ?? Container(),
-                      ),
+                      middlePart: settingsPages[function] ?? Container(),
+                      rightPart: settingsActions[action] ?? Container(),
                       gestureRight: false,
                     ),
                   );

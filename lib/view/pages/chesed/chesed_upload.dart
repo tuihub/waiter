@@ -1,20 +1,9 @@
-import 'dart:async';
-
-import 'package:file_picker/file_picker.dart' as file_picker;
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
-import 'package:grpc/grpc.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:screen_capturer/screen_capturer.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/base.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/binah.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_io/io.dart';
 
+import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../../common/platform.dart';
-import '../../../repo/grpc/api_mixins.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;
@@ -25,8 +14,7 @@ class ChesedUpload extends StatefulWidget {
   ChesedUploadState createState() => ChesedUploadState();
 }
 
-class ChesedUploadState extends State<ChesedUpload>
-    with SingleRequestMixin<ChesedUpload, PresignedUploadFileStatusResponse> {
+class ChesedUploadState extends State<ChesedUpload> {
   late String rssUrl;
   late int refreshInterval;
   late bool enabled;
@@ -34,110 +22,44 @@ class ChesedUploadState extends State<ChesedUpload>
   late String name;
   late String extension;
 
-  Future<void> pickSubmit() async {
-    final pickResult = await file_picker.FilePicker.platform
-        .pickFiles(type: file_picker.FileType.image);
-    if (pickResult != null) {
-      final pick = pickResult.files.first;
-      file = File(pick.path!); // TODO not compatible with web
-      name = pick.name;
-      extension = pick.extension!;
-      await doRequest().then((value) {
-        if (isSuccess) {
-          widget.callback();
-          Navigator.pop(context);
-        }
-      });
-    }
-  }
-
-  Future<void> captureSubmit() async {
-    // TODO linux platform rely on gnome-screenshot
-    if (!await ScreenCapturer.instance.isAccessAllowed()) {
-      return;
-    }
-    final Directory directory = await getTemporaryDirectory();
-    final String imageName =
-        'Screenshot-${DateTime.now().millisecondsSinceEpoch}.png';
-    final String imagePath = '${directory.path}/$imageName';
-    debugPrint('imagePath: $imagePath');
-    final capturedData = await ScreenCapturer.instance.capture(
-      mode: CaptureMode.region,
-      imagePath: imagePath,
-      silent: true,
-    );
-    if (capturedData != null) {
-      file = File(capturedData.imagePath!);
-      name = imageName;
-      extension = 'png';
-      await doRequest().then((value) {
-        if (isSuccess) {
-          widget.callback();
-          Navigator.pop(context);
-        }
-      });
-    } else {
-      debugPrint('User canceled capture');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('上传图片'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: pickSubmit,
-          child:
-              loading ? const CircularProgressIndicator() : const Text('选择文件'),
-        ),
-        if (PlatformHelper.isWindowsApp())
+    return BlocBuilder<ChesedBloc, ChesedState>(builder: (context, state) {
+      return AlertDialog(
+        title: const Text('上传图片'),
+        content: state is ChesedUploadImageState && state.msg != null
+            ? Text(state.msg!)
+            : null,
+        actions: <Widget>[
           TextButton(
-            onPressed: captureSubmit,
-            child: loading
+            onPressed: () {
+              context
+                  .read<ChesedBloc>()
+                  .add(ChesedUploadImageEvent(ChesedUploadImageType.pick));
+            },
+            child: state is ChesedUploadImageState && state.processing
                 ? const CircularProgressIndicator()
-                : const Text('截取屏幕'),
+                : const Text('选择文件'),
           ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); //close Dialog
-          },
-          child: const Text('取消'),
-        )
-      ],
-    );
-  }
-
-  @override
-  Future<PresignedUploadFileStatusResponse> request(
-      LibrarianSephirahServiceClient client, CallOptions option) async {
-    final token = await client.uploadImage(
-        UploadImageRequest(
-          fileMetadata: FileMetadata(
-            name: name,
-            sizeBytes: $fixnum.Int64(file.lengthSync()),
-            type: FileType.FILE_TYPE_CHESED_IMAGE,
-          ),
-          name: name,
-        ),
-        options: option);
-    final uploadOption =
-        CallOptions(metadata: {'Authorization': 'Bearer ${token.uploadToken}'});
-    final url = await client.presignedUploadFile(PresignedUploadFileRequest(),
-        options: uploadOption);
-    final uploadResponse = await http.put(
-      Uri.parse(url.uploadUrl),
-      headers: {'Content-Type': 'image/$extension'},
-      body: await file.readAsBytes(),
-    );
-    if (uploadResponse.statusCode != 200) {
-      throw '文件上传失败： ${uploadResponse.reasonPhrase}';
-    }
-    final resp = await client.presignedUploadFileStatus(
-        PresignedUploadFileStatusRequest(
-          status: FileTransferStatus.FILE_TRANSFER_STATUS_SUCCESS,
-        ),
-        options: uploadOption);
-    return resp;
+          if (PlatformHelper.isWindowsApp())
+            TextButton(
+              onPressed: () {
+                context
+                    .read<ChesedBloc>()
+                    .add(ChesedUploadImageEvent(ChesedUploadImageType.capture));
+              },
+              child: state is ChesedUploadImageState && state.processing
+                  ? const CircularProgressIndicator()
+                  : const Text('截取屏幕'),
+            ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); //close Dialog
+            },
+            child: const Text('取消'),
+          )
+        ],
+      );
+    });
   }
 }

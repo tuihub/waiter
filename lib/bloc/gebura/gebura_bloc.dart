@@ -159,6 +159,24 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaEditAppPackageState(state, EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
+
+    on<GeburaAssignAppPackageEvent>((event, emit) async {
+      emit(GeburaAssignAppPackageState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.assignAppPackage,
+        AssignAppPackageRequest(
+          appId: event.appID,
+          appPackageId: event.appPackageID,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaAssignAppPackageState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaAssignAppPackageState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {

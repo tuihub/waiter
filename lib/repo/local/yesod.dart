@@ -6,13 +6,12 @@ const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
 
 class YesodRepo {
   late Box<String> _feedItemCacheBox;
-  late String _path;
 
   YesodRepo._init(Box<String> box) {
     _feedItemCacheBox = box;
   }
 
-  static Future<YesodRepo> init(String path) async {
+  static Future<YesodRepo> init(String? path) async {
     final box = await Hive.openBox<String>(_feedItemCacheBoxFile, path: path);
     return YesodRepo._init(box);
   }

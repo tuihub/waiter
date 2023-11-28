@@ -3,32 +3,25 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/chesed.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../bloc/api_request/api_request_bloc.dart';
+import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
 class ChesedHome extends StatelessWidget {
-  final controller = TextEditingController();
-  final paging = PagingRequest(pageNum: 1, pageSize: 50);
-
-  ChesedHome({super.key});
+  const ChesedHome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ApiRequestBloc, ApiRequestState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+    final controller = TextEditingController();
+    bool firstBuild = true;
+    return BlocBuilder<ChesedBloc, ChesedState>(
       builder: (context, state) {
-        if (state is! ChesedState) {
-          context
-              .read<ApiRequestBloc>()
-              .add(ChesedLoadEvent(SearchImagesRequest(paging: paging)));
+        if (firstBuild) {
+          firstBuild = false;
+          context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
         }
         return Scaffold(
           body: Column(
@@ -82,9 +75,9 @@ class ChesedHome extends StatelessWidget {
                               splashColor: Theme.of(context).primaryColor,
                             )),
                         onEditingComplete: () {
-                          context.read<ApiRequestBloc>().add(ChesedLoadEvent(
-                              SearchImagesRequest(
-                                  keywords: controller.text, paging: paging)));
+                          context
+                              .read<ChesedBloc>()
+                              .add(ChesedSearchImagesEvent(controller.text));
                         }),
                   );
                 }),
@@ -100,9 +93,14 @@ class ChesedHome extends StatelessWidget {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 256),
+                    itemCount:
+                        state.imageUrls != null && state.imageUrls!.isNotEmpty
+                            ? state.imageUrls!.length + 1
+                            : 1,
                     itemBuilder: (BuildContext context, int index) {
-                      if (state is ChesedLoadDone) {
-                        if (index == state.resp.length) {
+                      if (state.imageUrls != null &&
+                          state.imageUrls!.isNotEmpty) {
+                        if (index == state.imageUrls!.length) {
                           return Ink(
                             decoration: BoxDecoration(
                               borderRadius: SpacingHelper.defaultBorderRadius,
@@ -115,14 +113,14 @@ class ChesedHome extends StatelessWidget {
                             ),
                           );
                         }
-                        final item = state.resp.elementAt(index);
+                        final item = state.imageUrls!.elementAt(index);
                         return InkWell(
                             onTap: () {
                               unawaited(Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ChesedImageViewWidget(
-                                        imageUrl: item.downloadUrl)),
+                                    builder: (context) =>
+                                        ChesedImageViewWidget(imageUrl: item)),
                               ));
                             },
                             child: Ink(
@@ -130,7 +128,7 @@ class ChesedHome extends StatelessWidget {
                                 borderRadius: SpacingHelper.defaultBorderRadius,
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                    item.downloadUrl,
+                                    item,
                                   ),
                                   fit: BoxFit.contain,
                                 ),
@@ -148,8 +146,6 @@ class ChesedHome extends StatelessWidget {
                         ),
                       );
                     },
-                    itemCount:
-                        state is ChesedLoadDone ? state.resp.length + 1 : 1,
                   ),
                 ),
               ),
@@ -165,14 +161,17 @@ class ChesedHome extends StatelessWidget {
               unawaited(
                 showDialog<void>(
                   context: context,
-                  builder: (context) {
-                    return ChesedUpload(
-                      callback: () {
-                        const Toast(
-                          title: '',
-                          message: '上传成功',
-                        ).show(context);
-                      },
+                  builder: (_) {
+                    return BlocProvider.value(
+                      value: context.read<ChesedBloc>(),
+                      child: ChesedUpload(
+                        callback: () {
+                          const Toast(
+                            title: '',
+                            message: '上传成功',
+                          ).show(context);
+                        },
+                      ),
                     );
                   },
                 ),

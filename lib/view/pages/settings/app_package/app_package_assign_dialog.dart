@@ -1,125 +1,109 @@
-import 'dart:async';
-
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../repo/grpc/api_mixins.dart';
+import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
+import '../../../components/toast.dart';
 
-class AppPackageAssignDialog extends StatefulWidget {
+class AppPackageAssignDialog extends StatelessWidget {
+  const AppPackageAssignDialog(
+      {super.key, required this.appPackage, required this.callback});
+
   final void Function() callback;
   final AppPackage appPackage;
 
-  const AppPackageAssignDialog(
-      {super.key, required this.appPackage, required this.callback});
-  @override
-  State<AppPackageAssignDialog> createState() => _AppPackageAssignDialogState();
-}
-
-class _AppPackageAssignDialogState extends State<AppPackageAssignDialog>
-    with SingleRequestMixin<AppPackageAssignDialog, AssignAppPackageResponse> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  final _formKey = GlobalKey<FormState>();
-
-  late int appID;
-
-  void submit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      unawaited(doRequest(
-        request: (client, option) {
-          return client.assignAppPackage(
-            AssignAppPackageRequest(
-              appId: InternalID(id: $fixnum.Int64(appID)),
-              appPackageId: widget.appPackage.id,
-            ),
-            options: option,
-          );
-        },
-      ).then((value) {
-        widget.callback();
-        Navigator.of(context).pop();
-      }));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('绑定应用'),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Name: ${widget.appPackage.name}'),
-              Text('ID: ${widget.appPackage.id.id.toHexString()}'),
-              Text(
-                  'Source: ${appPackageSourceString(widget.appPackage.source)}'),
-              const SizedBox(
-                height: 16,
-              ),
-              TextFormField(
-                onSaved: (newValue) => appID = int.parse(newValue!),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '应用ID',
+    final formKey = GlobalKey<FormState>();
+
+    late int appID;
+
+    return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
+      if (state is GeburaAssignAppPackageState && state.success) {
+        const Toast(title: '', message: '绑定成功').show(context);
+        callback();
+        Navigator.of(context).pop();
+      }
+    }, builder: (context, state) {
+      return AlertDialog(
+        title: const Text('绑定应用'),
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Name: ${appPackage.name}'),
+                Text('ID: ${appPackage.id.id.toHexString()}'),
+                Text('Source: ${appPackageSourceString(appPackage.source)}'),
+                const SizedBox(
+                  height: 16,
                 ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请输入应用ID';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: isError && !loading ? 48 : 0,
-                child: isError && !loading
-                    ? Ink(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(kToolbarHeight),
-                        ),
-                        child: Center(
-                          child: Text(
-                            response.error ?? '未知错误',
-                            textAlign: TextAlign.center,
+                TextFormField(
+                  onSaved: (newValue) => appID = int.parse(newValue!),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '应用ID',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请输入应用ID';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: state is GeburaAssignAppPackageState && state.failed
+                      ? 48
+                      : 0,
+                  child: state is GeburaAssignAppPackageState && state.failed
+                      ? Ink(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(kToolbarHeight),
                           ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-            ],
+                          child: Center(
+                            child: Text(
+                              state.msg ?? '未知错误',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: submit,
-          child:
-              loading ? const CircularProgressIndicator() : const Text('应用更改'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); //close Dialog
-          },
-          child: const Text('取消'),
-        )
-      ],
-    );
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              context.read<GeburaBloc>().add(GeburaAssignAppPackageEvent(
+                    appPackage.id,
+                    InternalID(id: $fixnum.Int64(appID)),
+                  ));
+            },
+            child: state is GeburaAssignAppPackageState && state.failed
+                ? const CircularProgressIndicator()
+                : const Text('应用更改'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); //close Dialog
+            },
+            child: const Text('取消'),
+          )
+        ],
+      );
+    });
   }
 }

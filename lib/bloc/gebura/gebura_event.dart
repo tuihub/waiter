@@ -54,3 +54,10 @@ final class GeburaEditAppPackageEvent extends GeburaEvent {
 
   GeburaEditAppPackageEvent(this.appPackage);
 }
+
+final class GeburaAssignAppPackageEvent extends GeburaEvent {
+  final InternalID appPackageID;
+  final InternalID appID;
+
+  GeburaAssignAppPackageEvent(this.appPackageID, this.appID);
+}

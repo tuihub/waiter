@@ -32,3 +32,19 @@ class TipherethEditUserEvent extends TipherethEvent {
 
   TipherethEditUserEvent(this.user, {this.password});
 }
+
+class TipherethGetAccountsEvent extends TipherethEvent {}
+
+class TipherethLinkAccountEvent extends TipherethEvent {
+  final AccountPlatform platform;
+  final String platformAccountID;
+
+  TipherethLinkAccountEvent(this.platform, this.platformAccountID);
+}
+
+class TipherethUnLinkAccountEvent extends TipherethEvent {
+  final AccountPlatform platform;
+  final String platformAccountID;
+
+  TipherethUnLinkAccountEvent(this.platform, this.platformAccountID);
+}

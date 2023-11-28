@@ -130,3 +130,15 @@ class GeburaEditAppPackageState extends GeburaState with EventStatusMixin {
   @override
   final String? msg;
 }
+
+class GeburaAssignAppPackageState extends GeburaState with EventStatusMixin {
+  GeburaAssignAppPackageState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}

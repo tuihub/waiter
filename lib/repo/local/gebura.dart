@@ -13,7 +13,7 @@ class GeburaRepo {
     _appSettings = box;
   }
 
-  static Future<GeburaRepo> init(String path) async {
+  static Future<GeburaRepo> init(String? path) async {
     final box = await Hive.openBox<String>(_appSettingsFile, path: path);
     return GeburaRepo._init(box);
   }

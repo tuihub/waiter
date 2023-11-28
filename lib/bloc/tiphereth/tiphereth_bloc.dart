@@ -163,6 +163,65 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       }
       emit(TipherethEditUserState(state, EventStatus.success, msg: resp.error));
     }, transformer: droppable());
+
+    on<TipherethGetAccountsEvent>((event, emit) async {
+      emit(TipherethGetAccountsState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.listLinkAccounts,
+        ListLinkAccountsRequest(),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethGetAccountsState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(TipherethGetAccountsState(
+          state.copyWith(accounts: resp.getData().accounts),
+          EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethLinkAccountEvent>((event, emit) async {
+      emit(TipherethLinkAccountState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.linkAccount,
+        LinkAccountRequest(
+          accountId: AccountID(
+            platform: event.platform,
+            platformAccountId: event.platformAccountID,
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethLinkAccountState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethGetAccountsEvent());
+      emit(TipherethLinkAccountState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethUnLinkAccountEvent>((event, emit) async {
+      emit(TipherethUnLinkAccountState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.unLinkAccount,
+        UnLinkAccountRequest(
+          accountId: AccountID(
+            platform: event.platform,
+            platformAccountId: event.platformAccountID,
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethUnLinkAccountState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethGetAccountsEvent());
+      emit(TipherethUnLinkAccountState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
   }
 
   Future<ListUsersResponse> listUsers(

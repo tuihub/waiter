@@ -1,98 +1,204 @@
 import 'package:flutter/material.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../repo/grpc/api_mixins.dart';
+import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../helper/duration_format.dart';
 
-class LinkAccountDialog extends StatefulWidget {
-  const LinkAccountDialog({super.key, required this.callback});
-
-  final void Function() callback;
-
-  @override
-  State<LinkAccountDialog> createState() => _LinkAccountDialogState();
-}
-
-class _LinkAccountDialogState extends State<LinkAccountDialog>
-    with SingleRequestMixin<LinkAccountDialog, LinkAccountResponse> {
-  void submit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      doRequest(
-        request: (client, option) {
-          return client.linkAccount(
-            LinkAccountRequest(
-                accountId: AccountID(
-              platform: platform,
-              platformAccountId: platformAccountID,
-            )),
-            options: option,
-          );
-        },
-      ).then((value) {
-        widget.callback();
-        Navigator.of(context).pop();
-      });
-    }
-  }
-
-  final _formKey = GlobalKey<FormState>();
-
-  AccountPlatform platform = AccountPlatform.ACCOUNT_PLATFORM_STEAM;
-  late String platformAccountID;
+class LinkAccountDialog extends StatelessWidget {
+  const LinkAccountDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('添加绑定'),
-      content: SizedBox(
-        width: 600,
-        child: Form(
-          key: _formKey,
+    final formKey = GlobalKey<FormState>();
+
+    AccountPlatform platform = AccountPlatform.ACCOUNT_PLATFORM_STEAM;
+    late String platformAccountID;
+
+    return BlocConsumer<TipherethBloc, TipherethState>(
+        listener: (context, state) {
+      if (state is TipherethLinkAccountState && state.success) {
+        Navigator.of(context).pop();
+      }
+    }, builder: (context, state) {
+      return AlertDialog(
+        title: const Text('添加绑定'),
+        content: SizedBox(
+          width: 600,
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.place),
+                    border: OutlineInputBorder(),
+                    labelText: '平台',
+                  ),
+                  value: platform,
+                  items: const [
+                    DropdownMenuItem(
+                      value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
+                      child: Text('Steam'),
+                    ),
+                  ],
+                  onChanged: (newValue) => platform = newValue!,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  onSaved: (newValue) => platformAccountID = newValue!,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                    labelText: 'ID',
+                  ),
+                  // The validator receives the text that the user has entered.
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请输入ID';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: state is TipherethLinkAccountState && state.failed
+                      ? 48
+                      : 0,
+                  child: state is TipherethLinkAccountState && state.failed
+                      ? Ink(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(kToolbarHeight),
+                          ),
+                          child: Center(
+                            child: Text(
+                              state.msg ?? '未知错误',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                formKey.currentState!.save();
+                context.read<TipherethBloc>().add(
+                    TipherethLinkAccountEvent(platform, platformAccountID));
+              }
+            },
+            child: state is TipherethLinkAccountState && state.processing
+                ? const CircularProgressIndicator()
+                : const Text('确定'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); //close Dialog
+            },
+            child: const Text('取消'),
+          )
+        ],
+      );
+    });
+  }
+}
+
+class UnLinkAccountDialog extends StatelessWidget {
+  const UnLinkAccountDialog({super.key, required this.account});
+
+  final Account account;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<TipherethBloc, TipherethState>(
+        listener: (context, state) {
+      if (state is TipherethUnLinkAccountState && state.success) {
+        Navigator.of(context).pop();
+      }
+    }, builder: (context, state) {
+      return AlertDialog(
+        title: const Text('账户详情'),
+        content: SizedBox(
+          width: 600,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: 'ID',
+                ),
+                initialValue: account.platformAccountId,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
               DropdownButtonFormField(
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.place),
+                  // icon: Icon(Icons.place),
                   border: OutlineInputBorder(),
                   labelText: '平台',
                 ),
-                value: platform,
+                value: account.platform,
                 items: const [
                   DropdownMenuItem(
                     value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
                     child: Text('Steam'),
                   ),
                 ],
-                onChanged: (newValue) => platform = newValue!,
+                onChanged: null,
               ),
               const SizedBox(
                 height: 16,
               ),
               TextFormField(
-                onSaved: (newValue) => platformAccountID = newValue!,
+                onSaved: null,
+                readOnly: true,
                 decoration: const InputDecoration(
-                  icon: Icon(Icons.person),
+                  // icon: Icon(Icons.person),
                   border: OutlineInputBorder(),
-                  labelText: 'ID',
+                  labelText: '用户名',
                 ),
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请输入ID';
-                  }
-                  return null;
-                },
+                initialValue: account.name,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: '上次更新时间',
+                ),
+                initialValue: DurationHelper.recentString(
+                    account.latestUpdateTime.toDateTime()),
               ),
               const SizedBox(
                 height: 16,
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                height: isError && !loading ? 48 : 0,
-                child: isError && !loading
+                height: state is TipherethUnLinkAccountState && state.failed
+                    ? 48
+                    : 0,
+                child: state is TipherethUnLinkAccountState && state.failed
                     ? Ink(
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.background,
@@ -100,7 +206,7 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
                         ),
                         child: Center(
                           child: Text(
-                            response.error ?? '未知错误',
+                            state.msg ?? '未知错误',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -110,154 +216,26 @@ class _LinkAccountDialogState extends State<LinkAccountDialog>
             ],
           ),
         ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: submit,
-          child: loading ? const CircularProgressIndicator() : const Text('确定'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); //close Dialog
-          },
-          child: const Text('取消'),
-        )
-      ],
-    );
-  }
-}
-
-class UnLinkAccountDialog extends StatefulWidget {
-  const UnLinkAccountDialog(
-      {super.key, required this.callback, required this.account});
-
-  final void Function() callback;
-  final Account account;
-
-  @override
-  State<UnLinkAccountDialog> createState() => _UnLinkAccountDialogState();
-}
-
-class _UnLinkAccountDialogState extends State<UnLinkAccountDialog>
-    with SingleRequestMixin<UnLinkAccountDialog, UnLinkAccountResponse> {
-  void unlink() {
-    doRequest(
-      request: (client, option) {
-        return client.unLinkAccount(
-          UnLinkAccountRequest(
-              accountId: AccountID(
-            platform: widget.account.platform,
-            platformAccountId: widget.account.platformAccountId,
-          )),
-          options: option,
-        );
-      },
-    ).then((value) {
-      widget.callback();
-      Navigator.of(context).pop();
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              context.read<TipherethBloc>().add(TipherethUnLinkAccountEvent(
+                    account.platform,
+                    account.platformAccountId,
+                  ));
+            },
+            child: state is TipherethUnLinkAccountState && state.processing
+                ? const CircularProgressIndicator()
+                : const Text('解绑'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); //close Dialog
+            },
+            child: const Text('关闭'),
+          )
+        ],
+      );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('账户详情'),
-      content: SizedBox(
-        width: 600,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextFormField(
-              onSaved: null,
-              readOnly: true,
-              decoration: const InputDecoration(
-                // icon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-                labelText: 'ID',
-              ),
-              initialValue: widget.account.platformAccountId,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            DropdownButtonFormField(
-              decoration: const InputDecoration(
-                // icon: Icon(Icons.place),
-                border: OutlineInputBorder(),
-                labelText: '平台',
-              ),
-              value: widget.account.platform,
-              items: const [
-                DropdownMenuItem(
-                  value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
-                  child: Text('Steam'),
-                ),
-              ],
-              onChanged: null,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              onSaved: null,
-              readOnly: true,
-              decoration: const InputDecoration(
-                // icon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-                labelText: '用户名',
-              ),
-              initialValue: widget.account.name,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              onSaved: null,
-              readOnly: true,
-              decoration: const InputDecoration(
-                // icon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-                labelText: '上次更新时间',
-              ),
-              initialValue: DurationHelper.recentString(
-                  widget.account.latestUpdateTime.toDateTime()),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: isError && !loading ? 48 : 0,
-              child: isError && !loading
-                  ? Ink(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(kToolbarHeight),
-                      ),
-                      child: Center(
-                        child: Text(
-                          response.error ?? '未知错误',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: unlink,
-          child: loading ? const CircularProgressIndicator() : const Text('解绑'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); //close Dialog
-          },
-          child: const Text('关闭'),
-        )
-      ],
-    );
   }
 }

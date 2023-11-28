@@ -5,12 +5,14 @@ class TipherethState {
   late String? accessToken;
   late User? currentUser;
   late ServerInformation? serverInfo;
+  late List<Account>? accounts;
 
   TipherethState({
     this.serverConfig,
     this.accessToken,
     this.currentUser,
     this.serverInfo,
+    this.accounts,
   });
 
   TipherethState copyWith({
@@ -18,12 +20,14 @@ class TipherethState {
     String? accessToken,
     User? currentUser,
     ServerInformation? serverInfo,
+    List<Account>? accounts,
   }) {
     return TipherethState(
       serverConfig: serverConfig ?? this.serverConfig,
       accessToken: accessToken ?? this.accessToken,
       currentUser: currentUser ?? this.currentUser,
       serverInfo: serverInfo ?? this.serverInfo,
+      accounts: accounts ?? this.accounts,
     );
   }
 
@@ -32,6 +36,7 @@ class TipherethState {
     accessToken = other.accessToken;
     currentUser = other.currentUser;
     serverInfo = other.serverInfo;
+    accounts = other.accounts;
   }
 }
 
@@ -73,6 +78,42 @@ class TipherethAddUserState extends TipherethState with EventStatusMixin {
 
 class TipherethEditUserState extends TipherethState with EventStatusMixin {
   TipherethEditUserState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethGetAccountsState extends TipherethState with EventStatusMixin {
+  TipherethGetAccountsState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethLinkAccountState extends TipherethState with EventStatusMixin {
+  TipherethLinkAccountState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethUnLinkAccountState extends TipherethState with EventStatusMixin {
+  TipherethUnLinkAccountState(TipherethState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

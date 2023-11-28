@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -69,6 +69,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => mainBloc),
         BlocProvider(create: (context) => mainBloc.tipherethBloc),
         BlocProvider(create: (context) => mainBloc.clientSettingBloc),
+        BlocProvider(create: (context) => mainBloc.chesedBloc),
+        BlocProvider(create: (context) => mainBloc.yesodBloc),
+        BlocProvider(create: (context) => mainBloc.geburaBloc),
       ],
       child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {

@@ -37,6 +37,7 @@ dependencies:
   bloc: ^8.1.1
   bloc_concurrency: ^0.2.2
   flutter_bloc: ^8.1.2
+  go_router: ^11.1.3
 
   # database
   floor: ^1.4.2
@@ -97,8 +98,6 @@ dependencies:
   package_info_plus: ^5.0.1
 
   # others
-  go_router: ^11.1.3
-  get_it: ^7.6.0
   json_annotation: ^4.8.1
 
 dev_dependencies:
