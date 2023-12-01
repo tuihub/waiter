@@ -55,7 +55,8 @@ class GeburaNav extends StatelessWidget {
                       physics: physics,
                       child: Column(
                         children: [
-                          if (state.purchasedApps != null)
+                          if (state.purchasedApps != null &&
+                              state.purchasedApps!.isNotEmpty)
                             for (var i = 0, app = state.purchasedApps![i];
                                 i < state.purchasedApps!.length;
                                 i++,

@@ -151,10 +151,6 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         state,
         EventStatus.processing,
       ));
-      final index = state.feedConfigEditIndex;
-      if (index == null) {
-        return;
-      }
       final resp = await _api.doRequest(
         (client) => client.createFeedConfig,
         CreateFeedConfigRequest(

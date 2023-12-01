@@ -15,9 +15,6 @@ class YesodConfigPage extends StatelessWidget {
   Widget _buildStatePage(BuildContext context, YesodState state) {
     final listData = state.feedConfigs ?? [];
     final bgColor = Theme.of(context).colorScheme.surface;
-    if (state.feedConfigs == null) {
-      context.read<YesodBloc>().add(YesodInitEvent());
-    }
     return Stack(children: [
       if (state is YesodConfigLoadState && state.processing)
         const Center(
@@ -113,7 +110,12 @@ class YesodConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var firstBuild = true;
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
+      if (firstBuild) {
+        firstBuild = false;
+        context.read<YesodBloc>().add(YesodInitEvent());
+      }
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(

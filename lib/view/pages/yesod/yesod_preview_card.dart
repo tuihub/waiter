@@ -124,7 +124,7 @@ class YesodPreviewCard extends StatelessWidget {
                                         image: DecorationImage(
                                           image:
                                               CachedNetworkImageProvider(image),
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fitWidth,
                                         ),
                                       ),
                                     ),
