@@ -29,6 +29,7 @@ Future<MyApp> init() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
+  await initSystemTray();
   final mainBloc = MainBloc(
     clientSettingBloc,
     tipherethBloc,
@@ -42,4 +43,45 @@ Future<MyApp> init() async {
   final router = getRouter(mainBloc, api);
 
   return MyApp(router, mainBloc);
+}
+
+Future<void> initSystemTray() async {
+  if (!PlatformHelper.isWindowsApp()) {
+    return null;
+  }
+  const String path = 'windows/runner/resources/app_icon.ico';
+
+  final AppWindow appWindow = AppWindow();
+  final SystemTray systemTray = SystemTray();
+
+  // We first init the systray menu
+  await systemTray.initSystemTray(
+    title: 'system tray',
+    iconPath: path,
+  );
+
+  // create context menu
+  final Menu menu = Menu();
+  await menu.buildFrom([
+    MenuItemLabel(label: 'Show', onClicked: (menuItem) => appWindow.show()),
+    MenuItemLabel(label: 'Hide', onClicked: (menuItem) => appWindow.hide()),
+    MenuItemLabel(label: 'Exit', onClicked: (menuItem) => appWindow.close()),
+  ]);
+
+  // set context menu
+  await systemTray.setContextMenu(menu);
+
+  // handle system tray event
+  systemTray.registerSystemTrayEventHandler((eventName) {
+    debugPrint('eventName: $eventName');
+    if (eventName == kSystemTrayEventClick) {
+      PlatformHelper.isWindows()
+          ? appWindow.show()
+          : systemTray.popUpContextMenu();
+    } else if (eventName == kSystemTrayEventRightClick) {
+      PlatformHelper.isWindows()
+          ? systemTray.popUpContextMenu()
+          : appWindow.show();
+    }
+  });
 }

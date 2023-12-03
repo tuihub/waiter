@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/platform.dart';
-import 'window_button.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});
 
   final List<Widget> actions;
+
+  void hideWindow() {}
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,40 @@ class TitleBar extends StatelessWidget {
         const SizedBox(
           width: 8,
         ),
-        if (PlatformHelper.isWindowsApp()) const WindowButtons()
+        if (PlatformHelper.isWindowsApp())
+          Row(
+            children: [
+              MinimizeWindowButton(),
+              MaximizeWindowButton(),
+              CloseWindowButton(onPressed: () {
+                unawaited(showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Exit Program?'),
+                      content: const Text(
+                          'Press Hide to hide window in tray, or press yes to exit.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Hide'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            appWindow.hide();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Yes'),
+                          onPressed: () {
+                            appWindow.close();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ));
+              }),
+            ],
+          ),
       ],
     );
   }
