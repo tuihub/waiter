@@ -1,10 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
+import 'package:path/path.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../ffi/native_ffi.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
@@ -24,7 +27,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaPurchasedAppsLoadEvent>((event, emit) async {
-      debugPrint('GeburaPurchasedAppsLoadEvent');
       emit(GeburaPurchasedAppsLoadState(state, EventStatus.processing));
       final resp = await _api.doRequest(
         (client) => client.getPurchasedApps,
@@ -177,6 +179,32 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaAssignAppPackageState(state, EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
+
+    on<GeburaRunAppEvent>((event, emit) async {
+      emit(GeburaRunAppState(state, event.appID, EventStatus.processing));
+      final setting = _repo.getAppLauncherSetting(event.appID.id.toInt());
+      if (setting == null) {
+        emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
+            msg: '请先设置应用路径'));
+        return;
+      }
+      try {
+        final (start, end, suceess) = await NativeFunc.processRunner(
+            '', setting.path, '', dirname(setting.path), 1, 1000);
+        if (!suceess) {
+          emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
+              msg: '应用未正常退出'));
+          return;
+        }
+        emit(GeburaRunAppState(state, event.appID, EventStatus.success,
+            startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
+            endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000)));
+      } catch (e) {
+        emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
+            msg: '启动器错误 ${e is FrbAnyhowException ? e.anyhow : e}'));
+        return;
+      }
+    });
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {

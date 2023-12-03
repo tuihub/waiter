@@ -142,3 +142,20 @@ class GeburaAssignAppPackageState extends GeburaState with EventStatusMixin {
   @override
   final String? msg;
 }
+
+class GeburaRunAppState extends GeburaState with EventStatusMixin {
+  GeburaRunAppState(GeburaState state, this.appID, this.statusCode,
+      {this.startTime, this.endTime, this.msg})
+      : super() {
+    _from(state);
+  }
+
+  final InternalID appID;
+  final DateTime? startTime;
+  final DateTime? endTime;
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}

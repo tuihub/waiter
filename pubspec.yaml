@@ -96,9 +96,11 @@ dependencies:
   open_file: ^3.3.2
   universal_io: ^2.2.2
   package_info_plus: ^5.0.1
+  path: ^1.8.3
 
   # others
   json_annotation: ^4.8.1
+  win32: ^5.1.0
 
 dev_dependencies:
   flutter_test:

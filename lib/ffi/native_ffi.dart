@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+
 import 'rust_ffi/rust_ffi.dart';
 
 class NativeFFI {
@@ -30,8 +31,22 @@ class NativeFFI {
 class NativeFunc {
   static final _ffi = RustFfiImpl(NativeFFI.dyLib);
 
-  static Future<int> add(int left, int right) async {
-    final int sum = await _ffi.add(left: left, right: right);
-    return sum;
+  static Future<(int, int, bool)> processRunner(
+    String name,
+    String executePath,
+    String monitorPath,
+    String workingDir,
+    int sleepCount,
+    int sleepMillis,
+  ) async {
+    return _ffi.processRunner(
+      name: name,
+      executePath: executePath,
+      monitorPath: monitorPath,
+      workingDir: workingDir,
+      sleepCount: sleepCount,
+      sleepMillis: sleepMillis,
+      mode: TraceMode.Simple,
+    );
   }
 }

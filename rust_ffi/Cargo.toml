@@ -7,7 +7,15 @@ edition = "2021"
 crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
+anyhow = "1.0"
 flutter_rust_bridge = "=1.82.1"
+log = "0.4.14"
+strum = "0.25.0"
+strum_macros = "0.25.3"
+sysinfo = "0.29.0"
+time = "0.3.21"
+walkdir = "2"
+winapi = { version = "0.3.9", features = ["processthreadsapi"] }
 
 [build-dependencies]
 flutter_rust_bridge_codegen = "=1.82.1"

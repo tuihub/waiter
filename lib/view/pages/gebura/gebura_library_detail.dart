@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file/open_file.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/platform.dart';
+import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
@@ -20,6 +20,13 @@ class GeburaLibraryDetailPage extends StatelessWidget {
       listener: (context, state) {
         if (state.selectedPurchasedAppIndex != lastIndex) {
           lastIndex = state.selectedPurchasedAppIndex;
+        }
+        if (state is GeburaRunAppState && state.msg != null) {
+          Toast(title: '', message: state.msg!).show(context);
+        }
+        if (state is GeburaRunAppState && state.success) {
+          Toast(title: '', message: '${state.startTime} ${state.endTime}')
+              .show(context);
         }
       },
       builder: (context, state) {
@@ -108,7 +115,9 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                 if (setting != null && setting.path.isNotEmpty)
                                   ElevatedButton(
                                     onPressed: () async {
-                                      await OpenFile.open(setting.path);
+                                      context
+                                          .read<GeburaBloc>()
+                                          .add(GeburaRunAppEvent(app.id));
                                     },
                                     child: const Text('启动'),
                                   )
