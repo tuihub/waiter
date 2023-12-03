@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
-import '../../ffi/native_ffi.dart';
+import '../../ffi/ffi.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
@@ -189,7 +189,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       try {
-        final (start, end, suceess) = await NativeFunc.processRunner(
+        final (start, end, suceess) = await FFI().processRunner(
             '', setting.path, '', dirname(setting.path), 1, 1000);
         if (!suceess) {
           emit(GeburaRunAppState(state, event.appID, EventStatus.failed,

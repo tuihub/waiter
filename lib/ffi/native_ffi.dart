@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'ffi_model.dart';
 import 'rust_ffi/rust_ffi.dart';
 
 class NativeFFI {
@@ -28,10 +29,11 @@ class NativeFFI {
   }
 }
 
-class NativeFunc {
+class FFI extends FFIBase {
   static final _ffi = RustFfiImpl(NativeFFI.dyLib);
 
-  static Future<(int, int, bool)> processRunner(
+  @override
+  Future<(int, int, bool)> processRunner(
     String name,
     String executePath,
     String monitorPath,
