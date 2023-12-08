@@ -51,3 +51,9 @@ final class YesodFeedItemLoadEvent extends YesodEvent {
 }
 
 final class YesodFeedCategoriesLoadEvent extends YesodEvent {}
+
+final class YesodFeedListTypeSetEvent extends YesodEvent {
+  final FeedListType type;
+
+  YesodFeedListTypeSetEvent(this.type);
+}

@@ -45,3 +45,9 @@ class ImgTextContent extends RssDescriptionContent {
 
   ImgTextContent(super.content, this.imgUrl);
 }
+
+enum FeedListType {
+  table,
+  message,
+  enrich,
+}

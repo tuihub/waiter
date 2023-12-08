@@ -6,6 +6,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../common/bloc_event_status_mixin.dart';
+import '../../../model/yesod_model.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
@@ -56,7 +57,7 @@ class YesodRecentPage extends StatelessWidget {
                 onPressed: () {
                   AppRoutes.yesodRecentFilter().go(context);
                 },
-                icon: const Icon(Icons.filter_alt_outlined),
+                icon: const Icon(Icons.settings),
               ),
             ],
           ),
@@ -118,6 +119,8 @@ class YesodRecentPage extends StatelessWidget {
                                     iconUrl: item.feedAvatarUrl,
                                     images: item.imageUrls,
                                     description: item.shortDescription,
+                                    listType: state.feedListType ??
+                                        FeedListType.enrich,
                                   );
                                 },
                               ),

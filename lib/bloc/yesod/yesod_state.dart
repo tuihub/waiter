@@ -1,15 +1,18 @@
 part of 'yesod_bloc.dart';
 
 class YesodState {
+  // Data from server
   late List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs;
+  late List<FeedItemDigest>? feedItemDigests;
+  late List<String>? feedCategories;
+  late Map<InternalID, FeedItem>? feedItems;
+
+  // Data for UI
   late int? feedConfigEditIndex;
   late RssPostItem? feedPreview;
-
-  late List<FeedItemDigest>? feedItemDigests;
-  late Map<InternalID, FeedItem>? feedItems;
   late InternalID? selectedFeedItemID;
   late YesodFeedItemFilter? feedItemFilter;
-  late List<String>? feedCategories;
+  late FeedListType? feedListType;
 
   YesodState({
     this.feedConfigs,
@@ -20,6 +23,7 @@ class YesodState {
     this.selectedFeedItemID,
     this.feedItemFilter,
     this.feedCategories,
+    this.feedListType,
   });
 
   YesodState copyWith({
@@ -31,6 +35,7 @@ class YesodState {
     InternalID? selectedFeedItemID,
     YesodFeedItemFilter? feedItemFilter,
     List<String>? feedCategories,
+    FeedListType? feedListType,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
@@ -41,6 +46,7 @@ class YesodState {
       selectedFeedItemID: selectedFeedItemID ?? this.selectedFeedItemID,
       feedItemFilter: feedItemFilter ?? this.feedItemFilter,
       feedCategories: feedCategories ?? this.feedCategories,
+      feedListType: feedListType ?? this.feedListType,
     );
   }
 
@@ -53,6 +59,7 @@ class YesodState {
     selectedFeedItemID = other.selectedFeedItemID;
     feedItemFilter = other.feedItemFilter;
     feedCategories = other.feedCategories;
+    feedListType = other.feedListType;
   }
 }
 

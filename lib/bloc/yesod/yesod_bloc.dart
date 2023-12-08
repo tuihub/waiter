@@ -327,6 +327,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         EventStatus.success,
       ));
     }, transformer: droppable());
+
+    on<YesodFeedListTypeSetEvent>((event, emit) async {
+      emit(state.copyWith(feedListType: event.type));
+    });
   }
 
   int cacheSize() {

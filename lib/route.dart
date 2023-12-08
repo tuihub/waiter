@@ -33,8 +33,8 @@ import 'view/pages/yesod/yesod_config_add_page.dart';
 import 'view/pages/yesod/yesod_config_edit_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
-import 'view/pages/yesod/yesod_recent_filter_page.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
+import 'view/pages/yesod/yesod_recent_setting_page.dart';
 
 class AppRoutes {
   const AppRoutes._(this.path, {this.isAction = false});
@@ -296,7 +296,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   final yesodActions = {
                     _YesodActions.configEdit: const YesodConfigEditPage(),
                     _YesodActions.configAdd: const YesodConfigAddPage(),
-                    _YesodActions.recentFilter: const YesodRecentFilterPage(),
+                    _YesodActions.recentFilter: const YesodRecentSettingPage(),
                   };
                   final gestureRight = function != _YesodFunctions.config;
                   return NoTransitionPage(
