@@ -59,7 +59,7 @@ class YesodRecentSettingPage extends StatelessWidget {
                     styleAnimationType: AnimationType.onHover,
                     spacing: 2.0,
                     customIconBuilder: (context, local, global) {
-                      final text = const ['表格', '信息', '动态'][local.index];
+                      final text = const ['列表', '杂志', '卡片'][local.index];
                       return Center(
                           child: Text(text,
                               style: TextStyle(
