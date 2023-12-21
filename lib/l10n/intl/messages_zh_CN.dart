@@ -45,6 +45,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("停止"),
         "FEED_CONFIG_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
+        "NOTIFY_TARGET_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
+        "NOTIFY_TARGET_STATUS_ACTIVE":
+            MessageLookupByLibrary.simpleMessage("启用"),
+        "NOTIFY_TARGET_STATUS_SUSPEND":
+            MessageLookupByLibrary.simpleMessage("停止"),
+        "NOTIFY_TARGET_STATUS_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
+        "NOTIFY_TARGET_TYPE": MessageLookupByLibrary.simpleMessage("类型"),
+        "NOTIFY_TARGET_TYPE_TELEGRAM":
+            MessageLookupByLibrary.simpleMessage("Telegram"),
+        "NOTIFY_TARGET_TYPE_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
         "USER_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
         "USER_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("正常"),
         "USER_STATUS_BLOCKED": MessageLookupByLibrary.simpleMessage("禁用"),

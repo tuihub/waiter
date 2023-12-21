@@ -1,3 +1,4 @@
+import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pbenum.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pbenum.dart';
@@ -82,6 +83,28 @@ String feedConfigStatusString(FeedConfigStatus status) {
       return S.current.FEED_CONFIG_STATUS_ACTIVE;
     case FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND:
       return S.current.FEED_CONFIG_STATUS_SUSPEND;
+  }
+  return '';
+}
+
+String notifyTargetTypeString(NotifyTargetType type) {
+  switch (type) {
+    case NotifyTargetType.NOTIFY_TARGET_TYPE_UNSPECIFIED:
+      return S.current.NOTIFY_TARGET_TYPE_UNSPECIFIED;
+    case NotifyTargetType.NOTIFY_TARGET_TYPE_TELEGRAM:
+      return S.current.NOTIFY_TARGET_TYPE_TELEGRAM;
+  }
+  return '';
+}
+
+String notifyTargetStatusString(NotifyTargetStatus status) {
+  switch (status) {
+    case NotifyTargetStatus.NOTIFY_TARGET_STATUS_UNSPECIFIED:
+      return S.current.NOTIFY_TARGET_STATUS_UNSPECIFIED;
+    case NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE:
+      return S.current.NOTIFY_TARGET_STATUS_ACTIVE;
+    case NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND:
+      return S.current.NOTIFY_TARGET_STATUS_SUSPEND;
   }
   return '';
 }

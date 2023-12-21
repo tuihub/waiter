@@ -41,6 +41,32 @@ class SettingsNav extends StatelessWidget {
                         title: const Text('客户端设置'),
                         selected: function == 'client',
                       ),
+                      ExpandRailTile(
+                        title: const Text(
+                          '通知设置',
+                        ),
+                        childrenPadding: const EdgeInsets.only(left: 12),
+                        children: [
+                          RailTile(
+                            title: const Text('Token管理'),
+                            onTap: () {
+                              AppRoutes.notifyTarget.go(context);
+                              OverlappingPanels.of(context)
+                                  ?.reveal(RevealSide.main);
+                            },
+                            selected: function == 'notifyTarget',
+                          ),
+                          RailTile(
+                            title: const Text('规则管理'),
+                            onTap: () {
+                              AppRoutes.notifyFlow.go(context);
+                              OverlappingPanels.of(context)
+                                  ?.reveal(RevealSide.main);
+                            },
+                            selected: function == 'notifyFlow',
+                          ),
+                        ],
+                      ),
                       if (state.currentUser!.type == UserType.USER_TYPE_ADMIN)
                         ExpandRailTile(
                           title: const Text(

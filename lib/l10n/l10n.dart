@@ -329,6 +329,76 @@ class S {
       args: [],
     );
   }
+
+  /// `状态`
+  String get NOTIFY_TARGET_STATUS {
+    return Intl.message(
+      '状态',
+      name: 'NOTIFY_TARGET_STATUS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get NOTIFY_TARGET_STATUS_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'NOTIFY_TARGET_STATUS_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启用`
+  String get NOTIFY_TARGET_STATUS_ACTIVE {
+    return Intl.message(
+      '启用',
+      name: 'NOTIFY_TARGET_STATUS_ACTIVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `停止`
+  String get NOTIFY_TARGET_STATUS_SUSPEND {
+    return Intl.message(
+      '停止',
+      name: 'NOTIFY_TARGET_STATUS_SUSPEND',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `类型`
+  String get NOTIFY_TARGET_TYPE {
+    return Intl.message(
+      '类型',
+      name: 'NOTIFY_TARGET_TYPE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get NOTIFY_TARGET_TYPE_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'NOTIFY_TARGET_TYPE_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram`
+  String get NOTIFY_TARGET_TYPE_TELEGRAM {
+    return Intl.message(
+      'Telegram',
+      name: 'NOTIFY_TARGET_TYPE_TELEGRAM',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

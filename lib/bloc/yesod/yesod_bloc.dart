@@ -71,14 +71,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         }
       }
 
-      if (configs.isEmpty) {
-        emit(YesodConfigLoadState(state, EventStatus.failed, msg: resp.error));
-      } else {
-        emit(YesodConfigLoadState(
-          state.copyWith(feedConfigs: configs),
-          failCount == 0 ? EventStatus.success : EventStatus.success,
-        ));
-      }
+      emit(YesodConfigLoadState(
+        state.copyWith(feedConfigs: configs),
+        failCount == 0 ? EventStatus.success : EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<YesodConfigPreviewEvent>((event, emit) async {
@@ -220,7 +216,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
 
     on<YesodFeedItemDigestsLoadEvent>((event, emit) async {
       final refresh = event.refresh ?? false;
-      const pageSize = 10;
+      const pageSize = 20;
       final pageNum = refresh ? 1 : event.pageNum;
 
       emit(YesodFeedItemDigestLoadState(

@@ -24,6 +24,12 @@ import 'view/pages/settings/app_package/app_package_add_page.dart';
 import 'view/pages/settings/app_package/app_package_edit_page.dart';
 import 'view/pages/settings/app_package/app_package_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
+import 'view/pages/settings/notify/notify_flow_add_page.dart';
+import 'view/pages/settings/notify/notify_flow_edit_page.dart';
+import 'view/pages/settings/notify/notify_flow_page.dart';
+import 'view/pages/settings/notify/notify_target_add_page.dart';
+import 'view/pages/settings/notify/notify_target_edit_page.dart';
+import 'view/pages/settings/notify/notify_target_page.dart';
 import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_add_page.dart';
 import 'view/pages/settings/user/user_edit_page.dart';
@@ -107,6 +113,22 @@ class AppRoutes {
   static const AppRoutes settings = AppRoutes._(_settings);
   static const AppRoutes settingsClient =
       AppRoutes._('$_settings/${_SettingsFunctions.client}');
+  static const AppRoutes notifyTarget =
+      AppRoutes._('$_settings/${_SettingsFunctions.notifyTarget}');
+  static AppRoutes notifyTargetAdd() =>
+      AppRoutes._('$notifyTarget?action=${_SettingsActions.notifyTargetAdd}',
+          isAction: true);
+  static AppRoutes notifyTargetEdit() =>
+      AppRoutes._('$notifyTarget?action=${_SettingsActions.notifyTargetEdit}',
+          isAction: true);
+  static const AppRoutes notifyFlow =
+      AppRoutes._('$_settings/${_SettingsFunctions.notifyFlow}');
+  static AppRoutes notifyFlowAdd() =>
+      AppRoutes._('$notifyFlow?action=${_SettingsActions.notifyFlowAdd}',
+          isAction: true);
+  static AppRoutes notifyFlowEdit() =>
+      AppRoutes._('$notifyFlow?action=${_SettingsActions.notifyFlowEdit}',
+          isAction: true);
   static const AppRoutes settingsUser =
       AppRoutes._('$_settings/${_SettingsFunctions.user}');
   static AppRoutes settingsUserAdd() =>
@@ -175,6 +197,8 @@ class _GeburaFunctions {
 
 class _SettingsFunctions {
   static const String client = 'client';
+  static const String notifyTarget = 'notifyTarget';
+  static const String notifyFlow = 'notifyFlow';
   static const String user = 'user';
   static const String app = 'app';
   static const String appPackage = 'appPackage';
@@ -182,6 +206,10 @@ class _SettingsFunctions {
 }
 
 class _SettingsActions {
+  static const String notifyTargetAdd = 'addNotifyTarget';
+  static const String notifyTargetEdit = 'editNotifyTarget';
+  static const String notifyFlowAdd = 'addNotifyFlow';
+  static const String notifyFlowEdit = 'editNotifyFlow';
   static const String userEdit = 'editUser';
   static const String userAdd = 'addUser';
   static const String appEdit = 'editApp';
@@ -389,6 +417,8 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 pageBuilder: (context, state) {
                   final settingsPages = {
                     _SettingsFunctions.client: const ClientSettingPage(),
+                    _SettingsFunctions.notifyTarget: const NotifyTargetPage(),
+                    _SettingsFunctions.notifyFlow: const NotifyFlowPage(),
                     _SettingsFunctions.user: const UserManagePage(),
                     _SettingsFunctions.app: const AppManagePage(),
                     _SettingsFunctions.appPackage: const AppPackageManagePage(),
@@ -399,6 +429,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   final function = state.pathParameters['function'] ??
                       _SettingsFunctions.client;
                   final settingsActions = {
+                    _SettingsActions.notifyTargetAdd:
+                        const NotifyTargetAddPage(),
+                    _SettingsActions.notifyTargetEdit:
+                        const NotifyTargetEditPage(),
+                    _SettingsActions.notifyFlowAdd: const NotifyFlowAddPage(),
+                    _SettingsActions.notifyFlowEdit: const NotifyFlowEditPage(),
                     _SettingsActions.userAdd: const UserAddPage(),
                     _SettingsActions.userEdit: UserEditPage(
                       key: ValueKey(state.extra),

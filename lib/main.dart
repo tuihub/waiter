@@ -17,6 +17,7 @@ import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
+import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'common/bloc_observer.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => mainBloc.chesedBloc),
         BlocProvider(create: (context) => mainBloc.yesodBloc),
         BlocProvider(create: (context) => mainBloc.geburaBloc),
+        BlocProvider(create: (context) => mainBloc.netzachBloc),
       ],
       child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {

@@ -26,6 +26,7 @@ Future<MyApp> init() async {
   final geburaBloc = GeburaBloc(api, geburaRepo);
   final yesodBloc = YesodBloc(api, yesodRepo);
   final chesedBloc = ChesedBloc(api);
+  final netzachBloc = NetzachBloc(api);
 
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
@@ -36,6 +37,7 @@ Future<MyApp> init() async {
     geburaBloc,
     yesodBloc,
     chesedBloc,
+    netzachBloc,
     packageInfo,
   );
 
