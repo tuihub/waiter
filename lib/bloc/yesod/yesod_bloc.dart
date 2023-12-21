@@ -311,8 +311,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         EventStatus.processing,
       ));
       final resp = await _api.doRequest(
-        (client) => client.listFeedConfigCategories,
-        ListFeedConfigCategoriesRequest(),
+        (client) => client.listFeedCategories,
+        ListFeedCategoriesRequest(),
       );
       if (resp.status != ApiStatus.success) {
         emit(YesodFeedCategoriesLoadState(
@@ -330,6 +330,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
 
     on<YesodFeedListTypeSetEvent>((event, emit) async {
       emit(state.copyWith(feedListType: event.type));
+    });
+
+    on<YesodFeedItemReadEvent>((event, emit) async {
+      await _api.doRequest(
+        (client) => client.readFeedItem,
+        ReadFeedItemRequest(id: event.id),
+      );
     });
   }
 

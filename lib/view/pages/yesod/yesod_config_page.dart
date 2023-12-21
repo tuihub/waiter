@@ -81,7 +81,9 @@ class YesodConfigPage extends StatelessWidget {
                                   color: Theme.of(context).disabledColor),
                               maxLines: 2,
                             ),
-                            Text(item.config.name),
+                            Text(item.config.name.isNotEmpty
+                                ? item.config.name
+                                : item.feed.title),
                             Text(
                                 '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
                             Text(

@@ -57,3 +57,9 @@ final class YesodFeedListTypeSetEvent extends YesodEvent {
 
   YesodFeedListTypeSetEvent(this.type);
 }
+
+final class YesodFeedItemReadEvent extends YesodEvent {
+  final InternalID id;
+
+  YesodFeedItemReadEvent(this.id);
+}

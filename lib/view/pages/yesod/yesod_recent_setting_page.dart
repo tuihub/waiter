@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
+import '../../form/form_field.dart';
 import '../../helper/spacing.dart';
 
 class YesodRecentSettingPage extends StatelessWidget {
@@ -22,12 +23,14 @@ class YesodRecentSettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<InternalID> feedIDFilter = [];
     List<String> categoryFilter = [];
+    late bool hideRead;
 
     return BlocBuilder<YesodBloc, YesodState>(
       builder: (context, state) {
         feedIDFilter = state.feedItemFilter?.feedIdFilter?.toList() ?? [];
         categoryFilter = state.feedItemFilter?.categoryFilter?.toList() ?? [];
         final listType = state.feedListType ?? FeedListType.enrich;
+        hideRead = state.feedItemFilter?.hideRead ?? false;
 
         return Scaffold(
           appBar: AppBar(
@@ -82,6 +85,14 @@ class YesodRecentSettingPage extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 16,
+                  ),
+                  SwitchFormField(
+                    onSaved: (newValue) => hideRead = newValue ?? false,
+                    title: const Text('隐藏已读'),
+                    initialValue: hideRead,
+                  ),
+                  const SizedBox(
+                    height: 8,
                   ),
                   MultiSelectDialogField(
                     title: const Text('按订阅筛选'),
@@ -140,6 +151,7 @@ class YesodRecentSettingPage extends StatelessWidget {
                             YesodFeedItemFilter(
                               feedIdFilter: feedIDFilter,
                               categoryFilter: categoryFilter,
+                              hideRead: hideRead,
                             ),
                           ),
                         );

@@ -95,7 +95,9 @@ class YesodRecentPage extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 8),
                               child: OpenContainer(
-                                openBuilder: (_, closedContainer) {
+                                tappable:
+                                    false, // https://github.com/flutter/flutter/issues/74111
+                                openBuilder: (_, __) {
                                   return BlocProvider.value(
                                     value: context.read<YesodBloc>(),
                                     child: YesodDetailPage(
@@ -111,16 +113,24 @@ class YesodRecentPage extends StatelessWidget {
                                 closedElevation: 0,
                                 closedColor: theme.cardColor,
                                 closedBuilder: (context, openContainer) {
-                                  return YesodPreviewCard(
-                                    name:
-                                        '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
-                                    title: item.title,
-                                    callback: openContainer,
-                                    iconUrl: item.feedAvatarUrl,
-                                    images: item.imageUrls,
-                                    description: item.shortDescription,
-                                    listType: state.feedListType ??
-                                        FeedListType.enrich,
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      openContainer();
+                                      context.read<YesodBloc>().add(
+                                          YesodFeedItemReadEvent(item.itemId));
+                                    },
+                                    child: YesodPreviewCard(
+                                      name:
+                                          '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                                      title: item.title,
+                                      callback: openContainer,
+                                      iconUrl: item.feedAvatarUrl,
+                                      images: item.imageUrls,
+                                      description: item.shortDescription,
+                                      listType: state.feedListType ??
+                                          FeedListType.enrich,
+                                    ),
                                   );
                                 },
                               ),

@@ -27,6 +27,7 @@ class YesodConfigAddPage extends StatelessWidget {
     var category = '';
     var refreshInterval = 60;
     var enabled = true;
+    var hideItems = false;
     RssPostItem? feedPreview;
 
     return BlocConsumer<YesodBloc, YesodState>(
@@ -129,13 +130,18 @@ class YesodConfigAddPage extends StatelessWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        const Divider(
-                          height: 8,
-                        ),
                         SwitchFormField(
                           onSaved: (newValue) => enabled = newValue ?? false,
                           title: const Text('立即启用'),
                           initialValue: enabled,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        SwitchFormField(
+                          onSaved: (newValue) => hideItems = newValue ?? false,
+                          title: const Text('隐藏内容'),
+                          initialValue: hideItems,
                         ),
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
@@ -194,6 +200,7 @@ class YesodConfigAddPage extends StatelessWidget {
                               seconds: $fixnum.Int64(refreshInterval * 60),
                             ),
                             category: category,
+                            hideItems: hideItems,
                           )));
                     }
                   },

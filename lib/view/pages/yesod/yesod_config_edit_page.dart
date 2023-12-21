@@ -41,6 +41,7 @@ class YesodConfigEditPage extends StatelessWidget {
             config.status == FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE;
         var pullInterval = config.pullInterval.seconds.toInt() ~/ 60;
         var category = config.category;
+        var hideItems = config.hideItems;
 
         return Scaffold(
           appBar: AppBar(
@@ -134,6 +135,14 @@ class YesodConfigEditPage extends StatelessWidget {
                           onSaved: (newValue) => feedEnabled = newValue!,
                           title: const Text('启用'),
                         ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        SwitchFormField(
+                          initialValue: hideItems,
+                          onSaved: (newValue) => hideItems = newValue!,
+                          title: const Text('隐藏内容'),
+                        ),
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           height: state is YesodConfigEditState && state.failed
@@ -187,6 +196,7 @@ class YesodConfigEditPage extends StatelessWidget {
                               ),
                               category: category,
                               latestUpdateTime: config.latestUpdateTime,
+                              hideItems: hideItems,
                             ),
                           ));
                     }

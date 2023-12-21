@@ -155,6 +155,7 @@ class YesodFeedItemFilter {
   final Iterable<String>? publishPlatformFilter;
   final Iterable<String>? categoryFilter;
   final TimeRange? publishTimeRange;
+  final bool? hideRead;
 
   YesodFeedItemFilter({
     this.feedIdFilter,
@@ -162,5 +163,6 @@ class YesodFeedItemFilter {
     this.publishPlatformFilter,
     this.categoryFilter,
     this.publishTimeRange,
+    this.hideRead,
   });
 }
