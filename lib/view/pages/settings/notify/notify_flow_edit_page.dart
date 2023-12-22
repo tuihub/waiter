@@ -7,8 +7,10 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
+import '../../../../model/netzach_model.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
+import '../../../components/chips_input.dart';
 import '../../../components/expand_rail_tile.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
@@ -22,6 +24,22 @@ class NotifyFlowEditPage extends StatefulWidget {
 }
 
 class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<NetzachBloc>().state;
+    if (state.notifyFlowEditIndex != null && state.notifyFlows != null) {
+      final NotifyFlow flow = state.notifyFlows![state.notifyFlowEditIndex!];
+      setState(() {
+        name = flow.name;
+        description = flow.description;
+        enabled = flow.status == NotifyFlowStatus.NOTIFY_FLOW_STATUS_ACTIVE;
+        sources = flow.sources.map(NotifyFlowSourceModel.fromProto).toList();
+        targets = flow.targets.map(NotifyFlowTargetModel.fromProto).toList();
+      });
+    }
+  }
+
   void close(BuildContext context) {
     AppRoutes.notifyFlowAdd().pop(context);
   }
@@ -31,36 +49,27 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
   String name = '';
   String description = '';
   bool enabled = true;
-  List<NotifyFlowSource> sources = [];
-  List<NotifyFlowTarget> targets = [];
+  List<NotifyFlowSourceModel> sources = [];
+  List<NotifyFlowTargetModel> targets = [];
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
-        if (state is NetzachFlowAddState && state.success) {
-          const Toast(title: '', message: '添加成功').show(context);
+        if (state is NetzachFlowEditState && state.success) {
+          const Toast(title: '', message: '已应用更改').show(context);
           close(context);
         }
       },
       builder: (context, state) {
         final notifySources = context.read<YesodBloc>().state.feedConfigs ?? [];
         final notifyTargets = state.notifyTargets ?? [];
-        if (state.notifyFlowEditIndex != null && state.notifyFlows != null) {
-          final NotifyFlow flow =
-              state.notifyFlows![state.notifyFlowEditIndex!];
-          name = flow.name;
-          description = flow.description;
-          enabled = flow.status == NotifyFlowStatus.NOTIFY_FLOW_STATUS_ACTIVE;
-          sources = flow.sources;
-          targets = flow.targets;
-        }
         return Scaffold(
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            title: const Text('添加规则'),
+            title: const Text('编辑规则'),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -148,19 +157,36 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                               items: [
                                 for (final ListFeedConfigsResponse_FeedWithConfig config
                                     in notifySources)
-                                  MultiSelectItem(
-                                      config.config.id,
-                                      config.feed.title.isNotEmpty
-                                          ? config.feed.title
-                                          : config.config.feedUrl),
+                                  if (config.config.id.id != 0)
+                                    MultiSelectItem(
+                                        config.config.id,
+                                        config.feed.title.isNotEmpty
+                                            ? config.feed.title
+                                            : config.config.feedUrl),
                               ],
                               initialValue:
                                   sources.map((e) => e.sourceId).toList(),
                               onConfirm: (values) {
+                                final List<NotifyFlowSourceModel> newSources =
+                                    [];
+                                for (final value in values) {
+                                  if (sources
+                                      .map((e) => e.sourceId)
+                                      .contains(value)) {
+                                    newSources.add(sources.firstWhere(
+                                        (e) => e.sourceId == value));
+                                  } else {
+                                    newSources.add(NotifyFlowSourceModel(
+                                      sourceId: value,
+                                      filter: NotifyFilterModel(
+                                        excludeKeywords: [],
+                                        includeKeywords: [],
+                                      ),
+                                    ));
+                                  }
+                                }
                                 setState(() {
-                                  sources = values
-                                      .map((e) => NotifyFlowSource(sourceId: e))
-                                      .toList();
+                                  sources = newSources;
                                 });
                               },
                               decoration: BoxDecoration(
@@ -193,47 +219,131 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      TextFormField(
-                                        initialValue: sources[i]
-                                            .filter
-                                            .includeKeywords
-                                            .join(','),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            sources[i].filter = NotifyFilter(
-                                              includeKeywords: [newValue],
-                                              excludeKeywords: sources[i]
-                                                  .filter
-                                                  .excludeKeywords,
-                                            );
-                                          });
-                                        },
+                                      ChipsInput<String>(
+                                        values:
+                                            sources[i].filter.excludeKeywords,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           labelText: '排除关键字',
+                                        ),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            sources[i].filter.excludeKeywords =
+                                                data;
+                                          });
+                                        },
+                                        onSubmitted: (text) {
+                                          if (sources[i]
+                                              .filter
+                                              .excludeKeywords
+                                              .contains(text)) {
+                                            return;
+                                          } else if (text.trim().isNotEmpty) {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .excludeKeywords = [
+                                                ...sources[i]
+                                                    .filter
+                                                    .excludeKeywords,
+                                                text
+                                              ];
+                                            });
+                                          } else {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .excludeKeywords = [];
+                                            });
+                                          }
+                                        },
+                                        onTextChanged: (text) {
+                                          sources[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
+                                        chipBuilder: (context, topping) =>
+                                            ToppingInputChip(
+                                          topping: topping,
+                                          onDeleted: (text) {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .excludeKeywords = [
+                                                ...sources[i]
+                                                    .filter
+                                                    .excludeKeywords
+                                                    .where((e) => e != text)
+                                              ];
+                                            });
+                                          },
+                                          onSelected: (_) {},
                                         ),
                                       ),
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      TextFormField(
-                                        initialValue: sources[i]
-                                            .filter
-                                            .excludeKeywords
-                                            .join(','),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            sources[i].filter = NotifyFilter(
-                                              includeKeywords: sources[i]
-                                                  .filter
-                                                  .includeKeywords,
-                                              excludeKeywords: [newValue],
-                                            );
-                                          });
-                                        },
+                                      ChipsInput<String>(
+                                        values:
+                                            sources[i].filter.includeKeywords,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           labelText: '包含关键字',
+                                        ),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            sources[i].filter.includeKeywords =
+                                                data;
+                                          });
+                                        },
+                                        onSubmitted: (text) {
+                                          if (sources[i]
+                                              .filter
+                                              .includeKeywords
+                                              .contains(text)) {
+                                            return;
+                                          } else if (text.trim().isNotEmpty) {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .includeKeywords = [
+                                                ...sources[i]
+                                                    .filter
+                                                    .includeKeywords,
+                                                text
+                                              ];
+                                            });
+                                          } else {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .includeKeywords = [];
+                                            });
+                                          }
+                                        },
+                                        onTextChanged: (text) {
+                                          sources[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
+                                        chipBuilder: (context, topping) =>
+                                            ToppingInputChip(
+                                          topping: topping,
+                                          onDeleted: (text) {
+                                            setState(() {
+                                              sources[i]
+                                                  .filter
+                                                  .includeKeywords = [
+                                                ...sources[i]
+                                                    .filter
+                                                    .includeKeywords
+                                                    .where((e) => e != text)
+                                              ];
+                                            });
+                                          },
+                                          onSelected: (_) {},
                                         ),
                                       ),
                                     ]),
@@ -248,17 +358,35 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                               buttonText: const Text('第三方平台'),
                               buttonIcon: const Icon(Icons.filter_alt_outlined),
                               items: [
-                                for (final NotifyTarget config
-                                    in state.notifyTargets ?? [])
-                                  MultiSelectItem(config.id, config.name),
+                                for (final NotifyTarget config in notifyTargets)
+                                  if (config.id.id != 0)
+                                    MultiSelectItem(config.id,
+                                        '${config.name} (${notifyTargetTypeString(config.type)})'),
                               ],
                               initialValue:
                                   targets.map((e) => e.targetId).toList(),
                               onConfirm: (values) {
+                                final List<NotifyFlowTargetModel> newTargets =
+                                    [];
+                                for (final value in values) {
+                                  if (targets
+                                      .map((e) => e.targetId)
+                                      .contains(value)) {
+                                    newTargets.add(targets.firstWhere(
+                                        (e) => e.targetId == value));
+                                  } else {
+                                    newTargets.add(NotifyFlowTargetModel(
+                                      targetId: value,
+                                      channelId: '',
+                                      filter: NotifyFilterModel(
+                                        excludeKeywords: [],
+                                        includeKeywords: [],
+                                      ),
+                                    ));
+                                  }
+                                }
                                 setState(() {
-                                  targets = values
-                                      .map((e) => NotifyFlowTarget(targetId: e))
-                                      .toList();
+                                  targets = newTargets;
                                 });
                               },
                               decoration: BoxDecoration(
@@ -283,7 +411,6 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                   height: 8,
                                 ),
                                 TextFormField(
-                                  initialValue: targets[i].channelId,
                                   onChanged: (newValue) {
                                     setState(() {
                                       targets[i].channelId = newValue;
@@ -303,47 +430,131 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      TextFormField(
-                                        initialValue: targets[i]
-                                            .filter
-                                            .includeKeywords
-                                            .join(','),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            targets[i].filter = NotifyFilter(
-                                              includeKeywords: [newValue],
-                                              excludeKeywords: targets[i]
-                                                  .filter
-                                                  .excludeKeywords,
-                                            );
-                                          });
-                                        },
+                                      ChipsInput<String>(
+                                        values:
+                                            targets[i].filter.excludeKeywords,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           labelText: '排除关键字',
+                                        ),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            targets[i].filter.excludeKeywords =
+                                                data;
+                                          });
+                                        },
+                                        onSubmitted: (text) {
+                                          if (targets[i]
+                                              .filter
+                                              .excludeKeywords
+                                              .contains(text)) {
+                                            return;
+                                          } else if (text.trim().isNotEmpty) {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .excludeKeywords = [
+                                                ...targets[i]
+                                                    .filter
+                                                    .excludeKeywords,
+                                                text
+                                              ];
+                                            });
+                                          } else {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .excludeKeywords = [];
+                                            });
+                                          }
+                                        },
+                                        onTextChanged: (text) {
+                                          targets[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
+                                        chipBuilder: (context, topping) =>
+                                            ToppingInputChip(
+                                          topping: topping,
+                                          onDeleted: (text) {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .excludeKeywords = [
+                                                ...targets[i]
+                                                    .filter
+                                                    .excludeKeywords
+                                                    .where((e) => e != text)
+                                              ];
+                                            });
+                                          },
+                                          onSelected: (_) {},
                                         ),
                                       ),
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      TextFormField(
-                                        initialValue: targets[i]
-                                            .filter
-                                            .excludeKeywords
-                                            .join(','),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            targets[i].filter = NotifyFilter(
-                                              includeKeywords: targets[i]
-                                                  .filter
-                                                  .includeKeywords,
-                                              excludeKeywords: [newValue],
-                                            );
-                                          });
-                                        },
+                                      ChipsInput<String>(
+                                        values:
+                                            targets[i].filter.includeKeywords,
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           labelText: '包含关键字',
+                                        ),
+                                        onChanged: (data) {
+                                          setState(() {
+                                            targets[i].filter.includeKeywords =
+                                                data;
+                                          });
+                                        },
+                                        onSubmitted: (text) {
+                                          if (targets[i]
+                                              .filter
+                                              .includeKeywords
+                                              .contains(text)) {
+                                            return;
+                                          } else if (text.trim().isNotEmpty) {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .includeKeywords = [
+                                                ...targets[i]
+                                                    .filter
+                                                    .includeKeywords,
+                                                text
+                                              ];
+                                            });
+                                          } else {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .includeKeywords = [];
+                                            });
+                                          }
+                                        },
+                                        onTextChanged: (text) {
+                                          targets[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
+                                        chipBuilder: (context, topping) =>
+                                            ToppingInputChip(
+                                          topping: topping,
+                                          onDeleted: (text) {
+                                            setState(() {
+                                              targets[i]
+                                                  .filter
+                                                  .includeKeywords = [
+                                                ...targets[i]
+                                                    .filter
+                                                    .includeKeywords
+                                                    .where((e) => e != text)
+                                              ];
+                                            });
+                                          },
+                                          onSelected: (_) {},
                                         ),
                                       ),
                                     ]),
@@ -401,8 +612,8 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                             status: enabled
                                 ? NotifyFlowStatus.NOTIFY_FLOW_STATUS_ACTIVE
                                 : NotifyFlowStatus.NOTIFY_FLOW_STATUS_SUSPEND,
-                            sources: sources,
-                            targets: targets,
+                            sources: sources.map((e) => e.toProto()).toList(),
+                            targets: targets.map((e) => e.toProto()).toList(),
                           )));
                     }
                   },

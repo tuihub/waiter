@@ -10,8 +10,6 @@ class TitleBar extends StatelessWidget {
 
   final List<Widget> actions;
 
-  void hideWindow() {}
-
   @override
   Widget build(BuildContext context) {
     if (PlatformHelper.isAndroidApp()) {
