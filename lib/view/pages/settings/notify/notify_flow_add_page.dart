@@ -239,6 +239,12 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                             });
                                           }
                                         },
+                                        onTextChanged: (text) {
+                                          sources[i]
+                                                  .filter
+                                                  .extraExcludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
                                         chipBuilder: (context, topping) =>
                                             ToppingInputChip(
                                           topping: topping,
@@ -256,7 +262,6 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                           },
                                           onSelected: (_) {},
                                         ),
-                                        onTextChanged: (_) {},
                                       ),
                                       const SizedBox(
                                         height: 8,
@@ -299,6 +304,12 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                             });
                                           }
                                         },
+                                        onTextChanged: (text) {
+                                          sources[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
                                         chipBuilder: (context, topping) =>
                                             ToppingInputChip(
                                           topping: topping,
@@ -316,7 +327,6 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                           },
                                           onSelected: (_) {},
                                         ),
-                                        onTextChanged: (_) {},
                                       ),
                                     ]),
                               ]),
@@ -440,6 +450,12 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                             });
                                           }
                                         },
+                                        onTextChanged: (text) {
+                                          targets[i]
+                                                  .filter
+                                                  .extraExcludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
                                         chipBuilder: (context, topping) =>
                                             ToppingInputChip(
                                           topping: topping,
@@ -457,7 +473,6 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                           },
                                           onSelected: (_) {},
                                         ),
-                                        onTextChanged: (_) {},
                                       ),
                                       const SizedBox(
                                         height: 8,
@@ -500,6 +515,12 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                             });
                                           }
                                         },
+                                        onTextChanged: (text) {
+                                          targets[i]
+                                                  .filter
+                                                  .extraIncludeKeywords =
+                                              text.isNotEmpty ? [text] : [];
+                                        },
                                         chipBuilder: (context, topping) =>
                                             ToppingInputChip(
                                           topping: topping,
@@ -517,7 +538,6 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                           },
                                           onSelected: (_) {},
                                         ),
-                                        onTextChanged: (_) {},
                                       ),
                                     ]),
                               ]),

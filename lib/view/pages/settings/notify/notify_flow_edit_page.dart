@@ -260,7 +260,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                         onTextChanged: (text) {
                                           sources[i]
                                                   .filter
-                                                  .extraIncludeKeywords =
+                                                  .extraExcludeKeywords =
                                               text.isNotEmpty ? [text] : [];
                                         },
                                         chipBuilder: (context, topping) =>
@@ -471,7 +471,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                         onTextChanged: (text) {
                                           targets[i]
                                                   .filter
-                                                  .extraIncludeKeywords =
+                                                  .extraExcludeKeywords =
                                               text.isNotEmpty ? [text] : [];
                                         },
                                         chipBuilder: (context, topping) =>
