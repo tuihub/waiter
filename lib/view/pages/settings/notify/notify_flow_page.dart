@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
+import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 
 class NotifyFlowPage extends StatelessWidget {
@@ -94,6 +95,10 @@ class NotifyFlowPage extends StatelessWidget {
                                             maxLines: 2,
                                           ),
                                           Text(item.name),
+                                          Text(
+                                              '${item.sources.length}个源 | ${item.targets.length}个目标'),
+                                          Text(
+                                              '状态: ${notifyFlowStatusString(item.status)}'),
                                           Text(item.description),
                                         ],
                                       ),

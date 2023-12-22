@@ -7,7 +7,9 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
+import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
+import '../../../components/expand_rail_tile.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../helper/spacing.dart';
@@ -42,6 +44,8 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
         }
       },
       builder: (context, state) {
+        final notifySources = context.read<YesodBloc>().state.feedConfigs ?? [];
+        final notifyTargets = state.notifyTargets ?? [];
         if (state.notifyFlowEditIndex != null && state.notifyFlows != null) {
           final NotifyFlow flow =
               state.notifyFlows![state.notifyFlowEditIndex!];
@@ -136,40 +140,105 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                         ),
                         Step(
                           title: const Text('通知源'),
-                          content: MultiSelectDialogField(
-                            title: const Text('订阅源'),
-                            buttonText: const Text('订阅'),
-                            buttonIcon: const Icon(Icons.filter_alt_outlined),
-                            items: [
-                              for (final ListFeedConfigsResponse_FeedWithConfig config
-                                  in context
-                                          .read<YesodBloc>()
-                                          .state
-                                          .feedConfigs ??
-                                      [])
-                                MultiSelectItem(
-                                    config.config.id,
-                                    config.feed.title.isNotEmpty
-                                        ? config.feed.title
-                                        : config.config.feedUrl),
-                            ],
-                            initialValue:
-                                sources.map((e) => e.sourceId).toList(),
-                            onConfirm: (values) {
-                              sources = values
-                                  .map((e) => NotifyFlowSource(sourceId: e))
-                                  .toList();
-                            },
-                            decoration: BoxDecoration(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
+                          content: Column(children: [
+                            MultiSelectDialogField(
+                              title: const Text('订阅源'),
+                              buttonText: const Text('订阅'),
+                              buttonIcon: const Icon(Icons.filter_alt_outlined),
+                              items: [
+                                for (final ListFeedConfigsResponse_FeedWithConfig config
+                                    in notifySources)
+                                  MultiSelectItem(
+                                      config.config.id,
+                                      config.feed.title.isNotEmpty
+                                          ? config.feed.title
+                                          : config.config.feedUrl),
+                              ],
+                              initialValue:
+                                  sources.map((e) => e.sourceId).toList(),
+                              onConfirm: (values) {
+                                setState(() {
+                                  sources = values
+                                      .map((e) => NotifyFlowSource(sourceId: e))
+                                      .toList();
+                                });
+                              },
+                              decoration: BoxDecoration(
+                                borderRadius: SpacingHelper.defaultBorderRadius,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return '请选择至少一个订阅';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请选择至少一个订阅';
-                              }
-                              return null;
-                            },
-                          ),
+                            for (var i = 0; i < sources.length; i++)
+                              Column(children: [
+                                SpacingHelper.defaultDivider,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(notifySources
+                                      .firstWhere((e) =>
+                                          e.config.id == sources[i].sourceId)
+                                      .feed
+                                      .title),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                ExpandRailTile(
+                                    title: const Text('过滤器'),
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      TextFormField(
+                                        initialValue: sources[i]
+                                            .filter
+                                            .includeKeywords
+                                            .join(','),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            sources[i].filter = NotifyFilter(
+                                              includeKeywords: [newValue],
+                                              excludeKeywords: sources[i]
+                                                  .filter
+                                                  .excludeKeywords,
+                                            );
+                                          });
+                                        },
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: '排除关键字',
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      TextFormField(
+                                        initialValue: sources[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .join(','),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            sources[i].filter = NotifyFilter(
+                                              includeKeywords: sources[i]
+                                                  .filter
+                                                  .includeKeywords,
+                                              excludeKeywords: [newValue],
+                                            );
+                                          });
+                                        },
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: '包含关键字',
+                                        ),
+                                      ),
+                                    ]),
+                              ]),
+                          ]),
                         ),
                         Step(
                           title: const Text('通知目标'),
@@ -202,26 +271,82 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                 return null;
                               },
                             ),
-                            for (final NotifyFlowTarget target in targets)
+                            for (var i = 0; i < targets.length; i++)
                               Column(children: [
+                                SpacingHelper.defaultDivider,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                      '${notifyTargets.firstWhere((e) => e.id == targets[i].targetId).name} (${notifyTargetTypeString(notifyTargets.firstWhere((e) => e.id == targets[i].targetId).type)})'),
+                                ),
                                 const SizedBox(
-                                  height: 16,
+                                  height: 8,
                                 ),
                                 TextFormField(
-                                  initialValue: target.channelId,
+                                  initialValue: targets[i].channelId,
                                   onChanged: (newValue) {
                                     setState(() {
-                                      targets[targets.indexWhere((e) =>
-                                              e.targetId == target.targetId)]
-                                          .channelId = newValue;
+                                      targets[i].channelId = newValue;
                                     });
                                   },
-                                  decoration: InputDecoration(
-                                    border: const OutlineInputBorder(),
-                                    labelText:
-                                        '频道: ${state.notifyTargets?.firstWhere((e) => e.id == target.targetId).name ?? ''}',
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: '频道',
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                ExpandRailTile(
+                                    title: const Text('过滤器'),
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      TextFormField(
+                                        initialValue: targets[i]
+                                            .filter
+                                            .includeKeywords
+                                            .join(','),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            targets[i].filter = NotifyFilter(
+                                              includeKeywords: [newValue],
+                                              excludeKeywords: targets[i]
+                                                  .filter
+                                                  .excludeKeywords,
+                                            );
+                                          });
+                                        },
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: '排除关键字',
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      TextFormField(
+                                        initialValue: targets[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .join(','),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            targets[i].filter = NotifyFilter(
+                                              includeKeywords: targets[i]
+                                                  .filter
+                                                  .includeKeywords,
+                                              excludeKeywords: [newValue],
+                                            );
+                                          });
+                                        },
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: '包含关键字',
+                                        ),
+                                      ),
+                                    ]),
                               ]),
                           ]),
                         ),

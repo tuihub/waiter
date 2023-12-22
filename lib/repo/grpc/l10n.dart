@@ -108,3 +108,15 @@ String notifyTargetStatusString(NotifyTargetStatus status) {
   }
   return '';
 }
+
+String notifyFlowStatusString(NotifyFlowStatus status) {
+  switch (status) {
+    case NotifyFlowStatus.NOTIFY_FLOW_STATUS_UNSPECIFIED:
+      return S.current.NOTIFY_FLOW_STATUS_UNSPECIFIED;
+    case NotifyFlowStatus.NOTIFY_FLOW_STATUS_ACTIVE:
+      return S.current.NOTIFY_FLOW_STATUS_ACTIVE;
+    case NotifyFlowStatus.NOTIFY_FLOW_STATUS_SUSPEND:
+      return S.current.NOTIFY_FLOW_STATUS_SUSPEND;
+  }
+  return '';
+}

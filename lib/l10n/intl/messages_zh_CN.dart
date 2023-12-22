@@ -45,6 +45,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("停止"),
         "FEED_CONFIG_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
+        "NOTIFY_FLOW_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
+        "NOTIFY_FLOW_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("启用"),
+        "NOTIFY_FLOW_STATUS_SUSPEND":
+            MessageLookupByLibrary.simpleMessage("停止"),
+        "NOTIFY_FLOW_STATUS_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
         "NOTIFY_TARGET_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
         "NOTIFY_TARGET_STATUS_ACTIVE":
             MessageLookupByLibrary.simpleMessage("启用"),

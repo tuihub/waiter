@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
+import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 
 class NotifyTargetPage extends StatelessWidget {
@@ -94,6 +95,10 @@ class NotifyTargetPage extends StatelessWidget {
                                             maxLines: 2,
                                           ),
                                           Text(item.name),
+                                          Text(
+                                              '类型: ${notifyTargetTypeString(item.type)}'),
+                                          Text(
+                                              '状态: ${notifyTargetStatusString(item.status)}'),
                                           Text(item.description),
                                         ],
                                       ),
