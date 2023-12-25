@@ -121,14 +121,6 @@ dev_dependencies:
   floor_generator: ^1.4.2
   json_serializable: ^6.7.1
 
-dependency_overrides:
-  # fix https://github.com/bitsdojo/bitsdojo_window/issues/220
-  bitsdojo_window_windows:
-    git:
-      url: https://github.com/tuihub/bitsdojo_window.git
-      path: bitsdojo_window_windows
-      ref: master
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
