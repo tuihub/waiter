@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../bloc/main_bloc.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
 import 'my_accounts_card.dart';
@@ -48,7 +48,7 @@ class _LogoutDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             const Toast(title: '', message: '已退出登录').show(context);
-            context.read<TipherethBloc>().add(TipherethLogoutEvent());
+            context.read<MainBloc>().add(MainLogoutEvent());
             AppRoutes.login.go(context);
           },
           child: const Text('确定'),

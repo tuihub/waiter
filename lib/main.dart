@@ -25,8 +25,6 @@ import 'common/platform.dart';
 import 'l10n/l10n.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/local/common.dart';
-import 'repo/local/gebura.dart';
-import 'repo/local/yesod.dart';
 import 'route.dart';
 
 part 'init.dart';
@@ -57,73 +55,131 @@ void main() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp(this.router, this.mainBloc, {super.key});
 
   final GoRouter router;
   final MainBloc mainBloc;
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      providers = genProviders(context);
+    });
+  }
+
+  late List<BlocProvider> providers;
+
+  List<BlocProvider> genProviders(BuildContext context) {
+    final List<BlocProvider> newProviders = [
+      BlocProvider<ClientSettingBloc>(
+          create: (context) => widget.mainBloc.clientSettingBloc),
+    ];
+    if (widget.mainBloc.tipherethBloc != null) {
+      newProviders.add(BlocProvider<TipherethBloc>(
+          create: (context) => widget.mainBloc.tipherethBloc!));
+    }
+    if (widget.mainBloc.geburaBloc != null) {
+      newProviders.add(BlocProvider<GeburaBloc>(
+          create: (context) => widget.mainBloc.geburaBloc!));
+    }
+    if (widget.mainBloc.yesodBloc != null) {
+      newProviders.add(BlocProvider<YesodBloc>(
+          create: (context) => widget.mainBloc.yesodBloc!));
+    }
+    if (widget.mainBloc.chesedBloc != null) {
+      newProviders.add(BlocProvider<ChesedBloc>(
+          create: (context) => widget.mainBloc.chesedBloc!));
+    }
+    if (widget.mainBloc.netzachBloc != null) {
+      newProviders.add(BlocProvider<NetzachBloc>(
+          create: (context) => widget.mainBloc.netzachBloc!));
+    }
+    return newProviders;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => mainBloc),
-        BlocProvider(create: (context) => mainBloc.tipherethBloc),
-        BlocProvider(create: (context) => mainBloc.clientSettingBloc),
-        BlocProvider(create: (context) => mainBloc.chesedBloc),
-        BlocProvider(create: (context) => mainBloc.yesodBloc),
-        BlocProvider(create: (context) => mainBloc.geburaBloc),
-        BlocProvider(create: (context) => mainBloc.netzachBloc),
-      ],
-      child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
+    return BlocProvider(
+      create: (context) => widget.mainBloc,
+      child: BlocConsumer<MainBloc, MainState>(
+        listener: (context, state) {
+          final newProviders = genProviders(context);
+          setState(() {
+            providers = newProviders;
+          });
+        },
         builder: (context, state) {
-          if (state is DefaultAppState) {
-            context.read<ClientSettingBloc>().add(InitClientSettingEvent());
-          }
-          return MaterialApp.router(
-            onGenerateTitle: (context) => S.of(context).title,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-            // The Mandy red, light theme.
-            theme: FlexThemeData.light(
-              scheme: state.theme.scheme,
-              useMaterial3: true,
-              surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
-              blendLevel: 10,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 7,
-                useTextTheme: true,
-                useM2StyleDividerInM3: true,
-              ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              swapLegacyOnMaterial3: true,
-            ),
-            // The Mandy red, dark theme.
-            darkTheme: FlexThemeData.dark(
-              scheme: state.theme.scheme,
-              surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface,
-              blendLevel: 13,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 20,
-                useTextTheme: true,
-                useM2StyleDividerInM3: true,
-              ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              useMaterial3: true,
-              swapLegacyOnMaterial3: true,
-            ),
-            themeMode: state.themeMode,
-            // Use dark or light theme based on system setting.
-            routerConfig: router,
+          return MultiBlocProvider(
+            providers: providers,
+            child: _MyAppWidget(widget.router),
           );
         },
       ),
+    );
+  }
+}
+
+class _MyAppWidget extends StatelessWidget {
+  const _MyAppWidget(this.router);
+
+  final GoRouter router;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+      builder: (context, state) {
+        if (state is DefaultAppState) {
+          context.read<ClientSettingBloc>().add(InitClientSettingEvent());
+        }
+        return MaterialApp.router(
+          onGenerateTitle: (context) => S.of(context).title,
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          // The Mandy red, light theme.
+          theme: FlexThemeData.light(
+            scheme: state.theme.scheme,
+            useMaterial3: true,
+            surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
+            blendLevel: 10,
+            subThemesData: const FlexSubThemesData(
+              blendOnLevel: 7,
+              useTextTheme: true,
+              useM2StyleDividerInM3: true,
+            ),
+            visualDensity: FlexColorScheme.comfortablePlatformDensity,
+            swapLegacyOnMaterial3: true,
+          ),
+          // The Mandy red, dark theme.
+          darkTheme: FlexThemeData.dark(
+            scheme: state.theme.scheme,
+            surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface,
+            blendLevel: 13,
+            subThemesData: const FlexSubThemesData(
+              blendOnLevel: 20,
+              useTextTheme: true,
+              useM2StyleDividerInM3: true,
+            ),
+            visualDensity: FlexColorScheme.comfortablePlatformDensity,
+            useMaterial3: true,
+            swapLegacyOnMaterial3: true,
+          ),
+          themeMode: state.themeMode,
+          // Use dark or light theme based on system setting.
+          routerConfig: router,
+        );
+      },
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/main_bloc.dart';
-import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../components/expand_rail_tile.dart';
 import '../../helper/spacing.dart';
 
@@ -13,7 +12,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final packageInfo = context.read<MainBloc>().packageInfo;
-    final serverInfo = context.read<TipherethBloc>().state.serverInfo;
+    final serverInfo = context.read<MainBloc>().state.serverInfo;
     final logoHeight = MediaQuery.sizeOf(context).height / 3;
     final textStyle = TextStyle(
       color: Theme.of(context).colorScheme.onSurface,

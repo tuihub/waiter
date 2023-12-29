@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
-import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
 import 'view/layout/overlapping_panels.dart';
@@ -267,9 +267,10 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
       ),
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          return BlocBuilder<TipherethBloc, TipherethState>(
+          return BlocBuilder<MainBloc, MainState>(
             builder: (context, state) {
-              if (state.currentUser != null) {
+              if (state.currentUser != null ||
+                  context.read<MainBloc>().tipherethBloc != null) {
                 return MainWindow(
                   child: child,
                 );
@@ -349,14 +350,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 path: AppRoutes.gebura.toString(),
                 redirect: (context, state) {
                   if (context
-                          .read<MainBloc>()
-                          .geburaBloc
+                          .read<GeburaBloc>()
                           .state
                           .selectedPurchasedAppIndex !=
                       null) {
                     return AppRoutes.geburaLibraryDetail(context
-                            .read<MainBloc>()
-                            .geburaBloc
+                            .read<GeburaBloc>()
                             .state
                             .selectedPurchasedAppIndex!)
                         .toString();

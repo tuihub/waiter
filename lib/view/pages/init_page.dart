@@ -2,33 +2,39 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../bloc/main_bloc.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
 
-class InitPage extends StatelessWidget {
+class InitPage extends StatefulWidget {
   const InitPage({super.key});
 
   @override
+  State<InitPage> createState() => _InitPageState();
+}
+
+class _InitPageState extends State<InitPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MainBloc>().add(MainAutoLoginEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return Theme(
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
-      child: BlocConsumer<TipherethBloc, TipherethState>(
+      child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
-          if (state is TipherethAutoLoginState && state.success) {
+          if (state is MainAutoLoginState && state.success) {
             AppRoutes.tiphereth.go(context);
             const Toast(title: '', message: '欢迎回来').show(context);
           }
         },
         builder: (context, state) {
-          if (firstBuild) {
-            firstBuild = false;
-            context.read<TipherethBloc>().add(TipherethAutoLoginEvent());
-          }
           return Scaffold(
             body: BootstrapContainer(children: [
               BootstrapColumn(
@@ -42,23 +48,22 @@ class InitPage extends StatelessWidget {
                 ),
               ),
             ]),
-            floatingActionButton:
-                state is TipherethAutoLoginState && state.failed
-                    ? FloatingActionButton.extended(
-                        onPressed: () {
-                          AppRoutes.login.go(context);
-                        },
-                        icon: const Icon(Icons.arrow_forward),
-                        label: const Text('登录'),
-                      )
-                    : Container(),
+            floatingActionButton: state is MainAutoLoginState && state.failed
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      AppRoutes.login.go(context);
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                    label: const Text('登录'),
+                  )
+                : Container(),
           );
         },
       ),
     );
   }
 
-  Widget getInitWidget(TipherethState state) {
+  Widget getInitWidget(MainState state) {
     return const InitWidget();
     // if (state is AutoLogging) {
     //   return const InitWidget();
@@ -72,8 +77,7 @@ class InitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TipherethBloc, TipherethState>(
-        builder: (context, state) {
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,7 +112,7 @@ class InitWidget extends StatelessWidget {
           const SizedBox(
             height: 32,
           ),
-          if (state is TipherethAutoLoginState && state.processing)
+          if (state is MainAutoLoginState && state.processing)
             const SizedBox(
               height: 24,
               width: 24,

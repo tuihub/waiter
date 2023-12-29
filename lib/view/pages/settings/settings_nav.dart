@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
-import '../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../bloc/main_bloc.dart';
 import '../../../route.dart';
 import '../../components/expand_rail_tile.dart';
 import '../../components/rail_tile.dart';
@@ -15,8 +15,7 @@ class SettingsNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TipherethBloc, TipherethState>(
-      listener: (context, state) {},
+    return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
         return Scaffold(
           body: Column(

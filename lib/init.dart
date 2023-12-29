@@ -10,36 +10,22 @@ Future<MyApp> init() async {
   await Hive.initFlutter(path);
 
   // repo
-  final yesodRepo = await YesodRepo.init(path);
-  final geburaRepo = await GeburaRepo.init(path);
   final common = await ClientCommonRepo.init();
 
   // api
   final api = ApiHelper();
 
+  // system tray
+  await initSystemTray();
+
   // bloc
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  final tipherethBloc = TipherethBloc(api, common);
-  final clientSettingBloc = ClientSettingBloc(common);
-  final geburaBloc = GeburaBloc(api, geburaRepo);
-  final yesodBloc = YesodBloc(api, yesodRepo);
-  final chesedBloc = ChesedBloc(api);
-  final netzachBloc = NetzachBloc(api);
-
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
-  await initSystemTray();
-  final mainBloc = MainBloc(
-    clientSettingBloc,
-    tipherethBloc,
-    geburaBloc,
-    yesodBloc,
-    chesedBloc,
-    netzachBloc,
-    packageInfo,
-  );
+  final clientSettingBloc = ClientSettingBloc(common);
+  final mainBloc = MainBloc(api, common, clientSettingBloc, packageInfo, path);
 
   // router
   final router = getRouter(mainBloc, api);
@@ -49,7 +35,7 @@ Future<MyApp> init() async {
 
 Future<void> initSystemTray() async {
   if (!PlatformHelper.isWindowsApp()) {
-    return null;
+    return;
   }
   const String path = 'windows/runner/resources/app_icon.ico';
 

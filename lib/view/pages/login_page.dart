@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
-      child: BlocConsumer<TipherethBloc, TipherethState>(
+      child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
           if (state.currentUser != null) {
             AppRoutes.tiphereth.go(context);
@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget getInitWidget(TipherethState state) {
+  Widget getInitWidget(MainState state) {
     if (state.serverConfig != null) {
       return const SizedBox(height: 360, child: LoginWidget());
     }
@@ -120,7 +120,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
                 unawaited(showDialog<void>(
                   context: context,
                   builder: (context) {
-                    return BlocConsumer<TipherethBloc, TipherethState>(
+                    return BlocConsumer<MainBloc, MainState>(
                       listener: (context, state) {},
                       builder: (context, state) {
                         return AlertDialog(
@@ -132,8 +132,8 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
                                 ServerConnectivityWidget(
                                   config: server,
                                   callback: () {
-                                    context.read<TipherethBloc>().add(
-                                          TipherethSetServerConfigEvent(server),
+                                    context.read<MainBloc>().add(
+                                          MainSetServerConfigEvent(server),
                                         );
                                     Navigator.of(context).pop();
                                   },
@@ -242,8 +242,8 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             ServerConnectivityWidget(
               config: server,
               callback: () {
-                context.read<TipherethBloc>().add(
-                      TipherethSetServerConfigEvent(server),
+                context.read<MainBloc>().add(
+                      MainSetServerConfigEvent(server),
                     );
               },
             ),
@@ -286,8 +286,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     if (username.isEmpty || password.isEmpty) {
       const Toast(title: '', message: '用户名或密码为空, 请修改后重试').show(context);
     } else {
-      context.read<TipherethBloc>().add(
-            TipherethManualLoginEvent(username, password),
+      context.read<MainBloc>().add(
+            MainManualLoginEvent(username, password),
           );
     }
   }
@@ -296,9 +296,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TipherethBloc, TipherethState>(
+    return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {
-        if (state is TipherethManualLoginState && state.failed) {
+        if (state is MainManualLoginState && state.failed) {
           Toast(
             title: '',
             message: '登录失败,${state.msg}',
@@ -332,7 +332,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextButton(
                     onPressed: () {
-                      context.read<TipherethBloc>().add(TipherethLogoutEvent());
+                      context.read<MainBloc>().add(MainLogoutEvent());
                     },
                     child: const Text('< 返回'),
                   ),
@@ -382,7 +382,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   elevation: MaterialStatePropertyAll(0),
                 ),
-                child: state is TipherethManualLoginState && state.processing
+                child: state is MainManualLoginState && state.processing
                     ? const SizedBox(
                         height: 16,
                         width: 16,
