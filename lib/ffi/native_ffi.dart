@@ -2,7 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'ffi_model.dart';
-import 'rust_ffi/rust_ffi.dart';
+import 'rust_ffi/rust_ffi.dart' as rust_ffi;
 
 class NativeFFI {
   NativeFFI._();
@@ -30,7 +30,7 @@ class NativeFFI {
 }
 
 class FFI extends FFIBase {
-  static final _ffi = RustFfiImpl(NativeFFI.dyLib);
+  static final _ffi = rust_ffi.RustFfiImpl(NativeFFI.dyLib);
 
   @override
   Future<(int, int, bool)> processRunner(
@@ -49,7 +49,9 @@ class FFI extends FFIBase {
       workingDir: workingDir,
       sleepCount: sleepCount,
       sleepMillis: sleepMillis,
-      mode: mode,
+      mode: mode == TraceMode.Simple
+          ? rust_ffi.TraceMode.Simple
+          : rust_ffi.TraceMode.ByName,
     );
   }
 }

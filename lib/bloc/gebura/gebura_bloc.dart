@@ -8,7 +8,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../ffi/ffi.dart';
-import '../../ffi/rust_ffi/rust_ffi.dart';
+import '../../ffi/ffi_model.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
