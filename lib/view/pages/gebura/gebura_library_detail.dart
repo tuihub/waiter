@@ -3,42 +3,74 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/platform.dart';
+import '../../../model/gebura_model.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
-class GeburaLibraryDetailPage extends StatelessWidget {
+class GeburaLibraryDetailPage extends StatefulWidget {
   const GeburaLibraryDetailPage({super.key});
 
   @override
+  State<GeburaLibraryDetailPage> createState() =>
+      _GeburaLibraryDetailPageState();
+}
+
+class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      lastIndex = null;
+    });
+    _updateState();
+  }
+
+  late int? lastIndex;
+  late App? app;
+  late AppLauncherSetting? setting;
+  late AppRunState? runState;
+
+  void _updateState() {
+    setState(() {
+      final state = context.read<GeburaBloc>().state;
+      app =
+          state.purchasedApps != null && state.selectedPurchasedAppIndex != null
+              ? state.purchasedApps![state.selectedPurchasedAppIndex!]
+              : null;
+
+      setting = app != null
+          ? context.read<GeburaBloc>().getAppLauncherSetting(app!.id)
+          : null;
+
+      runState = app != null &&
+              state.runState != null &&
+              state.runState!.containsKey(app!.id)
+          ? state.runState![app!.id]
+          : null;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    int? lastIndex;
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
         if (state.selectedPurchasedAppIndex != lastIndex) {
-          lastIndex = state.selectedPurchasedAppIndex;
+          setState(() {
+            lastIndex = state.selectedPurchasedAppIndex;
+          });
         }
         if (state is GeburaRunAppState && state.msg != null) {
           Toast(title: '', message: state.msg!).show(context);
         }
-        if (state is GeburaRunAppState && state.success) {
-          Toast(title: '', message: '${state.startTime} ${state.endTime}')
-              .show(context);
-        }
+
+        _updateState();
       },
       builder: (context, state) {
-        final app = state.purchasedApps != null &&
-                state.selectedPurchasedAppIndex != null
-            ? state.purchasedApps![state.selectedPurchasedAppIndex!]
-            : null;
-
-        final setting = app != null
-            ? context.read<GeburaBloc>().getAppLauncherSetting(app.id)
-            : null;
-
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: app == null
@@ -60,7 +92,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                 borderRadius: SpacingHelper.defaultBorderRadius,
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                    app.heroImageUrl,
+                                    app!.heroImageUrl,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -87,7 +119,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Text(
-                                  app.name,
+                                  app!.name,
                                   style: TextStyle(
                                     fontSize: 52,
                                     fontWeight: FontWeight.bold,
@@ -112,12 +144,12 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           child: Row(
                             children: [
                               if (PlatformHelper.isWindowsApp())
-                                if (setting != null && setting.path.isNotEmpty)
+                                if (setting != null && setting!.path.isNotEmpty)
                                   ElevatedButton(
                                     onPressed: () async {
                                       context
                                           .read<GeburaBloc>()
-                                          .add(GeburaRunAppEvent(app.id));
+                                          .add(GeburaRunAppEvent(app!.id));
                                     },
                                     child: const Text('启动'),
                                   )
@@ -132,9 +164,21 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('开发商：${app.details.developer}'),
-                                  Text('发行商：${app.details.publisher}'),
-                                  Text('发行日期：${app.details.releaseDate}'),
+                                  Text('开发商：${app!.details.developer}'),
+                                  Text('发行商：${app!.details.publisher}'),
+                                  Text('发行日期：${app!.details.releaseDate}'),
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 24,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '运行状态：${runState?.running ?? false ? '运行中' : '未运行'}'),
+                                  Text('启动时间：${runState?.startTime ?? ''}'),
+                                  Text('停止时间：${runState?.endTime ?? ''}'),
                                 ],
                               ),
                               const Expanded(child: SizedBox()),
@@ -146,7 +190,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                       builder: (_) => BlocProvider.value(
                                         value: context.read<GeburaBloc>(),
                                         child: GeburaAppLauncherSettingDialog(
-                                            app.id.id.toInt(), setting),
+                                            app!.id.id.toInt(), setting),
                                       ),
                                     ));
                                   },

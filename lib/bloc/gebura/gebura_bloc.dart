@@ -8,6 +8,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../ffi/ffi.dart';
+import '../../ffi/rust_ffi/rust_ffi.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
@@ -94,6 +95,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     }, transformer: droppable());
 
     on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
+      debugPrint(event.setting.toString());
       await _repo.setAppLauncherSetting(event.setting);
       emit(GeburaSetAppLauncherSettingState(state, EventStatus.success));
     });
@@ -181,25 +183,52 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     }, transformer: droppable());
 
     on<GeburaRunAppEvent>((event, emit) async {
+      state.runState ??= {};
       emit(GeburaRunAppState(state, event.appID, EventStatus.processing));
       final setting = _repo.getAppLauncherSetting(event.appID.id.toInt());
-      if (setting == null) {
+      if (setting == null || setting.path.isEmpty) {
         emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
             msg: '请先设置应用路径'));
         return;
       }
+      if (state.runState![event.appID] != null &&
+          state.runState![event.appID]!.running) {
+        emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
+            msg: '请勿重复运行'));
+        return;
+      }
+      state.runState![event.appID] =
+          const AppRunState(running: true, startTime: null, endTime: null);
+      emit(GeburaRunAppState(state, event.appID, EventStatus.processing));
       try {
         final (start, end, suceess) = await FFI().processRunner(
-            '', setting.path, '', dirname(setting.path), 1, 1000);
+            setting.advancedTracing ? TraceMode.ByName : TraceMode.Simple,
+            setting.processName,
+            setting.path,
+            setting.realPath,
+            dirname(setting.path),
+            setting.sleepTime,
+            1000);
         if (!suceess) {
+          state.runState![event.appID] =
+              state.runState![event.appID]!.copyWith(running: false);
           emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
               msg: '应用未正常退出'));
           return;
         }
-        emit(GeburaRunAppState(state, event.appID, EventStatus.success,
-            startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
-            endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000)));
+        state.runState![event.appID] = AppRunState(
+          running: false,
+          startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
+          endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
+        );
+        emit(GeburaRunAppState(
+          state,
+          event.appID,
+          EventStatus.success,
+        ));
       } catch (e) {
+        state.runState![event.appID] =
+            state.runState![event.appID]!.copyWith(running: false);
         emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
             msg: '启动器错误 ${e is FrbAnyhowException ? e.anyhow : e}'));
         return;

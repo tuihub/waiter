@@ -9,3 +9,6 @@ format:
 	cd rust_ffi && make format
 	dart fix --apply
 	dart format .
+
+generate_dart:
+	dart run build_runner build

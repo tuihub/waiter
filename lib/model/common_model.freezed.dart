@@ -166,7 +166,7 @@ class _$ServerConfigImpl implements _ServerConfig {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ServerConfigImpl &&
@@ -361,7 +361,7 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClientCommonDataImpl &&

@@ -34,6 +34,7 @@ class FFI extends FFIBase {
 
   @override
   Future<(int, int, bool)> processRunner(
+    TraceMode mode,
     String name,
     String executePath,
     String monitorPath,
@@ -48,7 +49,7 @@ class FFI extends FFIBase {
       workingDir: workingDir,
       sleepCount: sleepCount,
       sleepMillis: sleepMillis,
-      mode: TraceMode.Simple,
+      mode: mode,
     );
   }
 }

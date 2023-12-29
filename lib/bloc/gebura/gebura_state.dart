@@ -5,23 +5,27 @@ class GeburaState {
   late int? selectedPurchasedAppIndex;
 
   late Map<InternalID, App>? storeApps;
+  late Map<InternalID, AppRunState>? runState;
 
   GeburaState({
     this.purchasedApps,
     this.selectedPurchasedAppIndex,
     this.storeApps,
+    this.runState,
   });
 
   GeburaState copyWith({
     List<App>? purchasedApps,
     int? selectedPurchasedAppIndex,
     Map<InternalID, App>? storeApps,
+    Map<InternalID, AppRunState>? runState,
   }) {
     return GeburaState(
       purchasedApps: purchasedApps ?? this.purchasedApps,
       selectedPurchasedAppIndex:
           selectedPurchasedAppIndex ?? this.selectedPurchasedAppIndex,
       storeApps: storeApps ?? this.storeApps,
+      runState: runState ?? this.runState,
     );
   }
 
@@ -29,6 +33,7 @@ class GeburaState {
     purchasedApps = other.purchasedApps;
     selectedPurchasedAppIndex = other.selectedPurchasedAppIndex;
     storeApps = other.storeApps;
+    runState = other.runState;
   }
 }
 
@@ -144,15 +149,12 @@ class GeburaAssignAppPackageState extends GeburaState with EventStatusMixin {
 }
 
 class GeburaRunAppState extends GeburaState with EventStatusMixin {
-  GeburaRunAppState(GeburaState state, this.appID, this.statusCode,
-      {this.startTime, this.endTime, this.msg})
+  GeburaRunAppState(GeburaState state, this.appID, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
 
   final InternalID appID;
-  final DateTime? startTime;
-  final DateTime? endTime;
 
   @override
   final EventStatus? statusCode;

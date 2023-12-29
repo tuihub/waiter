@@ -11,6 +11,10 @@ _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
     _$AppLauncherSettingImpl(
       appID: json['appID'] as int,
       path: json['path'] as String,
+      advancedTracing: json['advancedTracing'] as bool,
+      processName: json['processName'] as String,
+      realPath: json['realPath'] as String,
+      sleepTime: json['sleepTime'] as int,
     );
 
 Map<String, dynamic> _$$AppLauncherSettingImplToJson(
@@ -18,4 +22,26 @@ Map<String, dynamic> _$$AppLauncherSettingImplToJson(
     <String, dynamic>{
       'appID': instance.appID,
       'path': instance.path,
+      'advancedTracing': instance.advancedTracing,
+      'processName': instance.processName,
+      'realPath': instance.realPath,
+      'sleepTime': instance.sleepTime,
+    };
+
+_$AppRunStateImpl _$$AppRunStateImplFromJson(Map<String, dynamic> json) =>
+    _$AppRunStateImpl(
+      running: json['running'] as bool,
+      startTime: json['startTime'] == null
+          ? null
+          : DateTime.parse(json['startTime'] as String),
+      endTime: json['endTime'] == null
+          ? null
+          : DateTime.parse(json['endTime'] as String),
+    );
+
+Map<String, dynamic> _$$AppRunStateImplToJson(_$AppRunStateImpl instance) =>
+    <String, dynamic>{
+      'running': instance.running,
+      'startTime': instance.startTime?.toIso8601String(),
+      'endTime': instance.endTime?.toIso8601String(),
     };
