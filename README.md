@@ -15,7 +15,7 @@ Current version is for developer testing only. It's not ready for user. Don't ru
     - [x] `Yesod` Feed item list filter. by feed & by category
     - [ ] `Yesod` Use bilibili as feed source (WIP)
     - [ ] `Yesod` Generate feed and let server serving rss protocol (WIP)
-    - [ ] `Netzach` Push generated feed to Telegram (WIP)
+    - [x] `Netzach` Push generated feed to Telegram
   - [ ] Image
     - [ ] `Chesed` Basic image upload and manage (UploadImage, UpdateImage, ListImages, GetImage, DownloadImage)
     - [ ] `Chesed` Search image by ocr (SearchImages)

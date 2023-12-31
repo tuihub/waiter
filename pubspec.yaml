@@ -76,6 +76,7 @@ dependencies:
   smooth_scroll_multiplatform: ^1.0.8
   keframe: ^3.0.0
   animated_toggle_switch: ^0.8.0
+  extended_image: ^8.0.0
 
   # rust bridge
   ffi: ^2.0.1
@@ -86,7 +87,6 @@ dependencies:
   http: ^1.1.0
   html: ^0.15.4
   flutter_widget_from_html: ^0.10.0
-  cached_network_image: ^3.2.3
 
   # l10n
   intl: ^0.18.0

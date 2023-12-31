@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,7 +59,7 @@ class YesodConfigPage extends StatelessWidget {
                                     borderRadius:
                                         SpacingHelper.defaultBorderRadius,
                                     image: DecorationImage(
-                                        image: CachedNetworkImageProvider(
+                                        image: ExtendedNetworkImageProvider(
                                           item.feed.image.url,
                                         ),
                                         fit: BoxFit.cover),

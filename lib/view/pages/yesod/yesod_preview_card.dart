@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/yesod_model.dart';
@@ -32,7 +32,7 @@ class YesodPreviewCard extends StatelessWidget {
       const cardPadding = 8.0;
       const imgPadding = 8;
       const iconSize = 18.0;
-      final double leftImageSize = listType == FeedListType.message ? 128 : 0;
+      final double leftImageSize = listType == FeedListType.magazine ? 128 : 0;
       final double bottomImageSize = constraints.biggest.width < 406
           ? (constraints.biggest.width - 4 * imgPadding) / 3
           : 130;
@@ -49,7 +49,7 @@ class YesodPreviewCard extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(cardPadding),
               child: Row(children: [
-                if (listType == FeedListType.message)
+                if (listType == FeedListType.magazine)
                   Container(
                     width: leftImageSize,
                     padding: const EdgeInsets.only(right: cardPadding),
@@ -61,7 +61,7 @@ class YesodPreviewCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: SpacingHelper.defaultBorderRadius,
                         child: images != null && images!.isNotEmpty
-                            ? CachedNetworkImage(imageUrl: images![0])
+                            ? ExtendedImage.network(images![0])
                             : Container(),
                       ),
                     ),
@@ -70,7 +70,7 @@ class YesodPreviewCard extends StatelessWidget {
                   width: constraints.biggest.width -
                       2 * cardPadding -
                       leftImageSize,
-                  constraints: listType == FeedListType.message
+                  constraints: listType == FeedListType.magazine
                       ? BoxConstraints(
                           minHeight: leftImageSize,
                         )
@@ -91,8 +91,8 @@ class YesodPreviewCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (iconUrl != null && iconUrl!.isNotEmpty)
-                                CachedNetworkImage(
-                                  imageUrl: iconUrl!,
+                                ExtendedImage.network(
+                                  iconUrl!,
                                   height: iconSize,
                                   width: iconSize,
                                 ),
@@ -133,7 +133,7 @@ class YesodPreviewCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (listType == FeedListType.enrich &&
+                        if (listType == FeedListType.card &&
                             images != null &&
                             images!.isNotEmpty)
                           ConstrainedBox(
@@ -151,7 +151,7 @@ class YesodPreviewCard extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: SpacingHelper.defaultBorderRadius,
                               child: images!.length == 1
-                                  ? CachedNetworkImage(imageUrl: images![0])
+                                  ? ExtendedImage.network(images![0])
                                   : Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
@@ -171,7 +171,7 @@ class YesodPreviewCard extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 image:
-                                                    CachedNetworkImageProvider(
+                                                    ExtendedNetworkImageProvider(
                                                         image),
                                                 fit: BoxFit.fitWidth,
                                               ),

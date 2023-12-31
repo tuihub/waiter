@@ -29,7 +29,7 @@ class YesodRecentSettingPage extends StatelessWidget {
       builder: (context, state) {
         feedIDFilter = state.feedItemFilter?.feedIdFilter?.toList() ?? [];
         categoryFilter = state.feedItemFilter?.categoryFilter?.toList() ?? [];
-        final listType = state.feedListType ?? FeedListType.enrich;
+        final listType = state.feedListType ?? FeedListType.card;
         hideRead = state.feedItemFilter?.hideRead ?? false;
 
         return Scaffold(

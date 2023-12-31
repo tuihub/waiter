@@ -48,6 +48,6 @@ class ImgTextContent extends RssDescriptionContent {
 
 enum FeedListType {
   table,
-  message,
-  enrich,
+  magazine,
+  card,
 }

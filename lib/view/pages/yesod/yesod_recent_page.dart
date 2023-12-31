@@ -129,7 +129,7 @@ class YesodRecentPage extends StatelessWidget {
                                       images: item.imageUrls,
                                       description: item.shortDescription,
                                       listType: state.feedListType ??
-                                          FeedListType.enrich,
+                                          FeedListType.card,
                                     ),
                                   );
                                 },
