@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -151,13 +152,13 @@ class YesodPreviewCard extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: SpacingHelper.defaultBorderRadius,
                               child: images!.length == 1
-                                  ? ExtendedImage.network(images![0])
+                                  ? _ResizedSpecialImage(images![0])
                                   : Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: [
                                         for (final image in images!)
-                                          Container(
+                                          SizedBox(
                                             width: images!.length == 1
                                                 ? bottomImageSize * 3 +
                                                     imgPadding * 2
@@ -168,14 +169,7 @@ class YesodPreviewCard extends StatelessWidget {
                                                 ? bottomImageSize * 3 +
                                                     imgPadding * 2
                                                 : bottomImageSize,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image:
-                                                    ExtendedNetworkImageProvider(
-                                                        image),
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            ),
+                                            child: _ResizedSpecialImage(image),
                                           ),
                                       ],
                                     ),
@@ -190,6 +184,70 @@ class YesodPreviewCard extends StatelessWidget {
           ),
         ),
       );
+    });
+  }
+}
+
+class _ResizedSpecialImage extends StatefulWidget {
+  const _ResizedSpecialImage(this.url);
+
+  final String url;
+
+  @override
+  State<_ResizedSpecialImage> createState() => _ResizedSpecialImageState();
+}
+
+class _ResizedSpecialImageState extends State<_ResizedSpecialImage> {
+  double? width;
+  double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      double? newWidth;
+      double? newHeight;
+      final res = ExtendedImage.network(
+        widget.url,
+        width: width,
+        height: height,
+        fit: BoxFit.fitWidth,
+        beforePaintImage:
+            (Canvas canvas, Rect rect, ui.Image image, Paint paint) {
+          const x = 0.0;
+          const y = 0.0;
+          const ratio = 0.75;
+          final imgSourceWidth = image.width;
+          final imgSourceHeight = image.height;
+          final maxHeight = constraints.maxHeight;
+
+          if (imgSourceHeight / imgSourceWidth > 3.0) {
+            final l = x * imgSourceWidth;
+            final w = imgSourceWidth + 0.0;
+            final h = imgSourceWidth / ratio;
+            final double t = y * (imgSourceHeight - h);
+            canvas.drawImageRect(
+                image,
+                Rect.fromLTWH(l, t, w, h),
+                Rect.fromLTWH(
+                    rect.left, rect.top, maxHeight * ratio, maxHeight),
+                paint);
+            newWidth = maxHeight * ratio;
+            newHeight = maxHeight;
+            return true;
+          }
+
+          return false;
+        },
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (newWidth != width || newHeight != height) {
+          setState(() {
+            width = newWidth;
+            height = newHeight;
+          });
+        }
+      });
+      return res;
     });
   }
 }
