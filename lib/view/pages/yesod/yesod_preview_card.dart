@@ -62,7 +62,7 @@ class YesodPreviewCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: SpacingHelper.defaultBorderRadius,
                         child: images != null && images!.isNotEmpty
-                            ? ExtendedImage.network(images![0])
+                            ? _ResizedSpecialImage(images![0])
                             : Container(),
                       ),
                     ),
@@ -204,9 +204,7 @@ class _ResizedSpecialImageState extends State<_ResizedSpecialImage> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double? newWidth;
-      double? newHeight;
-      final res = ExtendedImage.network(
+      return ExtendedImage.network(
         widget.url,
         width: width,
         height: height,
@@ -231,23 +229,21 @@ class _ResizedSpecialImageState extends State<_ResizedSpecialImage> {
                 Rect.fromLTWH(
                     rect.left, rect.top, maxHeight * ratio, maxHeight),
                 paint);
-            newWidth = maxHeight * ratio;
-            newHeight = maxHeight;
+            final newWidth = maxHeight * ratio;
+            final newHeight = maxHeight;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (newWidth != width || newHeight != height) {
+                setState(() {
+                  width = newWidth;
+                  height = newHeight;
+                });
+              }
+            });
             return true;
           }
-
           return false;
         },
       );
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (newWidth != width || newHeight != height) {
-          setState(() {
-            width = newWidth;
-            height = newHeight;
-          });
-        }
-      });
-      return res;
     });
   }
 }
