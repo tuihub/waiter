@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +17,7 @@ import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
 import 'view/pages/gebura/gebura_nav.dart';
 import 'view/pages/gebura/gebura_store.dart';
+import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/login_page.dart';
 import 'view/pages/settings/about_page.dart';
@@ -51,7 +55,11 @@ class AppRoutes {
   String toString() => path;
 
   void go(BuildContext context, {Object? extra}) {
-    GoRouter.of(context).go(path, extra: extra);
+    if (path.startsWith(_imageViewer)) {
+      unawaited(GoRouter.of(context).push(path, extra: extra));
+    } else {
+      GoRouter.of(context).go(path, extra: extra);
+    }
     if (isAction) {
       OverlappingPanels.of(context)?.reveal(RevealSide.right);
       FramePage.of(context)?.openDrawer();
@@ -69,6 +77,9 @@ class AppRoutes {
 
   static const AppRoutes init = AppRoutes._('/');
   static const AppRoutes login = AppRoutes._('/login');
+  static const String _imageViewer = '/imageViewer';
+  static AppRoutes imageViewer(int index) =>
+      AppRoutes._('$_imageViewer/$index');
   static const String _module = '/module';
   static AppRoutes module(ModuleName? moduleName) =>
       AppRoutes._('$_module${moduleName != null ? '/$moduleName' : ''}');
@@ -231,31 +242,7 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
 GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
     initialLocation: AppRoutes.init.toString(),
-    // refreshListenable: StreamListener(mainBloc.tipherethBloc.stream),
-    debugLogDiagnostics: true,
-    // redirect: (context, state) {
-    //   if (context.read<TipherethBloc>().state is PreLogin) {
-    //     return AppRoutes.init.toString();
-    //   }
-    //   if (context.read<TipherethBloc>().state is OnLogin) {
-    //     return AppRoutes.login.toString();
-    //   }
-    //   if (context.read<TipherethBloc>().state is PostLogin) {
-    //     if (state.uri.toString() == AppRoutes.login.toString() ||
-    //         state.uri.toString() == AppRoutes.init.toString()) {
-    //       final userPath = context.read<ClientSettingBloc>().userPath;
-    //       if (userPath.startsWith(AppRoutes._module)) {
-    //         return userPath;
-    //       }
-    //       return AppRoutes.tiphereth.toString();
-    //     }
-    //     if (state.uri.toString() == AppRoutes._module) {
-    //       return AppRoutes.tiphereth.toString();
-    //     }
-    //   }
-    //   context.read<ClientSettingBloc>().userPath = state.uri.toString();
-    //   return null;
-    // },
+    debugLogDiagnostics: kDebugMode,
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
@@ -264,6 +251,23 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
       GoRoute(
         path: AppRoutes.login.toString(),
         builder: (context, state) => const MainWindow(child: LoginPage()),
+      ),
+      GoRoute(
+        path: '${AppRoutes._imageViewer}/:index',
+        pageBuilder: (context, state) {
+          final indexStr = state.pathParameters['index'];
+          final index = indexStr != null ? int.tryParse(indexStr) : null;
+          final pics = state.extra as List<PicSwiperItem>?;
+          return CustomTransitionPage(
+            fullscreenDialog: true,
+            opaque: false,
+            transitionsBuilder: (_, __, ___, child) => child,
+            child: PicSwiper(
+              index: index,
+              pics: pics,
+            ),
+          );
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state, Widget child) {

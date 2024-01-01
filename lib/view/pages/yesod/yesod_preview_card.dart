@@ -3,7 +3,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/yesod_model.dart';
+import '../../../route.dart';
 import '../../helper/spacing.dart';
+import '../image_viewer.dart';
 
 class YesodPreviewCard extends StatelessWidget {
   const YesodPreviewCard({
@@ -152,12 +154,24 @@ class YesodPreviewCard extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: SpacingHelper.defaultBorderRadius,
                               child: images!.length == 1
-                                  ? _ResizedSpecialImage(images![0])
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        AppRoutes.imageViewer(0).go(context,
+                                            extra: images
+                                                ?.map((e) =>
+                                                    PicSwiperItem(picUrl: e))
+                                                .toList());
+                                      },
+                                      child: Hero(
+                                        tag: images![0],
+                                        child: _ResizedSpecialImage(images![0]),
+                                      ),
+                                    )
                                   : Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
                                       children: [
-                                        for (final image in images!)
+                                        for (var i = 0; i < images!.length; i++)
                                           SizedBox(
                                             width: images!.length == 1
                                                 ? bottomImageSize * 3 +
@@ -169,7 +183,22 @@ class YesodPreviewCard extends StatelessWidget {
                                                 ? bottomImageSize * 3 +
                                                     imgPadding * 2
                                                 : bottomImageSize,
-                                            child: _ResizedSpecialImage(image),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                AppRoutes.imageViewer(i).go(
+                                                    context,
+                                                    extra: images
+                                                        ?.map((e) =>
+                                                            PicSwiperItem(
+                                                                picUrl: e))
+                                                        .toList());
+                                              },
+                                              child: Hero(
+                                                tag: images![i],
+                                                child: _ResizedSpecialImage(
+                                                    images![i]),
+                                              ),
+                                            ),
                                           ),
                                       ],
                                     ),
