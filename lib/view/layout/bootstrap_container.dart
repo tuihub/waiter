@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 import 'bootstrap_breakpoints.dart';
 
 class BootstrapContainer extends StatelessWidget {
-  const BootstrapContainer(
-      {super.key, required this.children, this.alignment = Alignment.center});
+  const BootstrapContainer({
+    super.key,
+    required this.children,
+    this.alignment = Alignment.center,
+    this.fill = BootstrapSteps.undefined,
+  });
 
   final List<Widget> children;
   final AlignmentGeometry alignment;
+  final BootstrapSteps fill;
 
   @override
   Widget build(BuildContext context) {
@@ -16,22 +21,51 @@ class BootstrapContainer extends StatelessWidget {
       late double maxWidth;
 
       if (width >= BootstrapBreakpoints.xxl) {
-        maxWidth = BootstrapContainerMaxWidth.xxl;
+        if (fill.value >= BootstrapSteps.xxl.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.xxl;
+        }
       } else if (width >= BootstrapBreakpoints.xl) {
-        maxWidth = BootstrapContainerMaxWidth.xl;
+        if (fill.value >= BootstrapSteps.xl.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.xl;
+        }
       } else if (width >= BootstrapBreakpoints.lg) {
-        maxWidth = BootstrapContainerMaxWidth.lg;
+        if (fill.value >= BootstrapSteps.lg.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.lg;
+        }
       } else if (width >= BootstrapBreakpoints.md) {
-        maxWidth = BootstrapContainerMaxWidth.md;
+        if (fill.value >= BootstrapSteps.md.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.md;
+        }
       } else if (width >= BootstrapBreakpoints.sm) {
-        maxWidth = BootstrapContainerMaxWidth.sm;
+        if (fill.value >= BootstrapSteps.sm.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.sm;
+        }
       } else if (width >= BootstrapBreakpoints.xs) {
-        maxWidth = BootstrapContainerMaxWidth.xs;
+        if (fill.value >= BootstrapSteps.xs.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.xs;
+        }
       } else {
-        maxWidth = BootstrapContainerMaxWidth.xxs;
+        if (fill.value >= BootstrapSteps.xxs.value) {
+          maxWidth = width;
+        } else {
+          maxWidth = BootstrapContainerMaxWidth.xxs;
+        }
       }
       return _InheritedBootstrapContainer(
         width: maxWidth,
+        filled: maxWidth == width,
         child: Align(
           alignment: alignment,
           child: Container(
@@ -54,10 +88,12 @@ class BootstrapContainer extends StatelessWidget {
 class _InheritedBootstrapContainer extends InheritedWidget {
   const _InheritedBootstrapContainer({
     required this.width,
+    required this.filled,
     required super.child,
   });
 
   final double width;
+  final bool filled;
 
   static _InheritedBootstrapContainer? of(BuildContext context) {
     return context
@@ -70,19 +106,28 @@ class _InheritedBootstrapContainer extends InheritedWidget {
   }
 }
 
+typedef BootstrapColumnBuilder = Widget Function(
+    BuildContext context, bool containerFilled);
+
 class BootstrapColumn extends StatelessWidget {
   const BootstrapColumn(
       {super.key,
-      required this.child,
+      this.child,
+      this.builder,
+      this.fill = BootstrapSteps.undefined,
       this.xxs = -1,
       this.xs = -1,
       this.sm = -1,
       this.md = -1,
       this.lg = -1,
       this.xl = -1,
-      this.xxl = -1});
+      this.xxl = -1})
+      : assert(child != null || builder != null,
+            'child or builder must not be null');
 
-  final Widget child;
+  final BootstrapColumnBuilder? builder;
+  final Widget? child;
+  final BootstrapSteps fill;
   final int xxs;
   final int xs;
   final int sm;
@@ -144,29 +189,64 @@ class BootstrapColumn extends StatelessWidget {
 
       if (containerWidth == BootstrapContainerMaxWidth.xxs ||
           containerWidth < BootstrapContainerMaxWidth.xs) {
-        late double maxWidth = constraints.biggest.width;
-        if (maxWidth == double.infinity) {
-          maxWidth = BootstrapContainerMaxWidth.xs;
+        if (fill.value >= BootstrapSteps.xxs.value) {
+          columnWidth = containerWidth;
+        } else {
+          double maxWidth = constraints.biggest.width;
+          if (maxWidth == double.infinity) {
+            maxWidth = BootstrapContainerMaxWidth.xs;
+          }
+          columnWidth = maxWidth * xxs_ / 12;
         }
-        columnWidth = maxWidth * xxs_ / 12;
       } else if (containerWidth < BootstrapContainerMaxWidth.sm) {
-        columnWidth = BootstrapContainerMaxWidth.xs * xs_ / 12;
+        if (fill.value >= BootstrapSteps.xs.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.xs * xs_ / 12;
+        }
       } else if (containerWidth < BootstrapContainerMaxWidth.md) {
-        columnWidth = BootstrapContainerMaxWidth.sm * sm_ / 12;
+        if (fill.value >= BootstrapSteps.sm.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.sm * sm_ / 12;
+        }
       } else if (containerWidth < BootstrapContainerMaxWidth.lg) {
-        columnWidth = BootstrapContainerMaxWidth.md * md_ / 12;
+        if (fill.value >= BootstrapSteps.md.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.md * md_ / 12;
+        }
       } else if (containerWidth < BootstrapContainerMaxWidth.xl) {
-        columnWidth = BootstrapContainerMaxWidth.lg * lg_ / 12;
+        if (fill.value >= BootstrapSteps.lg.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.lg * lg_ / 12;
+        }
       } else if (containerWidth < BootstrapContainerMaxWidth.xxl) {
-        columnWidth = BootstrapContainerMaxWidth.xl * xl_ / 12;
+        if (fill.value >= BootstrapSteps.xl.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.xl * xl_ / 12;
+        }
       } else {
-        columnWidth = BootstrapContainerMaxWidth.xxl * xxl_ / 12;
+        if (fill.value >= BootstrapSteps.xxl.value) {
+          columnWidth = containerWidth;
+        } else {
+          columnWidth = BootstrapContainerMaxWidth.xxl * xxl_ / 12;
+        }
       }
-
-      return SizedBox(
-        width: columnWidth,
-        child: child,
-      );
+      if (builder != null) {
+        return SizedBox(
+          width: columnWidth,
+          child: builder!(context,
+              _InheritedBootstrapContainer.of(context)?.filled ?? false),
+        );
+      } else {
+        return SizedBox(
+          width: columnWidth,
+          child: child,
+        );
+      }
     });
   }
 }

@@ -9,6 +9,8 @@ import '../../../common/bloc_event_status_mixin.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
+import '../../helper/spacing.dart';
+import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
@@ -87,56 +89,68 @@ class YesodRecentPage extends StatelessWidget {
 
                       return FrameSeparateWidget(
                         index: index,
-                        child: BootstrapContainer(children: [
-                          BootstrapColumn(
-                            xxs: 12,
-                            md: 9,
-                            lg: 7,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: OpenContainer(
-                                tappable:
-                                    false, // https://github.com/flutter/flutter/issues/74111
-                                openBuilder: (_, __) {
-                                  return BlocProvider.value(
-                                    value: context.read<YesodBloc>(),
-                                    child: YesodDetailPage(
-                                      itemId: item.itemId,
-                                    ),
-                                  );
-                                },
-                                openColor: theme.colorScheme.primary,
-                                closedShape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12)),
-                                ),
-                                closedElevation: 0,
-                                closedColor: theme.cardColor,
-                                closedBuilder: (context, openContainer) {
-                                  return GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      openContainer();
-                                      context.read<YesodBloc>().add(
-                                          YesodFeedItemReadEvent(item.itemId));
-                                    },
-                                    child: YesodPreviewCard(
-                                      name:
-                                          '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
-                                      title: item.title,
-                                      callback: openContainer,
-                                      iconUrl: item.feedAvatarUrl,
-                                      images: item.imageUrls,
-                                      description: item.shortDescription,
-                                      listType: state.feedListType ??
-                                          FeedListType.card,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ]),
+                        child: BootstrapContainer(
+                            fill: BootstrapSteps.xs,
+                            children: [
+                              BootstrapColumn(
+                                  fill: BootstrapSteps.xs,
+                                  xxs: 12,
+                                  md: 9,
+                                  lg: 7,
+                                  builder: (context, filled) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: OpenContainer(
+                                        tappable:
+                                            false, // https://github.com/flutter/flutter/issues/74111
+                                        openBuilder: (_, __) {
+                                          return BlocProvider.value(
+                                            value: context.read<YesodBloc>(),
+                                            child: YesodDetailPage(
+                                              itemId: item.itemId,
+                                            ),
+                                          );
+                                        },
+                                        openColor: theme.colorScheme.primary,
+                                        closedShape: RoundedRectangleBorder(
+                                          borderRadius: filled
+                                              ? BorderRadius.zero
+                                              : SpacingHelper
+                                                  .defaultBorderRadius,
+                                        ),
+                                        closedElevation: 0,
+                                        closedColor: theme.cardColor,
+                                        closedBuilder:
+                                            (context, openContainer) {
+                                          return GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: () {
+                                              openContainer();
+                                              context.read<YesodBloc>().add(
+                                                  YesodFeedItemReadEvent(
+                                                      item.itemId));
+                                            },
+                                            child: YesodPreviewCard(
+                                              name:
+                                                  '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                                              title: item.title,
+                                              callback: openContainer,
+                                              iconUrl: item.feedAvatarUrl,
+                                              images: item.imageUrls,
+                                              description:
+                                                  item.shortDescription,
+                                              listType: state.feedListType ??
+                                                  FeedListType.card,
+                                              cardBorderRadius: filled
+                                                  ? BorderRadius.zero
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }),
+                            ]),
                       );
                     } else {
                       return Padding(

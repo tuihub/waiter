@@ -17,3 +17,17 @@ class BootstrapContainerMaxWidth {
   static const double xl = 1140;
   static const double xxl = 1320;
 }
+
+enum BootstrapSteps {
+  undefined._(0),
+  xxs._(1),
+  xs._(2),
+  sm._(3),
+  md._(4),
+  lg._(5),
+  xl._(6),
+  xxl._(7);
+
+  const BootstrapSteps._(this.value);
+  final int value;
+}

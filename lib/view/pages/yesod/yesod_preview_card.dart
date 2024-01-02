@@ -17,6 +17,7 @@ class YesodPreviewCard extends StatelessWidget {
     this.iconUrl,
     this.images,
     this.description,
+    this.cardBorderRadius,
   });
 
   final String? iconUrl;
@@ -26,36 +27,42 @@ class YesodPreviewCard extends StatelessWidget {
   final String? description;
   final void Function() callback;
   final FeedListType listType;
+  final BorderRadius? cardBorderRadius;
 
   @override
   Widget build(BuildContext context) {
+    final cardBorderRadius_ =
+        cardBorderRadius ?? SpacingHelper.defaultBorderRadius;
     return LayoutBuilder(builder: (context, constraints) {
       const maxTitleLines = 2;
       const maxDescriptionLines = 3;
-      const cardPadding = 8.0;
+      const cardPaddingV = 16.0;
+      const cardPaddingH = 16.0;
       const imgPadding = 8;
       const iconSize = 18.0;
       final double leftImageSize = listType == FeedListType.magazine ? 128 : 0;
       final double bottomImageSize = constraints.biggest.width < 406
-          ? (constraints.biggest.width - 4 * imgPadding) / 3
+          ? (constraints.biggest.width - 2 * imgPadding - 2 * cardPaddingH) / 3
           : 130;
+      debugPrint('${constraints.biggest.width} $bottomImageSize');
       return Material(
-        borderRadius: SpacingHelper.defaultBorderRadius,
+        borderRadius: cardBorderRadius_,
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: SpacingHelper.defaultBorderRadius,
+            borderRadius: cardBorderRadius_,
             color: Theme.of(context).cardColor,
           ),
           child: InkWell(
-            borderRadius: SpacingHelper.defaultBorderRadius,
+            borderRadius: cardBorderRadius_,
             onTap: callback,
             child: Padding(
-              padding: const EdgeInsets.all(cardPadding),
+              padding: const EdgeInsets.fromLTRB(
+                  cardPaddingH, cardPaddingV, cardPaddingH, cardPaddingV),
               child: Row(children: [
                 if (listType == FeedListType.magazine)
                   Container(
                     width: leftImageSize,
-                    padding: const EdgeInsets.only(right: cardPadding),
+                    padding: const EdgeInsets.only(right: cardPaddingV),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         maxHeight: leftImageSize,
@@ -71,7 +78,7 @@ class YesodPreviewCard extends StatelessWidget {
                   ),
                 Container(
                   width: constraints.biggest.width -
-                      2 * cardPadding -
+                      2 * cardPaddingH -
                       leftImageSize,
                   constraints: listType == FeedListType.magazine
                       ? BoxConstraints(
