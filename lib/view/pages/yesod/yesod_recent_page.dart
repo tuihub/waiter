@@ -85,6 +85,10 @@ class YesodRecentPage extends StatelessWidget {
                   cacheExtent: MediaQuery.sizeOf(context).height * 2,
                   itemBuilder: (context, index) {
                     if (index < items.length) {
+                      if ((state.feedItemFilter?.hideRead ?? false) &&
+                          items[index].readCount > 0) {
+                        return const SizedBox();
+                      }
                       final item = items[index];
 
                       return FrameSeparateWidget(
@@ -122,29 +126,24 @@ class YesodRecentPage extends StatelessWidget {
                                         closedColor: theme.cardColor,
                                         closedBuilder:
                                             (context, openContainer) {
-                                          return GestureDetector(
-                                            behavior: HitTestBehavior.opaque,
-                                            onTap: () {
+                                          return YesodPreviewCard(
+                                            name:
+                                                '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                                            title: item.title,
+                                            callback: () {
                                               openContainer();
                                               context.read<YesodBloc>().add(
                                                   YesodFeedItemReadEvent(
                                                       item.itemId));
                                             },
-                                            child: YesodPreviewCard(
-                                              name:
-                                                  '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
-                                              title: item.title,
-                                              callback: openContainer,
-                                              iconUrl: item.feedAvatarUrl,
-                                              images: item.imageUrls,
-                                              description:
-                                                  item.shortDescription,
-                                              listType: state.feedListType ??
-                                                  FeedListType.card,
-                                              cardBorderRadius: filled
-                                                  ? BorderRadius.zero
-                                                  : null,
-                                            ),
+                                            iconUrl: item.feedAvatarUrl,
+                                            images: item.imageUrls,
+                                            description: item.shortDescription,
+                                            listType: state.feedListType ??
+                                                FeedListType.card,
+                                            cardBorderRadius: filled
+                                                ? BorderRadius.zero
+                                                : null,
                                           );
                                         },
                                       ),

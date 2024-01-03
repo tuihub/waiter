@@ -44,7 +44,6 @@ class YesodPreviewCard extends StatelessWidget {
       final double bottomImageSize = constraints.biggest.width < 406
           ? (constraints.biggest.width - 2 * imgPadding - 2 * cardPaddingH) / 3
           : 130;
-      debugPrint('${constraints.biggest.width} $bottomImageSize');
       return Material(
         borderRadius: cardBorderRadius_,
         child: Ink(

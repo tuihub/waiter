@@ -21,9 +21,10 @@ class YesodRecentSettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     List<InternalID> feedIDFilter = [];
     List<String> categoryFilter = [];
-    late bool hideRead;
+    bool hideRead;
 
     return BlocBuilder<YesodBloc, YesodState>(
       builder: (context, state) {
@@ -42,100 +43,104 @@ class YesodRecentSettingPage extends StatelessWidget {
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  SpacingHelper.defaultDivider,
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('显示风格'),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  AnimatedToggleSwitch<FeedListType>.size(
-                    current: listType,
-                    values: FeedListType.values,
-                    iconOpacity: 1.0,
-                    selectedIconScale: 1.0,
-                    indicatorSize: const Size.fromWidth(100),
-                    iconAnimationType: AnimationType.onHover,
-                    styleAnimationType: AnimationType.onHover,
-                    spacing: 2.0,
-                    customIconBuilder: (context, local, global) {
-                      final text = const ['列表', '杂志', '卡片'][local.index];
-                      return Center(
-                          child: Text(text,
-                              style: TextStyle(
-                                  color: Color.lerp(Colors.black, Colors.white,
-                                      local.animationValue))));
-                    },
-                    onChanged: (value) {
-                      context.read<YesodBloc>().add(
-                            YesodFeedListTypeSetEvent(value),
-                          );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  SpacingHelper.defaultDivider,
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('筛选'),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  SwitchFormField(
-                    onSaved: (newValue) => hideRead = newValue ?? false,
-                    title: const Text('隐藏已读'),
-                    initialValue: hideRead,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  MultiSelectDialogField(
-                    title: const Text('按订阅筛选'),
-                    buttonText: const Text('订阅'),
-                    buttonIcon: const Icon(Icons.filter_alt_outlined),
-                    items: [
-                      for (final ListFeedConfigsResponse_FeedWithConfig config
-                          in state.feedConfigs ?? [])
-                        MultiSelectItem(
-                            config.config.id,
-                            config.feed.title.isNotEmpty
-                                ? config.feed.title
-                                : config.config.feedUrl),
-                    ],
-                    initialValue: feedIDFilter,
-                    onConfirm: (values) {
-                      feedIDFilter = values;
-                    },
-                    decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    SpacingHelper.defaultDivider,
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('显示风格'),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  MultiSelectDialogField(
-                    title: const Text('按分类筛选'),
-                    buttonText: const Text('分类'),
-                    buttonIcon: const Icon(Icons.filter_alt_outlined),
-                    items: [
-                      for (final String category in state.feedCategories ?? [])
-                        MultiSelectItem(
-                            category, category.isNotEmpty ? category : '未分类'),
-                    ],
-                    initialValue: categoryFilter,
-                    onConfirm: (values) {
-                      categoryFilter = values;
-                    },
-                    decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+                    const SizedBox(
+                      height: 16,
                     ),
-                  ),
-                ],
+                    AnimatedToggleSwitch<FeedListType>.size(
+                      current: listType,
+                      values: FeedListType.values,
+                      iconOpacity: 1.0,
+                      selectedIconScale: 1.0,
+                      indicatorSize: const Size.fromWidth(100),
+                      iconAnimationType: AnimationType.onHover,
+                      styleAnimationType: AnimationType.onHover,
+                      spacing: 2.0,
+                      customIconBuilder: (context, local, global) {
+                        final text = const ['列表', '杂志', '卡片'][local.index];
+                        return Center(
+                            child: Text(text,
+                                style: TextStyle(
+                                    color: Color.lerp(Colors.black,
+                                        Colors.white, local.animationValue))));
+                      },
+                      onChanged: (value) {
+                        context.read<YesodBloc>().add(
+                              YesodFeedListTypeSetEvent(value),
+                            );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SpacingHelper.defaultDivider,
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('筛选'),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SwitchFormField(
+                      onSaved: (newValue) => hideRead = newValue ?? false,
+                      title: const Text('隐藏已读'),
+                      initialValue: hideRead,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    MultiSelectDialogField(
+                      title: const Text('按订阅筛选'),
+                      buttonText: const Text('订阅'),
+                      buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      items: [
+                        for (final ListFeedConfigsResponse_FeedWithConfig config
+                            in state.feedConfigs ?? [])
+                          MultiSelectItem(
+                              config.config.id,
+                              config.feed.title.isNotEmpty
+                                  ? config.feed.title
+                                  : config.config.feedUrl),
+                      ],
+                      initialValue: feedIDFilter,
+                      onConfirm: (values) {
+                        feedIDFilter = values;
+                      },
+                      decoration: BoxDecoration(
+                        borderRadius: SpacingHelper.defaultBorderRadius,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    MultiSelectDialogField(
+                      title: const Text('按分类筛选'),
+                      buttonText: const Text('分类'),
+                      buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      items: [
+                        for (final String category
+                            in state.feedCategories ?? [])
+                          MultiSelectItem(
+                              category, category.isNotEmpty ? category : '未分类'),
+                      ],
+                      initialValue: categoryFilter,
+                      onConfirm: (values) {
+                        categoryFilter = values;
+                      },
+                      decoration: BoxDecoration(
+                        borderRadius: SpacingHelper.defaultBorderRadius,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -146,16 +151,19 @@ class YesodRecentSettingPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    context.read<YesodBloc>().add(
-                          YesodFeedItemDigestsSetFilterEvent(
-                            YesodFeedItemFilter(
-                              feedIdFilter: feedIDFilter,
-                              categoryFilter: categoryFilter,
-                              hideRead: hideRead,
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      context.read<YesodBloc>().add(
+                            YesodFeedItemDigestsSetFilterEvent(
+                              YesodFeedItemFilter(
+                                feedIdFilter: feedIDFilter,
+                                categoryFilter: categoryFilter,
+                                hideRead: hideRead,
+                              ),
                             ),
-                          ),
-                        );
-                    close(context);
+                          );
+                      close(context);
+                    }
                   },
                   child: const Text('确定'),
                 ),
