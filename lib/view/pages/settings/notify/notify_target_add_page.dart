@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 
+import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
@@ -18,9 +19,16 @@ class NotifyTargetAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final notifyDestinations = context
+            .read<MainBloc>()
+            .state
+            .serverFeatureSummary
+            ?.supportedNotifyDestinations ??
+        [];
     var name = '';
     var description = '';
-    var type = NotifyTargetType.NOTIFY_TARGET_TYPE_TELEGRAM;
+    var destination =
+        notifyDestinations.isNotEmpty ? notifyDestinations.first : '';
     var enabled = true;
     var token = '';
 
@@ -83,16 +91,21 @@ class NotifyTargetAddPage extends StatelessWidget {
                             border: const OutlineInputBorder(),
                             labelText: S.of(context).NOTIFY_TARGET_TYPE,
                           ),
-                          value: type,
+                          value: destination,
                           items: [
-                            DropdownMenuItem(
-                              value:
-                                  NotifyTargetType.NOTIFY_TARGET_TYPE_TELEGRAM,
-                              child: Text(
-                                  S.of(context).NOTIFY_TARGET_TYPE_TELEGRAM),
-                            ),
+                            for (final dest in notifyDestinations)
+                              DropdownMenuItem(
+                                value: dest,
+                                child: Text(dest),
+                              ),
                           ],
-                          onChanged: (newValue) => type = newValue!,
+                          onChanged: (newValue) => destination = newValue!,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '请选择类型';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(
                           height: 16,
@@ -171,7 +184,7 @@ class NotifyTargetAddPage extends StatelessWidget {
                           .add(NetzachTargetAddEvent(NotifyTarget(
                             name: name,
                             description: description,
-                            type: type,
+                            destination: destination,
                             status: enabled
                                 ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                                 : NotifyTargetStatus

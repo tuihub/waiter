@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -112,7 +113,8 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
     final resp = await _api.doRequest(
       (client) => client.listUsers,
       ListUsersRequest(
-        paging: PagingRequest(pageSize: pageSize, pageNum: pageNum),
+        paging:
+            PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
         typeFilter: typeFilter,
         statusFilter: statusFilter,
       ),

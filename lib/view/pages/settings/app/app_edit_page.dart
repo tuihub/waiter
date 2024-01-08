@@ -34,7 +34,7 @@ class _AppEditPageState extends State<AppEditPage> {
     shortDescription = widget.app.shortDescription;
     iconImageUrl = widget.app.iconImageUrl;
     heroImageUrl = widget.app.heroImageUrl;
-    readOnly = widget.app.source != AppSource.APP_SOURCE_INTERNAL;
+    readOnly = !widget.app.internal;
   }
 
   void close(BuildContext context) {

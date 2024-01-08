@@ -120,6 +120,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                   buildDate: info.serverBinarySummary.buildDate,
                   protocolVersion: info.protocolSummary.version,
                 ),
+                serverFeatureSummary: info.featureSummary,
               ),
               EventStatus.success,
             );
@@ -170,6 +171,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               buildDate: info.serverBinarySummary.buildDate,
               protocolVersion: info.protocolSummary.version,
             ),
+            serverFeatureSummary: info.featureSummary,
           ),
           EventStatus.success,
         );

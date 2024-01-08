@@ -4,9 +4,9 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
+import '../../../../bloc/main_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
@@ -31,6 +31,12 @@ class _AppManagePageState extends State<AppManagePage> {
   @override
   Widget build(BuildContext context) {
     dataSource.context = context;
+    final appSources = context
+            .read<MainBloc>()
+            .state
+            .serverFeatureSummary
+            ?.supportedAppSources ??
+        [];
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -47,10 +53,8 @@ class _AppManagePageState extends State<AppManagePage> {
                   buttonText: const Text('数据来源'),
                   buttonIcon: const Icon(Icons.filter_alt_outlined),
                   items: [
-                    MultiSelectItem(AppSource.APP_SOURCE_INTERNAL,
-                        appSourceString(AppSource.APP_SOURCE_INTERNAL)),
-                    MultiSelectItem(AppSource.APP_SOURCE_STEAM,
-                        appSourceString(AppSource.APP_SOURCE_STEAM)),
+                    for (final source in appSources)
+                      MultiSelectItem(source, appSourceString(source)),
                   ],
                   onConfirm: (values) {
                     dataSource.sourceFilter = values;
@@ -115,7 +119,7 @@ class AppTableSource extends AsyncDataTableSource {
   AppTableSource(this.pageSize);
   late BuildContext context;
   final int pageSize;
-  late List<AppSource> sourceFilter = [];
+  late List<String> sourceFilter = [];
 
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {

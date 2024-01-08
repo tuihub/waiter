@@ -61,7 +61,7 @@ class GeburaNav extends StatelessWidget {
                                 i < state.purchasedApps!.length;
                                 i++,
                                 app = state.purchasedApps!.elementAtOrNull(i) ??
-                                    App())
+                                    AppMixed())
                               RailTile(
                                 selected: i == state.selectedPurchasedAppIndex,
                                 onTap: () {

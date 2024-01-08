@@ -31,26 +31,24 @@ String userStatusString(UserStatus status) {
   return '';
 }
 
-String accountPlatformString(AccountPlatform platform) {
+String accountPlatformString(String platform) {
   switch (platform) {
-    case AccountPlatform.ACCOUNT_PLATFORM_UNSPECIFIED:
+    case '':
       return S.current.ACCOUNT_PLATFORM_UNSPECIFIED;
-    case AccountPlatform.ACCOUNT_PLATFORM_STEAM:
+    case 'steam':
       return S.current.ACCOUNT_PLATFORM_STEAM;
   }
-  return '';
+  return platform;
 }
 
-String appSourceString(AppSource source) {
+String appSourceString(String source) {
   switch (source) {
-    case AppSource.APP_SOURCE_UNSPECIFIED:
+    case '':
       return S.current.APP_SOURCE_UNSPECIFIED;
-    case AppSource.APP_SOURCE_INTERNAL:
-      return S.current.APP_SOURCE_INTERNAL;
-    case AppSource.APP_SOURCE_STEAM:
+    case 'steam':
       return S.current.APP_SOURCE_STEAM;
   }
-  return '';
+  return source;
 }
 
 String appTypeString(AppType type) {
@@ -87,14 +85,14 @@ String feedConfigStatusString(FeedConfigStatus status) {
   return '';
 }
 
-String notifyTargetTypeString(NotifyTargetType type) {
-  switch (type) {
-    case NotifyTargetType.NOTIFY_TARGET_TYPE_UNSPECIFIED:
+String notifyTargetDestinationString(String destination) {
+  switch (destination) {
+    case '':
       return S.current.NOTIFY_TARGET_TYPE_UNSPECIFIED;
-    case NotifyTargetType.NOTIFY_TARGET_TYPE_TELEGRAM:
+    case 'telegram':
       return S.current.NOTIFY_TARGET_TYPE_TELEGRAM;
   }
-  return '';
+  return destination;
 }
 
 String notifyTargetStatusString(NotifyTargetStatus status) {

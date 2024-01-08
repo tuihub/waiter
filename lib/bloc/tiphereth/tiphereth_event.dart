@@ -19,14 +19,14 @@ class TipherethEditUserEvent extends TipherethEvent {
 class TipherethGetAccountsEvent extends TipherethEvent {}
 
 class TipherethLinkAccountEvent extends TipherethEvent {
-  final AccountPlatform platform;
+  final String platform;
   final String platformAccountID;
 
   TipherethLinkAccountEvent(this.platform, this.platformAccountID);
 }
 
 class TipherethUnLinkAccountEvent extends TipherethEvent {
-  final AccountPlatform platform;
+  final String platform;
   final String platformAccountID;
 
   TipherethUnLinkAccountEvent(this.platform, this.platformAccountID);

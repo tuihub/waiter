@@ -5,12 +5,14 @@ class MainState {
   late String? accessToken;
   late User? currentUser;
   late ServerInformation? serverInfo;
+  late ServerFeatureSummary? serverFeatureSummary;
 
   MainState({
     this.serverConfig,
     this.accessToken,
     this.currentUser,
     this.serverInfo,
+    this.serverFeatureSummary,
   });
 
   MainState copyWith({
@@ -18,12 +20,14 @@ class MainState {
     String? accessToken,
     User? currentUser,
     ServerInformation? serverInfo,
+    ServerFeatureSummary? serverFeatureSummary,
   }) {
     return MainState(
       serverConfig: serverConfig ?? this.serverConfig,
       accessToken: accessToken ?? this.accessToken,
       currentUser: currentUser ?? this.currentUser,
       serverInfo: serverInfo ?? this.serverInfo,
+      serverFeatureSummary: serverFeatureSummary ?? this.serverFeatureSummary,
     );
   }
 
@@ -32,6 +36,7 @@ class MainState {
     accessToken = other.accessToken;
     currentUser = other.currentUser;
     serverInfo = other.serverInfo;
+    serverFeatureSummary = other.serverFeatureSummary;
   }
 }
 

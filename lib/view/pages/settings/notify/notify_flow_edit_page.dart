@@ -361,7 +361,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                 for (final NotifyTarget config in notifyTargets)
                                   if (config.id.id != 0)
                                     MultiSelectItem(config.id,
-                                        '${config.name} (${notifyTargetTypeString(config.type)})'),
+                                        '${config.name} (${notifyTargetDestinationString(config.destination)})'),
                               ],
                               initialValue:
                                   targets.map((e) => e.targetId).toList(),
@@ -405,7 +405,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPage> {
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                      '${notifyTargets.firstWhere((e) => e.id == targets[i].targetId).name} (${notifyTargetTypeString(notifyTargets.firstWhere((e) => e.id == targets[i].targetId).type)})'),
+                                      '${notifyTargets.firstWhere((e) => e.id == targets[i].targetId).name} (${notifyTargetDestinationString(notifyTargets.firstWhere((e) => e.id == targets[i].targetId).destination)})'),
                                 ),
                                 const SizedBox(
                                   height: 8,

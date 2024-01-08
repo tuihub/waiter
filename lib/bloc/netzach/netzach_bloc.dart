@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -26,8 +27,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           (client) => client.listNotifyTargets,
           ListNotifyTargetsRequest(
             paging: PagingRequest(
-              pageSize: 1,
-              pageNum: 1,
+              pageSize: Int64(1),
+              pageNum: Int64(1),
             ),
           ));
       if (resp.status != ApiStatus.success) {
@@ -46,8 +47,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           (client) => client.listNotifyTargets,
           ListNotifyTargetsRequest(
             paging: PagingRequest(
-              pageSize: pageSize,
-              pageNum: pageNum,
+              pageSize: Int64(pageSize),
+              pageNum: Int64(pageNum),
             ),
           ),
         );
@@ -114,8 +115,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           (client) => client.listNotifyFlows,
           ListNotifyFlowsRequest(
             paging: PagingRequest(
-              pageSize: 1,
-              pageNum: 1,
+              pageSize: Int64(1),
+              pageNum: Int64(1),
             ),
           ));
       if (resp.status != ApiStatus.success) {
@@ -133,8 +134,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           (client) => client.listNotifyFlows,
           ListNotifyFlowsRequest(
             paging: PagingRequest(
-              pageSize: pageSize,
-              pageNum: pageNum,
+              pageSize: Int64(pageSize),
+              pageNum: Int64(pageNum),
             ),
           ),
         );

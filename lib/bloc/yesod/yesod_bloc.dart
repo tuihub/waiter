@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
@@ -40,8 +41,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         (client) => client.listFeedConfigs,
         ListFeedConfigsRequest(
           paging: PagingRequest(
-            pageSize: 1,
-            pageNum: 1,
+            pageSize: Int64(1),
+            pageNum: Int64(1),
           ),
         ),
       );
@@ -59,8 +60,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           (client) => client.listFeedConfigs,
           ListFeedConfigsRequest(
             paging: PagingRequest(
-              pageSize: pageSize,
-              pageNum: pageNum,
+              pageSize: Int64(pageSize),
+              pageNum: Int64(pageNum),
             ),
           ),
         );
@@ -231,8 +232,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         (client) => client.listFeedItems,
         ListFeedItemsRequest(
           paging: PagingRequest(
-            pageSize: pageSize,
-            pageNum: pageNum,
+            pageSize: Int64(pageSize),
+            pageNum: Int64(pageNum),
           ),
           feedIdFilter: state.feedItemFilter?.feedIdFilter,
           categoryFilter: state.feedItemFilter?.categoryFilter,

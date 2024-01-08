@@ -31,7 +31,7 @@ class _GeburaLibraryDetailPageState extends State<GeburaLibraryDetailPage> {
   }
 
   late int? lastIndex;
-  late App? app;
+  late AppMixed? app;
   late AppLauncherSetting? setting;
   late AppRunState? runState;
 

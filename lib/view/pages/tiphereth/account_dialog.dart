@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../helper/duration_format.dart';
 
@@ -11,8 +12,14 @@ class LinkAccountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final platforms = context
+            .read<MainBloc>()
+            .state
+            .serverFeatureSummary
+            ?.supportedAccountPlatforms ??
+        [];
 
-    AccountPlatform platform = AccountPlatform.ACCOUNT_PLATFORM_STEAM;
+    String platform = platforms.isNotEmpty ? platforms.first : '';
     late String platformAccountID;
 
     return BlocConsumer<TipherethBloc, TipherethState>(
@@ -37,13 +44,20 @@ class LinkAccountDialog extends StatelessWidget {
                     labelText: '平台',
                   ),
                   value: platform,
-                  items: const [
-                    DropdownMenuItem(
-                      value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
-                      child: Text('Steam'),
-                    ),
+                  items: [
+                    for (final p in platforms)
+                      DropdownMenuItem(
+                        value: p,
+                        child: Text(p),
+                      ),
                   ],
                   onChanged: (newValue) => platform = newValue!,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请选择平台';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -148,20 +162,15 @@ class UnLinkAccountDialog extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              DropdownButtonFormField(
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
                 decoration: const InputDecoration(
-                  // icon: Icon(Icons.place),
+                  // icon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   labelText: '平台',
                 ),
-                value: account.platform,
-                items: const [
-                  DropdownMenuItem(
-                    value: AccountPlatform.ACCOUNT_PLATFORM_STEAM,
-                    child: Text('Steam'),
-                  ),
-                ],
-                onChanged: null,
+                initialValue: account.platform,
               ),
               const SizedBox(
                 height: 16,

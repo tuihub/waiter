@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
+import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
@@ -22,6 +23,13 @@ class YesodConfigAddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final feedSources = context
+            .read<MainBloc>()
+            .state
+            .serverFeatureSummary
+            ?.supportedFeedSources ??
+        [];
+    var source = feedSources.isNotEmpty ? feedSources.first : '';
     var url = '';
     var name = '';
     var category = '';
@@ -76,6 +84,31 @@ class YesodConfigAddPage extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.place),
+                            border: OutlineInputBorder(),
+                            labelText: '订阅源类型',
+                          ),
+                          value: source,
+                          items: [
+                            for (final s in feedSources)
+                              DropdownMenuItem(
+                                value: s,
+                                child: Text(s),
+                              ),
+                          ],
+                          onChanged: (newValue) => source = newValue!,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '请选择订阅源类型';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
                         TextFormField(
                           onChanged: (newValue) => url = newValue,
                           decoration: const InputDecoration(
@@ -192,7 +225,7 @@ class YesodConfigAddPage extends StatelessWidget {
                           .add(YesodConfigAddEvent(FeedConfig(
                             name: name,
                             feedUrl: url,
-                            source: FeedConfigSource.FEED_CONFIG_SOURCE_COMMON,
+                            source: source,
                             status: enabled
                                 ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
                                 : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,

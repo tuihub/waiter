@@ -81,29 +81,6 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
     super.dispose();
   }
 
-  // bool submitUrl() {
-  //   RegExp exp = RegExp(
-  //     r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)',
-  //   );
-  //   final match = exp.hasMatch(_controller.text);
-  //   if (!match) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         backgroundColor: Theme.of(context).cardColor,
-  //         content: Text(
-  //           "链接格式错误, 请修改后重试",
-  //           style: TextStyle(color: Colors.white),
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     context.read<UserBloc>().add(
-  //       ConnectToServerEvent(ServerConfig(_controller.text, 443, true)),
-  //     );
-  //   }
-  //   return match;
-  // }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -326,6 +303,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                 ),
               ),
+              Text(
+                  '登录至 ${state.serverConfig?.host}:${state.serverConfig?.port}'),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(

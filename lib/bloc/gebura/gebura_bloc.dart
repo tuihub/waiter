@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:path/path.dart';
@@ -56,8 +57,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         (client) => client.searchApps,
         SearchAppsRequest(
           paging: PagingRequest(
-            pageSize: 10,
-            pageNum: 1,
+            pageSize: Int64(10),
+            pageNum: Int64(1),
           ),
           keywords: event.query,
         ),
@@ -66,7 +67,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         emit(GeburaSearchAppsState(state, EventStatus.failed, msg: resp.error));
         return;
       }
-      final appMap = state.storeApps ?? <InternalID, App>{};
+      final appMap = state.storeApps ?? <InternalID, AppMixed>{};
       for (final app in resp.getData().apps) {
         appMap[app.id] = app;
       }
@@ -241,11 +242,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   }
 
   Future<ListAppsResponse> listApps(
-      int pageSize, int pageNum, List<AppSource> sourceFilter) async {
+      int pageSize, int pageNum, List<String> sourceFilter) async {
     final resp = await _api.doRequest(
       (client) => client.listApps,
       ListAppsRequest(
-        paging: PagingRequest(pageSize: pageSize, pageNum: pageNum),
+        paging:
+            PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
         sourceFilter: sourceFilter,
       ),
     );
@@ -257,7 +259,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     final resp = await _api.doRequest(
       (client) => client.listAppPackages,
       ListAppPackagesRequest(
-        paging: PagingRequest(pageSize: pageSize, pageNum: pageNum),
+        paging:
+            PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
         sourceFilter: sourceFilter,
       ),
     );

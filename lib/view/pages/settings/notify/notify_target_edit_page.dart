@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 
+import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
@@ -28,6 +29,12 @@ class NotifyTargetEditPage extends StatelessWidget {
           previous.notifyTargetEditIndex != current.notifyTargetEditIndex,
       builder: (context, state) {
         final formKey = GlobalKey<FormState>();
+        final notifyDestinations = context
+                .read<MainBloc>()
+                .state
+                .serverFeatureSummary
+                ?.supportedNotifyDestinations ??
+            [];
 
         final target =
             state.notifyTargetEditIndex != null && state.notifyTargets != null
@@ -37,7 +44,7 @@ class NotifyTargetEditPage extends StatelessWidget {
         var description = target.description;
         var enabled =
             target.status == NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE;
-        var type = target.type;
+        var destination = target.destination;
         var token = target.token;
 
         return Scaffold(
@@ -107,16 +114,21 @@ class NotifyTargetEditPage extends StatelessWidget {
                             border: const OutlineInputBorder(),
                             labelText: S.of(context).NOTIFY_TARGET_TYPE,
                           ),
-                          value: type,
+                          value: destination,
                           items: [
-                            DropdownMenuItem(
-                              value:
-                                  NotifyTargetType.NOTIFY_TARGET_TYPE_TELEGRAM,
-                              child: Text(
-                                  S.of(context).NOTIFY_TARGET_TYPE_TELEGRAM),
-                            ),
+                            for (final dest in notifyDestinations)
+                              DropdownMenuItem(
+                                value: dest,
+                                child: Text(dest),
+                              ),
                           ],
-                          onChanged: (newValue) => type = newValue!,
+                          onChanged: (newValue) => destination = newValue!,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '请选择类型';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(
                           height: 16,
@@ -185,7 +197,7 @@ class NotifyTargetEditPage extends StatelessWidget {
                               id: target.id,
                               name: name,
                               description: description,
-                              type: type,
+                              destination: destination,
                               status: enabled
                                   ? NotifyTargetStatus
                                       .NOTIFY_TARGET_STATUS_ACTIVE

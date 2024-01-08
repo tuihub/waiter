@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
-import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +28,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
       final resp = await _api.doRequest(
         (client) => client.searchImages,
         SearchImagesRequest(
-          paging: PagingRequest(pageNum: 1, pageSize: 50),
+          paging: PagingRequest(pageNum: Int64(1), pageSize: Int64(50)),
           keywords: event.query,
         ),
       );
@@ -83,7 +83,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
                 file = File(pick.path!);
                 fileMetadata = FileMetadata(
                   name: pick.name,
-                  sizeBytes: $fixnum.Int64(file.lengthSync()),
+                  sizeBytes: Int64(file.lengthSync()),
                   type: FileType.FILE_TYPE_CHESED_IMAGE,
                 );
                 extension = pick.extension!;
@@ -113,7 +113,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
                 file = File(capturedData.imagePath!);
                 fileMetadata = FileMetadata(
                   name: imageName,
-                  sizeBytes: $fixnum.Int64(file.lengthSync()),
+                  sizeBytes: Int64(file.lengthSync()),
                   type: FileType.FILE_TYPE_CHESED_IMAGE,
                 );
                 extension = 'png';

@@ -175,7 +175,7 @@ class GeburaStoreDetail extends StatelessWidget {
 class PurchaseAppDialog extends StatelessWidget {
   const PurchaseAppDialog({super.key, required this.app});
 
-  final App app;
+  final AppMixed app;
 
   @override
   Widget build(BuildContext context) {

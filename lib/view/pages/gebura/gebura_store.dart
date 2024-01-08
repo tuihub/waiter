@@ -16,7 +16,7 @@ class GeburaStorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
-    List<App>? apps;
+    List<AppMixed>? apps;
     String msg = '';
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
       if (state is GeburaSearchAppsState) {
@@ -109,7 +109,7 @@ class StoreList extends StatelessWidget {
     super.key,
     required this.apps,
   });
-  final List<App> apps;
+  final List<AppMixed> apps;
 
   @override
   Widget build(BuildContext context) {
