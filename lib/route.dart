@@ -34,6 +34,8 @@ import 'view/pages/settings/notify/notify_flow_page.dart';
 import 'view/pages/settings/notify/notify_target_add_page.dart';
 import 'view/pages/settings/notify/notify_target_edit_page.dart';
 import 'view/pages/settings/notify/notify_target_page.dart';
+import 'view/pages/settings/porter/porter_edit_page.dart';
+import 'view/pages/settings/porter/porter_manage_page.dart';
 import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_add_page.dart';
 import 'view/pages/settings/user/user_edit_page.dart';
@@ -124,6 +126,7 @@ class AppRoutes {
   static const AppRoutes settings = AppRoutes._(_settings);
   static const AppRoutes settingsClient =
       AppRoutes._('$_settings/${_SettingsFunctions.client}');
+
   static const AppRoutes notifyTarget =
       AppRoutes._('$_settings/${_SettingsFunctions.notifyTarget}');
   static AppRoutes notifyTargetAdd() =>
@@ -139,6 +142,12 @@ class AppRoutes {
           isAction: true);
   static AppRoutes notifyFlowEdit() =>
       AppRoutes._('$notifyFlow?action=${_SettingsActions.notifyFlowEdit}',
+          isAction: true);
+
+  static const AppRoutes settingsPorter =
+      AppRoutes._('$_settings/${_SettingsFunctions.porter}');
+  static AppRoutes settingsPorterEdit() =>
+      AppRoutes._('$settingsPorter?action=${_SettingsActions.porterEdit}',
           isAction: true);
   static const AppRoutes settingsUser =
       AppRoutes._('$_settings/${_SettingsFunctions.user}');
@@ -210,6 +219,7 @@ class _SettingsFunctions {
   static const String client = 'client';
   static const String notifyTarget = 'notifyTarget';
   static const String notifyFlow = 'notifyFlow';
+  static const String porter = 'porter';
   static const String user = 'user';
   static const String app = 'app';
   static const String appPackage = 'appPackage';
@@ -221,6 +231,8 @@ class _SettingsActions {
   static const String notifyTargetEdit = 'editNotifyTarget';
   static const String notifyFlowAdd = 'addNotifyFlow';
   static const String notifyFlowEdit = 'editNotifyFlow';
+
+  static const String porterEdit = 'editPorter';
   static const String userEdit = 'editUser';
   static const String userAdd = 'addUser';
   static const String appEdit = 'editApp';
@@ -422,6 +434,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                     _SettingsFunctions.client: const ClientSettingPage(),
                     _SettingsFunctions.notifyTarget: const NotifyTargetPage(),
                     _SettingsFunctions.notifyFlow: const NotifyFlowPage(),
+                    _SettingsFunctions.porter: const PorterManagePage(),
                     _SettingsFunctions.user: const UserManagePage(),
                     _SettingsFunctions.app: const AppManagePage(),
                     _SettingsFunctions.appPackage: const AppPackageManagePage(),
@@ -438,6 +451,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                         const NotifyTargetEditPage(),
                     _SettingsActions.notifyFlowAdd: const NotifyFlowAddPage(),
                     _SettingsActions.notifyFlowEdit: const NotifyFlowEditPage(),
+                    _SettingsActions.porterEdit: const PorterEditPage(),
                     _SettingsActions.userAdd: const UserAddPage(),
                     _SettingsActions.userEdit: UserEditPage(
                       key: ValueKey(state.extra),

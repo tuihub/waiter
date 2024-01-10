@@ -6,8 +6,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
-import '../../model/common_model.dart';
-import '../../model/tiphereth_model.dart';
 import '../../repo/grpc/api_helper.dart';
 
 part 'tiphereth_event.dart';
@@ -100,6 +98,52 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       }
       add(TipherethGetAccountsEvent());
       emit(TipherethUnLinkAccountState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethLoadPortersEvent>((event, emit) async {
+      emit(TipherethLoadPortersState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.listPorters,
+        ListPortersRequest(
+          paging: PagingRequest(
+            pageSize: Int64(100),
+            pageNum: Int64(1),
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethLoadPortersState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(TipherethLoadPortersState(
+          state.copyWith(porters: resp.getData().porters), EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethSetPorterEditIndexEvent>((event, emit) async {
+      final newState = state.copyWith();
+      newState.selectedPorterEditIndex = event.index;
+      emit(newState);
+    });
+
+    on<TipherethEditPorterEvent>((event, emit) async {
+      emit(TipherethEditPorterState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.updatePorterStatus,
+        UpdatePorterStatusRequest(
+          porterId: event.porterID,
+          status: event.status,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethEditPorterState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethLoadPortersEvent());
+      emit(TipherethEditPorterState(state, EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
   }

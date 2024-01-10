@@ -20,7 +20,7 @@ class UserManagePage extends StatefulWidget {
 
 class _UserManagePageState extends State<UserManagePage> {
   int pageSize = 10;
-  late AppPackageTableSource dataSource = AppPackageTableSource(pageSize);
+  late UserTableSource dataSource = UserTableSource(pageSize);
   PaginatorController paginatorController = PaginatorController();
 
   @override
@@ -147,8 +147,8 @@ class _UserManagePageState extends State<UserManagePage> {
   }
 }
 
-class AppPackageTableSource extends AsyncDataTableSource {
-  AppPackageTableSource(this.pageSize);
+class UserTableSource extends AsyncDataTableSource {
+  UserTableSource(this.pageSize);
   late BuildContext context;
   final int pageSize;
   late List<UserType> typeFilter = [];

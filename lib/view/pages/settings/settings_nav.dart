@@ -74,6 +74,15 @@ class SettingsNav extends StatelessWidget {
                           childrenPadding: const EdgeInsets.only(left: 12),
                           children: [
                             RailTile(
+                              title: const Text('插件管理'),
+                              onTap: () {
+                                AppRoutes.settingsPorter.go(context);
+                                OverlappingPanels.of(context)
+                                    ?.reveal(RevealSide.main);
+                              },
+                              selected: function == 'porter',
+                            ),
+                            RailTile(
                               title: const Text('用户管理'),
                               onTap: () {
                                 AppRoutes.settingsUser.go(context);

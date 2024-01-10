@@ -31,3 +31,18 @@ class TipherethUnLinkAccountEvent extends TipherethEvent {
 
   TipherethUnLinkAccountEvent(this.platform, this.platformAccountID);
 }
+
+class TipherethLoadPortersEvent extends TipherethEvent {}
+
+class TipherethSetPorterEditIndexEvent extends TipherethEvent {
+  final int index;
+
+  TipherethSetPorterEditIndexEvent(this.index);
+}
+
+class TipherethEditPorterEvent extends TipherethEvent {
+  final InternalID porterID;
+  final UserStatus status;
+
+  TipherethEditPorterEvent(this.porterID, this.status);
+}
