@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:system_tray/system_tray.dart';
 
 import '../../common/platform.dart';
 
@@ -60,21 +61,28 @@ class TitleBar extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Exit Program?'),
-                      content: const Text(
-                          'Press Hide to hide window in tray, or press yes to exit.'),
+                      title: const Text('关闭'),
+                      content: const Text('确定要关闭吗？'),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('Hide'),
+                          child: const Text('退出应用'),
+                          onPressed: () {
+                            final SystemTray systemTray = SystemTray();
+                            systemTray.destroy();
+                            appWindow.close();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('最小化到托盘'),
                           onPressed: () {
                             Navigator.of(context).pop();
                             appWindow.hide();
                           },
                         ),
                         TextButton(
-                          child: const Text('Yes'),
+                          child: const Text('取消'),
                           onPressed: () {
-                            appWindow.close();
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
