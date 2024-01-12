@@ -5,48 +5,45 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../route.dart';
 import '../../../components/toast.dart';
-import '../../../form/form_field.dart';
 
-class PorterEditPage extends StatelessWidget {
-  const PorterEditPage({super.key});
+class SessionEditPage extends StatelessWidget {
+  const SessionEditPage({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.settingsPorterEdit().pop(context);
+    AppRoutes.settingsSessionEdit().pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
-        if (state is TipherethEditPorterState && state.success) {
+        if (state is TipherethEditSessionState && state.success) {
           const Toast(title: '', message: '已应用更改').show(context);
           close(context);
         }
       },
       buildWhen: (previous, current) =>
-          previous.selectedPorterEditIndex != current.selectedPorterEditIndex,
+          previous.selectedSessionEditIndex != current.selectedSessionEditIndex,
       builder: (context, state) {
         final formKey = GlobalKey<FormState>();
-        final porter =
-            state.porters != null && state.selectedPorterEditIndex != null
-                ? state.porters![state.selectedPorterEditIndex!]
-                : Porter();
-
-        var enabled = porter.status == UserStatus.USER_STATUS_ACTIVE;
+        final session =
+            state.sessions != null && state.selectedSessionEditIndex != null
+                ? state.sessions![state.selectedSessionEditIndex!]
+                : UserSession();
 
         return Scaffold(
           appBar: AppBar(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            title: const Text('插件详情'),
+            title: const Text('设备详情'),
           ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Text(state is TipherethEditPorterState && state.failed
+                  Text(state is TipherethEditSessionState && state.failed
                       ? state.msg ?? ''
                       : ''),
                   Form(
@@ -55,7 +52,7 @@ class PorterEditPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         TextFormField(
-                          initialValue: porter.id.id.toString(),
+                          initialValue: session.id.id.toString(),
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -66,53 +63,48 @@ class PorterEditPage extends StatelessWidget {
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: porter.name,
+                          initialValue: '${session.deviceInfo.deviceModel} ',
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: '名称',
+                            labelText: '设备名',
                           ),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: porter.version,
+                          initialValue: '${session.deviceInfo.systemVersion} ',
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            label: Text('版本'),
+                            label: Text('操作系统'),
                           ),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: porter.globalName,
+                          initialValue:
+                              '${session.deviceInfo.clientName} ${session.deviceInfo.clientVersion}',
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: '全局名称',
+                            labelText: '客户端',
                           ),
                         ),
                         const SizedBox(
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: porter.featureSummary,
+                          initialValue: session.createTime
+                              .toDateTime(toLocal: true)
+                              .toIso8601String(),
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            label: Text('支持功能'),
+                            label: Text('最后登录'),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        SwitchFormField(
-                          initialValue: enabled,
-                          onSaved: (newValue) => enabled = newValue!,
-                          title: const Text('启用'),
                         ),
                         const SizedBox(
                           height: 16,
@@ -120,10 +112,10 @@ class PorterEditPage extends StatelessWidget {
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           height:
-                              state is TipherethEditPorterState && state.failed
+                              state is TipherethEditSessionState && state.failed
                                   ? 48
                                   : 0,
-                          child: state is TipherethEditPorterState &&
+                          child: state is TipherethEditSessionState &&
                                   state.failed
                               ? Ink(
                                   decoration: BoxDecoration(
@@ -160,17 +152,20 @@ class PorterEditPage extends StatelessWidget {
                       formKey.currentState!.save();
                       context
                           .read<TipherethBloc>()
-                          .add(TipherethEditPorterEvent(
-                            porter.id,
-                            enabled
-                                ? UserStatus.USER_STATUS_ACTIVE
-                                : UserStatus.USER_STATUS_BLOCKED,
+                          .add(TipherethEditSessionEvent(
+                            session.id,
                           ));
                     }
                   },
-                  child: state is TipherethEditPorterState && state.processing
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                  ),
+                  child: state is TipherethEditSessionState && state.processing
                       ? const CircularProgressIndicator()
-                      : const Text('应用更改'),
+                      : const Text(
+                          '注销该设备',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
                 ElevatedButton(
                   onPressed: () => close(context),

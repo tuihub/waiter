@@ -23,8 +23,20 @@ class ClientCommonData with _$ClientCommonData {
     ServerConfig? server,
     int? theme,
     int? themeMode,
+    Map<String, int>? deviceIDs,
   }) = _ClientCommonData;
 
   factory ClientCommonData.fromJson(Map<String, Object?> json) =>
       _$ClientCommonDataFromJson(json);
+}
+
+@freezed
+class ClientDeviceInfo with _$ClientDeviceInfo {
+  const factory ClientDeviceInfo(
+    String deviceModel,
+    String systemVersion,
+  ) = _ClientDeviceInfo;
+
+  factory ClientDeviceInfo.fromJson(Map<String, Object?> json) =>
+      _$ClientDeviceInfoFromJson(json);
 }

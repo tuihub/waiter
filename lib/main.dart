@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'bloc/yesod/yesod_bloc.dart';
 import 'common/bloc_observer.dart';
 import 'common/platform.dart';
 import 'l10n/l10n.dart';
+import 'model/common_model.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/local/common.dart';
 import 'route.dart';

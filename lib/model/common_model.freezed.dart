@@ -230,6 +230,7 @@ mixin _$ClientCommonData {
   ServerConfig? get server => throw _privateConstructorUsedError;
   int? get theme => throw _privateConstructorUsedError;
   int? get themeMode => throw _privateConstructorUsedError;
+  Map<String, int>? get deviceIDs => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -243,7 +244,11 @@ abstract class $ClientCommonDataCopyWith<$Res> {
           ClientCommonData value, $Res Function(ClientCommonData) then) =
       _$ClientCommonDataCopyWithImpl<$Res, ClientCommonData>;
   @useResult
-  $Res call({ServerConfig? server, int? theme, int? themeMode});
+  $Res call(
+      {ServerConfig? server,
+      int? theme,
+      int? themeMode,
+      Map<String, int>? deviceIDs});
 
   $ServerConfigCopyWith<$Res>? get server;
 }
@@ -264,6 +269,7 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
     Object? server = freezed,
     Object? theme = freezed,
     Object? themeMode = freezed,
+    Object? deviceIDs = freezed,
   }) {
     return _then(_value.copyWith(
       server: freezed == server
@@ -278,6 +284,10 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as int?,
+      deviceIDs: freezed == deviceIDs
+          ? _value.deviceIDs
+          : deviceIDs // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>?,
     ) as $Val);
   }
 
@@ -302,7 +312,11 @@ abstract class _$$ClientCommonDataImplCopyWith<$Res>
       __$$ClientCommonDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ServerConfig? server, int? theme, int? themeMode});
+  $Res call(
+      {ServerConfig? server,
+      int? theme,
+      int? themeMode,
+      Map<String, int>? deviceIDs});
 
   @override
   $ServerConfigCopyWith<$Res>? get server;
@@ -322,6 +336,7 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
     Object? server = freezed,
     Object? theme = freezed,
     Object? themeMode = freezed,
+    Object? deviceIDs = freezed,
   }) {
     return _then(_$ClientCommonDataImpl(
       server: freezed == server
@@ -336,6 +351,10 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as int?,
+      deviceIDs: freezed == deviceIDs
+          ? _value._deviceIDs
+          : deviceIDs // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>?,
     ));
   }
 }
@@ -343,7 +362,12 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ClientCommonDataImpl implements _ClientCommonData {
-  const _$ClientCommonDataImpl({this.server, this.theme, this.themeMode});
+  const _$ClientCommonDataImpl(
+      {this.server,
+      this.theme,
+      this.themeMode,
+      final Map<String, int>? deviceIDs})
+      : _deviceIDs = deviceIDs;
 
   factory _$ClientCommonDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientCommonDataImplFromJson(json);
@@ -354,10 +378,19 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
   final int? theme;
   @override
   final int? themeMode;
+  final Map<String, int>? _deviceIDs;
+  @override
+  Map<String, int>? get deviceIDs {
+    final value = _deviceIDs;
+    if (value == null) return null;
+    if (_deviceIDs is EqualUnmodifiableMapView) return _deviceIDs;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'ClientCommonData(server: $server, theme: $theme, themeMode: $themeMode)';
+    return 'ClientCommonData(server: $server, theme: $theme, themeMode: $themeMode, deviceIDs: $deviceIDs)';
   }
 
   @override
@@ -368,12 +401,15 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
             (identical(other.server, server) || other.server == server) &&
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.themeMode, themeMode) ||
-                other.themeMode == themeMode));
+                other.themeMode == themeMode) &&
+            const DeepCollectionEquality()
+                .equals(other._deviceIDs, _deviceIDs));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, server, theme, themeMode);
+  int get hashCode => Object.hash(runtimeType, server, theme, themeMode,
+      const DeepCollectionEquality().hash(_deviceIDs));
 
   @JsonKey(ignore: true)
   @override
@@ -394,7 +430,8 @@ abstract class _ClientCommonData implements ClientCommonData {
   const factory _ClientCommonData(
       {final ServerConfig? server,
       final int? theme,
-      final int? themeMode}) = _$ClientCommonDataImpl;
+      final int? themeMode,
+      final Map<String, int>? deviceIDs}) = _$ClientCommonDataImpl;
 
   factory _ClientCommonData.fromJson(Map<String, dynamic> json) =
       _$ClientCommonDataImpl.fromJson;
@@ -406,7 +443,166 @@ abstract class _ClientCommonData implements ClientCommonData {
   @override
   int? get themeMode;
   @override
+  Map<String, int>? get deviceIDs;
+  @override
   @JsonKey(ignore: true)
   _$$ClientCommonDataImplCopyWith<_$ClientCommonDataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ClientDeviceInfo _$ClientDeviceInfoFromJson(Map<String, dynamic> json) {
+  return _ClientDeviceInfo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ClientDeviceInfo {
+  String get deviceModel => throw _privateConstructorUsedError;
+  String get systemVersion => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ClientDeviceInfoCopyWith<ClientDeviceInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ClientDeviceInfoCopyWith<$Res> {
+  factory $ClientDeviceInfoCopyWith(
+          ClientDeviceInfo value, $Res Function(ClientDeviceInfo) then) =
+      _$ClientDeviceInfoCopyWithImpl<$Res, ClientDeviceInfo>;
+  @useResult
+  $Res call({String deviceModel, String systemVersion});
+}
+
+/// @nodoc
+class _$ClientDeviceInfoCopyWithImpl<$Res, $Val extends ClientDeviceInfo>
+    implements $ClientDeviceInfoCopyWith<$Res> {
+  _$ClientDeviceInfoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? deviceModel = null,
+    Object? systemVersion = null,
+  }) {
+    return _then(_value.copyWith(
+      deviceModel: null == deviceModel
+          ? _value.deviceModel
+          : deviceModel // ignore: cast_nullable_to_non_nullable
+              as String,
+      systemVersion: null == systemVersion
+          ? _value.systemVersion
+          : systemVersion // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ClientDeviceInfoImplCopyWith<$Res>
+    implements $ClientDeviceInfoCopyWith<$Res> {
+  factory _$$ClientDeviceInfoImplCopyWith(_$ClientDeviceInfoImpl value,
+          $Res Function(_$ClientDeviceInfoImpl) then) =
+      __$$ClientDeviceInfoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String deviceModel, String systemVersion});
+}
+
+/// @nodoc
+class __$$ClientDeviceInfoImplCopyWithImpl<$Res>
+    extends _$ClientDeviceInfoCopyWithImpl<$Res, _$ClientDeviceInfoImpl>
+    implements _$$ClientDeviceInfoImplCopyWith<$Res> {
+  __$$ClientDeviceInfoImplCopyWithImpl(_$ClientDeviceInfoImpl _value,
+      $Res Function(_$ClientDeviceInfoImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? deviceModel = null,
+    Object? systemVersion = null,
+  }) {
+    return _then(_$ClientDeviceInfoImpl(
+      null == deviceModel
+          ? _value.deviceModel
+          : deviceModel // ignore: cast_nullable_to_non_nullable
+              as String,
+      null == systemVersion
+          ? _value.systemVersion
+          : systemVersion // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ClientDeviceInfoImpl implements _ClientDeviceInfo {
+  const _$ClientDeviceInfoImpl(this.deviceModel, this.systemVersion);
+
+  factory _$ClientDeviceInfoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ClientDeviceInfoImplFromJson(json);
+
+  @override
+  final String deviceModel;
+  @override
+  final String systemVersion;
+
+  @override
+  String toString() {
+    return 'ClientDeviceInfo(deviceModel: $deviceModel, systemVersion: $systemVersion)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ClientDeviceInfoImpl &&
+            (identical(other.deviceModel, deviceModel) ||
+                other.deviceModel == deviceModel) &&
+            (identical(other.systemVersion, systemVersion) ||
+                other.systemVersion == systemVersion));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, deviceModel, systemVersion);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ClientDeviceInfoImplCopyWith<_$ClientDeviceInfoImpl> get copyWith =>
+      __$$ClientDeviceInfoImplCopyWithImpl<_$ClientDeviceInfoImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ClientDeviceInfoImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ClientDeviceInfo implements ClientDeviceInfo {
+  const factory _ClientDeviceInfo(
+          final String deviceModel, final String systemVersion) =
+      _$ClientDeviceInfoImpl;
+
+  factory _ClientDeviceInfo.fromJson(Map<String, dynamic> json) =
+      _$ClientDeviceInfoImpl.fromJson;
+
+  @override
+  String get deviceModel;
+  @override
+  String get systemVersion;
+  @override
+  @JsonKey(ignore: true)
+  _$$ClientDeviceInfoImplCopyWith<_$ClientDeviceInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

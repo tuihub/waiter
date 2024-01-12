@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../common/bloc_event_status_mixin.dart';
+import '../consts.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
 import '../repo/grpc/api_helper.dart';
@@ -31,6 +34,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final ClientCommonRepo _repo;
   final ClientSettingBloc _clientSettingBloc;
   final PackageInfo _packageInfo;
+  final ClientDeviceInfo _deviceInfo;
   final String? _basePath;
 
   TipherethBloc? _tipherethBloc;
@@ -41,6 +45,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   ClientSettingBloc get clientSettingBloc => _clientSettingBloc;
   PackageInfo get packageInfo => _packageInfo;
+  ClientDeviceInfo get deviceInfo => _deviceInfo;
 
   TipherethBloc? get tipherethBloc => _tipherethBloc;
   GeburaBloc? get geburaBloc => _geburaBloc;
@@ -80,9 +85,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     this._repo,
     this._clientSettingBloc,
     this._packageInfo,
+    this._deviceInfo,
     this._basePath,
   ) : super(MainState()) {
-    final repo = _repo.get();
+    var repo = _repo.get();
 
     on<MainAutoLoginEvent>((event, emit) async {
       emit(MainAutoLoginState(state, EventStatus.processing));
@@ -97,9 +103,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             state.copyWith(serverConfig: config), EventStatus.processing));
         if (repo.server!.refreshToken != null) {
           try {
+            final deviceIDKey = '${config.host}:${config.port}';
+            final deviceID = repo.deviceIDs![deviceIDKey] != null
+                ? InternalID(id: Int64(repo.deviceIDs![deviceIDKey]!))
+                : null;
             final client = clientFactory(config: config);
             final refreshToken = repo.server!.refreshToken!;
-            final resp = await client.refreshToken(RefreshTokenRequest(),
+            final resp = await client.refreshToken(
+                RefreshTokenRequest(deviceId: deviceID),
                 options: withAuth(refreshToken));
             final user = await client.getUser(GetUserRequest(),
                 options: withAuth(resp.accessToken));
@@ -121,6 +132,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                   protocolVersion: info.protocolSummary.version,
                 ),
                 serverFeatureSummary: info.featureSummary,
+                currentDeviceId: deviceID,
+                deviceInfo: _deviceInfo,
               ),
               EventStatus.success,
             );
@@ -149,21 +162,66 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       try {
         var config = state.serverConfig!;
         final client = clientFactory(config: config);
-        final resp = await client.getToken(
-          GetTokenRequest(username: event.username, password: event.password),
-        );
+        final deviceIDKey = '${config.host}:${config.port}';
+        late InternalID deviceID;
+        late String accessToken;
+        late String refreshToken;
+        if (repo.deviceIDs == null) {
+          repo = repo.copyWith(deviceIDs: {});
+          await _repo.set(repo);
+        }
+        if (repo.deviceIDs![deviceIDKey] == null) {
+          debugPrint('register device');
+          final token = await client.getToken(
+            GetTokenRequest(username: event.username, password: event.password),
+          );
+          final id = await client.registerDevice(
+              RegisterDeviceRequest(
+                deviceInfo: DeviceInfo(
+                  deviceModel: _deviceInfo.deviceModel,
+                  systemVersion: _deviceInfo.systemVersion,
+                  clientName: _packageInfo.appName,
+                  clientSourceCodeAddress: clientSourceCodeUrl,
+                  clientVersion: _packageInfo.version,
+                ),
+              ),
+              options: withAuth(token.accessToken));
+          final resp = await client.refreshToken(
+              RefreshTokenRequest(deviceId: id.deviceId),
+              options: withAuth(token.refreshToken));
+          accessToken = resp.accessToken;
+          refreshToken = resp.refreshToken;
+          repo = repo.copyWith(
+            deviceIDs: {
+              ...repo.deviceIDs!,
+              deviceIDKey: id.deviceId.id.toInt(),
+            },
+          );
+          await _repo.set(repo);
+          deviceID = id.deviceId;
+        } else {
+          deviceID = InternalID()..id = Int64(repo.deviceIDs![deviceIDKey]!);
+          final resp = await client.getToken(
+            GetTokenRequest(
+                username: event.username,
+                password: event.password,
+                deviceId: deviceID),
+          );
+          accessToken = resp.accessToken;
+          refreshToken = resp.refreshToken;
+        }
         final user = await client.getUser(GetUserRequest(),
-            options: withAuth(resp.accessToken));
+            options: withAuth(accessToken));
         final info = await client.getServerInformation(
             GetServerInformationRequest(),
-            options: withAuth(resp.accessToken));
-        config = config.copyWith(refreshToken: resp.refreshToken);
+            options: withAuth(accessToken));
+        config = config.copyWith(refreshToken: refreshToken);
         await _repo.set(repo.copyWith(server: config));
-        _api.init(client, resp.accessToken, resp.refreshToken);
+        _api.init(client, accessToken, refreshToken);
         final newState = MainManualLoginState(
           state.copyWith(
             serverConfig: config,
-            accessToken: resp.accessToken,
+            accessToken: accessToken,
             currentUser: user.user,
             serverInfo: ServerInformation(
               sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
@@ -172,6 +230,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               protocolVersion: info.protocolSummary.version,
             ),
             serverFeatureSummary: info.featureSummary,
+            currentDeviceId: deviceID,
+            deviceInfo: _deviceInfo,
           ),
           EventStatus.success,
         );

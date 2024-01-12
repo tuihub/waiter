@@ -146,6 +146,47 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       emit(TipherethEditPorterState(state, EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
+
+    on<TipherethLoadSessionsEvent>((event, emit) async {
+      emit(TipherethLoadSessionsState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.listUserSessions,
+        ListUserSessionsRequest(),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethLoadSessionsState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(TipherethLoadSessionsState(
+          state.copyWith(sessions: resp.getData().sessions),
+          EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethSetSessionEditIndexEvent>((event, emit) async {
+      final newState = state.copyWith();
+      newState.selectedSessionEditIndex = event.index;
+      emit(newState);
+    });
+
+    on<TipherethEditSessionEvent>((event, emit) async {
+      emit(TipherethEditSessionState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.deleteUserSession,
+        DeleteUserSessionRequest(
+          sessionId: event.sessionID,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethEditSessionState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethLoadSessionsEvent());
+      emit(TipherethEditSessionState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
   }
 
   Future<ListUsersResponse> listUsers(

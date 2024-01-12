@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/main_bloc.dart';
-import '../../consts.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
@@ -90,41 +87,6 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
           toolbarHeight: 96,
           title: const Center(child: Text('连接服务器')),
           backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.input),
-              onPressed: () {
-                unawaited(showDialog<void>(
-                  context: context,
-                  builder: (context) {
-                    return BlocConsumer<MainBloc, MainState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return AlertDialog(
-                          content: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text('内置服务器配置'),
-                              for (final server in newServerList)
-                                ServerConnectivityWidget(
-                                  config: server,
-                                  callback: () {
-                                    context.read<MainBloc>().add(
-                                          MainSetServerConfigEvent(server),
-                                        );
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ));
-              },
-            ),
-          ],
         ),
         body: ServerSelectForm(callback: () {}));
   }

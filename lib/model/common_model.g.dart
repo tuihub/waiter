@@ -32,6 +32,9 @@ _$ClientCommonDataImpl _$$ClientCommonDataImplFromJson(
           : ServerConfig.fromJson(json['server'] as Map<String, dynamic>),
       theme: json['theme'] as int?,
       themeMode: json['themeMode'] as int?,
+      deviceIDs: (json['deviceIDs'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as int),
+      ),
     );
 
 Map<String, dynamic> _$$ClientCommonDataImplToJson(
@@ -40,4 +43,19 @@ Map<String, dynamic> _$$ClientCommonDataImplToJson(
       'server': instance.server,
       'theme': instance.theme,
       'themeMode': instance.themeMode,
+      'deviceIDs': instance.deviceIDs,
+    };
+
+_$ClientDeviceInfoImpl _$$ClientDeviceInfoImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ClientDeviceInfoImpl(
+      json['deviceModel'] as String,
+      json['systemVersion'] as String,
+    );
+
+Map<String, dynamic> _$$ClientDeviceInfoImplToJson(
+        _$ClientDeviceInfoImpl instance) =>
+    <String, dynamic>{
+      'deviceModel': instance.deviceModel,
+      'systemVersion': instance.systemVersion,
     };

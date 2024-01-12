@@ -3,31 +3,43 @@ part of 'tiphereth_bloc.dart';
 class TipherethState {
   late List<Account>? accounts;
   late List<Porter>? porters;
+  late List<UserSession>? sessions;
 
   late int? selectedPorterEditIndex;
+  late int? selectedSessionEditIndex;
 
   TipherethState({
     this.accounts,
     this.porters,
+    this.sessions,
     this.selectedPorterEditIndex,
+    this.selectedSessionEditIndex,
   });
 
   TipherethState copyWith({
     List<Account>? accounts,
     List<Porter>? porters,
-    int? porterEditIndex,
+    List<UserSession>? sessions,
+    int? selectedPorterEditIndex,
+    int? selectedSessionDeleteIndex,
   }) {
     return TipherethState(
       accounts: accounts ?? this.accounts,
       porters: porters ?? this.porters,
-      selectedPorterEditIndex: porterEditIndex ?? this.selectedPorterEditIndex,
+      sessions: sessions ?? this.sessions,
+      selectedPorterEditIndex:
+          selectedPorterEditIndex ?? this.selectedPorterEditIndex,
+      selectedSessionEditIndex:
+          selectedSessionDeleteIndex ?? this.selectedSessionEditIndex,
     );
   }
 
   void _from(TipherethState other) {
     accounts = other.accounts;
     porters = other.porters;
+    sessions = other.sessions;
     selectedPorterEditIndex = other.selectedPorterEditIndex;
+    selectedSessionEditIndex = other.selectedSessionEditIndex;
   }
 }
 
@@ -105,6 +117,30 @@ class TipherethLoadPortersState extends TipherethState with EventStatusMixin {
 
 class TipherethEditPorterState extends TipherethState with EventStatusMixin {
   TipherethEditPorterState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethLoadSessionsState extends TipherethState with EventStatusMixin {
+  TipherethLoadSessionsState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethEditSessionState extends TipherethState with EventStatusMixin {
+  TipherethEditSessionState(TipherethState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

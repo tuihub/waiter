@@ -25,20 +25,6 @@ class PorterManagePage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(width: 8),
-                  FilledButton.tonalIcon(
-                    onPressed: () async {
-                      AppRoutes.settingsPorterEdit().go(context);
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('添加'),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8),

@@ -1,8 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-import 'model/common_model.dart';
 import 'route.dart';
+
+const clientSourceCodeUrl = 'github.com/tuihub/waiter';
 
 class App {
   final ModuleName name;
@@ -43,11 +44,4 @@ const themeData = [
     FlexScheme.sakura,
     1,
   ),
-];
-
-const List<ServerConfig> newServerList = [
-  ServerConfig('theam-grpc.gyx.moe', 443, true, 'cf 代理'),
-  ServerConfig('theam-grpc.gyx1.cn', 443, true, '直连'),
-  ServerConfig('theam-grpc-rp.gyx1.cn', 443, true, 'rp1'),
-  ServerConfig('theam-grpc-rp2.gyx1.cn', 443, true, 'rp2'),
 ];

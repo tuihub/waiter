@@ -24,8 +24,10 @@ Future<MyApp> init() async {
   }
   WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
+  final deviceInfo = await genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
-  final mainBloc = MainBloc(api, common, clientSettingBloc, packageInfo, path);
+  final mainBloc =
+      MainBloc(api, common, clientSettingBloc, packageInfo, deviceInfo, path);
 
   // router
   final router = getRouter(mainBloc, api);
@@ -72,4 +74,21 @@ Future<void> initSystemTray() async {
           : appWindow.show();
     }
   });
+}
+
+Future<ClientDeviceInfo> genClientDeviceInfo() async {
+  final deviceInfo = DeviceInfoPlugin();
+  if (PlatformHelper.isAndroidApp()) {
+    final androidInfo = await deviceInfo.androidInfo;
+    return ClientDeviceInfo(androidInfo.model, androidInfo.version.release);
+  } else if (PlatformHelper.isWindowsApp()) {
+    final windowsInfo = await deviceInfo.windowsInfo;
+    return ClientDeviceInfo(
+        '', '${windowsInfo.productName} ${windowsInfo.displayVersion}');
+  } else if (PlatformHelper.isWeb()) {
+    final webInfo = await deviceInfo.webBrowserInfo;
+    return ClientDeviceInfo('', webInfo.browserName.toString());
+  } else {
+    return const ClientDeviceInfo('unknown', 'unknown');
+  }
 }

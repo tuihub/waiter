@@ -46,3 +46,17 @@ class TipherethEditPorterEvent extends TipherethEvent {
 
   TipherethEditPorterEvent(this.porterID, this.status);
 }
+
+class TipherethLoadSessionsEvent extends TipherethEvent {}
+
+class TipherethSetSessionEditIndexEvent extends TipherethEvent {
+  final int index;
+
+  TipherethSetSessionEditIndexEvent(this.index);
+}
+
+class TipherethEditSessionEvent extends TipherethEvent {
+  final InternalID sessionID;
+
+  TipherethEditSessionEvent(this.sessionID);
+}
