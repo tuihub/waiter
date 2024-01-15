@@ -101,6 +101,7 @@ dependencies:
   package_info_plus: ^5.0.1
   device_info_plus: ^9.1.1
   path: ^1.8.3
+  petitparser: ^6.0.2
 
   # others
   json_annotation: ^4.8.1
