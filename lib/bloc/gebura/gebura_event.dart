@@ -67,3 +67,5 @@ final class GeburaRunAppEvent extends GeburaEvent {
 
   GeburaRunAppEvent(this.appID);
 }
+
+final class GeburaScanLocalLibraryEvent extends GeburaEvent {}

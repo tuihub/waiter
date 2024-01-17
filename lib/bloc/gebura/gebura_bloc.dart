@@ -8,6 +8,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../common/platform.dart';
 import '../../ffi/ffi.dart';
 import '../../ffi/ffi_model.dart';
 import '../../model/gebura_model.dart';
@@ -235,6 +236,13 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
     });
+
+    on<GeburaScanLocalLibraryEvent>((event, emit) async {
+      if (!PlatformHelper.isWindowsApp()) {
+        return;
+      }
+      emit(state.copyWith(localLibraryState: '正在扫描本地文件'));
+    }, transformer: droppable());
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {

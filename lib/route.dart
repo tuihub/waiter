@@ -15,8 +15,9 @@ import 'view/layout/overlapping_panels.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
+import 'view/pages/gebura/gebura_library_overview.dart';
+import 'view/pages/gebura/gebura_library_settings.dart';
 import 'view/pages/gebura/gebura_nav.dart';
-import 'view/pages/gebura/gebura_overview.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
@@ -127,6 +128,8 @@ class AppRoutes {
       AppRoutes._('$_gebura/${_GeburaFunctions.store}');
   static const AppRoutes geburaLibrary =
       AppRoutes._('$_gebura/${_GeburaFunctions.library}');
+  static const AppRoutes geburaLibrarySettings =
+      AppRoutes._('$_gebura/${_GeburaFunctions.librarySettings}');
   static AppRoutes geburaLibraryDetail(int id) =>
       AppRoutes._('$geburaLibrary?id=$id');
 
@@ -229,6 +232,7 @@ class _YesodActions {
 class _GeburaFunctions {
   static const String store = 'store';
   static const String library = 'library';
+  static const String librarySettings = 'librarySettings';
 }
 
 class _SettingsFunctions {
@@ -408,7 +412,9 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       AppRoutes.geburaStore.toString();
                   final geburaPages = {
                     _GeburaFunctions.store: const GeburaStorePage(),
-                    _GeburaFunctions.library: const GeburaOverview(),
+                    _GeburaFunctions.library: const GeburaLibraryOverview(),
+                    _GeburaFunctions.librarySettings:
+                        const GeburaLibrarySettings(),
                   };
                   Widget? page = geburaPages[function];
                   if (state.uri.queryParameters['id']?.isNotEmpty ?? false) {

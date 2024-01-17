@@ -7,11 +7,14 @@ class GeburaState {
   late Map<InternalID, AppMixed>? storeApps;
   late Map<InternalID, AppRunState>? runState;
 
+  late String? localLibraryState;
+
   GeburaState({
     this.purchasedApps,
     this.selectedPurchasedAppIndex,
     this.storeApps,
     this.runState,
+    this.localLibraryState,
   });
 
   GeburaState copyWith({
@@ -19,6 +22,7 @@ class GeburaState {
     int? selectedPurchasedAppIndex,
     Map<InternalID, AppMixed>? storeApps,
     Map<InternalID, AppRunState>? runState,
+    String? localLibraryState,
   }) {
     return GeburaState(
       purchasedApps: purchasedApps ?? this.purchasedApps,
@@ -26,6 +30,7 @@ class GeburaState {
           selectedPurchasedAppIndex ?? this.selectedPurchasedAppIndex,
       storeApps: storeApps ?? this.storeApps,
       runState: runState ?? this.runState,
+      localLibraryState: localLibraryState ?? this.localLibraryState,
     );
   }
 
@@ -34,6 +39,7 @@ class GeburaState {
     selectedPurchasedAppIndex = other.selectedPurchasedAppIndex;
     storeApps = other.storeApps;
     runState = other.runState;
+    localLibraryState = other.localLibraryState;
   }
 }
 

@@ -40,7 +40,7 @@ class GeburaNav extends StatelessWidget {
                   context
                       .read<GeburaBloc>()
                       .add(GeburaSetPurchasedAppIndexEvent(null));
-                  AppRoutes.geburaStore.push(context);
+                  AppRoutes.geburaStore.go(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
                 },
                 title: const Text('Store'),

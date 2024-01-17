@@ -60,16 +60,31 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                       ),
                       Positioned.fill(
                         child: Container(
-                          padding: const EdgeInsets.only(top: 300),
+                          padding: const EdgeInsets.only(top: 400 - 96),
                           decoration: BoxDecoration(
                             borderRadius: SpacingHelper.defaultBorderRadius,
                           ),
                           child: ClipRRect(
                             borderRadius: SpacingHelper.defaultBorderRadius,
                             child: Container(
-                              color: Colors.black.withOpacity(0.25),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Theme.of(context)
+                                        .colorScheme
+                                        .surfaceVariant
+                                        .withOpacity(0),
+                                    Theme.of(context)
+                                        .colorScheme
+                                        .surfaceVariant
+                                        .withOpacity(0.8125),
+                                  ],
+                                ),
+                              ),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                                 child: Container(
                                   color: Colors.transparent,
                                 ),
@@ -86,11 +101,17 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             app.name,
                             style: TextStyle(
                               fontSize: 52,
-                              color: Colors.white.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.1),
                               shadows: [
                                 Shadow(
-                                    color: Colors.white.withOpacity(0.7),
-                                    blurRadius: 2)
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.5),
+                                    blurRadius: 1)
                               ],
                             ),
                           ),
