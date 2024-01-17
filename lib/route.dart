@@ -16,6 +16,7 @@ import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
 import 'view/pages/gebura/gebura_nav.dart';
+import 'view/pages/gebura/gebura_overview.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
@@ -64,6 +65,14 @@ class AppRoutes {
     } else {
       GoRouter.of(context).go(path, extra: extra);
     }
+    if (isAction) {
+      OverlappingPanels.of(context)?.reveal(RevealSide.right);
+      FramePage.of(context)?.openDrawer();
+    }
+  }
+
+  void push(BuildContext context, {Object? extra}) {
+    unawaited(GoRouter.of(context).push(path, extra: extra));
     if (isAction) {
       OverlappingPanels.of(context)?.reveal(RevealSide.right);
       FramePage.of(context)?.openDrawer();
@@ -264,6 +273,7 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
 GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
     initialLocation: AppRoutes.init.toString(),
+    observers: [HeroController()],
     debugLogDiagnostics: kDebugMode,
     routes: [
       GoRoute(
@@ -371,6 +381,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           ),
           StatefulShellBranch(
             navigatorKey: _geburaNavigateKey,
+            observers: [HeroController()],
             routes: [
               GoRoute(
                 path: AppRoutes.gebura.toString(),
@@ -386,7 +397,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                             .selectedPurchasedAppIndex!)
                         .toString();
                   } else {
-                    return AppRoutes.geburaStore.toString();
+                    return AppRoutes.geburaLibrary.toString();
                   }
                 },
               ),
@@ -397,15 +408,23 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       AppRoutes.geburaStore.toString();
                   final geburaPages = {
                     _GeburaFunctions.store: const GeburaStorePage(),
-                    _GeburaFunctions.library: const GeburaLibraryDetailPage(),
+                    _GeburaFunctions.library: const GeburaOverview(),
                   };
-                  return NoTransitionPage(
+                  Widget? page = geburaPages[function];
+                  if (state.uri.queryParameters['id']?.isNotEmpty ?? false) {
+                    final idStr = state.uri.queryParameters['id'] ?? '';
+                    final id = int.tryParse(idStr) ?? 0;
+                    page = GeburaLibraryDetailPage(index: id);
+                  }
+                  return CustomTransitionPage(
+                    key: state.pageKey,
+                    transitionsBuilder: (_, __, ___, child) => child,
                     child: FramePage(
                       selectedNav: ModuleName.gebura,
                       leftPart: GeburaNav(
                         function: function,
                       ),
-                      middlePart: geburaPages[function],
+                      middlePart: page,
                     ),
                   );
                 },

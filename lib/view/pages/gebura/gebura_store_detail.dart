@@ -52,7 +52,7 @@ class GeburaStoreDetail extends StatelessWidget {
                                           SpacingHelper.defaultBorderRadius,
                                       image: DecorationImage(
                                         image: ExtendedNetworkImageProvider(
-                                          app.heroImageUrl,
+                                          app.backgroundImageUrl,
                                         ),
                                         fit: BoxFit.cover,
                                       ),

@@ -169,12 +169,12 @@ class StoreList extends StatelessWidget {
                                           image: DecorationImage(
                                               image:
                                                   ExtendedNetworkImageProvider(
-                                                app.heroImageUrl,
+                                                app.coverImageUrl,
                                               ),
                                               fit: BoxFit.scaleDown),
                                         ),
-                                        width: 200,
-                                        height: 100,
+                                        width: 150,
+                                        height: 200,
                                       ),
                                       const SizedBox(
                                         width: 16,

@@ -40,11 +40,26 @@ class GeburaNav extends StatelessWidget {
                   context
                       .read<GeburaBloc>()
                       .add(GeburaSetPurchasedAppIndexEvent(null));
-                  AppRoutes.geburaStore.go(context);
+                  AppRoutes.geburaStore.push(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
                 },
                 title: const Text('Store'),
                 selected: function == 'store',
+              ),
+              RailTile(
+                leading: const Icon(
+                  Icons.apps,
+                ),
+                onTap: () {
+                  context
+                      .read<GeburaBloc>()
+                      .add(GeburaSetPurchasedAppIndexEvent(null));
+                  AppRoutes.geburaLibrary.push(context);
+                  OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                },
+                title: const Text('Library'),
+                selected: function == 'library' &&
+                    state.selectedPurchasedAppIndex == null,
               ),
               SpacingHelper.defaultDivider,
               Expanded(
@@ -68,9 +83,8 @@ class GeburaNav extends StatelessWidget {
                                   context
                                       .read<GeburaBloc>()
                                       .add(GeburaSetPurchasedAppIndexEvent(i));
-                                  AppRoutes.geburaLibraryDetail(
-                                          app.id.id.toInt())
-                                      .go(context);
+                                  AppRoutes.geburaLibraryDetail(i)
+                                      .push(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },

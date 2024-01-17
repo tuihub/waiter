@@ -20,7 +20,8 @@ class AppAddPage extends StatelessWidget {
 
     String name = '';
     String iconImageUrl = '';
-    String heroImageUrl = '';
+    String backgroundImageUrl = '';
+    String coverImageUrl = '';
     String shortDescription = '';
     const appType = AppType.APP_TYPE_GAME;
 
@@ -75,10 +76,21 @@ class AppAddPage extends StatelessWidget {
                 height: 16,
               ),
               TextFormField(
-                onSaved: (newValue) => heroImageUrl = newValue!,
+                onSaved: (newValue) => backgroundImageUrl = newValue!,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: '图片链接',
+                  labelText: '背景图片链接',
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                onSaved: (newValue) => coverImageUrl = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '封面图片链接',
                 ),
                 maxLines: null,
               ),
@@ -117,7 +129,8 @@ class AppAddPage extends StatelessWidget {
                         type: appType,
                         shortDescription: shortDescription,
                         iconImageUrl: iconImageUrl,
-                        heroImageUrl: heroImageUrl,
+                        backgroundImageUrl: backgroundImageUrl,
+                        coverImageUrl: coverImageUrl,
                       ),
                     ));
               }

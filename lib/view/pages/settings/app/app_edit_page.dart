@@ -21,7 +21,8 @@ class _AppEditPageState extends State<AppEditPage> {
 
   late String name;
   late String iconImageUrl;
-  late String heroImageUrl;
+  late String backgroundImageUrl;
+  late String coverImageUrl;
   late String shortDescription;
   AppType appType = AppType.APP_TYPE_GAME;
   late bool readOnly;
@@ -33,7 +34,8 @@ class _AppEditPageState extends State<AppEditPage> {
     appType = widget.app.type;
     shortDescription = widget.app.shortDescription;
     iconImageUrl = widget.app.iconImageUrl;
-    heroImageUrl = widget.app.heroImageUrl;
+    backgroundImageUrl = widget.app.backgroundImageUrl;
+    coverImageUrl = widget.app.coverImageUrl;
     readOnly = !widget.app.internal;
   }
 
@@ -118,12 +120,25 @@ class _AppEditPageState extends State<AppEditPage> {
                 height: 16,
               ),
               TextFormField(
-                initialValue: heroImageUrl,
+                initialValue: backgroundImageUrl,
                 readOnly: readOnly,
-                onSaved: (newValue) => heroImageUrl = newValue!,
+                onSaved: (newValue) => backgroundImageUrl = newValue!,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: '图片链接',
+                  labelText: '背景图片链接',
+                ),
+                maxLines: null,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                initialValue: coverImageUrl,
+                readOnly: readOnly,
+                onSaved: (newValue) => coverImageUrl = newValue!,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '封面图片链接',
                 ),
                 maxLines: null,
               ),
@@ -167,7 +182,8 @@ class _AppEditPageState extends State<AppEditPage> {
                           type: widget.app.type,
                           shortDescription: shortDescription,
                           iconImageUrl: iconImageUrl,
-                          heroImageUrl: heroImageUrl,
+                          backgroundImageUrl: backgroundImageUrl,
+                          coverImageUrl: coverImageUrl,
                           details: widget.app.details,
                         ),
                       ));
