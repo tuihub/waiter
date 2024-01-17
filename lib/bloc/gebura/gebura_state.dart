@@ -8,6 +8,8 @@ class GeburaState {
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
+  late SteamScanResult? localSteamScanResult;
+  late List<InstalledSteamApps>? localSteamApps;
 
   GeburaState({
     this.purchasedApps,
@@ -15,6 +17,8 @@ class GeburaState {
     this.storeApps,
     this.runState,
     this.localLibraryState,
+    this.localSteamScanResult,
+    this.localSteamApps,
   });
 
   GeburaState copyWith({
@@ -23,6 +27,8 @@ class GeburaState {
     Map<InternalID, AppMixed>? storeApps,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
+    SteamScanResult? localSteamScanResult,
+    List<InstalledSteamApps>? localSteamApps,
   }) {
     return GeburaState(
       purchasedApps: purchasedApps ?? this.purchasedApps,
@@ -31,6 +37,8 @@ class GeburaState {
       storeApps: storeApps ?? this.storeApps,
       runState: runState ?? this.runState,
       localLibraryState: localLibraryState ?? this.localLibraryState,
+      localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
+      localSteamApps: localSteamApps ?? this.localSteamApps,
     );
   }
 
@@ -40,6 +48,8 @@ class GeburaState {
     storeApps = other.storeApps;
     runState = other.runState;
     localLibraryState = other.localLibraryState;
+    localSteamScanResult = other.localSteamScanResult;
+    localSteamApps = other.localSteamApps;
   }
 }
 

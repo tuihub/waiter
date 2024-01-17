@@ -89,6 +89,10 @@ dependencies:
   html: ^0.15.4
   flutter_widget_from_html: ^0.10.0
 
+  # windows
+  win32: ^5.1.0
+  win32_registry: ^1.1.2
+
   # l10n
   intl: ^0.18.0
 
@@ -106,7 +110,6 @@ dependencies:
 
   # others
   json_annotation: ^4.8.1
-  win32: ^5.1.0
 
 dev_dependencies:
   flutter_test:

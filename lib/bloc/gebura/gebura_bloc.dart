@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../common/platform.dart';
+import '../../common/steam/local_library.dart';
 import '../../ffi/ffi.dart';
 import '../../ffi/ffi_model.dart';
 import '../../model/gebura_model.dart';
@@ -26,6 +27,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     on<GeburaInitEvent>((event, emit) async {
       if (state.purchasedApps == null) {
         add(GeburaPurchasedAppsLoadEvent());
+        add(GeburaScanLocalLibraryEvent());
       }
     });
 
@@ -242,6 +244,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(state.copyWith(localLibraryState: '正在扫描本地文件'));
+      final (apps, result) = await scanLocalLibrary();
+      emit(state.copyWith(
+        localLibraryState: '',
+        localSteamScanResult: result,
+        localSteamApps: apps,
+      ));
     }, transformer: droppable());
   }
 
