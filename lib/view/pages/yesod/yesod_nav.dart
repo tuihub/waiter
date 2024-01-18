@@ -48,6 +48,17 @@ class YesodNav extends StatelessWidget {
                   // ),
                   // const YesodCategoryListPage(selectedAppID: ''),
                   const Expanded(child: SizedBox()),
+                  RailTile(
+                    leading: const Icon(
+                      Icons.timeline,
+                    ),
+                    onTap: (){
+                      AppRoutes.yesodTimeline.go(context);
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                    },
+                    title: const Text('Timeline'),
+                    selected: function == 'timeline',
+                  )
                 ],
               ),
             ),

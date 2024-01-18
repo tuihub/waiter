@@ -1,3 +1,7 @@
+import 'package:intl/intl.dart';
+
+import '../pages/yesod/yesod_timeline_page.dart';
+
 class DurationHelper {
   static String recentString(DateTime dateTime) {
     final duration = DateTime.now().difference(dateTime);
@@ -24,5 +28,17 @@ class DurationHelper {
     } else {
       return '$months 个月前';
     }
+  }
+
+  static String timeLineString(GroupType config,DateTime dateTime){
+    switch (config){
+      case GroupType.byDay:
+        return DateFormat('yyyy年MM月dd日').format(dateTime);
+      case GroupType.byMonth:
+        return DateFormat('yyyy年MM月').format(dateTime);
+      case GroupType.byYear:
+        return DateFormat('yyyy年').format(dateTime);
+    }
+
   }
 }

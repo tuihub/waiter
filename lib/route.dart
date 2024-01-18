@@ -51,6 +51,7 @@ import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_recent_setting_page.dart';
+import 'view/pages/yesod/yesod_timeline_page.dart';
 
 class AppRoutes {
   const AppRoutes._(this.path, {this.isAction = false});
@@ -352,7 +353,8 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 pageBuilder: (context, state) {
                   final yesodPages = {
                     _YesodFunctions.recent: const YesodRecentPage(),
-                    _YesodFunctions.config: const YesodConfigPage()
+                    _YesodFunctions.config: const YesodConfigPage(),
+                    _YesodFunctions.timeline: const YesodTimelinePage()
                   };
                   final function = state.pathParameters['function'] ??
                       _YesodFunctions.recent;
