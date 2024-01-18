@@ -1,6 +1,10 @@
+import 'package:data_table_2/data_table_2.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:universal_io/io.dart' as io;
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/steam/local_library.dart';
@@ -86,6 +90,18 @@ class GeburaLibrarySettings extends StatelessWidget {
                           Text('发现${localSteamApps.length}个Steam游戏'),
                         ],
                       ),
+                      Container(
+                        height: 512,
+                        margin: const EdgeInsets.only(top: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).dividerColor,
+                          ),
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: _SteamGameList(apps: localSteamApps),
+                      ),
                     ],
                   ),
                 ),
@@ -125,6 +141,101 @@ class GeburaLibrarySettings extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _SteamGameList extends StatefulWidget {
+  const _SteamGameList({
+    required this.apps,
+  });
+
+  final List<InstalledSteamApps> apps;
+
+  @override
+  State<_SteamGameList> createState() => _SteamGameListState();
+}
+
+class _SteamGameListState extends State<_SteamGameList> {
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = List.generate(widget.apps.length, (index) => false);
+  }
+
+  late List<bool> selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable2(
+      onSelectAll: (isSelectedAll) {
+        if (isSelectedAll ?? false) {
+          setState(() {
+            selectedIndex = List.generate(widget.apps.length, (index) => true);
+          });
+        } else {
+          setState(() {
+            selectedIndex = List.generate(widget.apps.length, (index) => false);
+          });
+        }
+      },
+      columns: const [
+        DataColumn2(
+          label: Text('游戏列表'),
+          size: ColumnSize.L,
+        ),
+        DataColumn2(
+          label: Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(onPressed: null, child: Text('导入选中')),
+          ),
+          fixedWidth: 150,
+        ),
+      ],
+      rows: widget.apps
+          .map(
+            (e) => DataRow(
+              selected: selectedIndex[widget.apps.indexOf(e)],
+              onSelectChanged: (isSelected) {
+                setState(() {
+                  selectedIndex[widget.apps.indexOf(e)] = isSelected ?? false;
+                });
+              },
+              cells: [
+                DataCell(Row(
+                  children: [
+                    if (e.iconFilePath != null)
+                      Container(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(2),
+                              child: ExtendedImage.file(
+                                io.File(e.iconFilePath!),
+                                width: 16,
+                                height: 16,
+                              )))
+                    else
+                      const Icon(Icons.image),
+                    Text(e.name),
+                  ],
+                )),
+                DataCell(
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          await launchUrlString(
+                              'steam://nav/games/details/${e.appId}');
+                        },
+                        icon: Icon(const FaIcon(FontAwesomeIcons.steam).icon,
+                            size: 16),
+                        label: const Text('查看'),
+                      )),
+                ),
+              ],
+            ),
+          )
+          .toList(),
     );
   }
 }

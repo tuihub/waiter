@@ -107,6 +107,7 @@ dependencies:
   device_info_plus: ^9.1.1
   path: ^1.8.3
   petitparser: ^6.0.2
+  url_launcher: ^6.2.3
 
   # others
   json_annotation: ^4.8.1

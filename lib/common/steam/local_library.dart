@@ -7,19 +7,41 @@ import '../platform.dart';
 import 'acf_parser.dart';
 
 const _defaultSteamInstallPath = r'C:\Program Files (x86)\Steam';
+const _excludeAppIds = <String>{
+  '228980', // Steamworks Common Redistributables
+  '250820', // SteamVR
+};
 
 class InstalledSteamApps {
   final String appId;
   final String name;
   final String launcherPath;
   final String sizeOnDisk;
+  final String? iconFilePath;
 
   InstalledSteamApps({
     required this.appId,
     required this.name,
     required this.launcherPath,
     required this.sizeOnDisk,
+    this.iconFilePath,
   });
+
+  InstalledSteamApps copyWith({
+    String? appId,
+    String? name,
+    String? launcherPath,
+    String? sizeOnDisk,
+    String? iconFilePath,
+  }) {
+    return InstalledSteamApps(
+      appId: appId ?? this.appId,
+      name: name ?? this.name,
+      launcherPath: launcherPath ?? this.launcherPath,
+      sizeOnDisk: sizeOnDisk ?? this.sizeOnDisk,
+      iconFilePath: iconFilePath ?? this.iconFilePath,
+    );
+  }
 }
 
 enum SteamScanResult {
@@ -60,6 +82,11 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanLocalLibrary() async {
           apps.add(appInfo);
         }
       }
+    }
+    for (var i = 0; i < apps.length; i += 1) {
+      apps[i] = apps[i].copyWith(
+        iconFilePath: _getAppIconFilePath(steamInstallPath, apps[i].appId),
+      );
     }
   } catch (e) {
     return (apps, SteamScanResult.unknownError);
@@ -132,6 +159,9 @@ InstalledSteamApps? _getAppInfo(String path) {
         final name = appState['name'];
         final launcherPath = appState['LauncherPath'];
         final sizeOnDisk = appState['SizeOnDisk'];
+        if (appId is String && _excludeAppIds.contains(appId)) {
+          return null;
+        }
         if (appId is String &&
             name is String &&
             launcherPath is String &&
@@ -149,4 +179,13 @@ InstalledSteamApps? _getAppInfo(String path) {
     debugPrint(e.toString());
   }
   return null;
+}
+
+String _getAppIconFilePath(String path, String appId) {
+  return p.join(
+    path,
+    'appcache',
+    'librarycache',
+    '${appId}_icon.jpg',
+  );
 }
