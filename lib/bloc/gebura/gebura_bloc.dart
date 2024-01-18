@@ -89,7 +89,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         PurchaseAppRequest(
           appId: AppID(
             internal: true,
-            sourceAppId: event.id.toString(),
+            sourceAppId: event.id.id.toString(),
           ),
         ),
       );
@@ -248,11 +248,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       }
       emit(state.copyWith(localLibraryState: '正在扫描本地文件'));
       final (apps, result) = await scanLocalLibrary();
+      final folders = await getSteamLibraryFolders();
+      final imported = _repo.getImportedSteamApps();
+      final unImported = apps.where((element) =>
+          !imported.any((imported) => imported.steamAppID == element.appId));
       emit(state.copyWith(
-        localLibraryState: '',
+        localLibraryState:
+            unImported.isNotEmpty ? '发现${unImported.length}个本地游戏' : '',
         localSteamScanResult: result,
         localSteamApps: apps,
-        importedSteamApps: _repo.getImportedSteamApps(),
+        importedSteamApps: imported,
+        localSteamLibraryFolders: folders,
       ));
     }, transformer: droppable());
 

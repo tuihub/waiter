@@ -97,6 +97,24 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanLocalLibrary() async {
   return (apps, SteamScanResult.fullyScanned);
 }
 
+Future<List<String>> getSteamLibraryFolders() async {
+  List<String> folders = [];
+  try {
+    if (!PlatformHelper.isWindowsApp()) {
+      return folders;
+    }
+    final steamInstallPath = await _getSteamInstallPath();
+    if (steamInstallPath == null) {
+      return folders;
+    }
+    folders = _getLibraryFolders(
+        p.join(steamInstallPath, 'config', 'libraryfolders.vdf'));
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+  return folders;
+}
+
 Future<String?> _getSteamInstallPath() async {
   try {
     const keyPath = r'Software\Wow6432Node\Valve\Steam';

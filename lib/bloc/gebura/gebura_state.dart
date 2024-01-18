@@ -11,6 +11,7 @@ class GeburaState {
   late SteamScanResult? localSteamScanResult;
   late List<InstalledSteamApps>? localSteamApps;
   late List<ImportedSteamApp>? importedSteamApps;
+  late List<String>? localSteamLibraryFolders;
 
   GeburaState({
     this.purchasedApps,
@@ -21,6 +22,7 @@ class GeburaState {
     this.localSteamScanResult,
     this.localSteamApps,
     this.importedSteamApps,
+    this.localSteamLibraryFolders,
   });
 
   GeburaState copyWith({
@@ -32,6 +34,7 @@ class GeburaState {
     SteamScanResult? localSteamScanResult,
     List<InstalledSteamApps>? localSteamApps,
     List<ImportedSteamApp>? importedSteamApps,
+    List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
       purchasedApps: purchasedApps ?? this.purchasedApps,
@@ -43,6 +46,8 @@ class GeburaState {
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
       localSteamApps: localSteamApps ?? this.localSteamApps,
       importedSteamApps: importedSteamApps ?? this.importedSteamApps,
+      localSteamLibraryFolders:
+          localSteamLibraryFolders ?? this.localSteamLibraryFolders,
     );
   }
 
@@ -55,6 +60,7 @@ class GeburaState {
     localSteamScanResult = other.localSteamScanResult;
     localSteamApps = other.localSteamApps;
     importedSteamApps = other.importedSteamApps;
+    localSteamLibraryFolders = other.localSteamLibraryFolders;
   }
 }
 

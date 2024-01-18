@@ -3,6 +3,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:open_file/open_file.dart';
 import 'package:universal_io/io.dart' as io;
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -29,6 +30,7 @@ class GeburaLibrarySettings extends StatelessWidget {
             .where(
                 (l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
             .toList();
+        final libraryFolders = state.localSteamLibraryFolders ?? [];
         late String? localSteamStateMsg;
         switch (localSteamScanResult) {
           case SteamScanResult.unavailable:
@@ -48,6 +50,60 @@ class GeburaLibrarySettings extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Text('本地库'),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (final folder in libraryFolders)
+                                InkWell(
+                                  onTap: () async {
+                                    await OpenFile.open(folder);
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    padding: const EdgeInsets.all(16),
+                                    child: Ink(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                              const FaIcon(
+                                                      FontAwesomeIcons.folder)
+                                                  .icon,
+                                              size: 48),
+                                          const SizedBox(height: 8),
+                                          Text(folder),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Card(
                   margin: EdgeInsets.zero,
                   child: Container(
@@ -115,6 +171,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
