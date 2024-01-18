@@ -54,7 +54,7 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/tuihub/protos.git
-      ref: v0.3.6
+      ref: v0.3.8
   fixnum: ^1.1.0
 
   # theme

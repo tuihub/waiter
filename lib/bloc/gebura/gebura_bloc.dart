@@ -87,7 +87,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       final resp = await _api.doRequest(
         (client) => client.purchaseApp,
         PurchaseAppRequest(
-          appId: event.id,
+          appId: AppID(
+            internal: true,
+            sourceAppId: event.id.toString(),
+          ),
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -249,6 +252,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         localLibraryState: '',
         localSteamScanResult: result,
         localSteamApps: apps,
+        importedSteamApps: _repo.getImportedSteamApps(),
       ));
     }, transformer: droppable());
 
@@ -259,27 +263,37 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaImportSteamAppsState(
           state.copyWith(localLibraryState: '正在导入Steam应用'),
           EventStatus.processing));
-      var successCount = 0;
+      var processCount = 0;
       var failedCount = 0;
-      var importedSteamApps = _repo.getImportedSteamApps();
+      final importedSteamApps = _repo.getImportedSteamApps();
       for (final app in event.appIDs) {
+        processCount += 1;
         emit(GeburaImportSteamAppsState(
             state.copyWith(
               localLibraryState:
-                  '正在导入Steam应用 $successCount ( $failedCount ) / ${event.appIDs.length}',
+                  '正在导入Steam应用 $processCount ( $failedCount ) / ${event.appIDs.length}',
             ),
             EventStatus.processing));
         if (importedSteamApps.any((element) => element.steamAppID == app)) {
-          successCount += 1;
           continue;
         }
-        final syncResp = await _api.doRequest(
+        await _api.doRequest(
           (client) => client.syncApps,
           SyncAppsRequest(
             appIds: [AppID(internal: false, source: 'steam', sourceAppId: app)],
             waitData: true,
           ),
         );
+        final purchaseResp = await _api.doRequest(
+          (client) => client.purchaseApp,
+          PurchaseAppRequest(
+            appId: AppID(internal: false, source: 'steam', sourceAppId: app),
+          ),
+        );
+        if (purchaseResp.status != ApiStatus.success) {
+          failedCount += 1;
+          continue;
+        }
         final createResp = await _api.doRequest(
           (client) => client.createAppPackage,
           CreateAppPackageRequest(
@@ -293,35 +307,29 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         );
         if (createResp.status != ApiStatus.success) {
           failedCount += 1;
-        } else {
-          successCount += 1;
-          importedSteamApps.add(ImportedSteamApp(
-            steamAppID: app,
-            internalID: createResp.getData().id.id.toInt(),
-          ));
-          if (syncResp.status == ApiStatus.success &&
-              syncResp.getData().apps.isNotEmpty) {
-            await _api.doRequest(
-              (client) => client.assignAppPackage,
-              AssignAppPackageRequest(
-                appId: syncResp.getData().apps.first.id,
-                appPackageId: createResp.getData().id,
-              ),
-            );
-            await _api.doRequest(
-              (client) => client.purchaseApp,
-              PurchaseAppRequest(
-                appId: syncResp.getData().apps.first.id,
-              ),
-            );
-          }
+          continue;
         }
+        final assignResp = await _api.doRequest(
+          (client) => client.assignAppPackage,
+          AssignAppPackageRequest(
+            appId: purchaseResp.getData().id,
+            appPackageId: createResp.getData().id,
+          ),
+        );
+        if (assignResp.status != ApiStatus.success) {
+          failedCount += 1;
+          continue;
+        }
+        importedSteamApps.add(ImportedSteamApp(
+          internalID: purchaseResp.getData().id.id.toInt(),
+          steamAppID: app,
+        ));
       }
       await _repo.setImportedSteamApps(importedSteamApps);
       add(GeburaPurchasedAppsLoadEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
-            localLibraryState: 'Steam应用导入完成，$successCount 成功，$failedCount 失败',
+            localLibraryState: 'Steam应用导入完成，$processCount 成功，$failedCount 失败',
             importedSteamApps: importedSteamApps,
           ),
           EventStatus.success));

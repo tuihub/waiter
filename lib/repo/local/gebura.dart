@@ -20,10 +20,10 @@ class GeburaRepo {
   }
 
   static Future<GeburaRepo> init(String? path) async {
-    final appSettings = await Hive.openBox<String>(_appSettingsFile, path: path);
+    final appSettings =
+        await Hive.openBox<String>(_appSettingsFile, path: path);
     final importedSteamApps =
-        await Hive.openBox<String>(_importedSteamAppsFile,
-            path: path);
+        await Hive.openBox<String>(_importedSteamAppsFile, path: path);
     return GeburaRepo._init(appSettings, importedSteamApps);
   }
 
@@ -58,8 +58,8 @@ class GeburaRepo {
     for (final key in _importedSteamApps.keys) {
       final app = _importedSteamApps.get(key);
       if (app != null) {
-        apps.add(ImportedSteamApp.fromJson(
-            jsonDecode(app) as Map<String, dynamic>));
+        apps.add(
+            ImportedSteamApp.fromJson(jsonDecode(app) as Map<String, dynamic>));
       }
     }
     return apps;

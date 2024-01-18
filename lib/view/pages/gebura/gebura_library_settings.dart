@@ -26,7 +26,8 @@ class GeburaLibrarySettings extends StatelessWidget {
         final localSteamApps = state.localSteamApps ?? [];
         final importedSteamApps = state.importedSteamApps ?? [];
         final unImportedSteamApps = localSteamApps
-            .where((l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
+            .where(
+                (l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
             .toList();
         late String? localSteamStateMsg;
         switch (localSteamScanResult) {
@@ -42,75 +43,80 @@ class GeburaLibrarySettings extends StatelessWidget {
             localSteamStateMsg = null;
         }
         return Scaffold(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                margin: EdgeInsets.zero,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(const FaIcon(FontAwesomeIcons.steam).icon),
-                          const SizedBox(width: 16),
-                          const Text('Steam'),
-                          if (localSteamStateMsg == null)
-                            Container()
-                          else
-                            Container(
-                              margin: const EdgeInsets.only(left: 16),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                localSteamStateMsg,
-                                style: const TextStyle(
-                                  color: Colors.white,
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(const FaIcon(FontAwesomeIcons.steam).icon),
+                            const SizedBox(width: 16),
+                            const Text('Steam'),
+                            if (localSteamStateMsg == null)
+                              Container()
+                            else
+                              Container(
+                                margin: const EdgeInsets.only(left: 16),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.blueGrey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  localSteamStateMsg,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          Expanded(child: Container()),
-                          if (localSteamScanResult !=
-                              SteamScanResult.unavailable)
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                context
-                                    .read<GeburaBloc>()
-                                    .add(GeburaScanLocalLibraryEvent());
-                              },
-                              icon: const Icon(Icons.refresh),
-                              label: const Text('扫描'),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Text('发现${localSteamApps.length}个Steam游戏'),
-                        ],
-                      ),
-                      Container(
-                        height: 512,
-                        margin: const EdgeInsets.only(top: 16),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).dividerColor,
-                          ),
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(8),
+                            Expanded(child: Container()),
+                            if (localSteamScanResult !=
+                                SteamScanResult.unavailable)
+                              OutlinedButton.icon(
+                                onPressed: () {
+                                  context
+                                      .read<GeburaBloc>()
+                                      .add(GeburaScanLocalLibraryEvent());
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('扫描'),
+                              ),
+                          ],
                         ),
-                        child: _SteamGameList(apps: unImportedSteamApps),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Text(
+                            '发现${unImportedSteamApps.length}个Steam游戏（已导入${importedSteamApps.length}个）'),
+                        if (unImportedSteamApps.isNotEmpty)
+                          Container(
+                            margin: const EdgeInsets.only(top: 16),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).dividerColor,
+                              ),
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            constraints: const BoxConstraints(
+                              maxHeight: 400,
+                            ),
+                            child: _SteamGameList(apps: unImportedSteamApps),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -185,7 +191,8 @@ class _SteamGameListState extends State<_SteamGameList> {
       },
       columns: [
         DataColumn2(
-          label: Text('游戏列表'),
+          label: Text(
+              '游戏列表${selectedIndex.contains(true) ? '（已选${selectedIndex.where((element) => element).length}个）' : ''}'),
           size: ColumnSize.L,
         ),
         DataColumn2(
@@ -208,7 +215,7 @@ class _SteamGameListState extends State<_SteamGameList> {
                       }
                     }
                   : null,
-              child: Text('导入选中'),
+              child: const Text('导入选中'),
             ),
           ),
           fixedWidth: 150,
