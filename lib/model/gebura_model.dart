@@ -29,3 +29,14 @@ class AppRunState with _$AppRunState {
   factory AppRunState.fromJson(Map<String, Object?> json) =>
       _$AppRunStateFromJson(json);
 }
+
+@freezed
+class ImportedSteamApp with _$ImportedSteamApp {
+  const factory ImportedSteamApp({
+    required int internalID,
+    required String steamAppID,
+  }) = _ImportedSteamApp;
+
+  factory ImportedSteamApp.fromJson(Map<String, Object?> json) =>
+      _$ImportedSteamAppFromJson(json);
+}

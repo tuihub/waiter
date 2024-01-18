@@ -24,6 +24,10 @@ class GeburaLibrarySettings extends StatelessWidget {
         final localLibraryState = state.localLibraryState ?? '';
         final localSteamScanResult = state.localSteamScanResult;
         final localSteamApps = state.localSteamApps ?? [];
+        final importedSteamApps = state.importedSteamApps ?? [];
+        final unImportedSteamApps = localSteamApps
+            .where((l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
+            .toList();
         late String? localSteamStateMsg;
         switch (localSteamScanResult) {
           case SteamScanResult.unavailable:
@@ -100,7 +104,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                           color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: _SteamGameList(apps: localSteamApps),
+                        child: _SteamGameList(apps: unImportedSteamApps),
                       ),
                     ],
                   ),
@@ -179,7 +183,7 @@ class _SteamGameListState extends State<_SteamGameList> {
           });
         }
       },
-      columns: const [
+      columns: [
         DataColumn2(
           label: Text('游戏列表'),
           size: ColumnSize.L,
@@ -187,7 +191,25 @@ class _SteamGameListState extends State<_SteamGameList> {
         DataColumn2(
           label: Align(
             alignment: Alignment.centerRight,
-            child: ElevatedButton(onPressed: null, child: Text('导入选中')),
+            child: ElevatedButton(
+              onPressed: selectedIndex.contains(true)
+                  ? () {
+                      context.read<GeburaBloc>().add(
+                            GeburaImportSteamAppsEvent(
+                              widget.apps
+                                  .where((element) => selectedIndex[
+                                      widget.apps.indexOf(element)])
+                                  .map((e) => e.appId)
+                                  .toList(),
+                            ),
+                          );
+                      for (var i = 0; i < selectedIndex.length; i++) {
+                        selectedIndex[i] = false;
+                      }
+                    }
+                  : null,
+              child: Text('导入选中'),
+            ),
           ),
           fixedWidth: 150,
         ),

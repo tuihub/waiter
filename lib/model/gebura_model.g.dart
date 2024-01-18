@@ -45,3 +45,17 @@ Map<String, dynamic> _$$AppRunStateImplToJson(_$AppRunStateImpl instance) =>
       'startTime': instance.startTime?.toIso8601String(),
       'endTime': instance.endTime?.toIso8601String(),
     };
+
+_$ImportedSteamAppImpl _$$ImportedSteamAppImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ImportedSteamAppImpl(
+      internalID: json['internalID'] as int,
+      steamAppID: json['steamAppID'] as String,
+    );
+
+Map<String, dynamic> _$$ImportedSteamAppImplToJson(
+        _$ImportedSteamAppImpl instance) =>
+    <String, dynamic>{
+      'internalID': instance.internalID,
+      'steamAppID': instance.steamAppID,
+    };

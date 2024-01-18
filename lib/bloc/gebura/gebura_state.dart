@@ -10,6 +10,7 @@ class GeburaState {
   late String? localLibraryState;
   late SteamScanResult? localSteamScanResult;
   late List<InstalledSteamApps>? localSteamApps;
+  late List<ImportedSteamApp>? importedSteamApps;
 
   GeburaState({
     this.purchasedApps,
@@ -19,6 +20,7 @@ class GeburaState {
     this.localLibraryState,
     this.localSteamScanResult,
     this.localSteamApps,
+    this.importedSteamApps,
   });
 
   GeburaState copyWith({
@@ -29,6 +31,7 @@ class GeburaState {
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
     List<InstalledSteamApps>? localSteamApps,
+    List<ImportedSteamApp>? importedSteamApps,
   }) {
     return GeburaState(
       purchasedApps: purchasedApps ?? this.purchasedApps,
@@ -39,6 +42,7 @@ class GeburaState {
       localLibraryState: localLibraryState ?? this.localLibraryState,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
       localSteamApps: localSteamApps ?? this.localSteamApps,
+      importedSteamApps: importedSteamApps ?? this.importedSteamApps,
     );
   }
 
@@ -50,6 +54,7 @@ class GeburaState {
     localLibraryState = other.localLibraryState;
     localSteamScanResult = other.localSteamScanResult;
     localSteamApps = other.localSteamApps;
+    importedSteamApps = other.importedSteamApps;
   }
 }
 
@@ -171,6 +176,18 @@ class GeburaRunAppState extends GeburaState with EventStatusMixin {
   }
 
   final InternalID appID;
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaImportSteamAppsState extends GeburaState with EventStatusMixin {
+  GeburaImportSteamAppsState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
 
   @override
   final EventStatus? statusCode;

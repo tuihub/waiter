@@ -432,3 +432,161 @@ abstract class _AppRunState implements AppRunState {
   _$$AppRunStateImplCopyWith<_$AppRunStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+ImportedSteamApp _$ImportedSteamAppFromJson(Map<String, dynamic> json) {
+  return _ImportedSteamApp.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ImportedSteamApp {
+  int get internalID => throw _privateConstructorUsedError;
+  String get steamAppID => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ImportedSteamAppCopyWith<ImportedSteamApp> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ImportedSteamAppCopyWith<$Res> {
+  factory $ImportedSteamAppCopyWith(
+          ImportedSteamApp value, $Res Function(ImportedSteamApp) then) =
+      _$ImportedSteamAppCopyWithImpl<$Res, ImportedSteamApp>;
+  @useResult
+  $Res call({int internalID, String steamAppID});
+}
+
+/// @nodoc
+class _$ImportedSteamAppCopyWithImpl<$Res, $Val extends ImportedSteamApp>
+    implements $ImportedSteamAppCopyWith<$Res> {
+  _$ImportedSteamAppCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? internalID = null,
+    Object? steamAppID = null,
+  }) {
+    return _then(_value.copyWith(
+      internalID: null == internalID
+          ? _value.internalID
+          : internalID // ignore: cast_nullable_to_non_nullable
+              as int,
+      steamAppID: null == steamAppID
+          ? _value.steamAppID
+          : steamAppID // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ImportedSteamAppImplCopyWith<$Res>
+    implements $ImportedSteamAppCopyWith<$Res> {
+  factory _$$ImportedSteamAppImplCopyWith(_$ImportedSteamAppImpl value,
+          $Res Function(_$ImportedSteamAppImpl) then) =
+      __$$ImportedSteamAppImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int internalID, String steamAppID});
+}
+
+/// @nodoc
+class __$$ImportedSteamAppImplCopyWithImpl<$Res>
+    extends _$ImportedSteamAppCopyWithImpl<$Res, _$ImportedSteamAppImpl>
+    implements _$$ImportedSteamAppImplCopyWith<$Res> {
+  __$$ImportedSteamAppImplCopyWithImpl(_$ImportedSteamAppImpl _value,
+      $Res Function(_$ImportedSteamAppImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? internalID = null,
+    Object? steamAppID = null,
+  }) {
+    return _then(_$ImportedSteamAppImpl(
+      internalID: null == internalID
+          ? _value.internalID
+          : internalID // ignore: cast_nullable_to_non_nullable
+              as int,
+      steamAppID: null == steamAppID
+          ? _value.steamAppID
+          : steamAppID // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ImportedSteamAppImpl implements _ImportedSteamApp {
+  const _$ImportedSteamAppImpl(
+      {required this.internalID, required this.steamAppID});
+
+  factory _$ImportedSteamAppImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ImportedSteamAppImplFromJson(json);
+
+  @override
+  final int internalID;
+  @override
+  final String steamAppID;
+
+  @override
+  String toString() {
+    return 'ImportedSteamApp(internalID: $internalID, steamAppID: $steamAppID)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ImportedSteamAppImpl &&
+            (identical(other.internalID, internalID) ||
+                other.internalID == internalID) &&
+            (identical(other.steamAppID, steamAppID) ||
+                other.steamAppID == steamAppID));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, internalID, steamAppID);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ImportedSteamAppImplCopyWith<_$ImportedSteamAppImpl> get copyWith =>
+      __$$ImportedSteamAppImplCopyWithImpl<_$ImportedSteamAppImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ImportedSteamAppImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ImportedSteamApp implements ImportedSteamApp {
+  const factory _ImportedSteamApp(
+      {required final int internalID,
+      required final String steamAppID}) = _$ImportedSteamAppImpl;
+
+  factory _ImportedSteamApp.fromJson(Map<String, dynamic> json) =
+      _$ImportedSteamAppImpl.fromJson;
+
+  @override
+  int get internalID;
+  @override
+  String get steamAppID;
+  @override
+  @JsonKey(ignore: true)
+  _$$ImportedSteamAppImplCopyWith<_$ImportedSteamAppImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

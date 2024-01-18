@@ -69,3 +69,9 @@ final class GeburaRunAppEvent extends GeburaEvent {
 }
 
 final class GeburaScanLocalLibraryEvent extends GeburaEvent {}
+
+final class GeburaImportSteamAppsEvent extends GeburaEvent {
+  final List<String> appIDs;
+
+  GeburaImportSteamAppsEvent(this.appIDs);
+}

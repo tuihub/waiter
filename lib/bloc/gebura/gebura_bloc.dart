@@ -251,6 +251,81 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         localSteamApps: apps,
       ));
     }, transformer: droppable());
+
+    on<GeburaImportSteamAppsEvent>((event, emit) async {
+      if (!PlatformHelper.isWindowsApp()) {
+        return;
+      }
+      emit(GeburaImportSteamAppsState(
+          state.copyWith(localLibraryState: '正在导入Steam应用'),
+          EventStatus.processing));
+      var successCount = 0;
+      var failedCount = 0;
+      var importedSteamApps = _repo.getImportedSteamApps();
+      for (final app in event.appIDs) {
+        emit(GeburaImportSteamAppsState(
+            state.copyWith(
+              localLibraryState:
+                  '正在导入Steam应用 $successCount ( $failedCount ) / ${event.appIDs.length}',
+            ),
+            EventStatus.processing));
+        if (importedSteamApps.any((element) => element.steamAppID == app)) {
+          successCount += 1;
+          continue;
+        }
+        final syncResp = await _api.doRequest(
+          (client) => client.syncApps,
+          SyncAppsRequest(
+            appIds: [AppID(internal: false, source: 'steam', sourceAppId: app)],
+            waitData: true,
+          ),
+        );
+        final createResp = await _api.doRequest(
+          (client) => client.createAppPackage,
+          CreateAppPackageRequest(
+            appPackage: AppPackage(
+              source: AppPackageSource.APP_PACKAGE_SOURCE_MANUAL,
+              name: (state.localSteamApps ?? [])
+                  .firstWhere((element) => element.appId == app)
+                  .name,
+            ),
+          ),
+        );
+        if (createResp.status != ApiStatus.success) {
+          failedCount += 1;
+        } else {
+          successCount += 1;
+          importedSteamApps.add(ImportedSteamApp(
+            steamAppID: app,
+            internalID: createResp.getData().id.id.toInt(),
+          ));
+          if (syncResp.status == ApiStatus.success &&
+              syncResp.getData().apps.isNotEmpty) {
+            await _api.doRequest(
+              (client) => client.assignAppPackage,
+              AssignAppPackageRequest(
+                appId: syncResp.getData().apps.first.id,
+                appPackageId: createResp.getData().id,
+              ),
+            );
+            await _api.doRequest(
+              (client) => client.purchaseApp,
+              PurchaseAppRequest(
+                appId: syncResp.getData().apps.first.id,
+              ),
+            );
+          }
+        }
+      }
+      await _repo.setImportedSteamApps(importedSteamApps);
+      add(GeburaPurchasedAppsLoadEvent());
+      emit(GeburaImportSteamAppsState(
+          state.copyWith(
+            localLibraryState: 'Steam应用导入完成，$successCount 成功，$failedCount 失败',
+            importedSteamApps: importedSteamApps,
+          ),
+          EventStatus.success));
+    }, transformer: droppable());
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {
