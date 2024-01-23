@@ -19,8 +19,20 @@ class GeburaStoreDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final app = state.storeApps != null ? state.storeApps![appID] : null;
+    var firstBuild = true;
+    String msg = '未选择应用';
+    return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
+      if (state is GeburaFetchBoundAppsState) {
+        msg = state.msg ?? msg;
+      }
+    }, builder: (context, state) {
+      final apps = state.storeApps != null ? state.storeApps![appID] : null;
+      final app = apps != null ? mixApp(apps) : null;
+      if (firstBuild && apps == null) {
+        firstBuild = false;
+        context.read<GeburaBloc>().add(GeburaFetchBoundAppsEvent(appID));
+      }
+      debugPrint(app.toString());
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [
@@ -32,7 +44,7 @@ class GeburaStoreDetail extends StatelessWidget {
           ),
           Expanded(
             child: app == null
-                ? const Center(child: Text('未选择应用'))
+                ? Center(child: Text(msg))
                 : DynMouseScroll(builder: (context, controller, physics) {
                     return SingleChildScrollView(
                       controller: controller,
@@ -175,16 +187,19 @@ class GeburaStoreDetail extends StatelessWidget {
 class PurchaseAppDialog extends StatelessWidget {
   const PurchaseAppDialog({super.key, required this.app});
 
-  final AppMixed app;
+  final App app;
 
   @override
   Widget build(BuildContext context) {
+    String msg = '';
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
         if (state is GeburaPurchaseState) {
           if (state.success) {
             const Toast(title: '', message: '添加成功').show(context);
             Navigator.of(context).pop();
+          } else {
+            msg = state.msg ?? msg;
           }
         }
       },
@@ -193,7 +208,8 @@ class PurchaseAppDialog extends StatelessWidget {
           title: const Text('入库'),
           content: SizedBox(
             width: 600,
-            child: Text('确定将${app.name}加入你的库存？'),
+            child: Text(
+                '确定将${app.name}加入你的库存？' + (msg.isNotEmpty ? '\n错误：$msg' : '')),
           ),
           actions: <Widget>[
             TextButton(

@@ -75,3 +75,9 @@ final class GeburaImportSteamAppsEvent extends GeburaEvent {
 
   GeburaImportSteamAppsEvent(this.appIDs);
 }
+
+final class GeburaFetchBoundAppsEvent extends GeburaEvent {
+  final InternalID appID;
+
+  GeburaFetchBoundAppsEvent(this.appID);
+}

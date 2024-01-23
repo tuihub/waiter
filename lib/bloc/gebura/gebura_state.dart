@@ -4,7 +4,7 @@ class GeburaState {
   late List<AppMixed>? purchasedApps;
   late int? selectedPurchasedAppIndex;
 
-  late Map<InternalID, AppMixed>? storeApps;
+  late Map<InternalID, List<App>>? storeApps;
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
@@ -28,7 +28,7 @@ class GeburaState {
   GeburaState copyWith({
     List<AppMixed>? purchasedApps,
     int? selectedPurchasedAppIndex,
-    Map<InternalID, AppMixed>? storeApps,
+    Map<InternalID, List<App>>? storeApps,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
@@ -191,6 +191,18 @@ class GeburaRunAppState extends GeburaState with EventStatusMixin {
 
 class GeburaImportSteamAppsState extends GeburaState with EventStatusMixin {
   GeburaImportSteamAppsState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaFetchBoundAppsState extends GeburaState with EventStatusMixin {
+  GeburaFetchBoundAppsState(GeburaState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

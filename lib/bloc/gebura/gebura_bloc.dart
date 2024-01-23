@@ -70,12 +70,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         emit(GeburaSearchAppsState(state, EventStatus.failed, msg: resp.error));
         return;
       }
-      final appMap = state.storeApps ?? <InternalID, AppMixed>{};
-      for (final app in resp.getData().apps) {
-        appMap[app.id] = app;
-      }
       emit(GeburaSearchAppsState(
-        state.copyWith(storeApps: appMap),
+        state,
         EventStatus.success,
         msg: resp.error,
         apps: resp.getData().apps,
@@ -335,10 +331,32 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       add(GeburaPurchasedAppsLoadEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
-            localLibraryState: 'Steam应用导入完成，$processCount 成功，$failedCount 失败',
+            localLibraryState: 'Steam应用导入完成，${processCount-failedCount}成功，${failedCount}失败',
             importedSteamApps: importedSteamApps,
           ),
           EventStatus.success));
+    }, transformer: droppable());
+
+    on<GeburaFetchBoundAppsEvent>((event, emit) async {
+      emit(GeburaFetchBoundAppsState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.getBoundApps,
+        GetBoundAppsRequest(
+          appId: event.appID,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaFetchBoundAppsState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      final storeApps = state.storeApps ?? {};
+      storeApps[event.appID] = resp.getData().apps;
+      emit(GeburaFetchBoundAppsState(
+        state.copyWith(storeApps: storeApps),
+        EventStatus.success,
+        msg: resp.error,
+      ));
     }, transformer: droppable());
   }
 
@@ -371,4 +389,48 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     );
     return resp.getData();
   }
+}
+
+App mixApp(List<App> apps) {
+  var mixedApp = App();
+  if (apps.isEmpty) {
+    return mixedApp;
+  }
+  mixedApp = apps.where((element) => element.internal).isNotEmpty
+      ? apps.firstWhere((element) => element.internal)
+      : App();
+  for (final app in apps.where((element) => !element.internal)) {
+    mixedApp.name = app.name.isNotEmpty ? app.name : mixedApp.name;
+    mixedApp.shortDescription = app.shortDescription.isNotEmpty
+        ? app.shortDescription
+        : mixedApp.shortDescription;
+    mixedApp.iconImageUrl =
+        app.iconImageUrl.isNotEmpty ? app.iconImageUrl : mixedApp.iconImageUrl;
+    mixedApp.backgroundImageUrl = app.backgroundImageUrl.isNotEmpty
+        ? app.backgroundImageUrl
+        : mixedApp.backgroundImageUrl;
+    mixedApp.coverImageUrl = app.coverImageUrl.isNotEmpty
+        ? app.coverImageUrl
+        : mixedApp.coverImageUrl;
+    mixedApp.tags.addAll(app.tags);
+    mixedApp.altNames.addAll(app.altNames);
+
+    mixedApp.details.description = app.details.description.isNotEmpty
+        ? app.details.description
+        : mixedApp.details.description;
+    mixedApp.details.releaseDate = app.details.releaseDate.isNotEmpty
+        ? app.details.releaseDate
+        : mixedApp.details.releaseDate;
+    mixedApp.details.developer = app.details.developer.isNotEmpty
+        ? app.details.developer
+        : mixedApp.details.developer;
+    mixedApp.details.publisher = app.details.publisher.isNotEmpty
+        ? app.details.publisher
+        : mixedApp.details.publisher;
+    mixedApp.details.version = app.details.version.isNotEmpty
+        ? app.details.version
+        : mixedApp.details.version;
+    mixedApp.details.imageUrls.addAll(app.details.imageUrls);
+  }
+  return mixedApp;
 }

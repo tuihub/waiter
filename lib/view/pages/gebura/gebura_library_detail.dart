@@ -19,6 +19,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var firstBuild = true;
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
         if (state is GeburaRunAppState && state.msg != null) {
@@ -33,6 +34,11 @@ class GeburaLibraryDetailPage extends StatelessWidget {
             state.runState != null && state.runState!.containsKey(app.id)
                 ? state.runState![app.id]
                 : null;
+        if (firstBuild &&
+            (state.storeApps == null || state.storeApps![app.id] == null)) {
+          firstBuild = false;
+          context.read<GeburaBloc>().add(GeburaFetchBoundAppsEvent(app.id));
+        }
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
