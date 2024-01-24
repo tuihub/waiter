@@ -331,7 +331,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       add(GeburaPurchasedAppsLoadEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
-            localLibraryState: 'Steam应用导入完成，${processCount-failedCount}成功，${failedCount}失败',
+            localLibraryState:
+                'Steam应用导入完成，${processCount - failedCount}成功，$failedCount失败',
             importedSteamApps: importedSteamApps,
           ),
           EventStatus.success));

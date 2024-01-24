@@ -209,7 +209,7 @@ class PurchaseAppDialog extends StatelessWidget {
           content: SizedBox(
             width: 600,
             child: Text(
-                '确定将${app.name}加入你的库存？' + (msg.isNotEmpty ? '\n错误：$msg' : '')),
+                '确定将${app.name}加入你的库存？${msg.isNotEmpty ? '\n错误：$msg' : ''}'),
           ),
           actions: <Widget>[
             TextButton(
