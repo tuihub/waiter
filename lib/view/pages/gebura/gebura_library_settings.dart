@@ -278,50 +278,52 @@ class _SteamGameListState extends State<_SteamGameList> {
           fixedWidth: 150,
         ),
       ],
-      rows: widget.apps
-          .map(
-            (e) => DataRow(
-              selected: selectedIndex[widget.apps.indexOf(e)],
-              onSelectChanged: (isSelected) {
-                setState(() {
-                  selectedIndex[widget.apps.indexOf(e)] = isSelected ?? false;
-                });
-              },
-              cells: [
-                DataCell(Row(
-                  children: [
-                    if (e.iconFilePath != null)
-                      Container(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(2),
-                              child: ExtendedImage.file(
-                                io.File(e.iconFilePath!),
-                                width: 16,
-                                height: 16,
-                              )))
-                    else
-                      const Icon(Icons.image),
-                    Text(e.name),
-                  ],
-                )),
-                DataCell(
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
-                          await launchUrlString(
-                              'steam://nav/games/details/${e.appId}');
-                        },
-                        icon: Icon(const FaIcon(FontAwesomeIcons.steam).icon,
-                            size: 16),
-                        label: const Text('查看'),
-                      )),
-                ),
-              ],
-            ),
-          )
-          .toList(),
+      rows: widget.apps.map(
+        (e) {
+          final file = io.File(e.iconFilePath!);
+          final content = file.readAsBytesSync();
+          return DataRow(
+            selected: selectedIndex[widget.apps.indexOf(e)],
+            onSelectChanged: (isSelected) {
+              setState(() {
+                selectedIndex[widget.apps.indexOf(e)] = isSelected ?? false;
+              });
+            },
+            cells: [
+              DataCell(Row(
+                children: [
+                  if (e.iconFilePath != null)
+                    Container(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(2),
+                            child: ExtendedImage.memory(
+                              content,
+                              width: 16,
+                              height: 16,
+                            )))
+                  else
+                    const Icon(Icons.image),
+                  Text(e.name),
+                ],
+              )),
+              DataCell(
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await launchUrlString(
+                            'steam://nav/games/details/${e.appId}');
+                      },
+                      icon: Icon(const FaIcon(FontAwesomeIcons.steam).icon,
+                          size: 16),
+                      label: const Text('查看'),
+                    )),
+              ),
+            ],
+          );
+        },
+      ).toList(),
     );
   }
 }

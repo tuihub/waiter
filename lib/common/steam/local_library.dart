@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:universal_io/io.dart' as io;
-import 'package:win32_registry/win32_registry.dart';
 
 import '../platform.dart';
 import 'acf_parser.dart';
+import 'win32.dart' if (dart.library.html) 'non_win32.dart';
 
-const _defaultSteamInstallPath = r'C:\Program Files (x86)\Steam';
 const _excludeAppIds = <String>{
   '228980', // Steamworks Common Redistributables
   '250820', // SteamVR
@@ -59,7 +58,7 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanLocalLibrary() async {
     if (!PlatformHelper.isWindowsApp()) {
       return (apps, SteamScanResult.unavailable);
     }
-    final steamInstallPath = await _getSteamInstallPath();
+    final steamInstallPath = await getSteamInstallPath();
     if (steamInstallPath == null) {
       return (apps, SteamScanResult.steamInstallationNotFound);
     }
@@ -103,7 +102,7 @@ Future<List<String>> getSteamLibraryFolders() async {
     if (!PlatformHelper.isWindowsApp()) {
       return folders;
     }
-    final steamInstallPath = await _getSteamInstallPath();
+    final steamInstallPath = await getSteamInstallPath();
     if (steamInstallPath == null) {
       return folders;
     }
@@ -113,25 +112,6 @@ Future<List<String>> getSteamLibraryFolders() async {
     debugPrint(e.toString());
   }
   return folders;
-}
-
-Future<String?> _getSteamInstallPath() async {
-  try {
-    const keyPath = r'Software\Wow6432Node\Valve\Steam';
-    final key = Registry.openPath(RegistryHive.localMachine, path: keyPath);
-
-    final path = key.getValueAsString('InstallPath');
-    key.close();
-    if (path != null && await io.Directory(path).exists()) {
-      return path;
-    }
-  } catch (e) {
-    debugPrint(e.toString());
-  }
-  if (await io.Directory(_defaultSteamInstallPath).exists()) {
-    return _defaultSteamInstallPath;
-  }
-  return null;
 }
 
 List<String> _getLibraryFolders(String path) {
