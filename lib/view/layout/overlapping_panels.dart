@@ -5,6 +5,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 const double minPixelsPerSecond = 240;
+const double minDragExtent = 24;
 
 /// Display sections
 enum RevealSide { left, right, main }
@@ -71,6 +72,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => setState(() {
         translate = widget.left == null ? 0 : _calculateGoal(width, 1);
+        lastTranslate = translate;
       }),
     );
   }
@@ -107,6 +109,12 @@ class OverlappingPanelsState extends State<OverlappingPanels>
       goal = _calculateGoal(width, multiplier);
     } else {
       goal = 0;
+    }
+
+    if ((translate - lastTranslate).abs() > minDragExtent) {
+      translate += translate < lastTranslate ? minDragExtent : -minDragExtent;
+    } else {
+      translate = lastTranslate;
     }
 
     if (widget.left == null && goal > 0) goal = 0;
@@ -198,7 +206,15 @@ class OverlappingPanelsState extends State<OverlappingPanels>
             child: widget.right,
           ),
           Transform.translate(
-            offset: Offset(translate, 0),
+            offset: translate == lastTranslate
+                ? Offset(translate, 0)
+                : (translate - lastTranslate).abs() > minDragExtent
+                    ? Offset(
+                        translate > lastTranslate
+                            ? translate - minDragExtent
+                            : translate + minDragExtent,
+                        0)
+                    : Offset(lastTranslate, 0),
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
