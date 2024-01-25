@@ -1,6 +1,18 @@
 # Waiter
 
-Current version is for developer testing only. It's not ready for user. Don't run it on your computer.
+[![](https://img.shields.io/github/v/release/tuihub/waiter.svg)](https://github.com/tuihub/waiter/releases/latest)
+
+Waiter is the standard client implementation of TuiHub.  
+
+It is recommended to use with the standard server implementation [Librarian](https://github.com/tuihub/librarian). Check [document](https://docs.tuihub.org) site for user guide.
+
+**You need an available server instance before going on.**
+
+## Development
+
+1. Setup [flutter](https://docs.flutter.dev/get-started/install) development environment
+2. Install [rust](https://www.rust-lang.org/tools/install) (knowledge about rust is not required, just a dependency of a small part)
+3. Open project with your IDE
 
 ## TODO
 
