@@ -282,11 +282,13 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
-        builder: (context, state) => const MainWindow(child: InitPage()),
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: MainWindow(child: InitPage())),
       ),
       GoRoute(
         path: AppRoutes.login.toString(),
-        builder: (context, state) => const MainWindow(child: LoginPage()),
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: MainWindow(child: LoginPage())),
       ),
       GoRoute(
         path: '${AppRoutes._imageViewer}/:index',
@@ -306,8 +308,8 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
         },
       ),
       StatefulShellRoute.indexedStack(
-        builder: (BuildContext context, GoRouterState state, Widget child) {
-          return BlocBuilder<MainBloc, MainState>(
+        pageBuilder: (BuildContext context, GoRouterState state, Widget child) {
+          return NoTransitionPage(child: BlocBuilder<MainBloc, MainState>(
             builder: (context, state) {
               if (state.currentUser != null ||
                   context.read<MainBloc>().tipherethBloc != null) {
@@ -319,7 +321,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 child: Center(child: CircularProgressIndicator()),
               );
             },
-          );
+          ));
         },
         branches: [
           StatefulShellBranch(
