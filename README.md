@@ -9,7 +9,7 @@ It is recommended to use with the standard server implementation [Librarian](htt
 ## Translation
 
 [![zh-CN](https://img.shields.io/badge/zh--CN-source-blue?logo=crowdin)](https://crowdin.com/project/tuihub-waiter)
-[![en translation](https://img.shields.io/badge/dynamic/json?color=blue&label=en&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27en%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16204710-643430-update.json)](https://crowdin.com/project/tuihub-waiter)
+[![en-US translation](https://img.shields.io/badge/dynamic/json?color=blue&label=en-US&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27en-US%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16204710-643430.json)](https://crowdin.com/project/tuihub-waiter)
 
 The translation of this project is managed by [Crowdin](https://crowdin.com/project/tuihub-waiter). Don't report translation related issues on Crowdin, report them here.
 
