@@ -4,11 +4,18 @@
 
 Waiter is the standard client implementation of TuiHub.  
 
-It is recommended to use with the standard server implementation [Librarian](https://github.com/tuihub/librarian). Check [document](https://docs.tuihub.org) site for user guide.
+It is recommended to use with the standard server implementation [Librarian](https://github.com/tuihub/librarian). **Check [document](https://docs.tuihub.org) site for user guide.**
 
-**You need an available server instance before going on.**
+## Translation
+
+[![zh-CN](https://img.shields.io/badge/zh--CN-source-blue?logo=crowdin)](https://crowdin.com/project/tuihub-waiter)
+[![en translation](https://img.shields.io/badge/dynamic/json?color=blue&label=en&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27en%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16204710-643430-update.json)](https://crowdin.com/project/tuihub-waiter)
+
+The translation of this project is managed by [Crowdin](https://crowdin.com/project/tuihub-waiter). Don't report translation related issues on Crowdin, report them here.
 
 ## Development
+
+*You need an available server instance before going on.*
 
 1. Setup [flutter](https://docs.flutter.dev/get-started/install) development environment
 2. Install [rust](https://www.rust-lang.org/tools/install) (knowledge about rust is not required, just a dependency of a small part)
