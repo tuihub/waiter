@@ -1,5 +1,5 @@
 {
-  "@@locale":"en-US",
+  "@@locale": "en-US",
   "title": "TuiHub",
   "buttonConfirm": "Confirm",
   "buttonClose": "Close",
@@ -18,7 +18,7 @@
   "durationWeeks": "{number} weeks ago",
   "durationMonths": "{number} months ago",
   "durationYears": "{number} years ago",
-  "welcomeHeader": "\uD83C\uDF89Welcome!",
+  "welcomeHeader": "🎉Welcome!",
   "welcome": "Welcome",
   "welcomeBack": "Welcome back",
   "login": "Login",
