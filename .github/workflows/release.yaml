@@ -46,7 +46,7 @@ jobs:
         run: |
           flutter pub get
           flutter build web --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
-          cd build/web && tar -zcvf ${{ env.APP_NAME }}-web-${{ github.ref_name }}.tar.gz ./*
+          cd build/web && tar -zcvf ../../${{ env.APP_NAME }}-web-${{ github.ref_name }}.tar.gz ./*
 
       - name: Release
         uses: softprops/action-gh-release@v1
