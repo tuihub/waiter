@@ -3,6 +3,8 @@ import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
+import '../../l10n/l10n.dart';
+
 enum ApiStatus { success, error }
 
 class ApiResponse<T> {
@@ -62,14 +64,16 @@ class ApiHelper {
           return ApiResponse(resp, ApiStatus.success, null);
         } catch (e) {
           if (e is GrpcError) {
-            return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+            return ApiResponse(null, ApiStatus.error,
+                e.message ?? S.current.unknownErrorOccurred);
           }
           return ApiResponse(null, ApiStatus.error, e.toString());
         }
       }
       debugPrint(e.toString());
       if (e is GrpcError) {
-        return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+        return ApiResponse(
+            null, ApiStatus.error, e.message ?? S.current.unknownErrorOccurred);
       }
       return ApiResponse(null, ApiStatus.error, e.toString());
     }
@@ -100,14 +104,16 @@ class ApiHelper {
           return ApiResponse(resp, ApiStatus.success, null);
         } catch (e) {
           if (e is GrpcError) {
-            return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+            return ApiResponse(null, ApiStatus.error,
+                e.message ?? S.current.unknownErrorOccurred);
           }
           return ApiResponse(null, ApiStatus.error, e.toString());
         }
       }
       debugPrint(e.toString());
       if (e is GrpcError) {
-        return ApiResponse(null, ApiStatus.error, e.message ?? '发生未知错误');
+        return ApiResponse(
+            null, ApiStatus.error, e.message ?? S.current.unknownErrorOccurred);
       }
       return ApiResponse(null, ApiStatus.error, e.toString());
     }

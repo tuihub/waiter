@@ -12,6 +12,7 @@ import '../../common/platform.dart';
 import '../../common/steam/local_library.dart';
 import '../../ffi/ffi.dart';
 import '../../ffi/ffi_model.dart';
+import '../../l10n/l10n.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/gebura.dart';
@@ -191,13 +192,13 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       final setting = _repo.getAppLauncherSetting(event.appID.id.toInt());
       if (setting == null || setting.path.isEmpty) {
         emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-            msg: '请先设置应用路径'));
+            msg: S.current.pleaseSetupApplicationPath));
         return;
       }
       if (state.runState![event.appID] != null &&
           state.runState![event.appID]!.running) {
         emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-            msg: '请勿重复运行'));
+            msg: S.current.pleaseDontReRunApplication));
         return;
       }
       state.runState![event.appID] =
@@ -216,7 +217,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           state.runState![event.appID] =
               state.runState![event.appID]!.copyWith(running: false);
           emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-              msg: '应用未正常退出'));
+              msg: S.current.applicationExitAbnormally));
           return;
         }
         state.runState![event.appID] = AppRunState(
@@ -233,7 +234,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         state.runState![event.appID] =
             state.runState![event.appID]!.copyWith(running: false);
         emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-            msg: '启动器错误 ${e is FrbAnyhowException ? e.anyhow : e}'));
+            msg:
+                '${S.current.launcherError} ${e is FrbAnyhowException ? e.anyhow : e}'));
         return;
       }
     });
@@ -242,15 +244,16 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       if (!PlatformHelper.isWindowsApp()) {
         return;
       }
-      emit(state.copyWith(localLibraryState: '正在扫描本地文件'));
+      emit(state.copyWith(localLibraryState: S.current.scanningLocalFiles));
       final (apps, result) = await scanLocalLibrary();
       final folders = await getSteamLibraryFolders();
       final imported = _repo.getImportedSteamApps();
       final unImported = apps.where((element) =>
           !imported.any((imported) => imported.steamAppID == element.appId));
       emit(state.copyWith(
-        localLibraryState:
-            unImported.isNotEmpty ? '发现${unImported.length}个本地游戏' : '',
+        localLibraryState: unImported.isNotEmpty
+            ? S.current.newApplicationFound(unImported.length)
+            : '',
         localSteamScanResult: result,
         localSteamApps: apps,
         importedSteamApps: imported,
@@ -263,7 +266,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaImportSteamAppsState(
-          state.copyWith(localLibraryState: '正在导入Steam应用'),
+          state.copyWith(
+              localLibraryState: S.current.importingSteamApplications),
           EventStatus.processing));
       var processCount = 0;
       var failedCount = 0;
@@ -273,7 +277,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         emit(GeburaImportSteamAppsState(
             state.copyWith(
               localLibraryState:
-                  '正在导入Steam应用 $processCount ( $failedCount ) / ${event.appIDs.length}',
+                  '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.appIDs.length}',
             ),
             EventStatus.processing));
         if (importedSteamApps.any((element) => element.steamAppID == app)) {
@@ -331,8 +335,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       add(GeburaPurchasedAppsLoadEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
-            localLibraryState:
-                'Steam应用导入完成，${processCount - failedCount}成功，$failedCount失败',
+            localLibraryState: S.current.importSteamApplicationFinished(
+                processCount - failedCount, failedCount),
             importedSteamApps: importedSteamApps,
           ),
           EventStatus.success));

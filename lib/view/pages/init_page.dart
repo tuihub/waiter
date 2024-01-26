@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/main_bloc.dart';
+import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
@@ -31,7 +32,7 @@ class _InitPageState extends State<InitPage> {
         listener: (context, state) {
           if (state is MainAutoLoginState && state.success) {
             AppRoutes.tiphereth.go(context);
-            const Toast(title: '', message: '欢迎回来').show(context);
+            Toast(title: '', message: S.of(context).welcomeBack).show(context);
           }
         },
         builder: (context, state) {
@@ -54,7 +55,7 @@ class _InitPageState extends State<InitPage> {
                       AppRoutes.login.go(context);
                     },
                     icon: const Icon(Icons.arrow_forward),
-                    label: const Text('登录'),
+                    label: Text(S.of(context).login),
                   )
                 : Container(),
           );
@@ -121,11 +122,11 @@ class InitWidget extends StatelessWidget {
               ),
             )
           else
-            const SizedBox(
+            SizedBox(
               height: 24,
               child: Text(
-                'CLICK LOGIN TO START',
-                style: TextStyle(fontSize: 16),
+                S.of(context).clickLoginToStart,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
         ],

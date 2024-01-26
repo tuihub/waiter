@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:system_tray/system_tray.dart';
 
 import '../../common/platform.dart';
+import '../../l10n/l10n.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});
@@ -44,7 +45,7 @@ class TitleBar extends StatelessWidget {
                   child: MoveWindow(),
                 )
               : PlatformHelper.isWeb()
-                  ? const Align(child: Text('网页版功能受限，仅供评估使用'))
+                  ? Align(child: Text(S.of(context).webVersionFunctionLimited))
                   : const SizedBox(),
         ),
         for (final action in actions) action,
@@ -61,11 +62,11 @@ class TitleBar extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('关闭'),
-                      content: const Text('确定要关闭吗？'),
+                      title: Text(S.of(context).buttonClose),
+                      content: Text(S.of(context).areYouSureToClose),
                       actions: <Widget>[
                         TextButton(
-                          child: const Text('退出应用'),
+                          child: Text(S.of(context).buttonExit),
                           onPressed: () {
                             final SystemTray systemTray = SystemTray();
                             systemTray.destroy();
@@ -73,14 +74,14 @@ class TitleBar extends StatelessWidget {
                           },
                         ),
                         TextButton(
-                          child: const Text('最小化到托盘'),
+                          child: Text(S.of(context).buttonMinimizeToTray),
                           onPressed: () {
                             Navigator.of(context).pop();
                             appWindow.hide();
                           },
                         ),
                         TextButton(
-                          child: const Text('取消'),
+                          child: Text(S.of(context).buttonCancel),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

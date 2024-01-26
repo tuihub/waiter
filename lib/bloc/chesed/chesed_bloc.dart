@@ -14,6 +14,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../l10n/l10n.dart';
 import '../../repo/grpc/api_helper.dart';
 
 part 'chesed_event.dart';
@@ -89,7 +90,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
                 extension = pick.extension!;
               } else {
                 emit(ChesedUploadImageState(state, EventStatus.failed,
-                    msg: 'User canceled pick'));
+                    msg: S.current.updateImageUserCanceledPick));
                 return;
               }
             }
@@ -119,7 +120,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
                 extension = 'png';
               } else {
                 emit(ChesedUploadImageState(state, EventStatus.failed,
-                    msg: 'User canceled capture'));
+                    msg: S.current.updateImageUserCanceledCapture));
                 return;
               }
             }
@@ -145,7 +146,8 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
           body: await file.readAsBytes(),
         );
         if (uploadResponse.statusCode != 200) {
-          throw Exception('文件上传失败： ${uploadResponse.reasonPhrase}');
+          throw Exception(
+              '${S.current.uploadImageFailed} ${uploadResponse.reasonPhrase}');
         }
         await _api.doRequestWithOptions(
           (client) => client.presignedUploadFileStatus,

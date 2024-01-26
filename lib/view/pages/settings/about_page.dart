@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../components/expand_rail_tile.dart';
@@ -68,9 +70,29 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16, child: Container()),
+              const SizedBox(height: 16),
               ExpandRailTile(
-                initiallyExpanded: true,
+                title: const Text(
+                  'Privacy Policy',
+                ),
+                children: [
+                  FutureBuilder(
+                    future: rootBundle.loadString('PrivacyPolicy.md'),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      if (snapshot.hasData) {
+                        return Markdown(
+                            shrinkWrap: true, data: snapshot.data ?? '');
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ExpandRailTile(
                 title: const Text(
                   'Current Server Information',
                 ),

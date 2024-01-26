@@ -1,3 +1,5 @@
+import '../../l10n/l10n.dart';
+
 class DurationHelper {
   static String recentString(DateTime dateTime) {
     final duration = DateTime.now().difference(dateTime);
@@ -14,15 +16,15 @@ class DurationHelper {
     const maxDays = 30;
 
     if (minutes <= 1) {
-      return '刚刚';
+      return S.current.durationJustNow;
     } else if (minutes < maxMinutes) {
-      return '$minutes 分钟前';
+      return S.current.durationMinutes(minutes);
     } else if (hours < maxHours) {
-      return '$hours 小时前';
+      return S.current.durationHours(hours);
     } else if (days < maxDays) {
-      return '$days 天前';
+      return S.current.durationDays(days);
     } else {
-      return '$months 个月前';
+      return S.current.durationMonths(months);
     }
   }
 }
