@@ -60,270 +60,270 @@ class S {
     );
   }
 
-  /// `Confirm`
+  /// `确认`
   String get buttonConfirm {
     return Intl.message(
-      'Confirm',
+      '确认',
       name: 'buttonConfirm',
       desc: '',
       args: [],
     );
   }
 
-  /// `Close`
+  /// `关闭`
   String get buttonClose {
     return Intl.message(
-      'Close',
+      '关闭',
       name: 'buttonClose',
       desc: '',
       args: [],
     );
   }
 
-  /// `Parse failed`
+  /// `解析失败`
   String get parseFailed {
     return Intl.message(
-      'Parse failed',
+      '解析失败',
       name: 'parseFailed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unknown error occurred`
+  /// `发生未知错误`
   String get unknownErrorOccurred {
     return Intl.message(
-      'Unknown error occurred',
+      '发生未知错误',
       name: 'unknownErrorOccurred',
       desc: '',
       args: [],
     );
   }
 
-  /// `Are you sure to close?`
+  /// `你确定要关闭吗？`
   String get areYouSureToClose {
     return Intl.message(
-      'Are you sure to close?',
+      '你确定要关闭吗？',
       name: 'areYouSureToClose',
       desc: '',
       args: [],
     );
   }
 
-  /// `Exit`
+  /// `退出`
   String get buttonExit {
     return Intl.message(
-      'Exit',
+      '退出',
       name: 'buttonExit',
       desc: '',
       args: [],
     );
   }
 
-  /// `Minimize to tray`
+  /// `最小化到托盘`
   String get buttonMinimizeToTray {
     return Intl.message(
-      'Minimize to tray',
+      '最小化到托盘',
       name: 'buttonMinimizeToTray',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancel`
+  /// `取消`
   String get buttonCancel {
     return Intl.message(
-      'Cancel',
+      '取消',
       name: 'buttonCancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Web version has limited functionality, for evaluation use only`
+  /// `Web版本功能有限，仅供评估使用。`
   String get webVersionFunctionLimited {
     return Intl.message(
-      'Web version has limited functionality, for evaluation use only',
+      'Web版本功能有限，仅供评估使用。',
       name: 'webVersionFunctionLimited',
       desc: '',
       args: [],
     );
   }
 
-  /// `Just now`
+  /// `刚刚`
   String get durationJustNow {
     return Intl.message(
-      'Just now',
+      '刚刚',
       name: 'durationJustNow',
       desc: '',
       args: [],
     );
   }
 
-  /// `{number} seconds ago`
+  /// `{number} 秒前`
   String durationSeconds(Object number) {
     return Intl.message(
-      '$number seconds ago',
+      '$number 秒前',
       name: 'durationSeconds',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} minutes ago`
+  /// `{number} 分钟前`
   String durationMinutes(Object number) {
     return Intl.message(
-      '$number minutes ago',
+      '$number 分钟前',
       name: 'durationMinutes',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} hours ago`
+  /// `{number} 小时前`
   String durationHours(Object number) {
     return Intl.message(
-      '$number hours ago',
+      '$number 小时前',
       name: 'durationHours',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} days ago`
+  /// `{number} 天前`
   String durationDays(Object number) {
     return Intl.message(
-      '$number days ago',
+      '$number 天前',
       name: 'durationDays',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} weeks ago`
+  /// `{number} 周前`
   String durationWeeks(Object number) {
     return Intl.message(
-      '$number weeks ago',
+      '$number 周前',
       name: 'durationWeeks',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} months ago`
+  /// `{number} 个月前`
   String durationMonths(Object number) {
     return Intl.message(
-      '$number months ago',
+      '$number 个月前',
       name: 'durationMonths',
       desc: '',
       args: [number],
     );
   }
 
-  /// `{number} years ago`
+  /// `{number} 年前`
   String durationYears(Object number) {
     return Intl.message(
-      '$number years ago',
+      '$number 年前',
       name: 'durationYears',
       desc: '',
       args: [number],
     );
   }
 
-  /// `🎉Welcome!`
+  /// `🎉欢迎！`
   String get welcomeHeader {
     return Intl.message(
-      '🎉Welcome!',
+      '🎉欢迎！',
       name: 'welcomeHeader',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welcome`
+  /// `欢迎`
   String get welcome {
     return Intl.message(
-      'Welcome',
+      '欢迎',
       name: 'welcome',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welcome back`
+  /// `欢迎回来`
   String get welcomeBack {
     return Intl.message(
-      'Welcome back',
+      '欢迎回来',
       name: 'welcomeBack',
       desc: '',
       args: [],
     );
   }
 
-  /// `Login`
+  /// `登录`
   String get login {
     return Intl.message(
-      'Login',
+      '登录',
       name: 'login',
       desc: '',
       args: [],
     );
   }
 
-  /// `CLICK LOGIN TO START`
+  /// `点击登录以开始`
   String get clickLoginToStart {
     return Intl.message(
-      'CLICK LOGIN TO START',
+      '点击登录以开始',
       name: 'clickLoginToStart',
       desc: '',
       args: [],
     );
   }
 
-  /// `Server setup`
+  /// `服务器设置`
   String get serverSetup {
     return Intl.message(
-      'Server setup',
+      '服务器设置',
       name: 'serverSetup',
       desc: '',
       args: [],
     );
   }
 
-  /// `Address`
+  /// `地址`
   String get address {
     return Intl.message(
-      'Address',
+      '地址',
       name: 'address',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please input server address`
+  /// `请输入服务器地址`
   String get pleaseInputServerAddress {
     return Intl.message(
-      'Please input server address',
+      '请输入服务器地址',
       name: 'pleaseInputServerAddress',
       desc: '',
       args: [],
     );
   }
 
-  /// `Port`
+  /// `端口`
   String get port {
     return Intl.message(
-      'Port',
+      '端口',
       name: 'port',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please input server port`
+  /// `请输入服务器端口`
   String get pleaseInputServerPort {
     return Intl.message(
-      'Please input server port',
+      '请输入服务器端口',
       name: 'pleaseInputServerPort',
       desc: '',
       args: [],
@@ -340,80 +340,80 @@ class S {
     );
   }
 
-  /// `Check`
+  /// `检查`
   String get buttonCheck {
     return Intl.message(
-      'Check',
+      '检查',
       name: 'buttonCheck',
       desc: '',
       args: [],
     );
   }
 
-  /// `Login failed, {reason}`
+  /// `登录失败，{reason}`
   String loginFailed(Object reason) {
     return Intl.message(
-      'Login failed, $reason',
+      '登录失败，$reason',
       name: 'loginFailed',
       desc: '',
       args: [reason],
     );
   }
 
-  /// `Retry`
+  /// `重试`
   String get buttonRetry {
     return Intl.message(
-      'Retry',
+      '重试',
       name: 'buttonRetry',
       desc: '',
       args: [],
     );
   }
 
-  /// `Logging in to {server}`
+  /// `登录到 {server}`
   String loggingInTo(Object server) {
     return Intl.message(
-      'Logging in to $server',
+      '登录到 $server',
       name: 'loggingInTo',
       desc: '',
       args: [server],
     );
   }
 
-  /// `Backward`
+  /// `返回`
   String get buttonBackward {
     return Intl.message(
-      'Backward',
+      '返回',
       name: 'buttonBackward',
       desc: '',
       args: [],
     );
   }
 
-  /// `Username`
+  /// `用户名`
   String get username {
     return Intl.message(
-      'Username',
+      '用户名',
       name: 'username',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password`
+  /// `密码`
   String get password {
     return Intl.message(
-      'Password',
+      '密码',
       name: 'password',
       desc: '',
       args: [],
     );
   }
 
-  /// `Login`
+  /// `登录`
   String get buttonLogin {
     return Intl.message(
-      'Login',
+      '登录',
       name: 'buttonLogin',
       desc: '',
       args: [],
@@ -430,30 +430,30 @@ class S {
     );
   }
 
-  /// `User canceled pick`
+  /// `用户取消了选择`
   String get updateImageUserCanceledPick {
     return Intl.message(
-      'User canceled pick',
+      '用户取消了选择',
       name: 'updateImageUserCanceledPick',
       desc: '',
       args: [],
     );
   }
 
-  /// `User canceled capture`
+  /// `用户取消了捕获`
   String get updateImageUserCanceledCapture {
     return Intl.message(
-      'User canceled capture',
+      '用户取消了捕获',
       name: 'updateImageUserCanceledCapture',
       desc: '',
       args: [],
     );
   }
 
-  /// `Upload image failed`
+  /// `上传图像失败`
   String get uploadImageFailed {
     return Intl.message(
-      'Upload image failed',
+      '上传图像失败',
       name: 'uploadImageFailed',
       desc: '',
       args: [],
@@ -470,80 +470,80 @@ class S {
     );
   }
 
-  /// `Please setup application path`
+  /// `请设置应用程序路径`
   String get pleaseSetupApplicationPath {
     return Intl.message(
-      'Please setup application path',
+      '请设置应用程序路径',
       name: 'pleaseSetupApplicationPath',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please don't re-run application`
+  /// `请不要重复运行应用程序`
   String get pleaseDontReRunApplication {
     return Intl.message(
-      'Please don\'t re-run application',
+      '请不要重复运行应用程序',
       name: 'pleaseDontReRunApplication',
       desc: '',
       args: [],
     );
   }
 
-  /// `Application exit abnormally`
+  /// `应用程序异常退出`
   String get applicationExitAbnormally {
     return Intl.message(
-      'Application exit abnormally',
+      '应用程序异常退出',
       name: 'applicationExitAbnormally',
       desc: '',
       args: [],
     );
   }
 
-  /// `Launcher error`
+  /// `启动器错误`
   String get launcherError {
     return Intl.message(
-      'Launcher error',
+      '启动器错误',
       name: 'launcherError',
       desc: '',
       args: [],
     );
   }
 
-  /// `Scanning local files`
+  /// `正在扫描本地文件`
   String get scanningLocalFiles {
     return Intl.message(
-      'Scanning local files',
+      '正在扫描本地文件',
       name: 'scanningLocalFiles',
       desc: '',
       args: [],
     );
   }
 
-  /// `{number} new applications found`
+  /// `发现 {number} 个新应用`
   String newApplicationFound(Object number) {
     return Intl.message(
-      '$number new applications found',
+      '发现 $number 个新应用',
       name: 'newApplicationFound',
       desc: '',
       args: [number],
     );
   }
 
-  /// `Importing steam applications`
+  /// `正在导入Steam应用程序`
   String get importingSteamApplications {
     return Intl.message(
-      'Importing steam applications',
+      '正在导入Steam应用程序',
       name: 'importingSteamApplications',
       desc: '',
       args: [],
     );
   }
 
-  /// `Import steam application finished, {success} success, {failed} failed`
+  /// `导入Steam应用程序完成，成功 {success} 个，失败 {failed} 个。`
   String importSteamApplicationFinished(Object success, Object failed) {
     return Intl.message(
-      'Import steam application finished, $success success, $failed failed',
+      '导入Steam应用程序完成，成功 $success 个，失败 $failed 个。',
       name: 'importSteamApplicationFinished',
       desc: '',
       args: [success, failed],
@@ -560,110 +560,110 @@ class S {
     );
   }
 
-  /// `Type`
+  /// `类型`
   String get USER_TYPE {
     return Intl.message(
-      'Type',
+      '类型',
       name: 'USER_TYPE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get USER_TYPE_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'USER_TYPE_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Admin`
+  /// `管理员`
   String get USER_TYPE_ADMIN {
     return Intl.message(
-      'Admin',
+      '管理员',
       name: 'USER_TYPE_ADMIN',
       desc: '',
       args: [],
     );
   }
 
-  /// `Normal`
+  /// `普通`
   String get USER_TYPE_NORMAL {
     return Intl.message(
-      'Normal',
+      '普通',
       name: 'USER_TYPE_NORMAL',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sentinel`
+  /// `扫描器`
   String get USER_TYPE_SENTINEL {
     return Intl.message(
-      'Sentinel',
+      '扫描器',
       name: 'USER_TYPE_SENTINEL',
       desc: '',
       args: [],
     );
   }
 
-  /// `Status`
+  /// `状态`
   String get USER_STATUS {
     return Intl.message(
-      'Status',
+      '状态',
       name: 'USER_STATUS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get USER_STATUS_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'USER_STATUS_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Active`
+  /// `正常`
   String get USER_STATUS_ACTIVE {
     return Intl.message(
-      'Active',
+      '正常',
       name: 'USER_STATUS_ACTIVE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Blocked`
+  /// `禁用`
   String get USER_STATUS_BLOCKED {
     return Intl.message(
-      'Blocked',
+      '禁用',
       name: 'USER_STATUS_BLOCKED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Platform`
+  /// `平台`
   String get ACCOUNT_PLATFORM {
     return Intl.message(
-      'Platform',
+      '平台',
       name: 'ACCOUNT_PLATFORM',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get ACCOUNT_PLATFORM_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'ACCOUNT_PLATFORM_UNSPECIFIED',
       desc: '',
       args: [],
@@ -680,30 +680,30 @@ class S {
     );
   }
 
-  /// `Source`
+  /// `来源`
   String get APP_SOURCE {
     return Intl.message(
-      'Source',
+      '来源',
       name: 'APP_SOURCE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get APP_SOURCE_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'APP_SOURCE_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Internal`
+  /// `内置`
   String get APP_SOURCE_INTERNAL {
     return Intl.message(
-      'Internal',
+      '内置',
       name: 'APP_SOURCE_INTERNAL',
       desc: '',
       args: [],
@@ -720,170 +720,170 @@ class S {
     );
   }
 
-  /// `Type`
+  /// `类型`
   String get APP_TYPE {
     return Intl.message(
-      'Type',
+      '类型',
       name: 'APP_TYPE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get APP_TYPE_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'APP_TYPE_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Game`
+  /// `游戏`
   String get APP_TYPE_GAME {
     return Intl.message(
-      'Game',
+      '游戏',
       name: 'APP_TYPE_GAME',
       desc: '',
       args: [],
     );
   }
 
-  /// `Source`
+  /// `来源`
   String get APP_PACKAGE_SOURCE {
     return Intl.message(
-      'Source',
+      '来源',
       name: 'APP_PACKAGE_SOURCE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get APP_PACKAGE_SOURCE_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'APP_PACKAGE_SOURCE_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Manual`
+  /// `手动`
   String get APP_PACKAGE_SOURCE_MANUAL {
     return Intl.message(
-      'Manual',
+      '手动',
       name: 'APP_PACKAGE_SOURCE_MANUAL',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sentinel`
+  /// `扫描`
   String get APP_PACKAGE_SOURCE_SENTINEL {
     return Intl.message(
-      'Sentinel',
+      '扫描',
       name: 'APP_PACKAGE_SOURCE_SENTINEL',
       desc: '',
       args: [],
     );
   }
 
-  /// `Status`
+  /// `状态`
   String get FEED_CONFIG_STATUS {
     return Intl.message(
-      'Status',
+      '状态',
       name: 'FEED_CONFIG_STATUS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get FEED_CONFIG_STATUS_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'FEED_CONFIG_STATUS_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Active`
+  /// `启用`
   String get FEED_CONFIG_STATUS_ACTIVE {
     return Intl.message(
-      'Active',
+      '启用',
       name: 'FEED_CONFIG_STATUS_ACTIVE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Suspend`
+  /// `停止`
   String get FEED_CONFIG_STATUS_SUSPEND {
     return Intl.message(
-      'Suspend',
+      '停止',
       name: 'FEED_CONFIG_STATUS_SUSPEND',
       desc: '',
       args: [],
     );
   }
 
-  /// `Status`
+  /// `状态`
   String get NOTIFY_TARGET_STATUS {
     return Intl.message(
-      'Status',
+      '状态',
       name: 'NOTIFY_TARGET_STATUS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get NOTIFY_TARGET_STATUS_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'NOTIFY_TARGET_STATUS_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Active`
+  /// `启用`
   String get NOTIFY_TARGET_STATUS_ACTIVE {
     return Intl.message(
-      'Active',
+      '启用',
       name: 'NOTIFY_TARGET_STATUS_ACTIVE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Suspend`
+  /// `停止`
   String get NOTIFY_TARGET_STATUS_SUSPEND {
     return Intl.message(
-      'Suspend',
+      '停止',
       name: 'NOTIFY_TARGET_STATUS_SUSPEND',
       desc: '',
       args: [],
     );
   }
 
-  /// `Type`
+  /// `类型`
   String get NOTIFY_TARGET_TYPE {
     return Intl.message(
-      'Type',
+      '类型',
       name: 'NOTIFY_TARGET_TYPE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get NOTIFY_TARGET_TYPE_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'NOTIFY_TARGET_TYPE_UNSPECIFIED',
       desc: '',
       args: [],
@@ -900,40 +900,40 @@ class S {
     );
   }
 
-  /// `Status`
+  /// `状态`
   String get NOTIFY_FLOW_STATUS {
     return Intl.message(
-      'Status',
+      '状态',
       name: 'NOTIFY_FLOW_STATUS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Unspecified`
+  /// `未知`
   String get NOTIFY_FLOW_STATUS_UNSPECIFIED {
     return Intl.message(
-      'Unspecified',
+      '未知',
       name: 'NOTIFY_FLOW_STATUS_UNSPECIFIED',
       desc: '',
       args: [],
     );
   }
 
-  /// `Active`
+  /// `启用`
   String get NOTIFY_FLOW_STATUS_ACTIVE {
     return Intl.message(
-      'Active',
+      '启用',
       name: 'NOTIFY_FLOW_STATUS_ACTIVE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Suspend`
+  /// `停止`
   String get NOTIFY_FLOW_STATUS_SUSPEND {
     return Intl.message(
-      'Suspend',
+      '停止',
       name: 'NOTIFY_FLOW_STATUS_SUSPEND',
       desc: '',
       args: [],
@@ -946,8 +946,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+      Locale.fromSubtags(languageCode: 'en'),
     ];
   }
 

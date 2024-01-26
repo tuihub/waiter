@@ -10,6 +10,7 @@
   "buttonMinimizeToTray": "最小化到托盘",
   "buttonCancel": "取消",
   "webVersionFunctionLimited": "Web版本功能有限，仅供评估使用。",
+
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",
   "durationMinutes": "{number} 分钟前",
@@ -18,6 +19,7 @@
   "durationWeeks": "{number} 周前",
   "durationMonths": "{number} 个月前",
   "durationYears": "{number} 年前",
+
   "welcomeHeader": "🎉欢迎！",
   "welcome": "欢迎",
   "welcomeBack": "欢迎回来",
@@ -37,10 +39,12 @@
   "username": "用户名",
   "password": "密码",
   "buttonLogin": "登录",
+
   "chesed": "Chesed",
   "updateImageUserCanceledPick": "用户取消了选择",
   "updateImageUserCanceledCapture": "用户取消了捕获",
   "uploadImageFailed": "上传图像失败",
+
   "gebura": "Gebura",
   "pleaseSetupApplicationPath": "请设置应用程序路径",
   "pleaseDontReRunApplication": "请不要重复运行应用程序",
@@ -50,6 +54,7 @@
   "newApplicationFound": "发现 {number} 个新应用",
   "importingSteamApplications": "正在导入Steam应用程序",
   "importSteamApplicationFinished": "导入Steam应用程序完成，成功 {success} 个，失败 {failed} 个。",
+
   "grpc": "gRPC",
   "USER_TYPE": "类型",
   "USER_TYPE_UNSPECIFIED": "未知",
