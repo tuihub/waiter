@@ -1,3 +1,3 @@
 files:
   - source: /l10n_arb/intl_en.arb
-    translation: /l10n_arb/intl_%locale%.arb
+    translation: /l10n_arb/intl_%locale_with_underscore%.arb
