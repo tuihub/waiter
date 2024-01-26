@@ -82,8 +82,7 @@ class AboutPage extends StatelessWidget {
                         (BuildContext context, AsyncSnapshot<String> snapshot) {
                       if (snapshot.hasData) {
                         return Markdown(
-                            shrinkWrap: true,
-                            data: snapshot.data ?? '');
+                            shrinkWrap: true, data: snapshot.data ?? '');
                       }
                       return const Center(
                         child: CircularProgressIndicator(),

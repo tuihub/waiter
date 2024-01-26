@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:webfeed_revised/domain/rss_feed.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../l10n/l10n.dart';
 import '../../model/yesod_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/yesod.dart';
@@ -138,7 +139,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
                     title: '', link: '', iconUrl: '', description: '')),
           ),
           EventStatus.failed,
-          msg: '解析失败, $e',
+          msg: '${S.current.parseFailed} $e',
         ));
       }
     }, transformer: droppable());

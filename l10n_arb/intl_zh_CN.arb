@@ -1,11 +1,6 @@
 {
   "@@locale":"zh_CN",
   "title": "TuiHub",
-  "@title": {
-    "description": "Title for the application",
-    "type": "text",
-    "placeholders": {}
-  },
   "USER_TYPE": "类型",
   "USER_TYPE_UNSPECIFIED": "未知",
   "USER_TYPE_ADMIN": "管理员",

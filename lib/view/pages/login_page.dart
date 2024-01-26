@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/main_bloc.dart';
+import '../../l10n/l10n.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
@@ -23,7 +24,7 @@ class LoginPage extends StatelessWidget {
         listener: (context, state) {
           if (state.currentUser != null) {
             AppRoutes.tiphereth.go(context);
-            const Toast(title: '', message: '欢迎').show(context);
+            Toast(title: '', message: S.of(context).welcome).show(context);
           }
         },
         builder: (context, state) {
@@ -85,7 +86,7 @@ class _ServerSelectWidgetState extends State<ServerSelectWidget>
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           toolbarHeight: 96,
-          title: const Center(child: Text('连接服务器')),
+          title: Center(child: Text(S.of(context).serverSetup)),
           backgroundColor: Colors.transparent,
         ),
         body: ServerSelectForm(callback: () {}));
@@ -106,7 +107,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
   String host = '';
   int port = 0;
   bool tls = false;
-  final String name = '确定';
+  final String name = '确定'; // TODO: what is this?
   ServerConfig server = const ServerConfig('', 0, true, '');
 
   void submit() {
@@ -130,13 +131,13 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
           children: <Widget>[
             TextFormField(
               onSaved: (newValue) => host = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '地址',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: S.of(context).address,
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return '请输入地址';
+                  return S.of(context).pleaseInputServerAddress;
                 }
                 return null;
               },
@@ -146,14 +147,14 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             ),
             TextFormField(
               onSaved: (newValue) => port = int.parse(newValue!),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '端口',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: S.of(context).port,
               ),
               validator: (value) {
                 final p = int.tryParse(value!) ?? 0;
                 if (p <= 0) {
-                  return '请输入端口';
+                  return S.of(context).pleaseInputServerPort;
                 }
                 return null;
               },
@@ -165,7 +166,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             ),
             SwitchFormField(
               onSaved: (newValue) => tls = newValue!,
-              title: const Text('TLS'),
+              title: Text(S.of(context).tls),
               initialValue: tls,
             ),
             const SizedBox(
@@ -176,7 +177,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
                 minimumSize: const Size(128, 32),
               ),
               onPressed: submit,
-              child: const Text('检查'),
+              child: Text(S.of(context).buttonCheck),
             ),
             ServerConnectivityWidget(
               config: server,
@@ -218,17 +219,13 @@ class _LoginWidgetState extends State<LoginWidget> {
     super.dispose();
   }
 
-  void submitUrl() {
+  void login() {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
-      const Toast(title: '', message: '用户名或密码为空, 请修改后重试').show(context);
-    } else {
-      context.read<MainBloc>().add(
-            MainManualLoginEvent(username, password),
-          );
-    }
+    context.read<MainBloc>().add(
+          MainManualLoginEvent(username, password),
+        );
   }
 
   bool hidePassword = true;
@@ -240,10 +237,10 @@ class _LoginWidgetState extends State<LoginWidget> {
         if (state is MainManualLoginState && state.failed) {
           Toast(
             title: '',
-            message: '登录失败,${state.msg}',
+            message: S.of(context).loginFailed(state.msg ?? ''),
             action: SnackBarAction(
-              label: '重试',
-              onPressed: submitUrl,
+              label: S.of(context).buttonRetry,
+              onPressed: login,
             ),
           ).show(context);
         }
@@ -257,7 +254,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               Expanded(
                 child: Center(
                   child: Text(
-                    '🎉欢迎!',
+                    S.of(context).welcomeHeader,
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
@@ -265,8 +262,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                 ),
               ),
-              Text(
-                  '登录至 ${state.serverConfig?.host}:${state.serverConfig?.port}'),
+              Text(S.of(context).loggingInTo(
+                  '${state.serverConfig?.host}:${state.serverConfig?.port}')),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -275,17 +272,17 @@ class _LoginWidgetState extends State<LoginWidget> {
                     onPressed: () {
                       context.read<MainBloc>().add(MainLogoutEvent());
                     },
-                    child: const Text('< 返回'),
+                    child: Text('< ${S.of(context).buttonBackward}'),
                   ),
                 ),
               ),
               TextField(
-                decoration: const InputDecoration(
-                  labelText: '用户名',
+                decoration: InputDecoration(
+                  labelText: S.of(context).username,
                 ),
                 controller: _usernameController,
                 onSubmitted: (value) {
-                  submitUrl();
+                  login();
                 },
               ),
               const SizedBox(
@@ -294,7 +291,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               TextField(
                 obscureText: hidePassword,
                 decoration: InputDecoration(
-                  labelText: '密码',
+                  labelText: S.of(context).password,
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -308,7 +305,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
                 controller: _passwordController,
                 onSubmitted: (value) {
-                  submitUrl();
+                  login();
                 },
                 obscuringCharacter: '*',
               ),
@@ -316,7 +313,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 height: 16,
               ),
               ElevatedButton(
-                onPressed: submitUrl,
+                onPressed: login,
                 style: const ButtonStyle(
                   fixedSize: MaterialStatePropertyAll(
                     Size(144, 36),
@@ -331,9 +328,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                           color: Colors.black,
                         ),
                       )
-                    : const Text(
-                        '登录',
-                        style: TextStyle(
+                    : Text(
+                        S.of(context).buttonLogin,
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                       ),

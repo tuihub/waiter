@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../layout/bootstrap_container.dart';
 
 class Toast {
@@ -55,7 +56,7 @@ class Toast {
             child: TextButton(
               onPressed: () => ScaffoldMessenger.of(context)
                   .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss),
-              child: const Text('关闭'),
+              child: Text(S.of(context).buttonClose),
             ),
           ),
         ),
