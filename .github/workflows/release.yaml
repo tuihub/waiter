@@ -127,7 +127,7 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile
           push: true
-          tags: $GITHUB_REPOSITORY:${{ github.ref_name }}
+          tags: tuihub/waiter:${{ github.ref_name }}
           build-args: |
             WEB_FILE=web/*
             WIN_FILE_NAME=$WIN_FILE_NAME
