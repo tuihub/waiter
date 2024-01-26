@@ -106,26 +106,14 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           merge-multiple: true
+          path: docker
       - name: Display structure of downloaded files
-        run: ls -R
-      - uses: actions/download-artifact@v4
-        with:
-          name: windows
-      - uses: actions/download-artifact@v4
-        with:
-          name: web
-      - uses: actions/download-artifact@v4
-        with:
-          name: android
+        run: ls -R docker
 
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Extract web file
-        run: tar -zxvf $WEB_FILE_NAME -C ./docker/web
-      - name: Move other files
         run: |
-          mv $WIN_FILE_NAME ./docker/$WIN_FILE_NAME
-          mv $AND_FILE_NAME ./docker/$AND_FILE_NAME
+          mkdir ./docker/web
+          tar -zxvf ./docker/$WEB_FILE_NAME -C ./docker/web
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
