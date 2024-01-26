@@ -10,6 +10,7 @@
   "buttonMinimizeToTray": "Minimize to tray",
   "buttonCancel": "Cancel",
   "webVersionFunctionLimited": "Web version has limited functionality, for evaluation use only",
+
   "durationJustNow": "Just now",
   "durationSeconds": "{number} seconds ago",
   "durationMinutes": "{number} minutes ago",
@@ -18,6 +19,7 @@
   "durationWeeks": "{number} weeks ago",
   "durationMonths": "{number} months ago",
   "durationYears": "{number} years ago",
+
   "welcomeHeader": "\uD83C\uDF89Welcome!",
   "welcome": "Welcome",
   "welcomeBack": "Welcome back",
@@ -37,10 +39,12 @@
   "username": "Username",
   "password": "Password",
   "buttonLogin": "Login",
+
   "chesed": "Chesed",
   "updateImageUserCanceledPick": "User canceled pick",
   "updateImageUserCanceledCapture": "User canceled capture",
   "uploadImageFailed": "Upload image failed",
+
   "gebura": "Gebura",
   "pleaseSetupApplicationPath": "Please setup application path",
   "pleaseDontReRunApplication": "Please don't re-run application",
@@ -50,6 +54,7 @@
   "newApplicationFound": "{number} new applications found",
   "importingSteamApplications": "Importing steam applications",
   "importSteamApplicationFinished": "Import steam application finished, {success} success, {failed} failed",
+
   "grpc": "gRPC",
   "USER_TYPE": "Type",
   "USER_TYPE_UNSPECIFIED": "Unspecified",
