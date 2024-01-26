@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'route.dart';
 
@@ -45,3 +46,14 @@ const themeData = [
     1,
   ),
 ];
+
+class DotEnvValue {
+  final String? value;
+
+  DotEnvValue._(this.value);
+
+  static String winClientDownloadUrl =
+      dotenv.env['WIN_CLIENT_DOWNLOAD_PATH'] ?? '';
+  static String andClientDownloadUrl =
+      dotenv.env['AND_CLIENT_DOWNLOAD_PATH'] ?? '';
+}

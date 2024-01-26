@@ -110,6 +110,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "buttonRetry": MessageLookupByLibrary.simpleMessage("重试"),
         "chesed": MessageLookupByLibrary.simpleMessage("Chesed"),
         "clickLoginToStart": MessageLookupByLibrary.simpleMessage("点击登录以开始"),
+        "continueInWebVersion": MessageLookupByLibrary.simpleMessage("继续使用网页版"),
+        "downloadClient": MessageLookupByLibrary.simpleMessage("下载客户端"),
         "durationDays": m0,
         "durationHours": m1,
         "durationJustNow": MessageLookupByLibrary.simpleMessage("刚刚"),

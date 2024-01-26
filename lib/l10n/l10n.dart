@@ -150,6 +150,26 @@ class S {
     );
   }
 
+  /// `下载客户端`
+  String get downloadClient {
+    return Intl.message(
+      '下载客户端',
+      name: 'downloadClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `继续使用网页版`
+  String get continueInWebVersion {
+    return Intl.message(
+      '继续使用网页版',
+      name: 'continueInWebVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

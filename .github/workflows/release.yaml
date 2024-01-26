@@ -91,3 +91,43 @@ jobs:
         with:
           name: android
           path: ${{ env.APP_NAME }}-${{ github.ref_name }}.apk
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-web, build-android]
+    steps:
+      - name: Set env
+        run: |
+          echo "WIN_FILE_NAME=${{ env.APP_NAME }}-windows-${{ github.ref_name }}.zip" >> $GITHUB_ENV
+          echo "WEB_FILE_NAME=${{ env.APP_NAME }}-web-${{ github.ref_name }}.tar.gz" >> $GITHUB_ENV
+          echo "AND_FILE_NAME=${{ env.APP_NAME }}-${{ github.ref_name }}.apk" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Extract web file
+        run: tar -zxvf $WEB_FILE_NAME -C ./docker/web
+      - name: Move other files
+        run: |
+          mv $WIN_FILE_NAME ./docker/$WIN_FILE_NAME
+          mv $AND_FILE_NAME ./docker/$AND_FILE_NAME
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile
+          push: true
+          tags: $GITHUB_REPOSITORY:${{ github.ref_name }}
+          build-args: |
+            WEB_FILE=web/*
+            WIN_FILE_NAME=$WIN_FILE_NAME
+            AND_FILE_NAME=$AND_FILE_NAME

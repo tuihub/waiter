@@ -45,6 +45,7 @@ import 'view/pages/settings/user/user_add_page.dart';
 import 'view/pages/settings/user/user_edit_page.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
+import 'view/pages/web_landing_page.dart';
 import 'view/pages/yesod/yesod_config_add_page.dart';
 import 'view/pages/yesod/yesod_config_edit_page.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
@@ -90,6 +91,7 @@ class AppRoutes {
   }
 
   static const AppRoutes init = AppRoutes._('/');
+  static const AppRoutes webLanding = AppRoutes._('/webLanding');
   static const AppRoutes login = AppRoutes._('/login');
   static const String _imageViewer = '/imageViewer';
   static AppRoutes imageViewer(int index) =>
@@ -284,6 +286,11 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
         path: AppRoutes.init.toString(),
         pageBuilder: (context, state) =>
             const NoTransitionPage(child: MainWindow(child: InitPage())),
+      ),
+      GoRoute(
+        path: AppRoutes.webLanding.toString(),
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: WebLandingPage()),
       ),
       GoRoute(
         path: AppRoutes.login.toString(),

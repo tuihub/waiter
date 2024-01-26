@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/main_bloc.dart';
+import '../../common/platform.dart';
+import '../../consts.dart';
 import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
@@ -33,6 +35,13 @@ class _InitPageState extends State<InitPage> {
           if (state is MainAutoLoginState && state.success) {
             AppRoutes.tiphereth.go(context);
             Toast(title: '', message: S.of(context).welcomeBack).show(context);
+          }
+          if (state is MainAutoLoginState &&
+              state.failed &&
+              PlatformHelper.isWeb() &&
+              (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
+                  DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
+            AppRoutes.webLanding.go(context);
           }
         },
         builder: (context, state) {

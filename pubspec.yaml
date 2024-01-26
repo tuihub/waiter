@@ -112,6 +112,8 @@ dependencies:
   petitparser: ^6.0.2
   url_launcher: ^6.2.3
   flutter_markdown: ^0.6.18
+  flutter_dotenv: ^5.1.0
+  app_links: ^3.5.0
 
   # others
   json_annotation: ^4.8.1
@@ -148,6 +150,7 @@ flutter:
     - web/icons/Icon-512.png
     - windows/runner/resources/app_icon.ico
     - PrivacyPolicy.md
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

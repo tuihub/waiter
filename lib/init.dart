@@ -1,6 +1,9 @@
 part of 'main.dart';
 
 Future<MyApp> init() async {
+  // dotenv
+  await dotenv.load(fileName: '.env');
+
   // dao
 
   // https://github.com/hivedb/hive/issues/1044
