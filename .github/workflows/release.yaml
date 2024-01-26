@@ -121,7 +121,7 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile
           push: true
-          tags: tuihub/waiter:${{ github.ref_name }}
+          tags: ghcr.io/tuihub/waiter:${{ github.ref_name }}
           build-args: |
             WEB_FILE=web/*
             WIN_FILE_NAME=${{ env.APP_NAME }}-windows-${{ github.ref_name }}.zip
