@@ -21,6 +21,7 @@ import '../repo/local/gebura.dart';
 import '../repo/local/yesod.dart';
 import 'chesed/chesed_bloc.dart';
 import 'client_setting/client_setting_bloc.dart';
+import 'deeplink_bloc.dart';
 import 'gebura/gebura_bloc.dart';
 import 'netzach/netzach_bloc.dart';
 import 'tiphereth/tiphereth_bloc.dart';
@@ -33,6 +34,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final ApiHelper _api;
   final ClientCommonRepo _repo;
   final ClientSettingBloc _clientSettingBloc;
+  final DeepLinkBloc _deepLinkBloc;
   final PackageInfo _packageInfo;
   final ClientDeviceInfo _deviceInfo;
   final String? _basePath;
@@ -43,6 +45,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   ChesedBloc? _chesedBloc;
   NetzachBloc? _netzachBloc;
 
+  DeepLinkBloc get deepLinkBloc => _deepLinkBloc;
   ClientSettingBloc get clientSettingBloc => _clientSettingBloc;
   PackageInfo get packageInfo => _packageInfo;
   ClientDeviceInfo get deviceInfo => _deviceInfo;
@@ -84,6 +87,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     this._api,
     this._repo,
     this._clientSettingBloc,
+    this._deepLinkBloc,
     this._packageInfo,
     this._deviceInfo,
     this._basePath,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/deeplink_bloc.dart';
 import 'common/platform.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
@@ -13,18 +15,20 @@ class MainWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _AppRetainWidget(
-      child: Scaffold(
-        body: SafeArea(
-          maintainBottomViewPadding: true,
-          child: Column(
-            children: [
-              const TitleBar(
-                actions: [ThemeModeToggle()],
-              ),
-              Expanded(
-                child: child,
-              ),
-            ],
+      child: _DeepLinkWidget(
+        child: Scaffold(
+          body: SafeArea(
+            maintainBottomViewPadding: true,
+            child: Column(
+              children: [
+                const TitleBar(
+                  actions: [ThemeModeToggle()],
+                ),
+                Expanded(
+                  child: child,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -56,6 +60,26 @@ class _AppRetainWidget extends StatelessWidget {
         }
       },
       child: child,
+    );
+  }
+}
+
+class _DeepLinkWidget extends StatelessWidget {
+  const _DeepLinkWidget({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<DeepLinkBloc, DeepLinkState>(
+      listener: (context, state) {
+        if (state is DeepLinkConnectState) {
+          // TODO
+        }
+      },
+      builder: (context, state) {
+        return child;
+      },
     );
   }
 }

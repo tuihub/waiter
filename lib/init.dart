@@ -21,16 +21,29 @@ Future<MyApp> init() async {
   // system tray
   await initSystemTray();
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // deep link
+  if (PlatformHelper.isWindowsApp()) {
+    registerProtocol('tuihub');
+  }
+  Uri? initialUri;
+  try {
+    initialUri = await getInitialUri();
+  } on FormatException {
+    // TODO: warn user
+  }
+
   // bloc
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  WidgetsFlutterBinding.ensureInitialized();
   final packageInfo = await PackageInfo.fromPlatform();
   final deviceInfo = await genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
-  final mainBloc =
-      MainBloc(api, common, clientSettingBloc, packageInfo, deviceInfo, path);
+  final deepLinkBloc = DeepLinkBloc(initialUri);
+  final mainBloc = MainBloc(api, common, clientSettingBloc, deepLinkBloc,
+      packageInfo, deviceInfo, path);
 
   // router
   final router = getRouter(mainBloc, api);

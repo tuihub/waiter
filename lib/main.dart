@@ -15,9 +15,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:uni_links_desktop/uni_links_desktop.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';
+import 'bloc/deeplink_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'bloc/netzach/netzach_bloc.dart';
@@ -33,7 +36,7 @@ import 'route.dart';
 
 part 'init.dart';
 
-void main() async {
+void main(List<String> args) async {
   // Required for Android App
   await Hive.initFlutter();
 
