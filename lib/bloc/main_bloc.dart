@@ -92,27 +92,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     this._deviceInfo,
     this._basePath,
   ) : super(MainState()) {
-    var repo = _repo.get();
+    final repo = _repo.get();
 
     on<MainAutoLoginEvent>((event, emit) async {
       emit(MainAutoLoginState(state, EventStatus.processing));
-      if (repo.server != null) {
-        var config = ServerConfig(
-          repo.server!.host,
-          repo.server!.port,
-          repo.server!.tls,
-          '',
-        );
+      debugPrint(repo.servers.toString());
+      if (repo.lastServerId != null &&
+          repo.servers != null &&
+          repo.servers![repo.lastServerId] != null) {
+        var config = repo.servers![repo.lastServerId]!;
         emit(MainAutoLoginState(
             state.copyWith(serverConfig: config), EventStatus.processing));
-        if (repo.server!.refreshToken != null) {
+        if (config.refreshToken != null) {
           try {
-            final deviceIDKey = '${config.host}:${config.port}';
-            final deviceID = repo.deviceIDs![deviceIDKey] != null
-                ? InternalID(id: Int64(repo.deviceIDs![deviceIDKey]!))
+            final deviceID = config.deviceId != null
+                ? InternalID(id: Int64(config.deviceId!))
                 : null;
             final client = clientFactory(config: config);
-            final refreshToken = repo.server!.refreshToken!;
+            final refreshToken = config.refreshToken!;
             final resp = await client.refreshToken(
                 RefreshTokenRequest(deviceId: deviceID),
                 options: withAuth(refreshToken));
@@ -122,7 +119,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                 GetServerInformationRequest(),
                 options: withAuth(resp.accessToken));
             config = config.copyWith(refreshToken: resp.refreshToken);
-            await _repo.set(repo.copyWith(server: config));
+            final Map<String, ServerConfig> servers =
+                Map.fromEntries(repo.servers?.entries ?? []);
+            servers[config.id] = config;
+            await _repo
+                .set(repo.copyWith(lastServerId: config.id, servers: servers));
             _api.init(client, resp.accessToken, resp.refreshToken);
             final newState = MainAutoLoginState(
               state.copyWith(
@@ -166,15 +167,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       try {
         var config = state.serverConfig!;
         final client = clientFactory(config: config);
-        final deviceIDKey = '${config.host}:${config.port}';
         late InternalID deviceID;
         late String accessToken;
         late String refreshToken;
-        if (repo.deviceIDs == null) {
-          repo = repo.copyWith(deviceIDs: {});
-          await _repo.set(repo);
+        if (repo.servers != null && repo.servers![config.id] != null) {
+          config = repo.servers![config.id]!.copyWith(tls: config.tls);
         }
-        if (repo.deviceIDs![deviceIDKey] == null) {
+        if (config.deviceId == null) {
           debugPrint('register device');
           final token = await client.getToken(
             GetTokenRequest(username: event.username, password: event.password),
@@ -195,16 +194,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               options: withAuth(token.refreshToken));
           accessToken = resp.accessToken;
           refreshToken = resp.refreshToken;
-          repo = repo.copyWith(
-            deviceIDs: {
-              ...repo.deviceIDs!,
-              deviceIDKey: id.deviceId.id.toInt(),
-            },
-          );
-          await _repo.set(repo);
           deviceID = id.deviceId;
+          config = config.copyWith(deviceId: id.deviceId.id.toInt());
+          await _repo.set(repo);
         } else {
-          deviceID = InternalID()..id = Int64(repo.deviceIDs![deviceIDKey]!);
+          deviceID = InternalID()..id = Int64(config.deviceId!);
           final resp = await client.getToken(
             GetTokenRequest(
                 username: event.username,
@@ -220,7 +214,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             GetServerInformationRequest(),
             options: withAuth(accessToken));
         config = config.copyWith(refreshToken: refreshToken);
-        await _repo.set(repo.copyWith(server: config));
+        final Map<String, ServerConfig> servers =
+            Map.fromEntries(repo.servers?.entries ?? []);
+        servers[config.id] = config;
+        await _repo
+            .set(repo.copyWith(lastServerId: config.id, servers: servers));
         _api.init(client, accessToken, refreshToken);
         final newState = MainManualLoginState(
           state.copyWith(
@@ -250,11 +248,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
     on<MainLogoutEvent>((event, emit) async {
       _pruneChild();
-      await _repo.set(ClientCommonData(
-        server: null,
-        theme: repo.theme,
-        themeMode: repo.themeMode,
-      ));
       emit(MainState());
     });
   }

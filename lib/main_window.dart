@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/deeplink_bloc.dart';
 import 'common/platform.dart';
+import 'view/pages/server_select_overlay.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
 
@@ -25,7 +26,9 @@ class MainWindow extends StatelessWidget {
                   actions: [ThemeModeToggle()],
                 ),
                 Expanded(
-                  child: child,
+                  child: ClipRect(
+                    child: ServerSelectOverlay(child: child),
+                  ),
                 ),
               ],
             ),

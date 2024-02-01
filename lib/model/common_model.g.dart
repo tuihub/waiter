@@ -11,8 +11,10 @@ _$ServerConfigImpl _$$ServerConfigImplFromJson(Map<String, dynamic> json) =>
       json['host'] as String,
       json['port'] as int,
       json['tls'] as bool,
-      json['name'] as String,
+      serverName: json['serverName'] as String?,
+      username: json['username'] as String?,
       refreshToken: json['refreshToken'] as String?,
+      deviceId: json['deviceId'] as int?,
     );
 
 Map<String, dynamic> _$$ServerConfigImplToJson(_$ServerConfigImpl instance) =>
@@ -20,30 +22,30 @@ Map<String, dynamic> _$$ServerConfigImplToJson(_$ServerConfigImpl instance) =>
       'host': instance.host,
       'port': instance.port,
       'tls': instance.tls,
-      'name': instance.name,
+      'serverName': instance.serverName,
+      'username': instance.username,
       'refreshToken': instance.refreshToken,
+      'deviceId': instance.deviceId,
     };
 
 _$ClientCommonDataImpl _$$ClientCommonDataImplFromJson(
         Map<String, dynamic> json) =>
     _$ClientCommonDataImpl(
-      server: json['server'] == null
-          ? null
-          : ServerConfig.fromJson(json['server'] as Map<String, dynamic>),
+      lastServerId: json['lastServerId'] as String?,
       theme: json['theme'] as int?,
       themeMode: json['themeMode'] as int?,
-      deviceIDs: (json['deviceIDs'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
+      servers: (json['servers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, ServerConfig.fromJson(e as Map<String, dynamic>)),
       ),
     );
 
 Map<String, dynamic> _$$ClientCommonDataImplToJson(
         _$ClientCommonDataImpl instance) =>
     <String, dynamic>{
-      'server': instance.server,
+      'lastServerId': instance.lastServerId,
       'theme': instance.theme,
       'themeMode': instance.themeMode,
-      'deviceIDs': instance.deviceIDs,
+      'servers': instance.servers,
     };
 
 _$ClientDeviceInfoImpl _$$ClientDeviceInfoImplFromJson(

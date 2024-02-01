@@ -107,14 +107,13 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
   String host = '';
   int port = 0;
   bool tls = false;
-  final String name = '确定'; // TODO: what is this?
-  ServerConfig server = const ServerConfig('', 0, true, '');
+  ServerConfig server = const ServerConfig('', 0, true);
 
   void submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
-        server = ServerConfig(host, port, tls, name);
+        server = ServerConfig(host, port, tls);
       });
     }
   }

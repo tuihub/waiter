@@ -1,11 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
+import '../server_select_overlay.dart';
 import 'my_accounts_card.dart';
 import 'my_profile_card.dart';
 
@@ -24,10 +23,11 @@ class TipherethFramePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          unawaited(showDialog<void>(
-            context: context,
-            builder: (context) => _LogoutDialog(),
-          ));
+          ServerSelectOverlay.of(context)?.fullscreen();
+          // unawaited(showDialog<void>(
+          //   context: context,
+          //   builder: (context) => _LogoutDialog(),
+          // ));
         },
         child: const Icon(Icons.logout),
       ),

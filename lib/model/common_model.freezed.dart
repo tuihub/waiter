@@ -23,8 +23,10 @@ mixin _$ServerConfig {
   String get host => throw _privateConstructorUsedError;
   int get port => throw _privateConstructorUsedError;
   bool get tls => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String? get serverName => throw _privateConstructorUsedError;
+  String? get username => throw _privateConstructorUsedError;
   String? get refreshToken => throw _privateConstructorUsedError;
+  int? get deviceId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +41,13 @@ abstract class $ServerConfigCopyWith<$Res> {
       _$ServerConfigCopyWithImpl<$Res, ServerConfig>;
   @useResult
   $Res call(
-      {String host, int port, bool tls, String name, String? refreshToken});
+      {String host,
+      int port,
+      bool tls,
+      String? serverName,
+      String? username,
+      String? refreshToken,
+      int? deviceId});
 }
 
 /// @nodoc
@@ -58,8 +66,10 @@ class _$ServerConfigCopyWithImpl<$Res, $Val extends ServerConfig>
     Object? host = null,
     Object? port = null,
     Object? tls = null,
-    Object? name = null,
+    Object? serverName = freezed,
+    Object? username = freezed,
     Object? refreshToken = freezed,
+    Object? deviceId = freezed,
   }) {
     return _then(_value.copyWith(
       host: null == host
@@ -74,14 +84,22 @@ class _$ServerConfigCopyWithImpl<$Res, $Val extends ServerConfig>
           ? _value.tls
           : tls // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
+      serverName: freezed == serverName
+          ? _value.serverName
+          : serverName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      username: freezed == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String?,
       refreshToken: freezed == refreshToken
           ? _value.refreshToken
           : refreshToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      deviceId: freezed == deviceId
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -95,7 +113,13 @@ abstract class _$$ServerConfigImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String host, int port, bool tls, String name, String? refreshToken});
+      {String host,
+      int port,
+      bool tls,
+      String? serverName,
+      String? username,
+      String? refreshToken,
+      int? deviceId});
 }
 
 /// @nodoc
@@ -112,8 +136,10 @@ class __$$ServerConfigImplCopyWithImpl<$Res>
     Object? host = null,
     Object? port = null,
     Object? tls = null,
-    Object? name = null,
+    Object? serverName = freezed,
+    Object? username = freezed,
     Object? refreshToken = freezed,
+    Object? deviceId = freezed,
   }) {
     return _then(_$ServerConfigImpl(
       null == host
@@ -128,23 +154,32 @@ class __$$ServerConfigImplCopyWithImpl<$Res>
           ? _value.tls
           : tls // ignore: cast_nullable_to_non_nullable
               as bool,
-      null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
+      serverName: freezed == serverName
+          ? _value.serverName
+          : serverName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      username: freezed == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String?,
       refreshToken: freezed == refreshToken
           ? _value.refreshToken
           : refreshToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      deviceId: freezed == deviceId
+          ? _value.deviceId
+          : deviceId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ServerConfigImpl implements _ServerConfig {
-  const _$ServerConfigImpl(this.host, this.port, this.tls, this.name,
-      {this.refreshToken});
+class _$ServerConfigImpl extends _ServerConfig {
+  const _$ServerConfigImpl(this.host, this.port, this.tls,
+      {this.serverName, this.username, this.refreshToken, this.deviceId})
+      : super._();
 
   factory _$ServerConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$ServerConfigImplFromJson(json);
@@ -156,13 +191,17 @@ class _$ServerConfigImpl implements _ServerConfig {
   @override
   final bool tls;
   @override
-  final String name;
+  final String? serverName;
+  @override
+  final String? username;
   @override
   final String? refreshToken;
+  @override
+  final int? deviceId;
 
   @override
   String toString() {
-    return 'ServerConfig(host: $host, port: $port, tls: $tls, name: $name, refreshToken: $refreshToken)';
+    return 'ServerConfig(host: $host, port: $port, tls: $tls, serverName: $serverName, username: $username, refreshToken: $refreshToken, deviceId: $deviceId)';
   }
 
   @override
@@ -173,15 +212,20 @@ class _$ServerConfigImpl implements _ServerConfig {
             (identical(other.host, host) || other.host == host) &&
             (identical(other.port, port) || other.port == port) &&
             (identical(other.tls, tls) || other.tls == tls) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.serverName, serverName) ||
+                other.serverName == serverName) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
             (identical(other.refreshToken, refreshToken) ||
-                other.refreshToken == refreshToken));
+                other.refreshToken == refreshToken) &&
+            (identical(other.deviceId, deviceId) ||
+                other.deviceId == deviceId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, host, port, tls, name, refreshToken);
+  int get hashCode => Object.hash(runtimeType, host, port, tls, serverName,
+      username, refreshToken, deviceId);
 
   @JsonKey(ignore: true)
   @override
@@ -197,10 +241,13 @@ class _$ServerConfigImpl implements _ServerConfig {
   }
 }
 
-abstract class _ServerConfig implements ServerConfig {
-  const factory _ServerConfig(
-      final String host, final int port, final bool tls, final String name,
-      {final String? refreshToken}) = _$ServerConfigImpl;
+abstract class _ServerConfig extends ServerConfig {
+  const factory _ServerConfig(final String host, final int port, final bool tls,
+      {final String? serverName,
+      final String? username,
+      final String? refreshToken,
+      final int? deviceId}) = _$ServerConfigImpl;
+  const _ServerConfig._() : super._();
 
   factory _ServerConfig.fromJson(Map<String, dynamic> json) =
       _$ServerConfigImpl.fromJson;
@@ -212,9 +259,13 @@ abstract class _ServerConfig implements ServerConfig {
   @override
   bool get tls;
   @override
-  String get name;
+  String? get serverName;
+  @override
+  String? get username;
   @override
   String? get refreshToken;
+  @override
+  int? get deviceId;
   @override
   @JsonKey(ignore: true)
   _$$ServerConfigImplCopyWith<_$ServerConfigImpl> get copyWith =>
@@ -227,10 +278,10 @@ ClientCommonData _$ClientCommonDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ClientCommonData {
-  ServerConfig? get server => throw _privateConstructorUsedError;
+  String? get lastServerId => throw _privateConstructorUsedError;
   int? get theme => throw _privateConstructorUsedError;
   int? get themeMode => throw _privateConstructorUsedError;
-  Map<String, int>? get deviceIDs => throw _privateConstructorUsedError;
+  Map<String, ServerConfig>? get servers => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -245,12 +296,10 @@ abstract class $ClientCommonDataCopyWith<$Res> {
       _$ClientCommonDataCopyWithImpl<$Res, ClientCommonData>;
   @useResult
   $Res call(
-      {ServerConfig? server,
+      {String? lastServerId,
       int? theme,
       int? themeMode,
-      Map<String, int>? deviceIDs});
-
-  $ServerConfigCopyWith<$Res>? get server;
+      Map<String, ServerConfig>? servers});
 }
 
 /// @nodoc
@@ -266,16 +315,16 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? server = freezed,
+    Object? lastServerId = freezed,
     Object? theme = freezed,
     Object? themeMode = freezed,
-    Object? deviceIDs = freezed,
+    Object? servers = freezed,
   }) {
     return _then(_value.copyWith(
-      server: freezed == server
-          ? _value.server
-          : server // ignore: cast_nullable_to_non_nullable
-              as ServerConfig?,
+      lastServerId: freezed == lastServerId
+          ? _value.lastServerId
+          : lastServerId // ignore: cast_nullable_to_non_nullable
+              as String?,
       theme: freezed == theme
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
@@ -284,23 +333,11 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as int?,
-      deviceIDs: freezed == deviceIDs
-          ? _value.deviceIDs
-          : deviceIDs // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>?,
+      servers: freezed == servers
+          ? _value.servers
+          : servers // ignore: cast_nullable_to_non_nullable
+              as Map<String, ServerConfig>?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ServerConfigCopyWith<$Res>? get server {
-    if (_value.server == null) {
-      return null;
-    }
-
-    return $ServerConfigCopyWith<$Res>(_value.server!, (value) {
-      return _then(_value.copyWith(server: value) as $Val);
-    });
   }
 }
 
@@ -313,13 +350,10 @@ abstract class _$$ClientCommonDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {ServerConfig? server,
+      {String? lastServerId,
       int? theme,
       int? themeMode,
-      Map<String, int>? deviceIDs});
-
-  @override
-  $ServerConfigCopyWith<$Res>? get server;
+      Map<String, ServerConfig>? servers});
 }
 
 /// @nodoc
@@ -333,16 +367,16 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? server = freezed,
+    Object? lastServerId = freezed,
     Object? theme = freezed,
     Object? themeMode = freezed,
-    Object? deviceIDs = freezed,
+    Object? servers = freezed,
   }) {
     return _then(_$ClientCommonDataImpl(
-      server: freezed == server
-          ? _value.server
-          : server // ignore: cast_nullable_to_non_nullable
-              as ServerConfig?,
+      lastServerId: freezed == lastServerId
+          ? _value.lastServerId
+          : lastServerId // ignore: cast_nullable_to_non_nullable
+              as String?,
       theme: freezed == theme
           ? _value.theme
           : theme // ignore: cast_nullable_to_non_nullable
@@ -351,10 +385,10 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
               as int?,
-      deviceIDs: freezed == deviceIDs
-          ? _value._deviceIDs
-          : deviceIDs // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>?,
+      servers: freezed == servers
+          ? _value._servers
+          : servers // ignore: cast_nullable_to_non_nullable
+              as Map<String, ServerConfig>?,
     ));
   }
 }
@@ -363,34 +397,34 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ClientCommonDataImpl implements _ClientCommonData {
   const _$ClientCommonDataImpl(
-      {this.server,
+      {this.lastServerId,
       this.theme,
       this.themeMode,
-      final Map<String, int>? deviceIDs})
-      : _deviceIDs = deviceIDs;
+      final Map<String, ServerConfig>? servers})
+      : _servers = servers;
 
   factory _$ClientCommonDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientCommonDataImplFromJson(json);
 
   @override
-  final ServerConfig? server;
+  final String? lastServerId;
   @override
   final int? theme;
   @override
   final int? themeMode;
-  final Map<String, int>? _deviceIDs;
+  final Map<String, ServerConfig>? _servers;
   @override
-  Map<String, int>? get deviceIDs {
-    final value = _deviceIDs;
+  Map<String, ServerConfig>? get servers {
+    final value = _servers;
     if (value == null) return null;
-    if (_deviceIDs is EqualUnmodifiableMapView) return _deviceIDs;
+    if (_servers is EqualUnmodifiableMapView) return _servers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(value);
   }
 
   @override
   String toString() {
-    return 'ClientCommonData(server: $server, theme: $theme, themeMode: $themeMode, deviceIDs: $deviceIDs)';
+    return 'ClientCommonData(lastServerId: $lastServerId, theme: $theme, themeMode: $themeMode, servers: $servers)';
   }
 
   @override
@@ -398,18 +432,18 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClientCommonDataImpl &&
-            (identical(other.server, server) || other.server == server) &&
+            (identical(other.lastServerId, lastServerId) ||
+                other.lastServerId == lastServerId) &&
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
-            const DeepCollectionEquality()
-                .equals(other._deviceIDs, _deviceIDs));
+            const DeepCollectionEquality().equals(other._servers, _servers));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, server, theme, themeMode,
-      const DeepCollectionEquality().hash(_deviceIDs));
+  int get hashCode => Object.hash(runtimeType, lastServerId, theme, themeMode,
+      const DeepCollectionEquality().hash(_servers));
 
   @JsonKey(ignore: true)
   @override
@@ -428,22 +462,22 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
 
 abstract class _ClientCommonData implements ClientCommonData {
   const factory _ClientCommonData(
-      {final ServerConfig? server,
+      {final String? lastServerId,
       final int? theme,
       final int? themeMode,
-      final Map<String, int>? deviceIDs}) = _$ClientCommonDataImpl;
+      final Map<String, ServerConfig>? servers}) = _$ClientCommonDataImpl;
 
   factory _ClientCommonData.fromJson(Map<String, dynamic> json) =
       _$ClientCommonDataImpl.fromJson;
 
   @override
-  ServerConfig? get server;
+  String? get lastServerId;
   @override
   int? get theme;
   @override
   int? get themeMode;
   @override
-  Map<String, int>? get deviceIDs;
+  Map<String, ServerConfig>? get servers;
   @override
   @JsonKey(ignore: true)
   _$$ClientCommonDataImplCopyWith<_$ClientCommonDataImpl> get copyWith =>

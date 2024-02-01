@@ -23,14 +23,13 @@ class NavRail extends StatelessWidget {
             if (leading.isNotEmpty) ...leading,
             if (leading.isNotEmpty && body.isNotEmpty)
               SpacingHelper.defaultDivider,
-            if (body.isNotEmpty)
-              Expanded(
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  children: body,
-                ),
+            Expanded(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                children: body,
               ),
+            ),
             if ((leading.isNotEmpty || body.isNotEmpty) && body.isNotEmpty)
               SpacingHelper.defaultDivider,
             if (trailing.isNotEmpty) ...trailing,

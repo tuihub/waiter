@@ -34,7 +34,7 @@ class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
             final tls = uri.queryParameters['tls'] == 'true';
             debugPrint('connect: $host:$port, tls: $tls');
             emit(DeepLinkConnectState(
-              ServerConfig(host, port, tls, ''),
+              ServerConfig(host, port, tls),
             ));
           }
         }

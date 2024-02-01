@@ -88,6 +88,8 @@ class _MyAppState extends State<MyApp> {
     final List<BlocProvider> newProviders = [
       BlocProvider<ClientSettingBloc>(
           create: (context) => widget.mainBloc.clientSettingBloc),
+      BlocProvider<DeepLinkBloc>(
+          create: (context) => widget.mainBloc.deepLinkBloc),
     ];
     if (widget.mainBloc.tipherethBloc != null) {
       newProviders.add(BlocProvider<TipherethBloc>(

@@ -8,6 +8,7 @@ class MainState {
   late ServerFeatureSummary? serverFeatureSummary;
   late InternalID? currentDeviceId;
   late ClientDeviceInfo? deviceInfo;
+  late List<ServerConfig>? knownServers;
 
   MainState({
     this.serverConfig,
@@ -17,6 +18,7 @@ class MainState {
     this.serverFeatureSummary,
     this.currentDeviceId,
     this.deviceInfo,
+    this.knownServers,
   });
 
   MainState copyWith({
@@ -27,6 +29,7 @@ class MainState {
     ServerFeatureSummary? serverFeatureSummary,
     InternalID? currentDeviceId,
     ClientDeviceInfo? deviceInfo,
+    List<ServerConfig>? knownServers,
   }) {
     return MainState(
       serverConfig: serverConfig ?? this.serverConfig,
@@ -36,6 +39,7 @@ class MainState {
       serverFeatureSummary: serverFeatureSummary ?? this.serverFeatureSummary,
       currentDeviceId: currentDeviceId ?? this.currentDeviceId,
       deviceInfo: deviceInfo ?? this.deviceInfo,
+      knownServers: knownServers ?? this.knownServers,
     );
   }
 
@@ -47,6 +51,7 @@ class MainState {
     serverFeatureSummary = other.serverFeatureSummary;
     currentDeviceId = other.currentDeviceId;
     deviceInfo = other.deviceInfo;
+    knownServers = other.knownServers;
   }
 }
 

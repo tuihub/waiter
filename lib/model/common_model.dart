@@ -8,22 +8,27 @@ class ServerConfig with _$ServerConfig {
   const factory ServerConfig(
     String host,
     int port,
-    bool tls,
-    String name, {
+    bool tls, {
+    String? serverName,
+    String? username,
     String? refreshToken,
+    int? deviceId,
   }) = _ServerConfig;
+  const ServerConfig._();
 
   factory ServerConfig.fromJson(Map<String, Object?> json) =>
       _$ServerConfigFromJson(json);
+
+  String get id => '$host#$port';
 }
 
 @freezed
 class ClientCommonData with _$ClientCommonData {
   const factory ClientCommonData({
-    ServerConfig? server,
+    String? lastServerId,
     int? theme,
     int? themeMode,
-    Map<String, int>? deviceIDs,
+    Map<String, ServerConfig>? servers,
   }) = _ClientCommonData;
 
   factory ClientCommonData.fromJson(Map<String, Object?> json) =>
