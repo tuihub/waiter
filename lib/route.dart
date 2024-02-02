@@ -292,8 +292,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
       ),
       GoRoute(
         path: AppRoutes.webLanding.toString(),
-        pageBuilder: (context, state) =>
-            const NoTransitionPage(child: WebLandingPage()),
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: MainWindow(
+            key: mainWindowKey,
+            child: const WebLandingPage(),
+          ),
+        ),
       ),
       GoRoute(
         path: '${AppRoutes._imageViewer}/:index',

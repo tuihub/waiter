@@ -9,6 +9,7 @@ import '../../bloc/main_bloc.dart';
 import '../../common/platform.dart';
 import '../../consts.dart';
 import '../../l10n/l10n.dart';
+import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../helper/spacing.dart';
@@ -63,8 +64,11 @@ class WebLandingPage extends StatelessWidget {
                         if (DotEnvValue.host.isNotEmpty)
                           Container(
                             padding: const EdgeInsets.only(top: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              runAlignment: WrapAlignment.center,
+                              spacing: 16,
+                              runSpacing: 16,
                               children: [
                                 ElevatedButton.icon(
                                   onPressed: () async {
@@ -85,7 +89,6 @@ class WebLandingPage extends StatelessWidget {
                                       .icon),
                                   label: Text(S.of(context).connectInClient),
                                 ),
-                                const SizedBox(width: 16),
                                 ElevatedButton.icon(
                                   onPressed: () async {
                                     final host = DotEnvValue.host;
@@ -128,8 +131,11 @@ class WebLandingPage extends StatelessWidget {
                           S.of(context).downloadClient,
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          spacing: 16,
+                          runSpacing: 16,
                           children: [
                             ElevatedButton.icon(
                               onPressed:
@@ -149,7 +155,6 @@ class WebLandingPage extends StatelessWidget {
                                   const FaIcon(FontAwesomeIcons.windows).icon),
                               label: const Text('Windows'),
                             ),
-                            const SizedBox(width: 16),
                             ElevatedButton.icon(
                               onPressed:
                                   DotEnvValue.andClientDownloadUrl.isNotEmpty
@@ -175,7 +180,12 @@ class WebLandingPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         OutlinedButton(
                           onPressed: () {
-                            ServerSelectOverlay.of(context)?.fullscreen();
+                            AppRoutes.tiphereth.go(context);
+                            context.read<MainBloc>().add(
+                                  MainSetNextServerConfigEvent(
+                                    ServerConfig.empty(),
+                                  ),
+                                );
                           },
                           child: Text(S.of(context).continueInWebVersion),
                         ),
