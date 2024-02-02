@@ -234,7 +234,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                         child: BootstrapContainer(
                           children: [
                             BootstrapColumn(
-                              xxs: 12,
+                              xxs: 11,
                               md: 8,
                               lg: 6,
                               child: _selected != null
@@ -343,7 +343,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(16),
       child: Form(
         key: _formKey,
         child: Column(
@@ -468,7 +468,7 @@ class _LoginFormState extends State<LoginForm> {
       },
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,

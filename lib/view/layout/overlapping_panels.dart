@@ -120,8 +120,10 @@ class OverlappingPanelsState extends State<OverlappingPanels>
     if (widget.left == null && goal > 0) goal = 0;
     if (widget.right == null && goal < 0) goal = 0;
 
-    if (!widget.gestureLeft && gestureEnd && goal > 0) goal = 0;
-    if (!widget.gestureRight && gestureEnd && goal < 0) goal = 0;
+    if (!widget.gestureLeft && gestureEnd && goal > 0 && lastTranslate <= 0)
+      goal = 0;
+    if (!widget.gestureRight && gestureEnd && goal < 0 && lastTranslate >= 0)
+      goal = 0;
 
     final Tween<double> tween = Tween<double>(begin: translate, end: goal);
 
