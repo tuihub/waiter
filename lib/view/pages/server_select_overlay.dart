@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +12,7 @@ import '../../route.dart';
 import '../components/toast.dart';
 import '../form/form_field.dart';
 import '../layout/bootstrap_container.dart';
+import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
 
@@ -30,37 +34,42 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   @override
   void initState() {
     super.initState();
-    current = context.read<MainBloc>().state.currentServer;
+    _current = context.read<MainBloc>().state.currentServer;
   }
 
-  double height = 0;
-  ServerConfig? current;
-  ServerConfig? selected;
+  double _height = 0;
+  ServerConfig? _current;
+  ServerConfig? _selected;
   double translate = 1;
+  bool _minimized = false;
+  static const minimizedHeight = 64.0;
 
   void fullscreen() {
-    selected = current;
     _animateTo(0);
+    setState(() {
+      _selected = _current;
+      _minimized = false;
+    });
   }
 
   void minimize() {
-    _animateTo(-height);
+    _animateTo(minimizedHeight - _height);
+    setState(() {
+      _minimized = true;
+    });
   }
 
   void hide() {
-    _animateTo(-height);
+    _animateTo(-_height, onComplete: () {
+      setState(() {
+        _minimized = false;
+      });
+    });
   }
 
-  void _animateTo(double goal) {
+  void _animateTo(double goal, {void Function()? onComplete}) {
     final animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
-
-    animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        animationController.dispose();
-      }
-    });
-
     final animation = Tween<double>(begin: translate, end: goal).animate(
       CurvedAnimation(
         parent: animationController,
@@ -74,13 +83,16 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
       });
     });
 
-    animationController.forward();
+    unawaited(animationController.forward().then((value) {
+      animationController.dispose();
+      onComplete?.call();
+    }));
   }
 
   @override
   void didUpdateWidget(covariant ServerSelectOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    current = context.read<MainBloc>().state.currentServer;
+    _current = context.read<MainBloc>().state.currentServer;
   }
 
   @override
@@ -91,11 +103,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
         BlocConsumer<MainBloc, MainState>(
           listener: (context, state) {
             if (state is MainAutoLoginState && state.success) {
-              AppRoutes.tiphereth.go(context);
-              minimize();
-            }
-            if (state is MainAutoLoginState && state.failed) {
-              fullscreen();
+              _current = context.read<MainBloc>().state.currentServer;
             }
             if (state is MainManualLoginState && state.success) {
               AppRoutes.tiphereth.go(context);
@@ -103,82 +111,158 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
             }
             if (state is MainNewServerSetState) {
               setState(() {
-                current = null;
+                _current = null;
               });
               fullscreen();
             }
           },
           builder: (context, state) {
             return LayoutBuilder(builder: (context, constraints) {
-              if (height != constraints.biggest.height) {
-                height = constraints.biggest.height;
+              if (_height != constraints.biggest.height) {
+                _height = constraints.biggest.height;
                 if (translate < 0) {
-                  translate = -height;
+                  translate = -_height;
                 }
               }
               if (translate > 0) {
-                translate = -height;
+                translate = -_height;
               }
               return Transform.translate(
                 offset: Offset(0, translate),
                 child: Scaffold(
-                  body: Stack(children: [
-                    NavRail(
-                      leading: [
-                        if (current != null)
-                          AvatarMenuItem(
-                            name: current!.host,
-                            image: '',
-                            selected: current?.id == selected?.id,
-                            onPressed: () {
-                              setState(() {
-                                selected = current;
-                              });
-                            },
+                  body: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ExtendedNetworkImageProvider(
+                            'https://dl.mosarin.tech/api/raw/?path=/Images/road.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Stack(children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        constraints: const BoxConstraints.expand(width: 64),
+                        child: const ClipRect(
+                          child: BackdropBlur(
+                            begin: Alignment.center,
+                            end: Alignment.center,
                           ),
-                      ],
-                      body: [
-                        for (final ServerConfig server
-                            in state.knownServers ?? [])
-                          if (server.id != current?.id)
-                            IconMenuItem(
-                              icon: Icons.account_circle,
-                              selected: server.id == selected?.id,
+                        ),
+                      ),
+                      if (_minimized)
+                        Container(
+                          margin: EdgeInsets.only(top: _height - 64),
+                          alignment: Alignment.bottomCenter,
+                          constraints: const BoxConstraints.expand(height: 64),
+                          child: const ClipRect(
+                            child: BackdropBlur(
+                              begin: Alignment.center,
+                              end: Alignment.center,
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                      if (_minimized)
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 64,
+                            alignment: Alignment.center,
+                            child: Text(
+                              _current?.host ?? '',
+                              style:
+                                  backdropBlurTextStyle(context, fontSize: 24),
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                      NavRail(
+                        leading: [
+                          if (_current != null)
+                            AvatarMenuItem(
+                              name: _current!.host,
+                              image: '',
+                              selected: _current?.id == _selected?.id,
                               onPressed: () {
                                 setState(() {
-                                  selected = server;
+                                  _selected = _current;
                                 });
                               },
                             ),
-                      ],
-                      trailing: [
-                        IconMenuItem(
-                          icon: Icons.add,
-                          selected: selected == null,
-                          onPressed: () {
-                            setState(() {
-                              selected = null;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 64),
-                      child: BootstrapContainer(
-                        children: [
-                          BootstrapColumn(
-                            xxs: 12,
-                            md: 8,
-                            lg: 6,
-                            child: selected != null
-                                ? ServerDetail(config: selected!)
-                                : const NewServer(),
-                          )
+                        ],
+                        body: [
+                          for (final ServerConfig server
+                              in state.knownServers ?? [])
+                            if (server.id != _current?.id)
+                              AvatarMenuItem(
+                                name: server.host,
+                                image: '',
+                                selected: server.id == _selected?.id,
+                                onPressed: () {
+                                  setState(() {
+                                    _selected = server;
+                                  });
+                                },
+                              ),
+                        ],
+                        trailing: [
+                          if (_minimized)
+                            AvatarMenuItem(
+                              name: _current!.host,
+                              image: '',
+                              selected: _current?.id == _selected?.id,
+                              onPressed: () {
+                                ServerSelectOverlay.of(context)?.fullscreen();
+                              },
+                            )
+                          else
+                            IconMenuItem(
+                              icon: Icons.add,
+                              selected: _selected == null,
+                              onPressed: () {
+                                setState(() {
+                                  _selected = null;
+                                });
+                              },
+                            ),
                         ],
                       ),
-                    )
-                  ]),
+                      Container(
+                        padding: const EdgeInsets.only(left: 64),
+                        child: BootstrapContainer(
+                          children: [
+                            BootstrapColumn(
+                              xxs: 12,
+                              md: 8,
+                              lg: 6,
+                              child: _selected != null
+                                  ? ServerDetail(config: _selected!)
+                                  : const NewServer(),
+                            )
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ),
+                  floatingActionButton: _selected != null && !_minimized
+                      ? FloatingActionButton.extended(
+                          onPressed: () {
+                            if (_selected!.id == state.currentServer?.id) {
+                              ServerSelectOverlay.of(context)?.minimize();
+                            } else {
+                              context.read<MainBloc>().add(
+                                    MainSetNextServerConfigEvent(_selected!),
+                                  );
+                            }
+                          },
+                          icon: const Icon(Icons.login),
+                          label: Text(_selected!.id == state.currentServer?.id
+                              ? S.of(context).continueInCurrentServer
+                              : S.of(context).buttonLogin),
+                        )
+                      : null,
                 ),
               );
             });
@@ -198,23 +282,14 @@ class ServerDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       return Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(config.host),
-            ElevatedButton.icon(
-                onPressed: () {
-                  if (config.id == state.currentServer?.id) {
-                    ServerSelectOverlay.of(context)?.hide();
-                  } else {
-                    context.read<MainBloc>().add(
-                          MainSetNextServerConfigEvent(config),
-                        );
-                  }
-                },
-                icon: const Icon(Icons.login),
-                label: Text(S.of(context).buttonLogin)),
-          ],
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(config.host),
+            ],
+          ),
         ),
       );
     });

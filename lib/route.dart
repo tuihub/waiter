@@ -273,6 +273,7 @@ final GlobalKey<NavigatorState> _chesedNavigateKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
+final mainWindowKey = GlobalKey();
 
 GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
@@ -282,8 +283,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
-        pageBuilder: (context, state) =>
-            const NoTransitionPage(child: MainWindow(child: InitPage())),
+        pageBuilder: (context, state) => NoTransitionPage(
+          child: MainWindow(
+            key: mainWindowKey,
+            child: const InitPage(),
+          ),
+        ),
       ),
       GoRoute(
         path: AppRoutes.webLanding.toString(),
@@ -314,11 +319,15 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
               if (state.currentUser != null ||
                   context.read<MainBloc>().tipherethBloc != null) {
                 return MainWindow(
+                  key: mainWindowKey,
                   child: child,
                 );
               }
-              return const MainWindow(
-                child: Center(child: CircularProgressIndicator()),
+              return MainWindow(
+                key: mainWindowKey,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             },
           ));

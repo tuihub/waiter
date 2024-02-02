@@ -12,6 +12,8 @@
   "webVersionFunctionLimited": "Web版本功能有限，仅供评估使用。",
   "downloadClient": "下载客户端",
   "continueInWebVersion": "继续使用网页版",
+  "changeServer": "切换服务器",
+  "continueInCurrentServer": "继续使用",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",

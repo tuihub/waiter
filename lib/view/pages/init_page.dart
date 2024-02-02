@@ -35,6 +35,7 @@ class _InitPageState extends State<InitPage> {
         listener: (context, state) {
           if (state is MainAutoLoginState && state.success) {
             AppRoutes.tiphereth.go(context);
+            ServerSelectOverlay.of(context)?.minimize();
             Toast(title: '', message: S.of(context).welcomeBack).show(context);
           }
           if (state is MainAutoLoginState &&
@@ -42,6 +43,7 @@ class _InitPageState extends State<InitPage> {
               PlatformHelper.isWeb() &&
               (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
                   DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
+            ServerSelectOverlay.of(context)?.fullscreen();
             AppRoutes.webLanding.go(context);
           }
         },

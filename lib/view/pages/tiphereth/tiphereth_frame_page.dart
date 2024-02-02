@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../server_select_overlay.dart';
 import 'my_accounts_card.dart';
 import 'my_profile_card.dart';
@@ -12,16 +13,18 @@ class TipherethFramePage extends StatelessWidget {
     return Scaffold(
       body: const Column(
         children: [
+          SizedBox(height: 64),
           MyProfileCard(),
           MyAccountsCard(),
           Expanded(child: SizedBox()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           ServerSelectOverlay.of(context)?.fullscreen();
         },
-        child: const Icon(Icons.logout),
+        icon: const Icon(Icons.logout),
+        label: Text(S.of(context).changeServer),
       ),
     );
   }

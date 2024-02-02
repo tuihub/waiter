@@ -170,6 +170,26 @@ class S {
     );
   }
 
+  /// `切换服务器`
+  String get changeServer {
+    return Intl.message(
+      '切换服务器',
+      name: 'changeServer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `继续使用`
+  String get continueInCurrentServer {
+    return Intl.message(
+      '继续使用',
+      name: 'continueInCurrentServer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import '../../../common/platform.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../specialized/backdrop_blur.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatelessWidget {
@@ -72,29 +72,9 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           ),
                           child: ClipRRect(
                             borderRadius: SpacingHelper.defaultBorderRadius,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: FractionalOffset.topCenter,
-                                  end: FractionalOffset.bottomCenter,
-                                  colors: [
-                                    Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant
-                                        .withOpacity(0),
-                                    Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant
-                                        .withOpacity(0.8125),
-                                  ],
-                                ),
-                              ),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                child: Container(
-                                  color: Colors.transparent,
-                                ),
-                              ),
+                            child: const BackdropBlur(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
                           ),
                         ),
@@ -105,21 +85,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             app.name,
-                            style: TextStyle(
-                              fontSize: 52,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.1),
-                              shadows: [
-                                Shadow(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.5),
-                                    blurRadius: 1)
-                              ],
-                            ),
+                            style: backdropBlurTextStyle(context),
                           ),
                         ),
                       ),

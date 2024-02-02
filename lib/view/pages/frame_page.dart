@@ -5,6 +5,7 @@ import '../../route.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/nav_rail.dart';
+import 'server_select_overlay.dart';
 
 class FramePage extends StatefulWidget {
   const FramePage({
@@ -154,6 +155,7 @@ class _Nav extends StatelessWidget {
           icon: Icons.account_circle_sharp,
           selected: ModuleName.tiphereth == selectedNav,
           onPressed: () {
+            ServerSelectOverlay.of(context)?.minimize();
             AppRoutes.tiphereth.go(context);
           },
         ),
@@ -164,6 +166,7 @@ class _Nav extends StatelessWidget {
             icon: module.icon,
             selected: module.name == selectedNav,
             onPressed: () {
+              ServerSelectOverlay.of(context)?.hide();
               AppRoutes.module(module.name).go(context);
             },
           ),
@@ -173,6 +176,7 @@ class _Nav extends StatelessWidget {
           icon: Icons.settings,
           selected: ModuleName.settings == selectedNav,
           onPressed: () {
+            ServerSelectOverlay.of(context)?.hide();
             AppRoutes.settings.go(context);
           },
         ),

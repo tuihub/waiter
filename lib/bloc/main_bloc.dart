@@ -140,6 +140,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                 serverFeatureSummary: info.featureSummary,
                 currentDeviceId: deviceID,
                 deviceInfo: _deviceInfo,
+                knownServers: servers.values.toList(),
               ),
               EventStatus.success,
             );
@@ -242,6 +243,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             serverFeatureSummary: info.featureSummary,
             currentDeviceId: deviceID,
             deviceInfo: _deviceInfo,
+            knownServers: servers.values.toList(),
           ),
           EventStatus.success,
         );

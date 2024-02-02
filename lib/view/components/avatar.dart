@@ -43,8 +43,8 @@ Color _getColorFromString(String str) {
   final random = Random(hash);
   return Color.fromARGB(
     255,
-    random.nextInt(100) + 155,
-    random.nextInt(100) + 155,
-    random.nextInt(100) + 155,
+    random.nextInt(100) + 100,
+    random.nextInt(100) + 100,
+    random.nextInt(100) + 100,
   );
 }
