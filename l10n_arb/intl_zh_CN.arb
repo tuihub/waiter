@@ -10,6 +10,8 @@
   "buttonMinimizeToTray": "最小化到托盘",
   "buttonCancel": "取消",
   "webVersionFunctionLimited": "Web版本功能有限，仅供评估使用。",
+  "connectInClient": "使用客户端登录",
+  "showServerConfig": "查看服务器信息",
   "downloadClient": "下载客户端",
   "continueInWebVersion": "继续使用网页版",
   "changeServer": "切换服务器",

@@ -56,4 +56,7 @@ class DotEnvValue {
       dotenv.env['WIN_CLIENT_DOWNLOAD_PATH'] ?? '';
   static String andClientDownloadUrl =
       dotenv.env['AND_CLIENT_DOWNLOAD_PATH'] ?? '';
+  static String host = dotenv.env['HOST'] ?? '';
+  static String port = dotenv.env['PORT'] ?? '';
+  static String tls = dotenv.env['TLS'] ?? '';
 }

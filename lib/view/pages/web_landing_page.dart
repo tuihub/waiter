@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,6 +60,68 @@ class WebLandingPage extends StatelessWidget {
                               .titleLarge
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
+                        if (DotEnvValue.host.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    final host = DotEnvValue.host;
+                                    final port = DotEnvValue.port.isNotEmpty
+                                        ? DotEnvValue.port
+                                        : '443';
+                                    final tls = DotEnvValue.tls.isNotEmpty
+                                        ? DotEnvValue.tls
+                                        : 'true';
+                                    final url = Uri.parse(
+                                        'tuihub://connect/$host?port=$port&tls=$tls');
+                                    await launchUrl(url);
+                                  },
+                                  style: primaryButtonStyle,
+                                  icon: Icon(const FaIcon(FontAwesomeIcons
+                                          .arrowUpRightFromSquare)
+                                      .icon),
+                                  label: Text(S.of(context).connectInClient),
+                                ),
+                                const SizedBox(width: 16),
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    final host = DotEnvValue.host;
+                                    final port = DotEnvValue.port.isNotEmpty
+                                        ? DotEnvValue.port
+                                        : '443';
+                                    final tls = DotEnvValue.tls.isNotEmpty
+                                        ? DotEnvValue.tls
+                                        : 'true';
+                                    unawaited(showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SelectableText(
+                                                  '${S.of(context).address}: $host'),
+                                              SelectableText(
+                                                  '${S.of(context).port}: $port'),
+                                              SelectableText(
+                                                  '${S.of(context).tls}: $tls'),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ));
+                                  },
+                                  icon: Icon(
+                                      const FaIcon(FontAwesomeIcons.circleInfo)
+                                          .icon),
+                                  label: Text(S.of(context).showServerConfig),
+                                ),
+                              ],
+                            ),
+                          ),
                         const SizedBox(height: 16),
                         SpacingHelper.defaultDivider,
                         Text(
@@ -76,7 +140,9 @@ class WebLandingPage extends StatelessWidget {
                                           await launchUrl(url);
                                         }
                                       : null,
-                              style: PlatformHelper.isWindows()
+                              style: PlatformHelper.isWindows() &&
+                                      DotEnvValue
+                                          .winClientDownloadUrl.isNotEmpty
                                   ? primaryButtonStyle
                                   : null,
                               icon: Icon(
@@ -93,7 +159,9 @@ class WebLandingPage extends StatelessWidget {
                                           await launchUrl(url);
                                         }
                                       : null,
-                              style: PlatformHelper.isAndroid()
+                              style: PlatformHelper.isAndroid() &&
+                                      DotEnvValue
+                                          .andClientDownloadUrl.isNotEmpty
                                   ? primaryButtonStyle
                                   : null,
                               icon: Icon(

@@ -8,7 +8,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf.template
 
 COPY ${WEB_FILE} /usr/share/nginx/html/
-RUN echo "WIN_CLIENT_DOWNLOAD_PATH=/download/windows" > /usr/share/nginx/html/assets/.env
+RUN echo "WIN_CLIENT_DOWNLOAD_PATH=/download/windows" >> /usr/share/nginx/html/assets/.env
 RUN echo "AND_CLIENT_DOWNLOAD_PATH=/download/android" >> /usr/share/nginx/html/assets/.env
 
 COPY ${WIN_FILE_NAME} /download/${WIN_FILE_NAME}

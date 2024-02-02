@@ -150,6 +150,26 @@ class S {
     );
   }
 
+  /// `使用客户端登录`
+  String get connectInClient {
+    return Intl.message(
+      '使用客户端登录',
+      name: 'connectInClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `查看服务器信息`
+  String get showServerConfig {
+    return Intl.message(
+      '查看服务器信息',
+      name: 'showServerConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `下载客户端`
   String get downloadClient {
     return Intl.message(
