@@ -21,7 +21,6 @@ import 'view/pages/gebura/gebura_nav.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
-import 'view/pages/login_page.dart';
 import 'view/pages/settings/about_page.dart';
 import 'view/pages/settings/app/app_add_page.dart';
 import 'view/pages/settings/app/app_edit_page.dart';
@@ -92,7 +91,6 @@ class AppRoutes {
 
   static const AppRoutes init = AppRoutes._('/');
   static const AppRoutes webLanding = AppRoutes._('/webLanding');
-  static const AppRoutes login = AppRoutes._('/login');
   static const String _imageViewer = '/imageViewer';
   static AppRoutes imageViewer(int index) =>
       AppRoutes._('$_imageViewer/$index');
@@ -291,11 +289,6 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
         path: AppRoutes.webLanding.toString(),
         pageBuilder: (context, state) =>
             const NoTransitionPage(child: WebLandingPage()),
-      ),
-      GoRoute(
-        path: AppRoutes.login.toString(),
-        pageBuilder: (context, state) =>
-            const NoTransitionPage(child: MainWindow(child: LoginPage())),
       ),
       GoRoute(
         path: '${AppRoutes._imageViewer}/:index',

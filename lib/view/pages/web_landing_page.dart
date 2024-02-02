@@ -11,6 +11,7 @@ import '../../route.dart';
 import '../components/toast.dart';
 import '../helper/spacing.dart';
 import '../layout/bootstrap_container.dart';
+import 'server_select_overlay.dart';
 
 class WebLandingPage extends StatelessWidget {
   const WebLandingPage({super.key});
@@ -106,7 +107,7 @@ class WebLandingPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         OutlinedButton(
                           onPressed: () {
-                            AppRoutes.login.go(context);
+                            ServerSelectOverlay.of(context)?.fullscreen();
                           },
                           child: Text(S.of(context).continueInWebVersion),
                         ),

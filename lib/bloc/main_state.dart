@@ -1,8 +1,8 @@
 part of 'main_bloc.dart';
 
 class MainState {
-  late ServerConfig? serverConfig;
-  late String? accessToken;
+  late ServerConfig? currentServer;
+  late ServerConfig? nextServer;
   late User? currentUser;
   late ServerInformation? serverInfo;
   late ServerFeatureSummary? serverFeatureSummary;
@@ -11,8 +11,8 @@ class MainState {
   late List<ServerConfig>? knownServers;
 
   MainState({
-    this.serverConfig,
-    this.accessToken,
+    this.currentServer,
+    this.nextServer,
     this.currentUser,
     this.serverInfo,
     this.serverFeatureSummary,
@@ -22,7 +22,8 @@ class MainState {
   });
 
   MainState copyWith({
-    ServerConfig? serverConfig,
+    ServerConfig? currentServer,
+    ServerConfig? nextServer,
     String? accessToken,
     User? currentUser,
     ServerInformation? serverInfo,
@@ -32,8 +33,8 @@ class MainState {
     List<ServerConfig>? knownServers,
   }) {
     return MainState(
-      serverConfig: serverConfig ?? this.serverConfig,
-      accessToken: accessToken ?? this.accessToken,
+      currentServer: currentServer ?? this.currentServer,
+      nextServer: nextServer ?? this.nextServer,
       currentUser: currentUser ?? this.currentUser,
       serverInfo: serverInfo ?? this.serverInfo,
       serverFeatureSummary: serverFeatureSummary ?? this.serverFeatureSummary,
@@ -44,8 +45,8 @@ class MainState {
   }
 
   void _from(MainState other) {
-    serverConfig = other.serverConfig;
-    accessToken = other.accessToken;
+    currentServer = other.currentServer;
+    nextServer = other.nextServer;
     currentUser = other.currentUser;
     serverInfo = other.serverInfo;
     serverFeatureSummary = other.serverFeatureSummary;
@@ -75,4 +76,10 @@ class MainManualLoginState extends MainState with EventStatusMixin {
   final EventStatus? statusCode;
   @override
   final String? msg;
+}
+
+class MainNewServerSetState extends MainState {
+  MainNewServerSetState(MainState state) : super() {
+    _from(state);
+  }
 }

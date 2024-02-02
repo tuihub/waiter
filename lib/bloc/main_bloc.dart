@@ -57,11 +57,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   NetzachBloc? get netzachBloc => _netzachBloc;
 
   Future<void> _initChild(MainState state) async {
-    debugPrint(state.serverConfig!.host);
+    debugPrint(state.currentServer!.host);
     final repoPath = _basePath != null
         ? path.join(
             _basePath!,
-            '${state.serverConfig!.host}#${state.serverConfig!.port}',
+            '${state.currentServer!.host}#${state.currentServer!.port}',
             state.currentUser!.id.id.toHexString(),
           )
         : null;
@@ -102,7 +102,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           repo.servers![repo.lastServerId] != null) {
         var config = repo.servers![repo.lastServerId]!;
         emit(MainAutoLoginState(
-            state.copyWith(serverConfig: config), EventStatus.processing));
+            state.copyWith(nextServer: config), EventStatus.processing));
         if (config.refreshToken != null) {
           try {
             final deviceID = config.deviceId != null
@@ -127,7 +127,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             _api.init(client, resp.accessToken, resp.refreshToken);
             final newState = MainAutoLoginState(
               state.copyWith(
-                serverConfig: config,
+                currentServer: config,
+                nextServer: ServerConfig.empty(),
                 accessToken: resp.accessToken,
                 currentUser: user.user,
                 serverInfo: ServerInformation(
@@ -154,18 +155,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(MainAutoLoginState(state, EventStatus.failed));
     }, transformer: droppable());
 
-    on<MainSetServerConfigEvent>((event, emit) async {
-      emit(state.copyWith(serverConfig: event.config));
+    on<MainSetNextServerConfigEvent>((event, emit) async {
+      debugPrint('set next server config ${event.config}');
+      emit(MainNewServerSetState(state.copyWith(nextServer: event.config)));
+    });
+
+    on<MainClearNextServerConfigEvent>((event, emit) async {
+      emit(MainNewServerSetState(
+          state.copyWith(nextServer: ServerConfig.empty())));
     });
 
     on<MainManualLoginEvent>((event, emit) async {
-      if (state.serverConfig == null) {
+      if (state.nextServer == null) {
         return;
       }
       emit(MainManualLoginState(state, EventStatus.processing));
 
       try {
-        var config = state.serverConfig!;
+        var config = state.nextServer!;
         final client = clientFactory(config: config);
         late InternalID deviceID;
         late String accessToken;
@@ -222,7 +229,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         _api.init(client, accessToken, refreshToken);
         final newState = MainManualLoginState(
           state.copyWith(
-            serverConfig: config,
+            currentServer: config,
+            nextServer: ServerConfig.empty(),
             accessToken: accessToken,
             currentUser: user.user,
             serverInfo: ServerInformation(

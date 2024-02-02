@@ -20,6 +20,7 @@ class ServerConfig with _$ServerConfig {
       _$ServerConfigFromJson(json);
 
   String get id => '$host#$port';
+  factory ServerConfig.empty() => const ServerConfig('', 0, false);
 }
 
 @freezed

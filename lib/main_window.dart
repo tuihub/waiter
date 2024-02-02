@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/deeplink_bloc.dart';
+import 'bloc/main_bloc.dart';
 import 'common/platform.dart';
 import 'view/pages/server_select_overlay.dart';
 import 'view/specialized/theme_mode_toggle.dart';
@@ -77,7 +78,9 @@ class _DeepLinkWidget extends StatelessWidget {
     return BlocConsumer<DeepLinkBloc, DeepLinkState>(
       listener: (context, state) {
         if (state is DeepLinkConnectState) {
-          // TODO
+          context
+              .read<MainBloc>()
+              .add(MainSetNextServerConfigEvent(state.serverConfig));
         }
       },
       builder: (context, state) {

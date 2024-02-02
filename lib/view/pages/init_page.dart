@@ -9,6 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
+import 'server_select_overlay.dart';
 
 class InitPage extends StatefulWidget {
   const InitPage({super.key});
@@ -61,7 +62,7 @@ class _InitPageState extends State<InitPage> {
             floatingActionButton: state is MainAutoLoginState && state.failed
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      AppRoutes.login.go(context);
+                      ServerSelectOverlay.of(context)?.fullscreen();
                     },
                     icon: const Icon(Icons.arrow_forward),
                     label: Text(S.of(context).login),

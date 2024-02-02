@@ -5,11 +5,13 @@ sealed class MainEvent {}
 
 class MainAutoLoginEvent extends MainEvent {}
 
-class MainSetServerConfigEvent extends MainEvent {
+class MainSetNextServerConfigEvent extends MainEvent {
   final ServerConfig config;
 
-  MainSetServerConfigEvent(this.config);
+  MainSetNextServerConfigEvent(this.config);
 }
+
+class MainClearNextServerConfigEvent extends MainEvent {}
 
 class MainManualLoginEvent extends MainEvent {
   final String username;
