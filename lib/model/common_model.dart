@@ -39,7 +39,7 @@ class ClientCommonData with _$ClientCommonData {
 @freezed
 class ClientDeviceInfo with _$ClientDeviceInfo {
   const factory ClientDeviceInfo(
-    String deviceModel,
+    String deviceName,
     String systemVersion,
   ) = _ClientDeviceInfo;
 

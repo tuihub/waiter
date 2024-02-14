@@ -72,10 +72,10 @@ class SessionManagePage extends StatelessWidget {
                                           maxLines: 2,
                                         ),
                                         Text(
-                                          deviceInfo.deviceModel.isNotEmpty ||
+                                          deviceInfo.deviceName.isNotEmpty ||
                                                   deviceInfo
                                                       .systemVersion.isNotEmpty
-                                              ? '${deviceInfo.deviceModel} ${deviceInfo.systemVersion}'
+                                              ? '${deviceInfo.deviceName} ${deviceInfo.systemVersion}'
                                               : '未知设备',
                                         ),
                                       ],
@@ -137,13 +137,13 @@ class SessionManagePage extends StatelessWidget {
                                               maxLines: 2,
                                             ),
                                             Text(
-                                              item.deviceInfo.deviceModel
+                                              item.deviceInfo.deviceName
                                                           .isNotEmpty ||
                                                       item
                                                           .deviceInfo
                                                           .systemVersion
                                                           .isNotEmpty
-                                                  ? '${item.deviceInfo.deviceModel} ${item.deviceInfo.systemVersion}'
+                                                  ? '${item.deviceInfo.deviceName} ${item.deviceInfo.systemVersion}'
                                                   : '未知设备',
                                             ),
                                             Text(

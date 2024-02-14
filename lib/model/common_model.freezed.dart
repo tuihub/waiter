@@ -490,7 +490,7 @@ ClientDeviceInfo _$ClientDeviceInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ClientDeviceInfo {
-  String get deviceModel => throw _privateConstructorUsedError;
+  String get deviceName => throw _privateConstructorUsedError;
   String get systemVersion => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -505,7 +505,7 @@ abstract class $ClientDeviceInfoCopyWith<$Res> {
           ClientDeviceInfo value, $Res Function(ClientDeviceInfo) then) =
       _$ClientDeviceInfoCopyWithImpl<$Res, ClientDeviceInfo>;
   @useResult
-  $Res call({String deviceModel, String systemVersion});
+  $Res call({String deviceName, String systemVersion});
 }
 
 /// @nodoc
@@ -521,13 +521,13 @@ class _$ClientDeviceInfoCopyWithImpl<$Res, $Val extends ClientDeviceInfo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? deviceModel = null,
+    Object? deviceName = null,
     Object? systemVersion = null,
   }) {
     return _then(_value.copyWith(
-      deviceModel: null == deviceModel
-          ? _value.deviceModel
-          : deviceModel // ignore: cast_nullable_to_non_nullable
+      deviceName: null == deviceName
+          ? _value.deviceName
+          : deviceName // ignore: cast_nullable_to_non_nullable
               as String,
       systemVersion: null == systemVersion
           ? _value.systemVersion
@@ -545,7 +545,7 @@ abstract class _$$ClientDeviceInfoImplCopyWith<$Res>
       __$$ClientDeviceInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String deviceModel, String systemVersion});
+  $Res call({String deviceName, String systemVersion});
 }
 
 /// @nodoc
@@ -559,13 +559,13 @@ class __$$ClientDeviceInfoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? deviceModel = null,
+    Object? deviceName = null,
     Object? systemVersion = null,
   }) {
     return _then(_$ClientDeviceInfoImpl(
-      null == deviceModel
-          ? _value.deviceModel
-          : deviceModel // ignore: cast_nullable_to_non_nullable
+      null == deviceName
+          ? _value.deviceName
+          : deviceName // ignore: cast_nullable_to_non_nullable
               as String,
       null == systemVersion
           ? _value.systemVersion
@@ -578,19 +578,19 @@ class __$$ClientDeviceInfoImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ClientDeviceInfoImpl implements _ClientDeviceInfo {
-  const _$ClientDeviceInfoImpl(this.deviceModel, this.systemVersion);
+  const _$ClientDeviceInfoImpl(this.deviceName, this.systemVersion);
 
   factory _$ClientDeviceInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ClientDeviceInfoImplFromJson(json);
 
   @override
-  final String deviceModel;
+  final String deviceName;
   @override
   final String systemVersion;
 
   @override
   String toString() {
-    return 'ClientDeviceInfo(deviceModel: $deviceModel, systemVersion: $systemVersion)';
+    return 'ClientDeviceInfo(deviceName: $deviceName, systemVersion: $systemVersion)';
   }
 
   @override
@@ -598,15 +598,15 @@ class _$ClientDeviceInfoImpl implements _ClientDeviceInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClientDeviceInfoImpl &&
-            (identical(other.deviceModel, deviceModel) ||
-                other.deviceModel == deviceModel) &&
+            (identical(other.deviceName, deviceName) ||
+                other.deviceName == deviceName) &&
             (identical(other.systemVersion, systemVersion) ||
                 other.systemVersion == systemVersion));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, deviceModel, systemVersion);
+  int get hashCode => Object.hash(runtimeType, deviceName, systemVersion);
 
   @JsonKey(ignore: true)
   @override
@@ -625,14 +625,14 @@ class _$ClientDeviceInfoImpl implements _ClientDeviceInfo {
 
 abstract class _ClientDeviceInfo implements ClientDeviceInfo {
   const factory _ClientDeviceInfo(
-          final String deviceModel, final String systemVersion) =
+          final String deviceName, final String systemVersion) =
       _$ClientDeviceInfoImpl;
 
   factory _ClientDeviceInfo.fromJson(Map<String, dynamic> json) =
       _$ClientDeviceInfoImpl.fromJson;
 
   @override
-  String get deviceModel;
+  String get deviceName;
   @override
   String get systemVersion;
   @override

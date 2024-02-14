@@ -63,7 +63,7 @@ class SessionEditPage extends StatelessWidget {
                           height: 16,
                         ),
                         TextFormField(
-                          initialValue: '${session.deviceInfo.deviceModel} ',
+                          initialValue: '${session.deviceInfo.deviceName} ',
                           readOnly: true,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),

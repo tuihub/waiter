@@ -189,7 +189,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           final id = await client.registerDevice(
               RegisterDeviceRequest(
                 deviceInfo: DeviceInfo(
-                  deviceModel: _deviceInfo.deviceModel,
+                  deviceName: _deviceInfo.deviceName,
                   systemVersion: _deviceInfo.systemVersion,
                   clientName: _packageInfo.appName,
                   clientSourceCodeAddress: clientSourceCodeUrl,

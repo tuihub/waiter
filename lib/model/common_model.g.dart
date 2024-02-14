@@ -51,13 +51,13 @@ Map<String, dynamic> _$$ClientCommonDataImplToJson(
 _$ClientDeviceInfoImpl _$$ClientDeviceInfoImplFromJson(
         Map<String, dynamic> json) =>
     _$ClientDeviceInfoImpl(
-      json['deviceModel'] as String,
+      json['deviceName'] as String,
       json['systemVersion'] as String,
     );
 
 Map<String, dynamic> _$$ClientDeviceInfoImplToJson(
         _$ClientDeviceInfoImpl instance) =>
     <String, dynamic>{
-      'deviceModel': instance.deviceModel,
+      'deviceName': instance.deviceName,
       'systemVersion': instance.systemVersion,
     };

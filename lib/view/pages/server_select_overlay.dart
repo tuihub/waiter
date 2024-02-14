@@ -134,7 +134,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: ExtendedNetworkImageProvider(
-                            'https://dl.mosarin.tech/api/raw/?path=/Images/road.jpg'),
+                            ''),
                         fit: BoxFit.cover,
                       ),
                     ),
