@@ -133,8 +133,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                   body: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: ExtendedNetworkImageProvider(
-                            ''),
+                        image: ExtendedNetworkImageProvider(''),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -11,6 +11,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../common/bloc_event_status_mixin.dart';
+import '../common/platform.dart';
 import '../consts.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
@@ -190,6 +191,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               RegisterDeviceRequest(
                 deviceInfo: DeviceInfo(
                   deviceName: _deviceInfo.deviceName,
+                  systemType: PlatformHelper.getSystemType(),
                   systemVersion: _deviceInfo.systemVersion,
                   clientName: _packageInfo.appName,
                   clientSourceCodeAddress: clientSourceCodeUrl,

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:universal_io/io.dart' as io;
 
 final class PlatformHelper {
@@ -28,5 +29,17 @@ final class PlatformHelper {
 
   static bool isWeb() {
     return kIsWeb;
+  }
+
+  static SystemType getSystemType() {
+    if (isAndroid()) {
+      return SystemType.SYSTEM_TYPE_ANDROID;
+    } else if (isWindows()) {
+      return SystemType.SYSTEM_TYPE_WINDOWS;
+    } else if (isWeb()) {
+      return SystemType.SYSTEM_TYPE_WEB;
+    } else {
+      return SystemType.SYSTEM_TYPE_UNSPECIFIED;
+    }
   }
 }

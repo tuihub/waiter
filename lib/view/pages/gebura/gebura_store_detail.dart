@@ -26,7 +26,8 @@ class GeburaStoreDetail extends StatelessWidget {
         msg = state.msg ?? msg;
       }
     }, builder: (context, state) {
-      final apps = state.storeApps != null ? state.storeApps![appID] : null;
+      final apps =
+          state.storeAppInfos != null ? state.storeAppInfos![appID] : null;
       final app = apps != null ? mixAppInfo(apps) : null;
       if (firstBuild && apps == null) {
         firstBuild = false;
@@ -114,7 +115,7 @@ class GeburaStoreDetail extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
-                                  if (state.purchasedApps?.contains(app) ??
+                                  if (state.purchasedAppInfos?.contains(app) ??
                                       false)
                                     const ElevatedButton(
                                       onPressed: null,

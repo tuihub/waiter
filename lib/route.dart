@@ -409,12 +409,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   if (context
                           .read<GeburaBloc>()
                           .state
-                          .selectedPurchasedAppIndex !=
+                          .selectedPurchasedAppInfoIndex !=
                       null) {
                     return AppRoutes.geburaLibraryDetail(context
                             .read<GeburaBloc>()
                             .state
-                            .selectedPurchasedAppIndex!)
+                            .selectedPurchasedAppInfoIndex!)
                         .toString();
                   } else {
                     return AppRoutes.geburaLibrary.toString();

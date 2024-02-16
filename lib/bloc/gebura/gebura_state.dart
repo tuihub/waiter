@@ -1,10 +1,10 @@
 part of 'gebura_bloc.dart';
 
 class GeburaState {
-  late List<AppInfoMixed>? purchasedApps;
-  late int? selectedPurchasedAppIndex;
+  late List<AppInfoMixed>? purchasedAppInfos;
+  late int? selectedPurchasedAppInfoIndex;
 
-  late Map<InternalID, List<AppInfo>>? storeApps;
+  late Map<InternalID, List<AppInfo>>? storeAppInfos;
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
@@ -14,9 +14,9 @@ class GeburaState {
   late List<String>? localSteamLibraryFolders;
 
   GeburaState({
-    this.purchasedApps,
-    this.selectedPurchasedAppIndex,
-    this.storeApps,
+    this.purchasedAppInfos,
+    this.selectedPurchasedAppInfoIndex,
+    this.storeAppInfos,
     this.runState,
     this.localLibraryState,
     this.localSteamScanResult,
@@ -26,9 +26,9 @@ class GeburaState {
   });
 
   GeburaState copyWith({
-    List<AppInfoMixed>? purchasedApps,
-    int? selectedPurchasedAppIndex,
-    Map<InternalID, List<AppInfo>>? storeApps,
+    List<AppInfoMixed>? purchasedAppInfos,
+    int? selectedPurchasedAppInfoIndex,
+    Map<InternalID, List<AppInfo>>? storeAppInfos,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
@@ -37,10 +37,10 @@ class GeburaState {
     List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
-      purchasedApps: purchasedApps ?? this.purchasedApps,
-      selectedPurchasedAppIndex:
-          selectedPurchasedAppIndex ?? this.selectedPurchasedAppIndex,
-      storeApps: storeApps ?? this.storeApps,
+      purchasedAppInfos: purchasedAppInfos ?? this.purchasedAppInfos,
+      selectedPurchasedAppInfoIndex:
+          selectedPurchasedAppInfoIndex ?? this.selectedPurchasedAppInfoIndex,
+      storeAppInfos: storeAppInfos ?? this.storeAppInfos,
       runState: runState ?? this.runState,
       localLibraryState: localLibraryState ?? this.localLibraryState,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
@@ -52,9 +52,9 @@ class GeburaState {
   }
 
   void _from(GeburaState other) {
-    purchasedApps = other.purchasedApps;
-    selectedPurchasedAppIndex = other.selectedPurchasedAppIndex;
-    storeApps = other.storeApps;
+    purchasedAppInfos = other.purchasedAppInfos;
+    selectedPurchasedAppInfoIndex = other.selectedPurchasedAppInfoIndex;
+    storeAppInfos = other.storeAppInfos;
     runState = other.runState;
     localLibraryState = other.localLibraryState;
     localSteamScanResult = other.localSteamScanResult;

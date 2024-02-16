@@ -100,10 +100,15 @@ Future<ClientDeviceInfo> genClientDeviceInfo() async {
   } else if (PlatformHelper.isWindowsApp()) {
     final windowsInfo = await deviceInfo.windowsInfo;
     return ClientDeviceInfo(
-        '', '${windowsInfo.productName} ${windowsInfo.displayVersion}');
+      windowsInfo.computerName,
+      '${windowsInfo.productName} ${windowsInfo.displayVersion}',
+    );
   } else if (PlatformHelper.isWeb()) {
     final webInfo = await deviceInfo.webBrowserInfo;
-    return ClientDeviceInfo('', webInfo.browserName.toString());
+    return ClientDeviceInfo(
+      webInfo.browserName.toString(),
+      webInfo.appVersion.toString(),
+    );
   } else {
     return const ClientDeviceInfo('unknown', 'unknown');
   }

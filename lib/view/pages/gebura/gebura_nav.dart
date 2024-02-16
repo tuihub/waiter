@@ -18,7 +18,7 @@ class GeburaNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      if (state.purchasedApps == null) {
+      if (state.purchasedAppInfos == null) {
         context.read<GeburaBloc>().add(GeburaInitEvent());
       }
 
@@ -59,7 +59,7 @@ class GeburaNav extends StatelessWidget {
                 },
                 title: const Text('Library'),
                 selected: function == 'library' &&
-                    state.selectedPurchasedAppIndex == null,
+                    state.selectedPurchasedAppInfoIndex == null,
               ),
               SpacingHelper.defaultDivider,
               Expanded(
@@ -70,15 +70,17 @@ class GeburaNav extends StatelessWidget {
                       physics: physics,
                       child: Column(
                         children: [
-                          if (state.purchasedApps != null &&
-                              state.purchasedApps!.isNotEmpty)
-                            for (var i = 0, app = state.purchasedApps![i];
-                                i < state.purchasedApps!.length;
+                          if (state.purchasedAppInfos != null &&
+                              state.purchasedAppInfos!.isNotEmpty)
+                            for (var i = 0, app = state.purchasedAppInfos![i];
+                                i < state.purchasedAppInfos!.length;
                                 i++,
-                                app = state.purchasedApps!.elementAtOrNull(i) ??
+                                app = state.purchasedAppInfos!
+                                        .elementAtOrNull(i) ??
                                     AppInfoMixed())
                               RailTile(
-                                selected: i == state.selectedPurchasedAppIndex,
+                                selected:
+                                    i == state.selectedPurchasedAppInfoIndex,
                                 onTap: () {
                                   context.read<GeburaBloc>().add(
                                       GeburaSetPurchasedAppInfoIndexEvent(i));

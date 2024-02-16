@@ -27,7 +27,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final app = state.purchasedApps![index];
+        final app = state.purchasedAppInfos![index];
         final setting =
             context.read<GeburaBloc>().getAppLauncherSetting(app.id);
         final runState =
@@ -35,7 +35,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                 ? state.runState![app.id]
                 : null;
         if (firstBuild &&
-            (state.storeApps == null || state.storeApps![app.id] == null)) {
+            (state.storeAppInfos == null ||
+                state.storeAppInfos![app.id] == null)) {
           firstBuild = false;
           context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(app.id));
         }

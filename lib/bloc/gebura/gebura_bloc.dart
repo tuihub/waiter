@@ -26,7 +26,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
 
   GeburaBloc(this._api, this._repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
-      if (state.purchasedApps == null) {
+      if (state.purchasedAppInfos == null) {
         add(GeburaPurchasedAppInfosLoadEvent());
         add(GeburaScanLocalLibraryEvent());
       }
@@ -44,14 +44,14 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaPurchasedAppsLoadState(
-          state.copyWith(purchasedApps: resp.getData().appInfos),
+          state.copyWith(purchasedAppInfos: resp.getData().appInfos),
           EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
 
     on<GeburaSetPurchasedAppInfoIndexEvent>((event, emit) async {
       final newState = state.copyWith();
-      newState.selectedPurchasedAppIndex = event.index;
+      newState.selectedPurchasedAppInfoIndex = event.index;
       emit(newState);
     });
 
@@ -357,10 +357,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             msg: resp.error));
         return;
       }
-      final storeApps = state.storeApps ?? {};
+      final storeApps = state.storeAppInfos ?? {};
       storeApps[event.appID] = resp.getData().appInfos;
       emit(GeburaFetchBoundAppsState(
-        state.copyWith(storeApps: storeApps),
+        state.copyWith(storeAppInfos: storeApps),
         EventStatus.success,
         msg: resp.error,
       ));
