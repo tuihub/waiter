@@ -810,46 +810,6 @@ class S {
     );
   }
 
-  /// `来源`
-  String get APP_PACKAGE_SOURCE {
-    return Intl.message(
-      '来源',
-      name: 'APP_PACKAGE_SOURCE',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `未知`
-  String get APP_PACKAGE_SOURCE_UNSPECIFIED {
-    return Intl.message(
-      '未知',
-      name: 'APP_PACKAGE_SOURCE_UNSPECIFIED',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `手动`
-  String get APP_PACKAGE_SOURCE_MANUAL {
-    return Intl.message(
-      '手动',
-      name: 'APP_PACKAGE_SOURCE_MANUAL',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `扫描`
-  String get APP_PACKAGE_SOURCE_SENTINEL {
-    return Intl.message(
-      '扫描',
-      name: 'APP_PACKAGE_SOURCE_SENTINEL',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `状态`
   String get FEED_CONFIG_STATUS {
     return Intl.message(

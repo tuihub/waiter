@@ -49,13 +49,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "ACCOUNT_PLATFORM_STEAM": MessageLookupByLibrary.simpleMessage("Steam"),
         "ACCOUNT_PLATFORM_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("Unspecified"),
-        "APP_PACKAGE_SOURCE": MessageLookupByLibrary.simpleMessage("Source"),
-        "APP_PACKAGE_SOURCE_MANUAL":
-            MessageLookupByLibrary.simpleMessage("Manual"),
-        "APP_PACKAGE_SOURCE_SENTINEL":
-            MessageLookupByLibrary.simpleMessage("Sentinel"),
-        "APP_PACKAGE_SOURCE_UNSPECIFIED":
-            MessageLookupByLibrary.simpleMessage("Unspecified"),
         "APP_SOURCE": MessageLookupByLibrary.simpleMessage("Source"),
         "APP_SOURCE_INTERNAL": MessageLookupByLibrary.simpleMessage("Internal"),
         "APP_SOURCE_STEAM": MessageLookupByLibrary.simpleMessage("Steam"),

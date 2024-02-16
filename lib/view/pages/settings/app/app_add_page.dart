@@ -123,8 +123,8 @@ class AppAddPage extends StatelessWidget {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
-                context.read<GeburaBloc>().add(GeburaAddAppEvent(
-                      App(
+                context.read<GeburaBloc>().add(GeburaAddAppInfoEvent(
+                      AppInfo(
                         name: name,
                         type: appType,
                         shortDescription: shortDescription,

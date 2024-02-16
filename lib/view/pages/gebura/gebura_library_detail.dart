@@ -37,7 +37,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         if (firstBuild &&
             (state.storeApps == null || state.storeApps![app.id] == null)) {
           firstBuild = false;
-          context.read<GeburaBloc>().add(GeburaFetchBoundAppsEvent(app.id));
+          context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(app.id));
         }
         return Scaffold(
           backgroundColor: Colors.transparent,

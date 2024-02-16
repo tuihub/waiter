@@ -27,16 +27,16 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   GeburaBloc(this._api, this._repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
       if (state.purchasedApps == null) {
-        add(GeburaPurchasedAppsLoadEvent());
+        add(GeburaPurchasedAppInfosLoadEvent());
         add(GeburaScanLocalLibraryEvent());
       }
     });
 
-    on<GeburaPurchasedAppsLoadEvent>((event, emit) async {
+    on<GeburaPurchasedAppInfosLoadEvent>((event, emit) async {
       emit(GeburaPurchasedAppsLoadState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.getPurchasedApps,
-        GetPurchasedAppsRequest(),
+        (client) => client.getPurchasedAppInfos,
+        GetPurchasedAppInfosRequest(),
       );
       if (resp.status != ApiStatus.success) {
         emit(GeburaPurchasedAppsLoadState(state, EventStatus.failed,
@@ -44,27 +44,27 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaPurchasedAppsLoadState(
-          state.copyWith(purchasedApps: resp.getData().apps),
+          state.copyWith(purchasedApps: resp.getData().appInfos),
           EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
 
-    on<GeburaSetPurchasedAppIndexEvent>((event, emit) async {
+    on<GeburaSetPurchasedAppInfoIndexEvent>((event, emit) async {
       final newState = state.copyWith();
       newState.selectedPurchasedAppIndex = event.index;
       emit(newState);
     });
 
-    on<GeburaSearchAppsEvent>((event, emit) async {
+    on<GeburaSearchAppInfosEvent>((event, emit) async {
       emit(GeburaSearchAppsState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.searchApps,
-        SearchAppsRequest(
+        (client) => client.searchAppInfos,
+        SearchAppInfosRequest(
           paging: PagingRequest(
             pageSize: Int64(10),
             pageNum: Int64(1),
           ),
-          keywords: event.query,
+          query: event.query,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -75,16 +75,16 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         state,
         EventStatus.success,
         msg: resp.error,
-        apps: resp.getData().apps,
+        apps: resp.getData().appInfos,
       ));
     }, transformer: droppable());
 
     on<GeburaPurchaseEvent>((event, emit) async {
       emit(GeburaPurchaseState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.purchaseApp,
-        PurchaseAppRequest(
-          appId: AppID(
+        (client) => client.purchaseAppInfo,
+        PurchaseAppInfoRequest(
+          appInfoId: AppInfoID(
             internal: true,
             sourceAppId: event.id.id.toString(),
           ),
@@ -95,7 +95,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaPurchaseState(state, EventStatus.success, msg: resp.error));
-      add(GeburaPurchasedAppsLoadEvent());
+      add(GeburaPurchasedAppInfosLoadEvent());
     }, transformer: droppable());
 
     on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
@@ -104,12 +104,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaSetAppLauncherSettingState(state, EventStatus.success));
     });
 
-    on<GeburaAddAppEvent>((event, emit) async {
+    on<GeburaAddAppInfoEvent>((event, emit) async {
       emit(GeburaAddAppState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.createApp,
-        CreateAppRequest(
-          app: event.app,
+        (client) => client.createAppInfo,
+        CreateAppInfoRequest(
+          appInfo: event.appInfo,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -119,12 +119,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaAddAppState(state, EventStatus.success, msg: resp.error));
     }, transformer: droppable());
 
-    on<GeburaEditAppEvent>((event, emit) async {
+    on<GeburaEditAppInfoEvent>((event, emit) async {
       emit(GeburaEditAppState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.updateApp,
-        UpdateAppRequest(
-          app: event.app,
+        (client) => client.updateAppInfo,
+        UpdateAppInfoRequest(
+          appInfo: event.appInfo,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -134,12 +134,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaEditAppState(state, EventStatus.success, msg: resp.error));
     }, transformer: droppable());
 
-    on<GeburaAddAppPackageEvent>((event, emit) async {
+    on<GeburaAddAppEvent>((event, emit) async {
       emit(GeburaAddAppPackageState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.createAppPackage,
-        CreateAppPackageRequest(
-          appPackage: event.appPackage,
+        (client) => client.createApp,
+        CreateAppRequest(
+          app: event.app,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -151,12 +151,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           msg: resp.error));
     }, transformer: droppable());
 
-    on<GeburaEditAppPackageEvent>((event, emit) async {
+    on<GeburaEditAppEvent>((event, emit) async {
       emit(GeburaEditAppPackageState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.updateAppPackage,
-        UpdateAppPackageRequest(
-          appPackage: event.appPackage,
+        (client) => client.updateApp,
+        UpdateAppRequest(
+          app: event.app,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -168,13 +168,13 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           msg: resp.error));
     }, transformer: droppable());
 
-    on<GeburaAssignAppPackageEvent>((event, emit) async {
+    on<GeburaAssignAppEvent>((event, emit) async {
       emit(GeburaAssignAppPackageState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.assignAppPackage,
-        AssignAppPackageRequest(
+        (client) => client.assignApp,
+        AssignAppRequest(
+          appInfoId: event.appInfoID,
           appId: event.appID,
-          appPackageId: event.appPackageID,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -284,16 +284,19 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           continue;
         }
         await _api.doRequest(
-          (client) => client.syncApps,
-          SyncAppsRequest(
-            appIds: [AppID(internal: false, source: 'steam', sourceAppId: app)],
+          (client) => client.syncAppInfos,
+          SyncAppInfosRequest(
+            appInfoIds: [
+              AppInfoID(internal: false, source: 'steam', sourceAppId: app)
+            ],
             waitData: true,
           ),
         );
         final purchaseResp = await _api.doRequest(
-          (client) => client.purchaseApp,
-          PurchaseAppRequest(
-            appId: AppID(internal: false, source: 'steam', sourceAppId: app),
+          (client) => client.purchaseAppInfo,
+          PurchaseAppInfoRequest(
+            appInfoId:
+                AppInfoID(internal: false, source: 'steam', sourceAppId: app),
           ),
         );
         if (purchaseResp.status != ApiStatus.success) {
@@ -301,10 +304,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           continue;
         }
         final createResp = await _api.doRequest(
-          (client) => client.createAppPackage,
-          CreateAppPackageRequest(
-            appPackage: AppPackage(
-              source: AppPackageSource.APP_PACKAGE_SOURCE_MANUAL,
+          (client) => client.createApp,
+          CreateAppRequest(
+            app: App(
               name: (state.localSteamApps ?? [])
                   .firstWhere((element) => element.appId == app)
                   .name,
@@ -316,10 +318,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           continue;
         }
         final assignResp = await _api.doRequest(
-          (client) => client.assignAppPackage,
-          AssignAppPackageRequest(
-            appId: purchaseResp.getData().id,
-            appPackageId: createResp.getData().id,
+          (client) => client.assignApp,
+          AssignAppRequest(
+            appInfoId: purchaseResp.getData().id,
+            appId: createResp.getData().id,
           ),
         );
         if (assignResp.status != ApiStatus.success) {
@@ -332,7 +334,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         ));
       }
       await _repo.setImportedSteamApps(importedSteamApps);
-      add(GeburaPurchasedAppsLoadEvent());
+      add(GeburaPurchasedAppInfosLoadEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
             localLibraryState: S.current.importSteamApplicationFinished(
@@ -342,12 +344,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           EventStatus.success));
     }, transformer: droppable());
 
-    on<GeburaFetchBoundAppsEvent>((event, emit) async {
+    on<GeburaFetchBoundAppInfosEvent>((event, emit) async {
       emit(GeburaFetchBoundAppsState(state, EventStatus.processing));
       final resp = await _api.doRequest(
-        (client) => client.getBoundApps,
-        GetBoundAppsRequest(
-          appId: event.appID,
+        (client) => client.getBoundAppInfos,
+        GetBoundAppInfosRequest(
+          appInfoId: event.appID,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -356,7 +358,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       final storeApps = state.storeApps ?? {};
-      storeApps[event.appID] = resp.getData().apps;
+      storeApps[event.appID] = resp.getData().appInfos;
       emit(GeburaFetchBoundAppsState(
         state.copyWith(storeApps: storeApps),
         EventStatus.success,
@@ -369,11 +371,11 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     return _repo.getAppLauncherSetting(id.id.toInt());
   }
 
-  Future<ListAppsResponse> listApps(
+  Future<ListAppInfosResponse> listAppInfos(
       int pageSize, int pageNum, List<String> sourceFilter) async {
     final resp = await _api.doRequest(
-      (client) => client.listApps,
-      ListAppsRequest(
+      (client) => client.listAppInfos,
+      ListAppInfosRequest(
         paging:
             PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
         sourceFilter: sourceFilter,
@@ -382,28 +384,26 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     return resp.getData();
   }
 
-  Future<ListAppPackagesResponse> listAppPackages(
-      int pageSize, int pageNum, List<AppPackageSource> sourceFilter) async {
+  Future<ListAppsResponse> listApps(int pageSize, int pageNum) async {
     final resp = await _api.doRequest(
-      (client) => client.listAppPackages,
-      ListAppPackagesRequest(
+      (client) => client.listApps,
+      ListAppsRequest(
         paging:
             PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
-        sourceFilter: sourceFilter,
       ),
     );
     return resp.getData();
   }
 }
 
-App mixApp(List<App> apps) {
-  var mixedApp = App();
+AppInfo mixAppInfo(List<AppInfo> apps) {
+  var mixedApp = AppInfo();
   if (apps.isEmpty) {
     return mixedApp;
   }
   mixedApp = apps.where((element) => element.internal).isNotEmpty
       ? apps.firstWhere((element) => element.internal)
-      : App();
+      : AppInfo();
   for (final app in apps.where((element) => !element.internal)) {
     mixedApp.name = app.name.isNotEmpty ? app.name : mixedApp.name;
     mixedApp.shortDescription = app.shortDescription.isNotEmpty

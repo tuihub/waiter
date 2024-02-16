@@ -35,7 +35,7 @@ class _AppManagePageState extends State<AppManagePage> {
             .read<MainBloc>()
             .state
             .serverFeatureSummary
-            ?.supportedAppSources ??
+            ?.supportedAppInfoSources ??
         [];
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -125,10 +125,10 @@ class AppTableSource extends AsyncDataTableSource {
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
     final data = await context
         .read<GeburaBloc>()
-        .listApps(pageSize, startIndex ~/ pageSize + 1, sourceFilter);
+        .listAppInfos(pageSize, startIndex ~/ pageSize + 1, sourceFilter);
     return AsyncRowsResponse(
       data.paging.totalSize.toInt(),
-      data.apps.map(
+      data.appInfos.map(
         (app) {
           return DataRow2(
               cells: [

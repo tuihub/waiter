@@ -61,18 +61,6 @@ String appTypeString(AppType type) {
   return '';
 }
 
-String appPackageSourceString(AppPackageSource source) {
-  switch (source) {
-    case AppPackageSource.APP_PACKAGE_SOURCE_UNSPECIFIED:
-      return S.current.APP_PACKAGE_SOURCE_UNSPECIFIED;
-    case AppPackageSource.APP_PACKAGE_SOURCE_MANUAL:
-      return S.current.APP_PACKAGE_SOURCE_MANUAL;
-    case AppPackageSource.APP_PACKAGE_SOURCE_SENTINEL:
-      return S.current.APP_PACKAGE_SOURCE_SENTINEL;
-  }
-  return '';
-}
-
 String feedConfigStatusString(FeedConfigStatus status) {
   switch (status) {
     case FeedConfigStatus.FEED_CONFIG_STATUS_UNSPECIFIED:

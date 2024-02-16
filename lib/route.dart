@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
@@ -512,14 +513,15 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                     _SettingsActions.appAdd: const AppAddPage(),
                     _SettingsActions.appEdit: AppEditPage(
                       key: ValueKey(state.extra),
-                      app: state.extra is App ? state.extra! as App : App(),
+                      app: state.extra is AppInfo
+                          ? state.extra! as AppInfo
+                          : AppInfo(),
                     ),
                     _SettingsActions.appPackageAdd: const AppPackageAddPage(),
                     _SettingsActions.appPackageEdit: AppPackageEditPage(
                       key: ValueKey(state.extra),
-                      appPackage: state.extra is AppPackage
-                          ? state.extra! as AppPackage
-                          : AppPackage(),
+                      appPackage:
+                          state.extra is App ? state.extra! as App : App(),
                     ),
                   };
                   return NoTransitionPage(

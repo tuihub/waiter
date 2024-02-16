@@ -27,10 +27,10 @@ class GeburaStoreDetail extends StatelessWidget {
       }
     }, builder: (context, state) {
       final apps = state.storeApps != null ? state.storeApps![appID] : null;
-      final app = apps != null ? mixApp(apps) : null;
+      final app = apps != null ? mixAppInfo(apps) : null;
       if (firstBuild && apps == null) {
         firstBuild = false;
-        context.read<GeburaBloc>().add(GeburaFetchBoundAppsEvent(appID));
+        context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(appID));
       }
       debugPrint(app.toString());
       return Scaffold(
@@ -187,7 +187,7 @@ class GeburaStoreDetail extends StatelessWidget {
 class PurchaseAppDialog extends StatelessWidget {
   const PurchaseAppDialog({super.key, required this.app});
 
-  final App app;
+  final AppInfo app;
 
   @override
   Widget build(BuildContext context) {

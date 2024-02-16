@@ -49,12 +49,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "ACCOUNT_PLATFORM_STEAM": MessageLookupByLibrary.simpleMessage("Steam"),
         "ACCOUNT_PLATFORM_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
-        "APP_PACKAGE_SOURCE": MessageLookupByLibrary.simpleMessage("来源"),
-        "APP_PACKAGE_SOURCE_MANUAL": MessageLookupByLibrary.simpleMessage("手动"),
-        "APP_PACKAGE_SOURCE_SENTINEL":
-            MessageLookupByLibrary.simpleMessage("扫描"),
-        "APP_PACKAGE_SOURCE_UNSPECIFIED":
-            MessageLookupByLibrary.simpleMessage("未知"),
         "APP_SOURCE": MessageLookupByLibrary.simpleMessage("来源"),
         "APP_SOURCE_INTERNAL": MessageLookupByLibrary.simpleMessage("内置"),
         "APP_SOURCE_STEAM": MessageLookupByLibrary.simpleMessage("Steam"),

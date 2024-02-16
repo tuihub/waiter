@@ -5,18 +5,18 @@ sealed class GeburaEvent {}
 
 final class GeburaInitEvent extends GeburaEvent {}
 
-final class GeburaPurchasedAppsLoadEvent extends GeburaEvent {}
+final class GeburaPurchasedAppInfosLoadEvent extends GeburaEvent {}
 
-final class GeburaSetPurchasedAppIndexEvent extends GeburaEvent {
+final class GeburaSetPurchasedAppInfoIndexEvent extends GeburaEvent {
   final int? index;
 
-  GeburaSetPurchasedAppIndexEvent(this.index);
+  GeburaSetPurchasedAppInfoIndexEvent(this.index);
 }
 
-final class GeburaSearchAppsEvent extends GeburaEvent {
+final class GeburaSearchAppInfosEvent extends GeburaEvent {
   final String query;
 
-  GeburaSearchAppsEvent(this.query);
+  GeburaSearchAppInfosEvent(this.query);
 }
 
 final class GeburaPurchaseEvent extends GeburaEvent {
@@ -31,6 +31,18 @@ final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
   GeburaSetAppLauncherSettingEvent(this.setting);
 }
 
+final class GeburaAddAppInfoEvent extends GeburaEvent {
+  final AppInfo appInfo;
+
+  GeburaAddAppInfoEvent(this.appInfo);
+}
+
+final class GeburaEditAppInfoEvent extends GeburaEvent {
+  final AppInfo appInfo;
+
+  GeburaEditAppInfoEvent(this.appInfo);
+}
+
 final class GeburaAddAppEvent extends GeburaEvent {
   final App app;
 
@@ -43,23 +55,11 @@ final class GeburaEditAppEvent extends GeburaEvent {
   GeburaEditAppEvent(this.app);
 }
 
-final class GeburaAddAppPackageEvent extends GeburaEvent {
-  final AppPackage appPackage;
-
-  GeburaAddAppPackageEvent(this.appPackage);
-}
-
-final class GeburaEditAppPackageEvent extends GeburaEvent {
-  final AppPackage appPackage;
-
-  GeburaEditAppPackageEvent(this.appPackage);
-}
-
-final class GeburaAssignAppPackageEvent extends GeburaEvent {
-  final InternalID appPackageID;
+final class GeburaAssignAppEvent extends GeburaEvent {
   final InternalID appID;
+  final InternalID appInfoID;
 
-  GeburaAssignAppPackageEvent(this.appPackageID, this.appID);
+  GeburaAssignAppEvent(this.appID, this.appInfoID);
 }
 
 final class GeburaRunAppEvent extends GeburaEvent {
@@ -76,8 +76,8 @@ final class GeburaImportSteamAppsEvent extends GeburaEvent {
   GeburaImportSteamAppsEvent(this.appIDs);
 }
 
-final class GeburaFetchBoundAppsEvent extends GeburaEvent {
+final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {
   final InternalID appID;
 
-  GeburaFetchBoundAppsEvent(this.appID);
+  GeburaFetchBoundAppInfosEvent(this.appID);
 }

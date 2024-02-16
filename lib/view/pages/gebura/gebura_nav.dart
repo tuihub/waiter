@@ -39,7 +39,7 @@ class GeburaNav extends StatelessWidget {
                 onTap: () {
                   context
                       .read<GeburaBloc>()
-                      .add(GeburaSetPurchasedAppIndexEvent(null));
+                      .add(GeburaSetPurchasedAppInfoIndexEvent(null));
                   AppRoutes.geburaStore.go(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
                 },
@@ -53,7 +53,7 @@ class GeburaNav extends StatelessWidget {
                 onTap: () {
                   context
                       .read<GeburaBloc>()
-                      .add(GeburaSetPurchasedAppIndexEvent(null));
+                      .add(GeburaSetPurchasedAppInfoIndexEvent(null));
                   AppRoutes.geburaLibrary.push(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
                 },
@@ -76,13 +76,12 @@ class GeburaNav extends StatelessWidget {
                                 i < state.purchasedApps!.length;
                                 i++,
                                 app = state.purchasedApps!.elementAtOrNull(i) ??
-                                    AppMixed())
+                                    AppInfoMixed())
                               RailTile(
                                 selected: i == state.selectedPurchasedAppIndex,
                                 onTap: () {
-                                  context
-                                      .read<GeburaBloc>()
-                                      .add(GeburaSetPurchasedAppIndexEvent(i));
+                                  context.read<GeburaBloc>().add(
+                                      GeburaSetPurchasedAppInfoIndexEvent(i));
                                   AppRoutes.geburaLibraryDetail(i)
                                       .push(context);
                                   OverlappingPanels.of(context)

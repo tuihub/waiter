@@ -88,7 +88,7 @@ class _GeburaLibraryOverviewItem extends StatefulWidget {
   const _GeburaLibraryOverviewItem({required this.index, required this.item});
 
   final int index;
-  final AppMixed item;
+  final AppInfoMixed item;
 
   @override
   State<_GeburaLibraryOverviewItem> createState() =>
@@ -106,7 +106,7 @@ class _GeburaLibraryOverviewItemState
         onTap: () {
           context
               .read<GeburaBloc>()
-              .add(GeburaSetPurchasedAppIndexEvent(widget.index));
+              .add(GeburaSetPurchasedAppInfoIndexEvent(widget.index));
           AppRoutes.geburaLibraryDetail(widget.index).push(context);
         },
         child: Stack(

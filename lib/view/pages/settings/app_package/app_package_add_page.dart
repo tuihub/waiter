@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../route.dart';
@@ -89,8 +89,8 @@ class AppPackageAddPage extends StatelessWidget {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
-                context.read<GeburaBloc>().add(GeburaAddAppPackageEvent(
-                      AppPackage(
+                context.read<GeburaBloc>().add(GeburaAddAppEvent(
+                      App(
                         name: name,
                         description: description,
                       ),

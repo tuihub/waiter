@@ -2,10 +2,10 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
@@ -13,7 +13,7 @@ class AppPackageAssignDialog extends StatelessWidget {
       {super.key, required this.appPackage, required this.callback});
 
   final void Function() callback;
-  final AppPackage appPackage;
+  final App appPackage;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,6 @@ class AppPackageAssignDialog extends StatelessWidget {
               children: <Widget>[
                 Text('Name: ${appPackage.name}'),
                 Text('ID: ${appPackage.id.id.toHexString()}'),
-                Text('Source: ${appPackageSourceString(appPackage.source)}'),
                 const SizedBox(
                   height: 16,
                 ),
@@ -87,7 +86,7 @@ class AppPackageAssignDialog extends StatelessWidget {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              context.read<GeburaBloc>().add(GeburaAssignAppPackageEvent(
+              context.read<GeburaBloc>().add(GeburaAssignAppEvent(
                     appPackage.id,
                     InternalID(id: $fixnum.Int64(appID)),
                   ));

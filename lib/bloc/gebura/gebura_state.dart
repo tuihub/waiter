@@ -1,10 +1,10 @@
 part of 'gebura_bloc.dart';
 
 class GeburaState {
-  late List<AppMixed>? purchasedApps;
+  late List<AppInfoMixed>? purchasedApps;
   late int? selectedPurchasedAppIndex;
 
-  late Map<InternalID, List<App>>? storeApps;
+  late Map<InternalID, List<AppInfo>>? storeApps;
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
@@ -26,9 +26,9 @@ class GeburaState {
   });
 
   GeburaState copyWith({
-    List<AppMixed>? purchasedApps,
+    List<AppInfoMixed>? purchasedApps,
     int? selectedPurchasedAppIndex,
-    Map<InternalID, List<App>>? storeApps,
+    Map<InternalID, List<AppInfo>>? storeApps,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
@@ -83,7 +83,7 @@ class GeburaSearchAppsState extends GeburaState with EventStatusMixin {
     _from(state);
   }
 
-  final List<AppMixed>? apps;
+  final List<AppInfoMixed>? apps;
 
   @override
   final EventStatus? statusCode;

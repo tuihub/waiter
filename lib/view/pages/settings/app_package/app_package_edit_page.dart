@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
@@ -14,7 +13,7 @@ import 'app_package_assign_dialog.dart';
 class AppPackageEditPage extends StatefulWidget {
   const AppPackageEditPage({super.key, required this.appPackage});
 
-  final AppPackage appPackage;
+  final App appPackage;
 
   @override
   State<AppPackageEditPage> createState() => _AppPackageEditPageState();
@@ -53,8 +52,6 @@ class _AppPackageEditPageState extends State<AppPackageEditPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('ID: ${widget.appPackage.id.id.toHexString()}'),
-              Text(
-                  'Source: ${appPackageSourceString(widget.appPackage.source)}'),
               const SizedBox(
                 height: 16,
               ),
@@ -129,10 +126,9 @@ class _AppPackageEditPageState extends State<AppPackageEditPage> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                context.read<GeburaBloc>().add(GeburaEditAppPackageEvent(
-                      AppPackage(
+                context.read<GeburaBloc>().add(GeburaEditAppEvent(
+                      App(
                         id: widget.appPackage.id,
-                        source: widget.appPackage.source,
                         name: name,
                         description: description,
                       ),

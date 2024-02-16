@@ -9,7 +9,7 @@ import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
 
 class AppEditPage extends StatefulWidget {
-  final App app;
+  final AppInfo app;
 
   const AppEditPage({super.key, required this.app});
   @override
@@ -172,8 +172,8 @@ class _AppEditPageState extends State<AppEditPage> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  context.read<GeburaBloc>().add(GeburaEditAppEvent(
-                        App(
+                  context.read<GeburaBloc>().add(GeburaEditAppInfoEvent(
+                        AppInfo(
                           id: widget.app.id,
                           source: widget.app.source,
                           sourceAppId: widget.app.sourceAppId,
