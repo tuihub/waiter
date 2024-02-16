@@ -126,11 +126,11 @@ class AppRoutes {
   static const String _gebura = '$_module/${ModuleName._gebura}';
   static const AppRoutes gebura = AppRoutes._(_gebura);
   static const AppRoutes geburaStore =
-      AppRoutes._('$_gebura/${_GeburaFunctions.store}');
+      AppRoutes._('$_gebura/${GeburaFunctions.store}');
   static const AppRoutes geburaLibrary =
-      AppRoutes._('$_gebura/${_GeburaFunctions.library}');
+      AppRoutes._('$_gebura/${GeburaFunctions.library}');
   static const AppRoutes geburaLibrarySettings =
-      AppRoutes._('$_gebura/${_GeburaFunctions.librarySettings}');
+      AppRoutes._('$_gebura/${GeburaFunctions.librarySettings}');
   static AppRoutes geburaLibraryDetail(int id) =>
       AppRoutes._('$geburaLibrary?id=$id');
 
@@ -230,7 +230,7 @@ class _YesodActions {
   static const String recentFilter = 'filterRecent';
 }
 
-class _GeburaFunctions {
+class GeburaFunctions {
   static const String store = 'store';
   static const String library = 'library';
   static const String librarySettings = 'librarySettings';
@@ -427,9 +427,9 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   final function = state.pathParameters['function'] ??
                       AppRoutes.geburaStore.toString();
                   final geburaPages = {
-                    _GeburaFunctions.store: const GeburaStorePage(),
-                    _GeburaFunctions.library: const GeburaLibraryOverview(),
-                    _GeburaFunctions.librarySettings:
+                    GeburaFunctions.store: const GeburaStorePage(),
+                    GeburaFunctions.library: const GeburaLibraryOverview(),
+                    GeburaFunctions.librarySettings:
                         const GeburaLibrarySettings(),
                   };
                   Widget? page = geburaPages[function];

@@ -31,6 +31,8 @@ import 'yesod/yesod_bloc.dart';
 part 'main_event.dart';
 part 'main_state.dart';
 
+// MainBloc manage the basic state of the app,
+// including login, logout, and server switching.
 class MainBloc extends Bloc<MainEvent, MainState> {
   final ApiHelper _api;
   final ClientCommonRepo _repo;

@@ -9,6 +9,7 @@ import 'view/pages/server_select_overlay.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
 
+// MainWindow is the top-level widget of the app
 class MainWindow extends StatelessWidget {
   const MainWindow({super.key, required this.child});
 

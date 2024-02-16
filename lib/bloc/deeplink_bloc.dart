@@ -19,6 +19,7 @@ class DeepLinkConnectState extends DeepLinkState {
   DeepLinkConnectState(this.serverConfig);
 }
 
+// DeepLinkBloc manages deep link events and states.
 class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
   StreamSubscription? _sub;
 

@@ -59,6 +59,7 @@ dependencies:
 
   # theme
   flex_color_scheme: ^7.0.0
+  chinese_font_library: ^1.1.0
 
   # ui components
   fl_chart: ^0.64.0

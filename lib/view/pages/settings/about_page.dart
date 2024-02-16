@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../bloc/main_bloc.dart';
-import '../../components/expand_rail_tile.dart';
 import '../../helper/spacing.dart';
 
 class AboutPage extends StatelessWidget {
@@ -32,7 +31,7 @@ class AboutPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.only(top: 8),
         child: Material(
           color: Colors.transparent,
           child: ListView(
@@ -71,7 +70,7 @@ class AboutPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              ExpandRailTile(
+              ExpansionTile(
                 title: const Text(
                   'Privacy Policy',
                 ),
@@ -92,7 +91,7 @@ class AboutPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              ExpandRailTile(
+              ExpansionTile(
                 title: const Text(
                   'Current Server Information',
                 ),

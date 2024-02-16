@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
@@ -33,9 +34,11 @@ import 'model/common_model.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/local/common.dart';
 import 'route.dart';
+import 'view/helper/spacing.dart';
 
 part 'init.dart';
 
+// main function is the entry point of the app
 void main(List<String> args) async {
   // Required for Android App
   await Hive.initFlutter();
@@ -148,6 +151,39 @@ class _MyAppWidget extends StatelessWidget {
         if (state is DefaultAppState) {
           context.read<ClientSettingBloc>().add(InitClientSettingEvent());
         }
+
+        final lightTheme = _customizeTheme(
+            Brightness.light,
+            FlexThemeData.light(
+              scheme: state.theme.scheme,
+              useMaterial3: true,
+              surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
+              blendLevel: 10,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 7,
+                useTextTheme: true,
+                useM2StyleDividerInM3: true,
+              ),
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              swapLegacyOnMaterial3: true,
+            ));
+
+        final darkTheme = _customizeTheme(
+            Brightness.dark,
+            FlexThemeData.dark(
+              scheme: state.theme.scheme,
+              surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface,
+              blendLevel: 13,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 20,
+                useTextTheme: true,
+                useM2StyleDividerInM3: true,
+              ),
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              useMaterial3: true,
+              swapLegacyOnMaterial3: true,
+            ));
+
         return MaterialApp.router(
           onGenerateTitle: (context) => S.of(context).title,
           localizationsDelegates: const [
@@ -157,39 +193,28 @@ class _MyAppWidget extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
-          // The Mandy red, light theme.
-          theme: FlexThemeData.light(
-            scheme: state.theme.scheme,
-            useMaterial3: true,
-            surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
-            blendLevel: 10,
-            subThemesData: const FlexSubThemesData(
-              blendOnLevel: 7,
-              useTextTheme: true,
-              useM2StyleDividerInM3: true,
-            ),
-            visualDensity: FlexColorScheme.comfortablePlatformDensity,
-            swapLegacyOnMaterial3: true,
-          ),
-          // The Mandy red, dark theme.
-          darkTheme: FlexThemeData.dark(
-            scheme: state.theme.scheme,
-            surfaceMode: FlexSurfaceMode.highScaffoldLevelSurface,
-            blendLevel: 13,
-            subThemesData: const FlexSubThemesData(
-              blendOnLevel: 20,
-              useTextTheme: true,
-              useM2StyleDividerInM3: true,
-            ),
-            visualDensity: FlexColorScheme.comfortablePlatformDensity,
-            useMaterial3: true,
-            swapLegacyOnMaterial3: true,
-          ),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           themeMode: state.themeMode,
-          // Use dark or light theme based on system setting.
           routerConfig: router,
         );
       },
     );
   }
+}
+
+ThemeData _customizeTheme(Brightness brightness, ThemeData theme) {
+  // Temporary fix for font issue
+  // https://github.com/flutter/flutter/issues/48381
+  return theme
+      .copyWith(
+        listTileTheme: theme.listTileTheme.copyWith(
+          selectedColor: theme.colorScheme.onPrimary,
+          selectedTileColor: theme.colorScheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: SpacingHelper.defaultBorderRadius,
+          ),
+        ),
+      )
+      .useSystemChineseFont(brightness);
 }

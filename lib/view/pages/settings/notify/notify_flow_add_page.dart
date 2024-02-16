@@ -11,7 +11,6 @@ import '../../../../model/netzach_model.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../components/chips_input.dart';
-import '../../../components/expand_rail_tile.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../helper/spacing.dart';
@@ -195,7 +194,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                ExpandRailTile(
+                                ExpansionTile(
                                     title: const Text('过滤器'),
                                     children: [
                                       const SizedBox(
@@ -406,7 +405,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowAddPage> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                ExpandRailTile(
+                                ExpansionTile(
                                     title: const Text('过滤器'),
                                     children: [
                                       const SizedBox(

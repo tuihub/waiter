@@ -16,6 +16,7 @@
   "continueInWebVersion": "继续使用网页版",
   "changeServer": "切换服务器",
   "continueInCurrentServer": "继续使用",
+  "loadFailed": "加载失败{reason}",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",
@@ -52,6 +53,8 @@
   "uploadImageFailed": "上传图像失败",
 
   "gebura": "Gebura",
+  "store": "商店",
+  "library": "库",
   "pleaseSetupApplicationPath": "请设置应用程序路径",
   "pleaseDontReRunApplication": "请不要重复运行应用程序",
   "applicationExitAbnormally": "应用程序异常退出",

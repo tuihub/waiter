@@ -22,7 +22,7 @@ class ClientSettingPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.only(top: 8),
         child: Material(
           color: Colors.transparent,
           child: BlocBuilder<ClientSettingBloc, ClientSettingState>(

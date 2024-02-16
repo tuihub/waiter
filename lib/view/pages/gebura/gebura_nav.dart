@@ -5,8 +5,8 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../../route.dart';
-import '../../components/rail_tile.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 
@@ -17,68 +17,64 @@ class GeburaNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var firstBuild = true;
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      if (state.purchasedAppInfos == null) {
-        context.read<GeburaBloc>().add(GeburaInitEvent());
+      if (firstBuild) {
+        firstBuild = false;
+        if (state.purchasedAppInfos == null) {
+          context.read<GeburaBloc>().add(GeburaInitEvent());
+        }
       }
 
-      return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceTint.withAlpha(24),
-            borderRadius: BorderRadius.circular(12),
+      return Column(
+        children: [
+          ListTile(
+            leading: const Icon(
+              Icons.shopping_cart,
+            ),
+            onTap: () {
+              context
+                  .read<GeburaBloc>()
+                  .add(GeburaSetPurchasedAppInfoIndexEvent(null));
+              AppRoutes.geburaStore.go(context);
+              OverlappingPanels.of(context)?.reveal(RevealSide.main);
+            },
+            title: Text(S.of(context).store),
+            selected: function == GeburaFunctions.store,
           ),
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              RailTile(
-                leading: const Icon(
-                  Icons.shopping_cart,
-                ),
-                onTap: () {
-                  context
-                      .read<GeburaBloc>()
-                      .add(GeburaSetPurchasedAppInfoIndexEvent(null));
-                  AppRoutes.geburaStore.go(context);
-                  OverlappingPanels.of(context)?.reveal(RevealSide.main);
-                },
-                title: const Text('Store'),
-                selected: function == 'store',
-              ),
-              RailTile(
-                leading: const Icon(
-                  Icons.apps,
-                ),
-                onTap: () {
-                  context
-                      .read<GeburaBloc>()
-                      .add(GeburaSetPurchasedAppInfoIndexEvent(null));
-                  AppRoutes.geburaLibrary.push(context);
-                  OverlappingPanels.of(context)?.reveal(RevealSide.main);
-                },
-                title: const Text('Library'),
-                selected: function == 'library' &&
-                    state.selectedPurchasedAppInfoIndex == null,
-              ),
-              SpacingHelper.defaultDivider,
-              Expanded(
-                child: DynMouseScroll(
-                  builder: (context, controller, physics) {
-                    return SingleChildScrollView(
-                      controller: controller,
-                      physics: physics,
-                      child: Column(
-                        children: [
-                          if (state.purchasedAppInfos != null &&
-                              state.purchasedAppInfos!.isNotEmpty)
+          ListTile(
+            leading: const Icon(
+              Icons.apps,
+            ),
+            onTap: () {
+              context
+                  .read<GeburaBloc>()
+                  .add(GeburaSetPurchasedAppInfoIndexEvent(null));
+              AppRoutes.geburaLibrary.push(context);
+              OverlappingPanels.of(context)?.reveal(RevealSide.main);
+            },
+            title: Text(S.of(context).library),
+            selected: function == GeburaFunctions.library &&
+                state.selectedPurchasedAppInfoIndex == null,
+          ),
+          SpacingHelper.defaultDivider,
+          Expanded(
+            child: DynMouseScroll(
+              builder: (context, controller, physics) {
+                return SingleChildScrollView(
+                  controller: controller,
+                  physics: physics,
+                  child: (state.purchasedAppInfos != null &&
+                          state.purchasedAppInfos!.isNotEmpty)
+                      ? Column(
+                          children: [
                             for (var i = 0, app = state.purchasedAppInfos![i];
                                 i < state.purchasedAppInfos!.length;
                                 i++,
                                 app = state.purchasedAppInfos!
                                         .elementAtOrNull(i) ??
                                     AppInfoMixed())
-                              RailTile(
+                              ListTile(
                                 selected:
                                     i == state.selectedPurchasedAppInfoIndex,
                                 onTap: () {
@@ -109,24 +105,26 @@ class GeburaNav extends StatelessWidget {
                                     ? app.id.id.toHexString()
                                     : app.name),
                               )
-                          else if (state is GeburaPurchasedAppsLoadState)
-                            if (state.processing)
-                              const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            else if (state.failed)
-                              Center(
-                                child: Text('加载失败: ${state.msg}'),
-                              ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
+                          ],
+                        )
+                      : (state is GeburaPurchasedAppsLoadState)
+                          ? (state.processing)
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : (state.failed)
+                                  ? Center(
+                                      child: Text(S
+                                          .of(context)
+                                          .loadFailed(state.msg ?? '')),
+                                    )
+                                  : Container()
+                          : Container(),
+                );
+              },
+            ),
+          )
+        ],
       );
     });
   }

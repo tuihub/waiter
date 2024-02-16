@@ -210,6 +210,16 @@ class S {
     );
   }
 
+  /// `加载失败{reason}`
+  String loadFailed(Object reason) {
+    return Intl.message(
+      '加载失败$reason',
+      name: 'loadFailed',
+      desc: '',
+      args: [reason],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(
@@ -525,6 +535,26 @@ class S {
     return Intl.message(
       'Gebura',
       name: 'gebura',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `商店`
+  String get store {
+    return Intl.message(
+      '商店',
+      name: 'store',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `库`
+  String get library {
+    return Intl.message(
+      '库',
+      name: 'library',
       desc: '',
       args: [],
     );

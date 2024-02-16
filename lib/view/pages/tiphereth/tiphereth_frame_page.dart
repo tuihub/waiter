@@ -13,7 +13,7 @@ class TipherethFramePage extends StatelessWidget {
     return Scaffold(
       body: const Column(
         children: [
-          SizedBox(height: 80),
+          SizedBox(height: 72),
           MyProfileCard(),
           MyAccountsCard(),
           Expanded(child: SizedBox()),

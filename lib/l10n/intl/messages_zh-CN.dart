@@ -37,6 +37,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m7(success, failed) =>
       "导入Steam应用程序完成，成功 ${success} 个，失败 ${failed} 个。";
 
+  static String m11(reason) => "加载失败${reason}";
+
   static String m8(server) => "登录到 ${server}";
 
   static String m9(reason) => "登录失败，${reason}";
@@ -123,6 +125,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "importingSteamApplications":
             MessageLookupByLibrary.simpleMessage("正在导入Steam应用程序"),
         "launcherError": MessageLookupByLibrary.simpleMessage("启动器错误"),
+        "library": MessageLookupByLibrary.simpleMessage("库"),
+        "loadFailed": m11,
         "loggingInTo": m8,
         "login": MessageLookupByLibrary.simpleMessage("登录"),
         "loginFailed": m9,
@@ -141,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "scanningLocalFiles": MessageLookupByLibrary.simpleMessage("正在扫描本地文件"),
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),
         "showServerConfig": MessageLookupByLibrary.simpleMessage("查看服务器信息"),
+        "store": MessageLookupByLibrary.simpleMessage("商店"),
         "title": MessageLookupByLibrary.simpleMessage("TuiHub"),
         "tls": MessageLookupByLibrary.simpleMessage("TLS"),
         "unknownErrorOccurred": MessageLookupByLibrary.simpleMessage("发生未知错误"),

@@ -5,7 +5,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
-import '../../../components/expand_rail_tile.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
 
@@ -137,7 +136,7 @@ class _UserEditPageState extends State<UserEditPage> {
               const SizedBox(
                 height: 16,
               ),
-              ExpandRailTile(
+              ExpansionTile(
                 title: const Text('修改密码'),
                 children: [
                   const Text('你必须拥有旧密码才能修改密码'),

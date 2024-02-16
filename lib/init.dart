@@ -19,7 +19,7 @@ Future<MyApp> init() async {
   final api = ApiHelper();
 
   // system tray
-  await initSystemTray();
+  await _initSystemTray();
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -39,7 +39,7 @@ Future<MyApp> init() async {
     Bloc.observer = SimpleBlocObserver();
   }
   final packageInfo = await PackageInfo.fromPlatform();
-  final deviceInfo = await genClientDeviceInfo();
+  final deviceInfo = await _genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
   final deepLinkBloc = DeepLinkBloc(initialUri);
   final mainBloc = MainBloc(api, common, clientSettingBloc, deepLinkBloc,
@@ -51,7 +51,7 @@ Future<MyApp> init() async {
   return MyApp(router, mainBloc);
 }
 
-Future<void> initSystemTray() async {
+Future<void> _initSystemTray() async {
   if (!PlatformHelper.isWindowsApp()) {
     return;
   }
@@ -92,7 +92,7 @@ Future<void> initSystemTray() async {
   });
 }
 
-Future<ClientDeviceInfo> genClientDeviceInfo() async {
+Future<ClientDeviceInfo> _genClientDeviceInfo() async {
   final deviceInfo = DeviceInfoPlugin();
   if (PlatformHelper.isAndroidApp()) {
     final androidInfo = await deviceInfo.androidInfo;
