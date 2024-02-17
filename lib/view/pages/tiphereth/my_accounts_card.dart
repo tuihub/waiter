@@ -1,89 +1,78 @@
-import 'dart:async';
-
-import 'package:extended_image/extended_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-
-import '../../../bloc/tiphereth/tiphereth_bloc.dart';
-import '../../../l10n/l10n.dart';
-import '../../../repo/grpc/l10n.dart';
-import '../../helper/spacing.dart';
-import 'account_dialog.dart';
+part of 'tiphereth_frame_page.dart';
 
 class MyAccountsCard extends StatelessWidget {
   const MyAccountsCard({super.key});
 
   static const int accountPlatformCount = 1;
 
+  void refresh(BuildContext context) {
+    context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
-    String msg = '加载中';
     bool firstBuild = true;
     return BlocConsumer<TipherethBloc, TipherethState>(
-      listener: (context, state) {
-        if (state is TipherethGetAccountsState) {
-          if (state.msg != null) {
-            msg = state.msg!;
-          }
-          if (state.success) {
-            msg = '添加绑定';
-          }
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
-        void refresh() {
-          context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
-        }
-
         if (firstBuild) {
           firstBuild = false;
-          refresh();
+          if (state.accounts == null) {
+            refresh(context);
+          }
         }
+        final supportedAccountPlatforms = context
+                .read<MainBloc>()
+                .state
+                .serverFeatureSummary
+                ?.supportedAccountPlatforms ??
+            [];
+        final accounts = state.accounts ?? [];
+        final accountMap =
+            Map.fromEntries(accounts.map((e) => MapEntry(e.platform, e)));
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        return DefaultTabController(
+          length: supportedAccountPlatforms.length,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  for (final Account account in state.accounts ?? [])
-                    _AccountCard(
-                      account: account,
-                      callback: () {
-                        unawaited(showDialog<void>(
-                          context: context,
-                          builder: (context) => UnLinkAccountDialog(
-                            account: account,
-                          ),
-                        ));
-                      },
-                    ),
-                  if (state.accounts == null)
-                    _AccountCard(
-                      account: null,
-                      callback: refresh,
-                      msg: msg,
-                    )
-                  else if (state.accounts!.length < accountPlatformCount)
-                    _AccountCard(
-                      account: null,
-                      callback: () {
-                        unawaited(showDialog<void>(
-                          context: context,
-                          builder: (context) => BlocProvider.value(
-                            value: context.read<TipherethBloc>(),
-                            child: const LinkAccountDialog(),
-                          ),
-                        ));
-                      },
-                      msg: msg ?? '',
-                    ),
+                  ButtonsTabBar(
+                    contentPadding: const EdgeInsets.all(8),
+                    tabs: [
+                      for (final platform in supportedAccountPlatforms)
+                        Tab(
+                          icon: _wellKnownAccountPlatformIcon(platform),
+                          text: accountPlatformString(platform),
+                        ),
+                    ],
+                  ),
+                  Expanded(child: Container()),
+                  IconButton(
+                    onPressed: () {
+                      refresh(context);
+                    },
+                    icon: const Icon(Icons.refresh),
+                  ),
                 ],
               ),
-            ),
+              SizedBox(
+                height: 256,
+                child: TabBarView(
+                  children: [
+                    for (final platform in supportedAccountPlatforms)
+                      _AccountCard(
+                        platform: platform,
+                        serverSupported:
+                            supportedAccountPlatforms.contains(platform),
+                        account: accountMap[platform],
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -92,97 +81,244 @@ class MyAccountsCard extends StatelessWidget {
 }
 
 class _AccountCard extends StatelessWidget {
-  const _AccountCard(
-      {required this.account, required this.callback, this.msg = ''});
+  const _AccountCard({
+    required this.account,
+    required this.platform,
+    required this.serverSupported,
+  });
 
+  final String platform;
+  final bool serverSupported;
   final Account? account;
-  final String msg;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget content;
+    if (account != null) {
+      content = Center(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                ),
+                child: ClipRRect(
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  child: const BackdropBlur(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: SpacingHelper.defaultBorderRadius,
+                      image: DecorationImage(
+                          image: ExtendedNetworkImageProvider(
+                            account!.avatarUrl,
+                          ),
+                          fit: BoxFit.cover),
+                    ),
+                    width: 96,
+                    height: 96,
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        account!.id.id.toHexString(),
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 10,
+                            color: Theme.of(context).disabledColor),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        account!.name,
+                        style: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          unawaited(showDialog<void>(
+                            context: context,
+                            builder: (context) => UnLinkAccountDialog(
+                              account: account!,
+                            ),
+                          ));
+                        },
+                        child: Text('详情'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (serverSupported) {
+      content = Center(
+        child: LinkAccountForm(
+          platform: platform,
+          callback: () {
+            context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
+          },
+        ),
+      );
+    } else {
+      content = Center(
+        child: Card(
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            child: Text('服务器不支持此平台'),
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          image: _wellKnownAccountPlatformBackground(platform),
+        ),
+        child: content,
+      ),
+    );
+  }
+}
+
+class LinkAccountForm extends StatelessWidget {
+  const LinkAccountForm(
+      {super.key, required this.platform, required this.callback});
+
+  final String platform;
   final void Function() callback;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 384,
-      height: 128,
-      child: Material(
-        borderRadius: SpacingHelper.defaultBorderRadius,
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: SpacingHelper.defaultBorderRadius,
-          ),
-          child: InkWell(
-            borderRadius: SpacingHelper.defaultBorderRadius,
-            onTap: callback,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: account == null
-                  ? Center(
-                      child: TextButton(
-                        onPressed: callback,
-                        child: Text(msg),
+    final formKey = GlobalKey<FormState>();
+    late String platformAccountID;
+
+    return BlocConsumer<TipherethBloc, TipherethState>(
+        listener: (context, state) {
+      if (state is TipherethLinkAccountState && state.success) {
+        callback();
+      }
+    }, builder: (context, state) {
+      return BootstrapContainer(
+        children: [
+          BootstrapColumn(
+            xxs: 12,
+            sm: 10,
+            md: 8,
+            lg: 6,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        onSaved: (newValue) => platformAccountID = newValue!,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入ID';
+                          }
+                          return null;
+                        },
                       ),
-                    )
-                  : Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: SpacingHelper.defaultBorderRadius,
-                            image: DecorationImage(
-                                image: ExtendedNetworkImageProvider(
-                                  account!.avatarUrl,
-                                ),
-                                fit: BoxFit.cover),
-                          ),
-                          width: 100,
-                          height: 100,
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                account!.id.id.toHexString(),
-                                style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 10,
-                                    color: Theme.of(context).disabledColor),
-                                maxLines: 2,
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                account!.name,
-                                style: const TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                '${S.current.ACCOUNT_PLATFORM}: ${accountPlatformString(account!.platform)}',
-                                style: const TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 10,
-                                ),
-                                maxLines: 3,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height:
+                            state is TipherethLinkAccountState && state.failed
+                                ? 48
+                                : 0,
+                        child:
+                            state is TipherethLinkAccountState && state.failed
+                                ? Card(
+                                    child: Center(
+                                      child: Text(
+                                        state.msg ?? '未知错误',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      context.read<TipherethBloc>().add(
+                          TipherethLinkAccountEvent(
+                              platform, platformAccountID));
+                    }
+                  },
+                  child: state is TipherethLinkAccountState && state.processing
+                      ? const CircularProgressIndicator()
+                      : const Text('绑定账户'),
+                ),
+              ],
             ),
           ),
-        ),
-      ),
+        ],
+      );
+    });
+  }
+}
+
+DecorationImage? _wellKnownAccountPlatformBackground(String platform) {
+  String? url;
+  switch (platform) {
+    case 'steam':
+      url =
+          'https://pbs.twimg.com/profile_banners/36803580/1694625433/1500x500';
+  }
+  if (url != null) {
+    return DecorationImage(
+      image: ExtendedNetworkImageProvider(url),
+      fit: BoxFit.cover,
     );
   }
+  return null;
+}
+
+Widget? _wellKnownAccountPlatformIcon(String platform) {
+  switch (platform) {
+    case 'steam':
+      return const Icon(FontAwesomeIcons.steam);
+  }
+  return null;
 }

@@ -54,12 +54,17 @@ class FramePageState extends State<FramePage> {
             ? Row(
                 children: [
                   _Nav(selectedNav: widget.selectedNav),
-                  Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
-                    width: widget.leftPartWidth != null
-                        ? widget.leftPartWidth! - 64
-                        : 256,
-                    child: widget.leftPart,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Material(
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: widget.leftPartWidth != null
+                            ? widget.leftPartWidth! - 64
+                            : 256,
+                        child: widget.leftPart,
+                      ),
+                    ),
                   ),
                   Expanded(child: widget.middlePart!),
                 ],
@@ -79,11 +84,12 @@ class FramePageState extends State<FramePage> {
                   left: Row(
                     children: [
                       _Nav(selectedNav: widget.selectedNav),
-                      Container(
-                        padding:
-                            const EdgeInsets.only(top: 8, bottom: 8, right: 8),
-                        width: width - 64 - restWidth,
-                        child: widget.leftPart,
+                      Material(
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          width: width - 64 - restWidth,
+                          child: widget.leftPart,
+                        ),
                       ),
                     ],
                   ),

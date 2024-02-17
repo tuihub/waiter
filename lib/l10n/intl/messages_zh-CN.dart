@@ -87,9 +87,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "PORTER_CONNECTION_STATUS_ACTIVE":
             MessageLookupByLibrary.simpleMessage("工作中"),
         "PORTER_CONNECTION_STATUS_CONNECTED":
-            MessageLookupByLibrary.simpleMessage("已连接"),
+            MessageLookupByLibrary.simpleMessage("已连接未启用"),
         "PORTER_CONNECTION_STATUS_DISCONNECTED":
-            MessageLookupByLibrary.simpleMessage("已断开"),
+            MessageLookupByLibrary.simpleMessage("连接断开"),
         "PORTER_CONNECTION_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
         "USER_STATUS": MessageLookupByLibrary.simpleMessage("状态"),

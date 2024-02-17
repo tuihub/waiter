@@ -1200,20 +1200,20 @@ class S {
     );
   }
 
-  /// `已连接`
+  /// `已连接未启用`
   String get PORTER_CONNECTION_STATUS_CONNECTED {
     return Intl.message(
-      '已连接',
+      '已连接未启用',
       name: 'PORTER_CONNECTION_STATUS_CONNECTED',
       desc: '',
       args: [],
     );
   }
 
-  /// `已断开`
+  /// `连接断开`
   String get PORTER_CONNECTION_STATUS_DISCONNECTED {
     return Intl.message(
-      '已断开',
+      '连接断开',
       name: 'PORTER_CONNECTION_STATUS_DISCONNECTED',
       desc: '',
       args: [],
