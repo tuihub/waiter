@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
 import '../../../components/toast.dart';
 
@@ -18,7 +19,7 @@ class SessionEditPage extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is TipherethEditSessionState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          Toast(title: '', message: S.of(context).applySuccess).show(context);
           close(context);
         }
       },
@@ -36,7 +37,7 @@ class SessionEditPage extends StatelessWidget {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            title: const Text('设备详情'),
+            title: Text(S.of(context).deviceDetail),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -54,9 +55,8 @@ class SessionEditPage extends StatelessWidget {
                         TextFormField(
                           initialValue: session.id.id.toString(),
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'ID',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).id,
                           ),
                         ),
                         const SizedBox(
@@ -65,9 +65,8 @@ class SessionEditPage extends StatelessWidget {
                         TextFormField(
                           initialValue: '${session.deviceInfo.deviceName} ',
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: '设备名',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).deviceName,
                           ),
                         ),
                         const SizedBox(
@@ -76,9 +75,8 @@ class SessionEditPage extends StatelessWidget {
                         TextFormField(
                           initialValue: '${session.deviceInfo.systemVersion} ',
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            label: Text('操作系统'),
+                          decoration: InputDecoration(
+                            label: Text(S.of(context).operatingSystem),
                           ),
                         ),
                         const SizedBox(
@@ -88,9 +86,8 @@ class SessionEditPage extends StatelessWidget {
                           initialValue:
                               '${session.deviceInfo.clientName} ${session.deviceInfo.clientVersion}',
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: '客户端',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).client,
                           ),
                         ),
                         const SizedBox(
@@ -101,9 +98,8 @@ class SessionEditPage extends StatelessWidget {
                               .toDateTime(toLocal: true)
                               .toIso8601String(),
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            label: Text('最后登录'),
+                          decoration: InputDecoration(
+                            label: Text(S.of(context).lastLogin),
                           ),
                         ),
                         const SizedBox(
@@ -127,7 +123,8 @@ class SessionEditPage extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      state.msg ?? '未知错误',
+                                      state.msg ??
+                                          S.of(context).unknownErrorOccurred,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -162,14 +159,14 @@ class SessionEditPage extends StatelessWidget {
                   ),
                   child: state is TipherethEditSessionState && state.processing
                       ? const CircularProgressIndicator()
-                      : const Text(
-                          '注销该设备',
-                          style: TextStyle(color: Colors.white),
+                      : Text(
+                          S.of(context).logoutDevice,
+                          style: const TextStyle(color: Colors.white),
                         ),
                 ),
                 ElevatedButton(
                   onPressed: () => close(context),
-                  child: const Text('取消'),
+                  child: Text(S.of(context).buttonCancel),
                 ),
               ],
             ),

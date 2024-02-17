@@ -27,23 +27,72 @@ const appDefaultAccentColor = Color.fromARGB(255, 255, 145, 0);
 // const AppBackgroudColor = Color.fromARGB(255, 32, 34, 37);
 
 class AppTheme {
-  const AppTheme(this.name, this.scheme, this.index);
+  const AppTheme(this.name, this.scheme);
 
   final String name;
   final FlexScheme scheme;
-  final int index;
 }
 
 const themeData = [
   AppTheme(
-    'M3',
+    'default',
     FlexScheme.materialBaseline,
-    0,
   ),
   AppTheme(
-    '樱花',
-    FlexScheme.sakura,
-    1,
+    'verdun hemlock',
+    FlexScheme.verdunHemlock,
+  ),
+  AppTheme(
+    'dell genoa',
+    FlexScheme.dellGenoa,
+  ),
+  AppTheme(
+    'red',
+    FlexScheme.redM3,
+  ),
+  AppTheme(
+    'pink',
+    FlexScheme.pinkM3,
+  ),
+  AppTheme(
+    'purple',
+    FlexScheme.purpleM3,
+  ),
+  AppTheme(
+    'indigo',
+    FlexScheme.indigoM3,
+  ),
+  AppTheme(
+    'blue',
+    FlexScheme.blueM3,
+  ),
+  AppTheme(
+    'cyan',
+    FlexScheme.cyanM3,
+  ),
+  AppTheme(
+    'teal',
+    FlexScheme.tealM3,
+  ),
+  AppTheme(
+    'green',
+    FlexScheme.greenM3,
+  ),
+  AppTheme(
+    'lime',
+    FlexScheme.limeM3,
+  ),
+  AppTheme(
+    'yellow',
+    FlexScheme.yellowM3,
+  ),
+  AppTheme(
+    'orange',
+    FlexScheme.orangeM3,
+  ),
+  AppTheme(
+    'deep orange',
+    FlexScheme.deepOrangeM3,
   ),
 ];
 

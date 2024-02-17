@@ -104,6 +104,17 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
           listener: (context, state) {
             if (state is MainAutoLoginState && state.success) {
               _current = context.read<MainBloc>().state.currentServer;
+              AppRoutes.tiphereth.go(context);
+              minimize();
+            }
+            if (state is MainAutoLoginState && state.failed) {
+              Toast(
+                title: '',
+                message: S.of(context).loginFailed(state.msg ?? ''),
+              ).show(context);
+              context.read<MainBloc>().add(
+                    MainSetNextServerConfigEvent(_selected!),
+                  );
             }
             if (state is MainManualLoginState && state.success) {
               AppRoutes.tiphereth.go(context);
@@ -247,15 +258,19 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                   ),
                   floatingActionButton: _selected != null && !_minimized
                       ? FloatingActionButton.extended(
-                          onPressed: () {
-                            if (_selected!.id == state.currentServer?.id) {
-                              ServerSelectOverlay.of(context)?.minimize();
-                            } else {
-                              context.read<MainBloc>().add(
-                                    MainSetNextServerConfigEvent(_selected!),
-                                  );
-                            }
-                          },
+                          onPressed: (state is MainAutoLoginState &&
+                                  state.processing)
+                              ? null
+                              : () {
+                                  if (_selected!.id ==
+                                      state.currentServer?.id) {
+                                    ServerSelectOverlay.of(context)?.minimize();
+                                  } else {
+                                    context.read<MainBloc>().add(
+                                          MainAutoLoginEvent(config: _selected),
+                                        );
+                                  }
+                                },
                           icon: const Icon(Icons.login),
                           label: Text(_selected!.id == state.currentServer?.id
                               ? S.of(context).continueInCurrentServer

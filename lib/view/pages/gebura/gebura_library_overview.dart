@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../../route.dart';
+import '../../helper/url.dart';
 
 class GeburaLibraryOverview extends StatelessWidget {
   const GeburaLibraryOverview({super.key});
@@ -101,6 +103,12 @@ class _GeburaLibraryOverviewItemState
 
   @override
   Widget build(BuildContext context) {
+    if (!UrlHelper.isValidUrl(widget.item.coverImageUrl)) {
+      noCoverImage = true;
+    }
+    final name = widget.item.name.isNotEmpty
+        ? widget.item.name
+        : S.of(context).unknownApp;
     return _HoverScaleEffect(
       child: GestureDetector(
         onTap: () {
@@ -118,24 +126,27 @@ class _GeburaLibraryOverviewItemState
                   width: 1,
                 ),
               ),
-              child: Center(child: Text(noCoverImage ? widget.item.name : '')),
+              child: Center(child: Text(noCoverImage ? name : '')),
             ),
             Center(
               child: Hero(
                 tag: widget.item.id.id.toString(),
-                child: ExtendedImage.network(
-                  widget.item.coverImageUrl,
-                  loadStateChanged: (ExtendedImageState state) {
-                    if (state.extendedImageLoadState == LoadState.failed) {
-                      WidgetsBinding.instance
-                          .addPostFrameCallback((_) => setState(() {
-                                noCoverImage = true;
-                              }));
-                      return const SizedBox();
-                    }
-                    return null;
-                  },
-                ),
+                child: noCoverImage
+                    ? Container()
+                    : ExtendedImage.network(
+                        widget.item.coverImageUrl,
+                        loadStateChanged: (ExtendedImageState state) {
+                          if (state.extendedImageLoadState ==
+                              LoadState.failed) {
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((_) => setState(() {
+                                      noCoverImage = true;
+                                    }));
+                            return const SizedBox();
+                          }
+                          return null;
+                        },
+                      ),
               ),
             ),
           ],

@@ -8,6 +8,7 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/platform.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
+import '../../helper/url.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
@@ -99,17 +100,20 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               padding: const EdgeInsets.all(8),
                               child: Hero(
                                 tag: app.id.id.toString(),
-                                child: ExtendedImage.network(
-                                  app.coverImageUrl,
-                                  height: 200,
-                                  loadStateChanged: (ExtendedImageState state) {
-                                    if (state.extendedImageLoadState ==
-                                        LoadState.failed) {
-                                      return const SizedBox();
-                                    }
-                                    return null;
-                                  },
-                                ),
+                                child: UrlHelper.isValidUrl(app.coverImageUrl)
+                                    ? ExtendedImage.network(
+                                        app.coverImageUrl,
+                                        height: 200,
+                                        loadStateChanged:
+                                            (ExtendedImageState state) {
+                                          if (state.extendedImageLoadState ==
+                                              LoadState.failed) {
+                                            return const SizedBox();
+                                          }
+                                          return null;
+                                        },
+                                      )
+                                    : Container(),
                               ),
                             ),
                           )

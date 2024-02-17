@@ -279,7 +279,7 @@ ClientCommonData _$ClientCommonDataFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ClientCommonData {
   String? get lastServerId => throw _privateConstructorUsedError;
-  int? get theme => throw _privateConstructorUsedError;
+  String? get themeName => throw _privateConstructorUsedError;
   int? get themeMode => throw _privateConstructorUsedError;
   Map<String, ServerConfig>? get servers => throw _privateConstructorUsedError;
 
@@ -297,7 +297,7 @@ abstract class $ClientCommonDataCopyWith<$Res> {
   @useResult
   $Res call(
       {String? lastServerId,
-      int? theme,
+      String? themeName,
       int? themeMode,
       Map<String, ServerConfig>? servers});
 }
@@ -316,7 +316,7 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
   @override
   $Res call({
     Object? lastServerId = freezed,
-    Object? theme = freezed,
+    Object? themeName = freezed,
     Object? themeMode = freezed,
     Object? servers = freezed,
   }) {
@@ -325,10 +325,10 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
           ? _value.lastServerId
           : lastServerId // ignore: cast_nullable_to_non_nullable
               as String?,
-      theme: freezed == theme
-          ? _value.theme
-          : theme // ignore: cast_nullable_to_non_nullable
-              as int?,
+      themeName: freezed == themeName
+          ? _value.themeName
+          : themeName // ignore: cast_nullable_to_non_nullable
+              as String?,
       themeMode: freezed == themeMode
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
@@ -351,7 +351,7 @@ abstract class _$$ClientCommonDataImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? lastServerId,
-      int? theme,
+      String? themeName,
       int? themeMode,
       Map<String, ServerConfig>? servers});
 }
@@ -368,7 +368,7 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? lastServerId = freezed,
-    Object? theme = freezed,
+    Object? themeName = freezed,
     Object? themeMode = freezed,
     Object? servers = freezed,
   }) {
@@ -377,10 +377,10 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
           ? _value.lastServerId
           : lastServerId // ignore: cast_nullable_to_non_nullable
               as String?,
-      theme: freezed == theme
-          ? _value.theme
-          : theme // ignore: cast_nullable_to_non_nullable
-              as int?,
+      themeName: freezed == themeName
+          ? _value.themeName
+          : themeName // ignore: cast_nullable_to_non_nullable
+              as String?,
       themeMode: freezed == themeMode
           ? _value.themeMode
           : themeMode // ignore: cast_nullable_to_non_nullable
@@ -398,7 +398,7 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
 class _$ClientCommonDataImpl implements _ClientCommonData {
   const _$ClientCommonDataImpl(
       {this.lastServerId,
-      this.theme,
+      this.themeName,
       this.themeMode,
       final Map<String, ServerConfig>? servers})
       : _servers = servers;
@@ -409,7 +409,7 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
   @override
   final String? lastServerId;
   @override
-  final int? theme;
+  final String? themeName;
   @override
   final int? themeMode;
   final Map<String, ServerConfig>? _servers;
@@ -424,7 +424,7 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
 
   @override
   String toString() {
-    return 'ClientCommonData(lastServerId: $lastServerId, theme: $theme, themeMode: $themeMode, servers: $servers)';
+    return 'ClientCommonData(lastServerId: $lastServerId, themeName: $themeName, themeMode: $themeMode, servers: $servers)';
   }
 
   @override
@@ -434,7 +434,8 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
             other is _$ClientCommonDataImpl &&
             (identical(other.lastServerId, lastServerId) ||
                 other.lastServerId == lastServerId) &&
-            (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.themeName, themeName) ||
+                other.themeName == themeName) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
             const DeepCollectionEquality().equals(other._servers, _servers));
@@ -442,8 +443,8 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, lastServerId, theme, themeMode,
-      const DeepCollectionEquality().hash(_servers));
+  int get hashCode => Object.hash(runtimeType, lastServerId, themeName,
+      themeMode, const DeepCollectionEquality().hash(_servers));
 
   @JsonKey(ignore: true)
   @override
@@ -463,7 +464,7 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
 abstract class _ClientCommonData implements ClientCommonData {
   const factory _ClientCommonData(
       {final String? lastServerId,
-      final int? theme,
+      final String? themeName,
       final int? themeMode,
       final Map<String, ServerConfig>? servers}) = _$ClientCommonDataImpl;
 
@@ -473,7 +474,7 @@ abstract class _ClientCommonData implements ClientCommonData {
   @override
   String? get lastServerId;
   @override
-  int? get theme;
+  String? get themeName;
   @override
   int? get themeMode;
   @override

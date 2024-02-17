@@ -15,8 +15,8 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
     final common = _repo.get();
 
     on<InitClientSettingEvent>((event, emit) async {
-      if (common.theme != null) {
-        final theme = themeData[common.theme!];
+      if (common.themeName != null) {
+        final theme = themeData.firstWhere((e) => e.name == common.themeName);
         debugPrint(theme.name);
         emit(state.copyWith(theme: theme));
       }
@@ -28,7 +28,7 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
 
     on<ChangeThemeEvent>((event, emit) async {
       emit(state.copyWith(theme: event.theme));
-      await _repo.set(common.copyWith(themeMode: event.theme.index));
+      await _repo.set(common.copyWith(themeName: event.theme.name));
     });
 
     on<ChangeBrightnessEvent>((event, emit) async {

@@ -27,7 +27,7 @@ class ServerConfig with _$ServerConfig {
 class ClientCommonData with _$ClientCommonData {
   const factory ClientCommonData({
     String? lastServerId,
-    int? theme,
+    String? themeName,
     int? themeMode,
     Map<String, ServerConfig>? servers,
   }) = _ClientCommonData;

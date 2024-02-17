@@ -220,6 +220,26 @@ class S {
     );
   }
 
+  /// `更改已应用`
+  String get applySuccess {
+    return Intl.message(
+      '更改已应用',
+      name: 'applySuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ID`
+  String get id {
+    return Intl.message(
+      'ID',
+      name: 'id',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(
@@ -560,6 +580,16 @@ class S {
     );
   }
 
+  /// `未知应用`
+  String get unknownApp {
+    return Intl.message(
+      '未知应用',
+      name: 'unknownApp',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `请设置应用程序路径`
   String get pleaseSetupApplicationPath {
     return Intl.message(
@@ -637,6 +667,176 @@ class S {
       name: 'importSteamApplicationFinished',
       desc: '',
       args: [success, failed],
+    );
+  }
+
+  /// `设置`
+  String get settings {
+    return Intl.message(
+      '设置',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前设备`
+  String get currentDevice {
+    return Intl.message(
+      '当前设备',
+      name: 'currentDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知设备`
+  String get unknownDevice {
+    return Intl.message(
+      '未知设备',
+      name: 'unknownDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知客户端`
+  String get unknownClient {
+    return Intl.message(
+      '未知客户端',
+      name: 'unknownClient',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `登录已过期`
+  String get loginExpired {
+    return Intl.message(
+      '登录已过期',
+      name: 'loginExpired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备详情`
+  String get deviceDetail {
+    return Intl.message(
+      '设备详情',
+      name: 'deviceDetail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `设备名称`
+  String get deviceName {
+    return Intl.message(
+      '设备名称',
+      name: 'deviceName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `操作系统`
+  String get operatingSystem {
+    return Intl.message(
+      '操作系统',
+      name: 'operatingSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `客户端`
+  String get client {
+    return Intl.message(
+      '客户端',
+      name: 'client',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `上次登录`
+  String get lastLogin {
+    return Intl.message(
+      '上次登录',
+      name: 'lastLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注销设备`
+  String get logoutDevice {
+    return Intl.message(
+      '注销设备',
+      name: 'logoutDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `客户端设置`
+  String get clientSetting {
+    return Intl.message(
+      '客户端设置',
+      name: 'clientSetting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `主题`
+  String get theme {
+    return Intl.message(
+      '主题',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前主题`
+  String get currentTheme {
+    return Intl.message(
+      '当前主题',
+      name: 'currentTheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓存`
+  String get cache {
+    return Intl.message(
+      '缓存',
+      name: 'cache',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `刷新`
+  String get refresh {
+    return Intl.message(
+      '刷新',
+      name: 'refresh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `清空`
+  String get clearCache {
+    return Intl.message(
+      '清空',
+      name: 'clearCache',
+      desc: '',
+      args: [],
     );
   }
 
@@ -985,6 +1185,56 @@ class S {
     return Intl.message(
       '停止',
       name: 'NOTIFY_FLOW_STATUS_SUSPEND',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get PORTER_CONNECTION_STATUS_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'PORTER_CONNECTION_STATUS_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已连接`
+  String get PORTER_CONNECTION_STATUS_CONNECTED {
+    return Intl.message(
+      '已连接',
+      name: 'PORTER_CONNECTION_STATUS_CONNECTED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已断开`
+  String get PORTER_CONNECTION_STATUS_DISCONNECTED {
+    return Intl.message(
+      '已断开',
+      name: 'PORTER_CONNECTION_STATUS_DISCONNECTED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `工作中`
+  String get PORTER_CONNECTION_STATUS_ACTIVE {
+    return Intl.message(
+      '工作中',
+      name: 'PORTER_CONNECTION_STATUS_ACTIVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `启用失败`
+  String get PORTER_CONNECTION_STATUS_ACTIVATION_FAILED {
+    return Intl.message(
+      '启用失败',
+      name: 'PORTER_CONNECTION_STATUS_ACTIVATION_FAILED',
       desc: '',
       args: [],
     );

@@ -106,3 +106,19 @@ String notifyFlowStatusString(NotifyFlowStatus status) {
   }
   return '';
 }
+
+String porterConnectionStatusString(PorterConnectionStatus status) {
+  switch (status) {
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_UNSPECIFIED:
+      return S.current.PORTER_CONNECTION_STATUS_UNSPECIFIED;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_CONNECTED:
+      return S.current.PORTER_CONNECTION_STATUS_CONNECTED;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_DISCONNECTED:
+      return S.current.PORTER_CONNECTION_STATUS_DISCONNECTED;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVE:
+      return S.current.PORTER_CONNECTION_STATUS_ACTIVE;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED:
+      return S.current.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED;
+  }
+  return '';
+}

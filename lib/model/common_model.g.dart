@@ -32,7 +32,7 @@ _$ClientCommonDataImpl _$$ClientCommonDataImplFromJson(
         Map<String, dynamic> json) =>
     _$ClientCommonDataImpl(
       lastServerId: json['lastServerId'] as String?,
-      theme: json['theme'] as int?,
+      themeName: json['themeName'] as String?,
       themeMode: json['themeMode'] as int?,
       servers: (json['servers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, ServerConfig.fromJson(e as Map<String, dynamic>)),
@@ -43,7 +43,7 @@ Map<String, dynamic> _$$ClientCommonDataImplToJson(
         _$ClientCommonDataImpl instance) =>
     <String, dynamic>{
       'lastServerId': instance.lastServerId,
-      'theme': instance.theme,
+      'themeName': instance.themeName,
       'themeMode': instance.themeMode,
       'servers': instance.servers,
     };

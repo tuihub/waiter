@@ -100,10 +100,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<MainAutoLoginEvent>((event, emit) async {
       emit(MainAutoLoginState(state, EventStatus.processing));
       debugPrint(repo.servers.toString());
-      if (repo.lastServerId != null &&
-          repo.servers != null &&
-          repo.servers![repo.lastServerId] != null) {
-        var config = repo.servers![repo.lastServerId]!;
+      ServerConfig? config = event.config;
+      if (config == null) {
+        if (repo.lastServerId != null &&
+            repo.servers != null &&
+            repo.servers![repo.lastServerId] != null) {
+          config = repo.servers![repo.lastServerId];
+        }
+      }
+      if (config != null) {
         emit(MainAutoLoginState(
             state.copyWith(nextServer: config), EventStatus.processing));
         if (config.refreshToken != null) {
