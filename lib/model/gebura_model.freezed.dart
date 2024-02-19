@@ -12,7 +12,7 @@ part of 'gebura_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AppLauncherSetting _$AppLauncherSettingFromJson(Map<String, dynamic> json) {
   return _AppLauncherSetting.fromJson(json);
@@ -588,5 +588,143 @@ abstract class _ImportedSteamApp implements ImportedSteamApp {
   @override
   @JsonKey(ignore: true)
   _$$ImportedSteamAppImplCopyWith<_$ImportedSteamAppImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+LibrarySettings _$LibrarySettingsFromJson(Map<String, dynamic> json) {
+  return _LibrarySettings.fromJson(json);
+}
+
+/// @nodoc
+mixin _$LibrarySettings {
+  String? get query => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $LibrarySettingsCopyWith<LibrarySettings> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LibrarySettingsCopyWith<$Res> {
+  factory $LibrarySettingsCopyWith(
+          LibrarySettings value, $Res Function(LibrarySettings) then) =
+      _$LibrarySettingsCopyWithImpl<$Res, LibrarySettings>;
+  @useResult
+  $Res call({String? query});
+}
+
+/// @nodoc
+class _$LibrarySettingsCopyWithImpl<$Res, $Val extends LibrarySettings>
+    implements $LibrarySettingsCopyWith<$Res> {
+  _$LibrarySettingsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = freezed,
+  }) {
+    return _then(_value.copyWith(
+      query: freezed == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$LibrarySettingsImplCopyWith<$Res>
+    implements $LibrarySettingsCopyWith<$Res> {
+  factory _$$LibrarySettingsImplCopyWith(_$LibrarySettingsImpl value,
+          $Res Function(_$LibrarySettingsImpl) then) =
+      __$$LibrarySettingsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? query});
+}
+
+/// @nodoc
+class __$$LibrarySettingsImplCopyWithImpl<$Res>
+    extends _$LibrarySettingsCopyWithImpl<$Res, _$LibrarySettingsImpl>
+    implements _$$LibrarySettingsImplCopyWith<$Res> {
+  __$$LibrarySettingsImplCopyWithImpl(
+      _$LibrarySettingsImpl _value, $Res Function(_$LibrarySettingsImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = freezed,
+  }) {
+    return _then(_$LibrarySettingsImpl(
+      query: freezed == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$LibrarySettingsImpl implements _LibrarySettings {
+  const _$LibrarySettingsImpl({required this.query});
+
+  factory _$LibrarySettingsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LibrarySettingsImplFromJson(json);
+
+  @override
+  final String? query;
+
+  @override
+  String toString() {
+    return 'LibrarySettings(query: $query)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LibrarySettingsImpl &&
+            (identical(other.query, query) || other.query == query));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, query);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LibrarySettingsImplCopyWith<_$LibrarySettingsImpl> get copyWith =>
+      __$$LibrarySettingsImplCopyWithImpl<_$LibrarySettingsImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$LibrarySettingsImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _LibrarySettings implements LibrarySettings {
+  const factory _LibrarySettings({required final String? query}) =
+      _$LibrarySettingsImpl;
+
+  factory _LibrarySettings.fromJson(Map<String, dynamic> json) =
+      _$LibrarySettingsImpl.fromJson;
+
+  @override
+  String? get query;
+  @override
+  @JsonKey(ignore: true)
+  _$$LibrarySettingsImplCopyWith<_$LibrarySettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

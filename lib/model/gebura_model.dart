@@ -40,3 +40,13 @@ class ImportedSteamApp with _$ImportedSteamApp {
   factory ImportedSteamApp.fromJson(Map<String, Object?> json) =>
       _$ImportedSteamAppFromJson(json);
 }
+
+@freezed
+class LibrarySettings with _$LibrarySettings {
+  const factory LibrarySettings({
+    required String? query,
+  }) = _LibrarySettings;
+
+  factory LibrarySettings.fromJson(Map<String, Object?> json) =>
+      _$LibrarySettingsFromJson(json);
+}

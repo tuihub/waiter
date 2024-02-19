@@ -9,6 +9,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../consts.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../helper/duration_format.dart';

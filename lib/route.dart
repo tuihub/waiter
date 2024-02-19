@@ -406,15 +406,12 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
               GoRoute(
                 path: AppRoutes.gebura.toString(),
                 redirect: (context, state) {
-                  if (context
-                          .read<GeburaBloc>()
-                          .state
-                          .selectedPurchasedAppInfoIndex !=
+                  if (context.read<GeburaBloc>().state.selectedLibraryItem !=
                       null) {
                     return AppRoutes.geburaLibraryDetail(context
                             .read<GeburaBloc>()
                             .state
-                            .selectedPurchasedAppInfoIndex!)
+                            .selectedLibraryItem!)
                         .toString();
                   } else {
                     return AppRoutes.geburaLibrary.toString();
@@ -436,7 +433,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   if (state.uri.queryParameters['id']?.isNotEmpty ?? false) {
                     final idStr = state.uri.queryParameters['id'] ?? '';
                     final id = int.tryParse(idStr) ?? 0;
-                    page = GeburaLibraryDetailPage(index: id);
+                    page = GeburaLibraryDetailPage(id: id);
                   }
                   return CustomTransitionPage(
                     key: state.pageKey,

@@ -27,12 +27,16 @@ class MyAccountsCard extends StatelessWidget {
                 .serverFeatureSummary
                 ?.supportedAccountPlatforms ??
             [];
+        final unsupportedWellKnownAccountPlatforms = wellKnownAccountPlatforms
+            .where((element) => !supportedAccountPlatforms.contains(element));
+        final accountPlatforms = supportedAccountPlatforms
+            .followedBy(unsupportedWellKnownAccountPlatforms);
         final accounts = state.accounts ?? [];
         final accountMap =
             Map.fromEntries(accounts.map((e) => MapEntry(e.platform, e)));
 
         return DefaultTabController(
-          length: supportedAccountPlatforms.length,
+          length: accountPlatforms.length,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +46,7 @@ class MyAccountsCard extends StatelessWidget {
                   ButtonsTabBar(
                     contentPadding: const EdgeInsets.all(8),
                     tabs: [
-                      for (final platform in supportedAccountPlatforms)
+                      for (final platform in accountPlatforms)
                         Tab(
                           icon: _wellKnownAccountPlatformIcon(platform),
                           text: accountPlatformString(platform),
@@ -62,7 +66,7 @@ class MyAccountsCard extends StatelessWidget {
                 height: 256,
                 child: TabBarView(
                   children: [
-                    for (final platform in supportedAccountPlatforms)
+                    for (final platform in accountPlatforms)
                       _AccountCard(
                         platform: platform,
                         serverSupported:

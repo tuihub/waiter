@@ -109,3 +109,5 @@ class DotEnvValue {
   static String port = dotenv.env['PORT'] ?? '';
   static String tls = dotenv.env['TLS'] ?? '';
 }
+
+const wellKnownAccountPlatforms = ['steam'];

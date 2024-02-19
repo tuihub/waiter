@@ -26,8 +26,7 @@ class GeburaStoreDetail extends StatelessWidget {
         msg = state.msg ?? msg;
       }
     }, builder: (context, state) {
-      final apps =
-          state.storeAppInfos != null ? state.storeAppInfos![appID] : null;
+      final apps = state.appInfoMap != null ? state.appInfoMap![appID] : null;
       final app = apps != null ? mixAppInfo(apps) : null;
       if (firstBuild && apps == null) {
         firstBuild = false;

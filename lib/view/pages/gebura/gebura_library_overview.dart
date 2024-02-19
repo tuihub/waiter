@@ -114,8 +114,9 @@ class _GeburaLibraryOverviewItemState
         onTap: () {
           context
               .read<GeburaBloc>()
-              .add(GeburaSetPurchasedAppInfoIndexEvent(widget.index));
-          AppRoutes.geburaLibraryDetail(widget.index).push(context);
+              .add(GeburaSetSelectedLibraryItemEvent(widget.item.id));
+          AppRoutes.geburaLibraryDetail(widget.item.id.id.toInt())
+              .push(context);
         },
         child: Stack(
           children: [

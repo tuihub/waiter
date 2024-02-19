@@ -19,7 +19,7 @@ class GeburaStorePage extends StatelessWidget {
     List<AppInfoMixed>? apps;
     String msg = '';
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      if (state is GeburaSearchAppsState) {
+      if (state is GeburaSearchAppInfosState) {
         apps = state.apps;
         if (state.processing) {
           msg = '加载中';

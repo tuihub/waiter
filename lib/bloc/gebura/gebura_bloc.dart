@@ -26,37 +26,109 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
 
   GeburaBloc(this._api, this._repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
-      if (state.purchasedAppInfos == null) {
-        add(GeburaPurchasedAppInfosLoadEvent());
+      if (state.ownedApps == null) {
+        add(GeburaRefreshLibraryEvent());
         add(GeburaScanLocalLibraryEvent());
       }
     });
 
-    on<GeburaPurchasedAppInfosLoadEvent>((event, emit) async {
-      emit(GeburaPurchasedAppsLoadState(state, EventStatus.processing));
+    on<GeburaRefreshLibraryEvent>((event, emit) async {
+      emit(GeburaRefreshLibraryState(state, EventStatus.processing));
       final resp = await _api.doRequest(
         (client) => client.getPurchasedAppInfos,
         GetPurchasedAppInfosRequest(),
       );
       if (resp.status != ApiStatus.success) {
-        emit(GeburaPurchasedAppsLoadState(state, EventStatus.failed,
+        emit(GeburaRefreshLibraryState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
-      emit(GeburaPurchasedAppsLoadState(
-          state.copyWith(purchasedAppInfos: resp.getData().appInfos),
-          EventStatus.success,
-          msg: resp.error));
+      final ownedApps = <App>[];
+      for (var i = 0; i < 1000; i++) {
+        final appResp = await _api.doRequest(
+          (client) => client.listApps,
+          ListAppsRequest(
+            paging: PagingRequest(
+              pageSize: Int64(100),
+              pageNum: Int64(i + 1),
+            ),
+          ),
+        );
+        if (appResp.status != ApiStatus.success) {
+          emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+              msg: resp.error));
+          return;
+        }
+        if (appResp.getData().appPackages.isEmpty) {
+          break;
+        }
+        ownedApps.addAll(appResp.getData().appPackages);
+      }
+      emit(GeburaRefreshLibraryState(
+        state.copyWith(
+          purchasedAppInfos: resp.getData().appInfos,
+          ownedApps: ownedApps,
+        ),
+        EventStatus.success,
+        msg: resp.error,
+      ));
+      add(GeburaApplyLibrarySettingsEvent());
     }, transformer: droppable());
 
-    on<GeburaSetPurchasedAppInfoIndexEvent>((event, emit) async {
+    on<GeburaApplyLibrarySettingsEvent>((event, emit) async {
+      var settings =
+          state.librarySettings ?? const LibrarySettings(query: null);
+      if (event.usePreviousSettings == null || !event.usePreviousSettings!) {
+        settings = settings.copyWith(query: event.query);
+      }
+      // prepare library items
+      Map<Int64, AppInfoMixed> libraryItemMap = Map.fromEntries(
+        (state.purchasedAppInfos ?? []).map((e) => MapEntry(e.id.id, e)),
+      );
+      final appInfoMap = state.appInfoMap ?? {};
+      for (final App app in state.ownedApps ?? []) {
+        if (app.hasAssignedAppInfoId()) {
+          if (appInfoMap[app.assignedAppInfoId.id] != null) {
+            libraryItemMap[app.assignedAppInfoId.id] =
+                appInfoToMixed(mixAppInfo(
+              appInfoMap[app.assignedAppInfoId.id]!,
+            ));
+          } else {
+            add(GeburaFetchBoundAppInfosEvent(app.assignedAppInfoId));
+          }
+        } else {
+          libraryItemMap[app.id.id] = AppInfoMixed(
+            id: app.id,
+            name: app.name,
+            shortDescription: app.description,
+          );
+        }
+      }
+      // apply query
+      if (settings.query != null && settings.query!.isNotEmpty) {
+        final query = settings.query!.toLowerCase();
+        libraryItemMap = Map.fromEntries(libraryItemMap.entries.where(
+          (element) => element.value.name.toLowerCase().contains(query),
+        ));
+      }
+      // sort by name
+      libraryItemMap = Map.fromEntries(libraryItemMap.entries.toList()
+        ..sort((a, b) => a.value.name.compareTo(b.value.name)));
+      // emit
+      emit(state.copyWith(
+        libraryItems: libraryItemMap.values.toList(),
+        librarySettings: settings,
+      ));
+    });
+
+    on<GeburaSetSelectedLibraryItemEvent>((event, emit) async {
       final newState = state.copyWith();
-      newState.selectedPurchasedAppInfoIndex = event.index;
+      newState.selectedLibraryItem = event.id?.id.toInt();
       emit(newState);
     });
 
     on<GeburaSearchAppInfosEvent>((event, emit) async {
-      emit(GeburaSearchAppsState(state, EventStatus.processing));
+      emit(GeburaSearchAppInfosState(state, EventStatus.processing));
       final resp = await _api.doRequest(
         (client) => client.searchAppInfos,
         SearchAppInfosRequest(
@@ -68,10 +140,11 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(GeburaSearchAppsState(state, EventStatus.failed, msg: resp.error));
+        emit(GeburaSearchAppInfosState(state, EventStatus.failed,
+            msg: resp.error));
         return;
       }
-      emit(GeburaSearchAppsState(
+      emit(GeburaSearchAppInfosState(
         state,
         EventStatus.success,
         msg: resp.error,
@@ -95,7 +168,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaPurchaseState(state, EventStatus.success, msg: resp.error));
-      add(GeburaPurchasedAppInfosLoadEvent());
+      add(GeburaRefreshLibraryEvent());
     }, transformer: droppable());
 
     on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
@@ -334,7 +407,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         ));
       }
       await _repo.setImportedSteamApps(importedSteamApps);
-      add(GeburaPurchasedAppInfosLoadEvent());
+      add(GeburaRefreshLibraryEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(
             localLibraryState: S.current.importSteamApplicationFinished(
@@ -357,10 +430,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             msg: resp.error));
         return;
       }
-      final storeApps = state.storeAppInfos ?? {};
-      storeApps[event.appID] = resp.getData().appInfos;
+      final appInfoMap = state.appInfoMap ?? {};
+      appInfoMap[event.appID.id] = resp.getData().appInfos;
       emit(GeburaFetchBoundAppsState(
-        state.copyWith(storeAppInfos: storeApps),
+        state.copyWith(appInfoMap: appInfoMap),
         EventStatus.success,
         msg: resp.error,
       ));
@@ -438,4 +511,19 @@ AppInfo mixAppInfo(List<AppInfo> apps) {
     mixedApp.details.imageUrls.addAll(app.details.imageUrls);
   }
   return mixedApp;
+}
+
+AppInfoMixed appInfoToMixed(AppInfo appInfo) {
+  return AppInfoMixed(
+    id: appInfo.id,
+    name: appInfo.name,
+    type: appInfo.type,
+    shortDescription: appInfo.shortDescription,
+    iconImageUrl: appInfo.iconImageUrl,
+    backgroundImageUrl: appInfo.backgroundImageUrl,
+    coverImageUrl: appInfo.coverImageUrl,
+    tags: appInfo.tags,
+    altNames: appInfo.altNames,
+    details: appInfo.details,
+  );
 }

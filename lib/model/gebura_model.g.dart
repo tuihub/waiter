@@ -59,3 +59,15 @@ Map<String, dynamic> _$$ImportedSteamAppImplToJson(
       'internalID': instance.internalID,
       'steamAppID': instance.steamAppID,
     };
+
+_$LibrarySettingsImpl _$$LibrarySettingsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LibrarySettingsImpl(
+      query: json['query'] as String?,
+    );
+
+Map<String, dynamic> _$$LibrarySettingsImplToJson(
+        _$LibrarySettingsImpl instance) =>
+    <String, dynamic>{
+      'query': instance.query,
+    };

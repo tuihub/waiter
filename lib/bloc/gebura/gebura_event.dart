@@ -5,12 +5,19 @@ sealed class GeburaEvent {}
 
 final class GeburaInitEvent extends GeburaEvent {}
 
-final class GeburaPurchasedAppInfosLoadEvent extends GeburaEvent {}
+final class GeburaRefreshLibraryEvent extends GeburaEvent {}
 
-final class GeburaSetPurchasedAppInfoIndexEvent extends GeburaEvent {
-  final int? index;
+final class GeburaApplyLibrarySettingsEvent extends GeburaEvent {
+  final String? query;
+  final bool? usePreviousSettings;
 
-  GeburaSetPurchasedAppInfoIndexEvent(this.index);
+  GeburaApplyLibrarySettingsEvent({this.query, this.usePreviousSettings});
+}
+
+final class GeburaSetSelectedLibraryItemEvent extends GeburaEvent {
+  final InternalID? id;
+
+  GeburaSetSelectedLibraryItemEvent(this.id);
 }
 
 final class GeburaSearchAppInfosEvent extends GeburaEvent {

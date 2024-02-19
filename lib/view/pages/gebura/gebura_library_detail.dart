@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,9 +15,9 @@ import '../../specialized/backdrop_blur.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatelessWidget {
-  const GeburaLibraryDetailPage({super.key, required this.index});
+  const GeburaLibraryDetailPage({super.key, required this.id});
 
-  final int index;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,9 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final app = state.purchasedAppInfos![index];
+        final app = state.libraryItems!.firstWhere(
+          (element) => element.id.id == Int64(id),
+        );
         final setting =
             context.read<GeburaBloc>().getAppLauncherSetting(app.id);
         final runState =
@@ -36,8 +39,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                 ? state.runState![app.id]
                 : null;
         if (firstBuild &&
-            (state.storeAppInfos == null ||
-                state.storeAppInfos![app.id] == null)) {
+            (state.appInfoMap == null ||
+                state.appInfoMap![app.id.id] == null)) {
           firstBuild = false;
           context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(app.id));
         }

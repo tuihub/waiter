@@ -18,10 +18,11 @@ class GeburaNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var firstBuild = true;
+    final searchController = TextEditingController();
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
       if (firstBuild) {
         firstBuild = false;
-        if (state.purchasedAppInfos == null) {
+        if (state.libraryItems == null) {
           context.read<GeburaBloc>().add(GeburaInitEvent());
         }
       }
@@ -35,7 +36,7 @@ class GeburaNav extends StatelessWidget {
             onTap: () {
               context
                   .read<GeburaBloc>()
-                  .add(GeburaSetPurchasedAppInfoIndexEvent(null));
+                  .add(GeburaSetSelectedLibraryItemEvent(null));
               AppRoutes.geburaStore.go(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.main);
             },
@@ -49,13 +50,39 @@ class GeburaNav extends StatelessWidget {
             onTap: () {
               context
                   .read<GeburaBloc>()
-                  .add(GeburaSetPurchasedAppInfoIndexEvent(null));
+                  .add(GeburaSetSelectedLibraryItemEvent(null));
               AppRoutes.geburaLibrary.push(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.main);
             },
             title: Text(S.of(context).library),
             selected: function == GeburaFunctions.library &&
-                state.selectedPurchasedAppInfoIndex == null,
+                state.selectedLibraryItem == null,
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 4),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: state.librarySettings?.query?.isNotEmpty ?? false
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          context
+                              .read<GeburaBloc>()
+                              .add(GeburaApplyLibrarySettingsEvent(query: ''));
+                          searchController.clear();
+                        },
+                      )
+                    : null,
+                contentPadding: const EdgeInsets.all(4),
+              ),
+              onChanged: (query) {
+                context
+                    .read<GeburaBloc>()
+                    .add(GeburaApplyLibrarySettingsEvent(query: query));
+              },
+            ),
           ),
           SpacingHelper.defaultDivider,
           Expanded(
@@ -64,23 +91,21 @@ class GeburaNav extends StatelessWidget {
                 return SingleChildScrollView(
                   controller: controller,
                   physics: physics,
-                  child: (state.purchasedAppInfos != null &&
-                          state.purchasedAppInfos!.isNotEmpty)
+                  child: (state.libraryItems != null &&
+                          state.libraryItems!.isNotEmpty)
                       ? Column(
                           children: [
-                            for (var i = 0, app = state.purchasedAppInfos![i];
-                                i < state.purchasedAppInfos!.length;
-                                i++,
-                                app = state.purchasedAppInfos!
-                                        .elementAtOrNull(i) ??
-                                    AppInfoMixed())
+                            for (final AppInfoMixed app
+                                in state.libraryItems ?? [])
                               ListTile(
-                                selected:
-                                    i == state.selectedPurchasedAppInfoIndex,
+                                selected: app.id.id.toInt() ==
+                                    state.selectedLibraryItem,
                                 onTap: () {
                                   context.read<GeburaBloc>().add(
-                                      GeburaSetPurchasedAppInfoIndexEvent(i));
-                                  AppRoutes.geburaLibraryDetail(i)
+                                      GeburaSetSelectedLibraryItemEvent(
+                                          app.id));
+                                  AppRoutes.geburaLibraryDetail(
+                                          app.id.id.toInt())
                                       .push(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
@@ -107,7 +132,7 @@ class GeburaNav extends StatelessWidget {
                               )
                           ],
                         )
-                      : (state is GeburaPurchasedAppsLoadState)
+                      : (state is GeburaRefreshLibraryState)
                           ? (state.processing)
                               ? const Center(
                                   child: CircularProgressIndicator(),
