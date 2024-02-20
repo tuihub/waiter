@@ -19,6 +19,8 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
 
     final TextEditingController pathController = TextEditingController();
     pathController.text = setting?.path ?? '';
+    final TextEditingController installPathController = TextEditingController();
+    installPathController.text = setting?.installPath ?? '';
     bool advancedTracing = setting?.advancedTracing ?? false;
     String processName = setting?.processName ?? '';
     final TextEditingController realPathController = TextEditingController();
@@ -56,6 +58,28 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                       ),
                       border: const OutlineInputBorder(),
                       labelText: '应用启动路径',
+                    ),
+                    maxLines: null,
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    controller: installPathController,
+                    decoration: InputDecoration(
+                      suffixIcon: TextButton(
+                        onPressed: () async {
+                          final pickResult = await file_picker
+                              .FilePicker.platform
+                              .getDirectoryPath();
+                          if (pickResult != null) {
+                            installPathController.text = pickResult;
+                          }
+                        },
+                        child: const Text('选择'),
+                      ),
+                      border: const OutlineInputBorder(),
+                      labelText: '应用安装路径',
                     ),
                     maxLines: null,
                   ),
@@ -134,6 +158,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                         setting?.copyWith(
                               appInstID: appID,
                               path: pathController.text,
+                              installPath: installPathController.text,
                               advancedTracing: advancedTracing,
                               processName: processName,
                               realPath: realPathController.text,
@@ -142,6 +167,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                             AppLauncherSetting(
                               appInstID: appID,
                               path: pathController.text,
+                              installPath: installPathController.text,
                               advancedTracing: advancedTracing,
                               processName: processName,
                               realPath: realPathController.text,

@@ -5,23 +5,23 @@ import 'package:hive/hive.dart';
 import '../../model/gebura_model.dart';
 
 const _appSettingsFile = 'gebura_app_settings';
-const _importedSteamAppsFile = 'gebura_imported_steam_apps';
+const _importedSteamAppInstsFile = 'gebura_imported_steam_app_insts';
 const _localAppInstFoldersFile = 'gebura_local_app_inst_folders';
 const _localAppInstIndependentsFile = 'gebura_local_app_inst_independents';
 
 class GeburaRepo {
   late Box<String> _appSettings;
-  late Box<String> _importedSteamApps;
+  late Box<String> _importedSteamAppInsts;
   late Box<String> _localAppInstFolders;
   late Box<String> _localAppInstIndependents;
 
   GeburaRepo._init(
     Box<String> appSettings,
-    Box<String> importedSteamApps,
+    Box<String> importedSteamAppInsts,
     Box<String> localAppInstFolders,
     Box<String> localAppInstIndependents,
   ) {
-    _importedSteamApps = importedSteamApps;
+    _importedSteamAppInsts = importedSteamAppInsts;
     _appSettings = appSettings;
     _localAppInstFolders = localAppInstFolders;
     _localAppInstIndependents = localAppInstIndependents;
@@ -30,14 +30,14 @@ class GeburaRepo {
   static Future<GeburaRepo> init(String? path) async {
     final appSettings =
         await Hive.openBox<String>(_appSettingsFile, path: path);
-    final importedSteamApps =
-        await Hive.openBox<String>(_importedSteamAppsFile, path: path);
+    final importedSteamAppInsts =
+        await Hive.openBox<String>(_importedSteamAppInstsFile, path: path);
     final localAppInstFolders =
         await Hive.openBox<String>(_localAppInstFoldersFile, path: path);
     final localAppInstIndependents =
         await Hive.openBox<String>(_localAppInstIndependentsFile, path: path);
-    return GeburaRepo._init(appSettings, importedSteamApps, localAppInstFolders,
-        localAppInstIndependents);
+    return GeburaRepo._init(appSettings, importedSteamAppInsts,
+        localAppInstFolders, localAppInstIndependents);
   }
 
   Future<void> setAppLauncherSetting(AppLauncherSetting setting) async {
@@ -56,23 +56,23 @@ class GeburaRepo {
     return null;
   }
 
-  Future<void> setImportedSteamApps(List<ImportedSteamApp> apps) async {
-    await _importedSteamApps.clear();
+  Future<void> setImportedSteamAppInsts(List<ImportedSteamAppInst> apps) async {
+    await _importedSteamAppInsts.clear();
     for (final app in apps) {
-      await _importedSteamApps.put(
-        app.internalID.toString(),
+      await _importedSteamAppInsts.put(
+        app.instID.toString(),
         jsonEncode(app.toJson()),
       );
     }
   }
 
-  List<ImportedSteamApp> getImportedSteamApps() {
-    final apps = <ImportedSteamApp>[];
-    for (final key in _importedSteamApps.keys) {
-      final app = _importedSteamApps.get(key);
+  List<ImportedSteamAppInst> getImportedSteamAppInsts() {
+    final apps = <ImportedSteamAppInst>[];
+    for (final key in _importedSteamAppInsts.keys) {
+      final app = _importedSteamAppInsts.get(key);
       if (app != null) {
-        apps.add(
-            ImportedSteamApp.fromJson(jsonDecode(app) as Map<String, dynamic>));
+        apps.add(ImportedSteamAppInst.fromJson(
+            jsonDecode(app) as Map<String, dynamic>));
       }
     }
     return apps;

@@ -14,7 +14,7 @@ class GeburaState {
   late String? localLibraryState;
   late SteamScanResult? localSteamScanResult;
   late List<InstalledSteamApps>? localSteamAppInsts;
-  late List<ImportedSteamApp>? importedSteamAppInsts;
+  late List<ImportedSteamAppInst>? importedSteamAppInsts;
   late List<String>? localSteamLibraryFolders;
 
   GeburaState({
@@ -45,7 +45,7 @@ class GeburaState {
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
     List<InstalledSteamApps>? localSteamAppInsts,
-    List<ImportedSteamApp>? importedSteamAppInsts,
+    List<ImportedSteamAppInst>? importedSteamAppInsts,
     List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(

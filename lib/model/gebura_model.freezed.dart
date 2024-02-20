@@ -21,6 +21,7 @@ AppLauncherSetting _$AppLauncherSettingFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AppLauncherSetting {
   int get appInstID => throw _privateConstructorUsedError;
+  String get installPath => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
   bool get advancedTracing => throw _privateConstructorUsedError;
   String get processName => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $AppLauncherSettingCopyWith<$Res> {
   @useResult
   $Res call(
       {int appInstID,
+      String installPath,
       String path,
       bool advancedTracing,
       String processName,
@@ -62,6 +64,7 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
   @override
   $Res call({
     Object? appInstID = null,
+    Object? installPath = null,
     Object? path = null,
     Object? advancedTracing = null,
     Object? processName = null,
@@ -73,6 +76,10 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
           ? _value.appInstID
           : appInstID // ignore: cast_nullable_to_non_nullable
               as int,
+      installPath: null == installPath
+          ? _value.installPath
+          : installPath // ignore: cast_nullable_to_non_nullable
+              as String,
       path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
@@ -107,6 +114,7 @@ abstract class _$$AppLauncherSettingImplCopyWith<$Res>
   @useResult
   $Res call(
       {int appInstID,
+      String installPath,
       String path,
       bool advancedTracing,
       String processName,
@@ -126,6 +134,7 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? appInstID = null,
+    Object? installPath = null,
     Object? path = null,
     Object? advancedTracing = null,
     Object? processName = null,
@@ -137,6 +146,10 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
           ? _value.appInstID
           : appInstID // ignore: cast_nullable_to_non_nullable
               as int,
+      installPath: null == installPath
+          ? _value.installPath
+          : installPath // ignore: cast_nullable_to_non_nullable
+              as String,
       path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
@@ -166,6 +179,7 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
 class _$AppLauncherSettingImpl implements _AppLauncherSetting {
   const _$AppLauncherSettingImpl(
       {required this.appInstID,
+      required this.installPath,
       required this.path,
       required this.advancedTracing,
       required this.processName,
@@ -177,6 +191,8 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @override
   final int appInstID;
+  @override
+  final String installPath;
   @override
   final String path;
   @override
@@ -190,7 +206,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @override
   String toString() {
-    return 'AppLauncherSetting(appInstID: $appInstID, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
+    return 'AppLauncherSetting(appInstID: $appInstID, installPath: $installPath, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
   }
 
   @override
@@ -200,6 +216,8 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
             other is _$AppLauncherSettingImpl &&
             (identical(other.appInstID, appInstID) ||
                 other.appInstID == appInstID) &&
+            (identical(other.installPath, installPath) ||
+                other.installPath == installPath) &&
             (identical(other.path, path) || other.path == path) &&
             (identical(other.advancedTracing, advancedTracing) ||
                 other.advancedTracing == advancedTracing) &&
@@ -213,8 +231,8 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, appInstID, path, advancedTracing,
-      processName, realPath, sleepTime);
+  int get hashCode => Object.hash(runtimeType, appInstID, installPath, path,
+      advancedTracing, processName, realPath, sleepTime);
 
   @JsonKey(ignore: true)
   @override
@@ -234,6 +252,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 abstract class _AppLauncherSetting implements AppLauncherSetting {
   const factory _AppLauncherSetting(
       {required final int appInstID,
+      required final String installPath,
       required final String path,
       required final bool advancedTracing,
       required final String processName,
@@ -245,6 +264,8 @@ abstract class _AppLauncherSetting implements AppLauncherSetting {
 
   @override
   int get appInstID;
+  @override
+  String get installPath;
   @override
   String get path;
   @override
@@ -434,34 +455,36 @@ abstract class _AppRunState implements AppRunState {
       throw _privateConstructorUsedError;
 }
 
-ImportedSteamApp _$ImportedSteamAppFromJson(Map<String, dynamic> json) {
-  return _ImportedSteamApp.fromJson(json);
+ImportedSteamAppInst _$ImportedSteamAppInstFromJson(Map<String, dynamic> json) {
+  return _ImportedSteamAppInst.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ImportedSteamApp {
-  int get internalID => throw _privateConstructorUsedError;
+mixin _$ImportedSteamAppInst {
+  int get instID => throw _privateConstructorUsedError;
+  int get appID => throw _privateConstructorUsedError;
   String get steamAppID => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ImportedSteamAppCopyWith<ImportedSteamApp> get copyWith =>
+  $ImportedSteamAppInstCopyWith<ImportedSteamAppInst> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ImportedSteamAppCopyWith<$Res> {
-  factory $ImportedSteamAppCopyWith(
-          ImportedSteamApp value, $Res Function(ImportedSteamApp) then) =
-      _$ImportedSteamAppCopyWithImpl<$Res, ImportedSteamApp>;
+abstract class $ImportedSteamAppInstCopyWith<$Res> {
+  factory $ImportedSteamAppInstCopyWith(ImportedSteamAppInst value,
+          $Res Function(ImportedSteamAppInst) then) =
+      _$ImportedSteamAppInstCopyWithImpl<$Res, ImportedSteamAppInst>;
   @useResult
-  $Res call({int internalID, String steamAppID});
+  $Res call({int instID, int appID, String steamAppID});
 }
 
 /// @nodoc
-class _$ImportedSteamAppCopyWithImpl<$Res, $Val extends ImportedSteamApp>
-    implements $ImportedSteamAppCopyWith<$Res> {
-  _$ImportedSteamAppCopyWithImpl(this._value, this._then);
+class _$ImportedSteamAppInstCopyWithImpl<$Res,
+        $Val extends ImportedSteamAppInst>
+    implements $ImportedSteamAppInstCopyWith<$Res> {
+  _$ImportedSteamAppInstCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -471,13 +494,18 @@ class _$ImportedSteamAppCopyWithImpl<$Res, $Val extends ImportedSteamApp>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? internalID = null,
+    Object? instID = null,
+    Object? appID = null,
     Object? steamAppID = null,
   }) {
     return _then(_value.copyWith(
-      internalID: null == internalID
-          ? _value.internalID
-          : internalID // ignore: cast_nullable_to_non_nullable
+      instID: null == instID
+          ? _value.instID
+          : instID // ignore: cast_nullable_to_non_nullable
+              as int,
+      appID: null == appID
+          ? _value.appID
+          : appID // ignore: cast_nullable_to_non_nullable
               as int,
       steamAppID: null == steamAppID
           ? _value.steamAppID
@@ -488,34 +516,39 @@ class _$ImportedSteamAppCopyWithImpl<$Res, $Val extends ImportedSteamApp>
 }
 
 /// @nodoc
-abstract class _$$ImportedSteamAppImplCopyWith<$Res>
-    implements $ImportedSteamAppCopyWith<$Res> {
-  factory _$$ImportedSteamAppImplCopyWith(_$ImportedSteamAppImpl value,
-          $Res Function(_$ImportedSteamAppImpl) then) =
-      __$$ImportedSteamAppImplCopyWithImpl<$Res>;
+abstract class _$$ImportedSteamAppInstImplCopyWith<$Res>
+    implements $ImportedSteamAppInstCopyWith<$Res> {
+  factory _$$ImportedSteamAppInstImplCopyWith(_$ImportedSteamAppInstImpl value,
+          $Res Function(_$ImportedSteamAppInstImpl) then) =
+      __$$ImportedSteamAppInstImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int internalID, String steamAppID});
+  $Res call({int instID, int appID, String steamAppID});
 }
 
 /// @nodoc
-class __$$ImportedSteamAppImplCopyWithImpl<$Res>
-    extends _$ImportedSteamAppCopyWithImpl<$Res, _$ImportedSteamAppImpl>
-    implements _$$ImportedSteamAppImplCopyWith<$Res> {
-  __$$ImportedSteamAppImplCopyWithImpl(_$ImportedSteamAppImpl _value,
-      $Res Function(_$ImportedSteamAppImpl) _then)
+class __$$ImportedSteamAppInstImplCopyWithImpl<$Res>
+    extends _$ImportedSteamAppInstCopyWithImpl<$Res, _$ImportedSteamAppInstImpl>
+    implements _$$ImportedSteamAppInstImplCopyWith<$Res> {
+  __$$ImportedSteamAppInstImplCopyWithImpl(_$ImportedSteamAppInstImpl _value,
+      $Res Function(_$ImportedSteamAppInstImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? internalID = null,
+    Object? instID = null,
+    Object? appID = null,
     Object? steamAppID = null,
   }) {
-    return _then(_$ImportedSteamAppImpl(
-      internalID: null == internalID
-          ? _value.internalID
-          : internalID // ignore: cast_nullable_to_non_nullable
+    return _then(_$ImportedSteamAppInstImpl(
+      instID: null == instID
+          ? _value.instID
+          : instID // ignore: cast_nullable_to_non_nullable
+              as int,
+      appID: null == appID
+          ? _value.appID
+          : appID // ignore: cast_nullable_to_non_nullable
               as int,
       steamAppID: null == steamAppID
           ? _value.steamAppID
@@ -527,69 +560,75 @@ class __$$ImportedSteamAppImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ImportedSteamAppImpl implements _ImportedSteamApp {
-  const _$ImportedSteamAppImpl(
-      {required this.internalID, required this.steamAppID});
+class _$ImportedSteamAppInstImpl implements _ImportedSteamAppInst {
+  const _$ImportedSteamAppInstImpl(
+      {required this.instID, required this.appID, required this.steamAppID});
 
-  factory _$ImportedSteamAppImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ImportedSteamAppImplFromJson(json);
+  factory _$ImportedSteamAppInstImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ImportedSteamAppInstImplFromJson(json);
 
   @override
-  final int internalID;
+  final int instID;
+  @override
+  final int appID;
   @override
   final String steamAppID;
 
   @override
   String toString() {
-    return 'ImportedSteamApp(internalID: $internalID, steamAppID: $steamAppID)';
+    return 'ImportedSteamAppInst(instID: $instID, appID: $appID, steamAppID: $steamAppID)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ImportedSteamAppImpl &&
-            (identical(other.internalID, internalID) ||
-                other.internalID == internalID) &&
+            other is _$ImportedSteamAppInstImpl &&
+            (identical(other.instID, instID) || other.instID == instID) &&
+            (identical(other.appID, appID) || other.appID == appID) &&
             (identical(other.steamAppID, steamAppID) ||
                 other.steamAppID == steamAppID));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, internalID, steamAppID);
+  int get hashCode => Object.hash(runtimeType, instID, appID, steamAppID);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ImportedSteamAppImplCopyWith<_$ImportedSteamAppImpl> get copyWith =>
-      __$$ImportedSteamAppImplCopyWithImpl<_$ImportedSteamAppImpl>(
-          this, _$identity);
+  _$$ImportedSteamAppInstImplCopyWith<_$ImportedSteamAppInstImpl>
+      get copyWith =>
+          __$$ImportedSteamAppInstImplCopyWithImpl<_$ImportedSteamAppInstImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ImportedSteamAppImplToJson(
+    return _$$ImportedSteamAppInstImplToJson(
       this,
     );
   }
 }
 
-abstract class _ImportedSteamApp implements ImportedSteamApp {
-  const factory _ImportedSteamApp(
-      {required final int internalID,
-      required final String steamAppID}) = _$ImportedSteamAppImpl;
+abstract class _ImportedSteamAppInst implements ImportedSteamAppInst {
+  const factory _ImportedSteamAppInst(
+      {required final int instID,
+      required final int appID,
+      required final String steamAppID}) = _$ImportedSteamAppInstImpl;
 
-  factory _ImportedSteamApp.fromJson(Map<String, dynamic> json) =
-      _$ImportedSteamAppImpl.fromJson;
+  factory _ImportedSteamAppInst.fromJson(Map<String, dynamic> json) =
+      _$ImportedSteamAppInstImpl.fromJson;
 
   @override
-  int get internalID;
+  int get instID;
+  @override
+  int get appID;
   @override
   String get steamAppID;
   @override
   @JsonKey(ignore: true)
-  _$$ImportedSteamAppImplCopyWith<_$ImportedSteamAppImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ImportedSteamAppInstImplCopyWith<_$ImportedSteamAppInstImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 LibrarySettings _$LibrarySettingsFromJson(Map<String, dynamic> json) {

@@ -10,6 +10,7 @@ _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
         Map<String, dynamic> json) =>
     _$AppLauncherSettingImpl(
       appInstID: json['appInstID'] as int,
+      installPath: json['installPath'] as String,
       path: json['path'] as String,
       advancedTracing: json['advancedTracing'] as bool,
       processName: json['processName'] as String,
@@ -21,6 +22,7 @@ Map<String, dynamic> _$$AppLauncherSettingImplToJson(
         _$AppLauncherSettingImpl instance) =>
     <String, dynamic>{
       'appInstID': instance.appInstID,
+      'installPath': instance.installPath,
       'path': instance.path,
       'advancedTracing': instance.advancedTracing,
       'processName': instance.processName,
@@ -46,17 +48,19 @@ Map<String, dynamic> _$$AppRunStateImplToJson(_$AppRunStateImpl instance) =>
       'endTime': instance.endTime?.toIso8601String(),
     };
 
-_$ImportedSteamAppImpl _$$ImportedSteamAppImplFromJson(
+_$ImportedSteamAppInstImpl _$$ImportedSteamAppInstImplFromJson(
         Map<String, dynamic> json) =>
-    _$ImportedSteamAppImpl(
-      internalID: json['internalID'] as int,
+    _$ImportedSteamAppInstImpl(
+      instID: json['instID'] as int,
+      appID: json['appID'] as int,
       steamAppID: json['steamAppID'] as String,
     );
 
-Map<String, dynamic> _$$ImportedSteamAppImplToJson(
-        _$ImportedSteamAppImpl instance) =>
+Map<String, dynamic> _$$ImportedSteamAppInstImplToJson(
+        _$ImportedSteamAppInstImpl instance) =>
     <String, dynamic>{
-      'internalID': instance.internalID,
+      'instID': instance.instID,
+      'appID': instance.appID,
       'steamAppID': instance.steamAppID,
     };
 

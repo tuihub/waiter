@@ -190,7 +190,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               //   ),
                               // ));
                             },
-                            child: const Icon(Icons.settings),
+                            child: const Icon(Icons.arrow_drop_down),
                           )
                       ],
                     ),
@@ -220,7 +220,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         ?.firstWhere((element) => element.appId == steamAppID);
     return ListTile(
       title: const Text('由Steam管理'),
-      subtitle: Text(steamApp?.launcherPath ?? ''),
+      subtitle: Text(steamApp?.installPath ?? ''),
       trailing: steamApp != null
           ? ElevatedButton.icon(
               onPressed: () async {
@@ -237,8 +237,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
 
   Widget _localItem(BuildContext context, AppLauncherSetting settings) {
     return ListTile(
-      title: Text(settings.processName),
-      subtitle: Text(settings.path),
+      title: Text(settings.installPath),
       trailing: ElevatedButton.icon(
         onPressed: () async {
           unawaited(showDialog<void>(
@@ -283,14 +282,14 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         children: [
           for (final inst in localAppInsts)
             if (state.importedSteamAppInsts?.any(
-                  (e) => e.internalID == inst.id.id.toInt(),
+                  (e) => e.instID == inst.id.id.toInt(),
                 ) ??
                 false)
               _steamItem(
                 context,
                 state.importedSteamAppInsts!
                     .firstWhere(
-                      (e) => e.internalID == inst.id.id.toInt(),
+                      (e) => e.instID == inst.id.id.toInt(),
                     )
                     .steamAppID,
               )

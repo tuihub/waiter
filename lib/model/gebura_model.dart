@@ -7,6 +7,7 @@ part 'gebura_model.g.dart';
 class AppLauncherSetting with _$AppLauncherSetting {
   const factory AppLauncherSetting({
     required int appInstID,
+    required String installPath,
     required String path,
     required bool advancedTracing,
     required String processName,
@@ -31,14 +32,15 @@ class AppRunState with _$AppRunState {
 }
 
 @freezed
-class ImportedSteamApp with _$ImportedSteamApp {
-  const factory ImportedSteamApp({
-    required int internalID,
+class ImportedSteamAppInst with _$ImportedSteamAppInst {
+  const factory ImportedSteamAppInst({
+    required int instID,
+    required int appID,
     required String steamAppID,
-  }) = _ImportedSteamApp;
+  }) = _ImportedSteamAppInst;
 
-  factory ImportedSteamApp.fromJson(Map<String, Object?> json) =>
-      _$ImportedSteamAppFromJson(json);
+  factory ImportedSteamAppInst.fromJson(Map<String, Object?> json) =>
+      _$ImportedSteamAppInstFromJson(json);
 }
 
 @freezed

@@ -359,7 +359,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(state.copyWith(localLibraryState: S.current.scanningLocalFiles));
       final (apps, result) = await scanLocalLibrary();
       final folders = await getSteamLibraryFolders();
-      final imported = _repo.getImportedSteamApps();
+      final imported = _repo.getImportedSteamAppInsts();
       final unImported = apps.where((element) =>
           !imported.any((imported) => imported.steamAppID == element.appId));
       emit(state.copyWith(
@@ -408,7 +408,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       ));
       await _repo.setAppLauncherSetting(AppLauncherSetting(
         appInstID: instResp.getData().id.id.toInt(),
-        path: event.path,
+        path: '',
+        installPath: event.path,
         realPath: '',
         processName: '',
         sleepTime: 0,
@@ -429,7 +430,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           EventStatus.processing));
       var processCount = 0;
       var failedCount = 0;
-      final importedSteamApps = _repo.getImportedSteamApps();
+      final importedSteamApps = _repo.getImportedSteamAppInsts();
       for (final steamAppID in event.steamAppIDs) {
         processCount += 1;
         emit(GeburaImportSteamAppsState(
@@ -488,12 +489,26 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           failedCount += 1;
           continue;
         }
-        importedSteamApps.add(ImportedSteamApp(
-          internalID: purchaseResp.getData().id.id.toInt(),
+        final instResp = await _api.doRequest(
+          (client) => client.createAppInst,
+          CreateAppInstRequest(
+            appInst: AppInst(
+              appId: createResp.getData().id,
+              deviceId: _deviceID,
+            ),
+          ),
+        );
+        if (instResp.status != ApiStatus.success) {
+          failedCount += 1;
+          continue;
+        }
+        importedSteamApps.add(ImportedSteamAppInst(
+          instID: instResp.getData().id.id.toInt(),
+          appID: createResp.getData().id.id.toInt(),
           steamAppID: steamAppID,
         ));
       }
-      await _repo.setImportedSteamApps(importedSteamApps);
+      await _repo.setImportedSteamAppInsts(importedSteamApps);
       add(GeburaRefreshLibraryEvent());
       emit(GeburaImportSteamAppsState(
           state.copyWith(

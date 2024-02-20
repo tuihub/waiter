@@ -15,6 +15,7 @@ class InstalledSteamApps {
   final String appId;
   final String name;
   final String launcherPath;
+  final String installPath;
   final String sizeOnDisk;
   final String? iconFilePath;
 
@@ -22,6 +23,7 @@ class InstalledSteamApps {
     required this.appId,
     required this.name,
     required this.launcherPath,
+    required this.installPath,
     required this.sizeOnDisk,
     this.iconFilePath,
   });
@@ -30,6 +32,7 @@ class InstalledSteamApps {
     String? appId,
     String? name,
     String? launcherPath,
+    String? installPath,
     String? sizeOnDisk,
     String? iconFilePath,
   }) {
@@ -37,6 +40,7 @@ class InstalledSteamApps {
       appId: appId ?? this.appId,
       name: name ?? this.name,
       launcherPath: launcherPath ?? this.launcherPath,
+      installPath: installPath ?? this.installPath,
       sizeOnDisk: sizeOnDisk ?? this.sizeOnDisk,
       iconFilePath: iconFilePath ?? this.iconFilePath,
     );
@@ -156,6 +160,10 @@ InstalledSteamApps? _getAppInfo(String path) {
         final appId = appState['appid'];
         final name = appState['name'];
         final launcherPath = appState['LauncherPath'];
+        final installDir = appState['installdir'];
+        final installPath = installDir is String
+            ? p.join(p.dirname(path), 'common', installDir)
+            : '';
         final sizeOnDisk = appState['SizeOnDisk'];
         if (appId is String && _excludeAppIds.contains(appId)) {
           return null;
@@ -168,6 +176,7 @@ InstalledSteamApps? _getAppInfo(String path) {
             appId: appId,
             name: name,
             launcherPath: launcherPath,
+            installPath: installPath,
             sizeOnDisk: sizeOnDisk,
           );
         }
