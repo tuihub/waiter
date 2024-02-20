@@ -7,13 +7,14 @@ class GeburaState {
   late List<AppInfoMixed>? libraryItems;
   late LibrarySettings? librarySettings;
   late int? selectedLibraryItem;
+  late List<AppInst>? ownedAppInsts;
 
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
   late SteamScanResult? localSteamScanResult;
-  late List<InstalledSteamApps>? localSteamApps;
-  late List<ImportedSteamApp>? importedSteamApps;
+  late List<InstalledSteamApps>? localSteamAppInsts;
+  late List<ImportedSteamApp>? importedSteamAppInsts;
   late List<String>? localSteamLibraryFolders;
 
   GeburaState({
@@ -23,11 +24,12 @@ class GeburaState {
     this.libraryItems,
     this.librarySettings,
     this.selectedLibraryItem,
+    this.ownedAppInsts,
     this.runState,
     this.localLibraryState,
     this.localSteamScanResult,
-    this.localSteamApps,
-    this.importedSteamApps,
+    this.localSteamAppInsts,
+    this.importedSteamAppInsts,
     this.localSteamLibraryFolders,
   });
 
@@ -38,11 +40,12 @@ class GeburaState {
     List<AppInfoMixed>? libraryItems,
     LibrarySettings? librarySettings,
     int? selectedLibraryItem,
+    List<AppInst>? ownedAppInsts,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
-    List<InstalledSteamApps>? localSteamApps,
-    List<ImportedSteamApp>? importedSteamApps,
+    List<InstalledSteamApps>? localSteamAppInsts,
+    List<ImportedSteamApp>? importedSteamAppInsts,
     List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
@@ -52,11 +55,13 @@ class GeburaState {
       libraryItems: libraryItems ?? this.libraryItems,
       librarySettings: librarySettings ?? this.librarySettings,
       selectedLibraryItem: selectedLibraryItem ?? this.selectedLibraryItem,
+      ownedAppInsts: ownedAppInsts ?? this.ownedAppInsts,
       runState: runState ?? this.runState,
       localLibraryState: localLibraryState ?? this.localLibraryState,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
-      localSteamApps: localSteamApps ?? this.localSteamApps,
-      importedSteamApps: importedSteamApps ?? this.importedSteamApps,
+      localSteamAppInsts: localSteamAppInsts ?? this.localSteamAppInsts,
+      importedSteamAppInsts:
+          importedSteamAppInsts ?? this.importedSteamAppInsts,
       localSteamLibraryFolders:
           localSteamLibraryFolders ?? this.localSteamLibraryFolders,
     );
@@ -69,11 +74,12 @@ class GeburaState {
     libraryItems = other.libraryItems;
     librarySettings = other.librarySettings;
     selectedLibraryItem = other.selectedLibraryItem;
+    ownedAppInsts = other.ownedAppInsts;
     runState = other.runState;
     localLibraryState = other.localLibraryState;
     localSteamScanResult = other.localSteamScanResult;
-    localSteamApps = other.localSteamApps;
-    importedSteamApps = other.importedSteamApps;
+    localSteamAppInsts = other.localSteamAppInsts;
+    importedSteamAppInsts = other.importedSteamAppInsts;
     localSteamLibraryFolders = other.localSteamLibraryFolders;
   }
 }
@@ -217,6 +223,18 @@ class GeburaImportSteamAppsState extends GeburaState with EventStatusMixin {
 
 class GeburaFetchBoundAppsState extends GeburaState with EventStatusMixin {
   GeburaFetchBoundAppsState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaImportNewAppInstState extends GeburaState with EventStatusMixin {
+  GeburaImportNewAppInstState(GeburaState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

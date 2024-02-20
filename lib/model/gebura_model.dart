@@ -6,7 +6,7 @@ part 'gebura_model.g.dart';
 @freezed
 class AppLauncherSetting with _$AppLauncherSetting {
   const factory AppLauncherSetting({
-    required int appID,
+    required int appInstID,
     required String path,
     required bool advancedTracing,
     required String processName,
@@ -49,4 +49,25 @@ class LibrarySettings with _$LibrarySettings {
 
   factory LibrarySettings.fromJson(Map<String, Object?> json) =>
       _$LibrarySettingsFromJson(json);
+}
+
+@freezed
+class LocalAppInstFolder with _$LocalAppInstFolder {
+  const factory LocalAppInstFolder({
+    required String path,
+  }) = _LocalAppInstFolder;
+
+  factory LocalAppInstFolder.fromJson(Map<String, Object?> json) =>
+      _$LocalAppInstFolderFromJson(json);
+}
+
+@freezed
+class LocalAppInstIndependent with _$LocalAppInstIndependent {
+  const factory LocalAppInstIndependent({
+    required int appInstID,
+    required String path,
+  }) = _LocalAppInstIndependent;
+
+  factory LocalAppInstIndependent.fromJson(Map<String, Object?> json) =>
+      _$LocalAppInstIndependentFromJson(json);
 }

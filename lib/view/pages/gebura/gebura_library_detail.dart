@@ -4,9 +4,14 @@ import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
+import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
+import '../../../model/gebura_model.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../helper/url.dart';
@@ -29,21 +34,24 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final app = state.libraryItems!.firstWhere(
+        final item = state.libraryItems!.firstWhere(
           (element) => element.id.id == Int64(id),
         );
-        final setting =
-            context.read<GeburaBloc>().getAppLauncherSetting(app.id);
-        final runState =
-            state.runState != null && state.runState!.containsKey(app.id)
-                ? state.runState![app.id]
-                : null;
         if (firstBuild &&
             (state.appInfoMap == null ||
-                state.appInfoMap![app.id.id] == null)) {
+                state.appInfoMap![item.id.id] == null)) {
           firstBuild = false;
-          context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(app.id));
+          context
+              .read<GeburaBloc>()
+              .add(GeburaFetchBoundAppInfosEvent(item.id));
         }
+
+        final setting =
+            context.read<GeburaBloc>().getAppLauncherSetting(item.id);
+        final runState =
+            state.runState != null && state.runState!.containsKey(item.id)
+                ? state.runState![item.id]
+                : null;
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
@@ -61,7 +69,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           borderRadius: SpacingHelper.defaultBorderRadius,
                           image: DecorationImage(
                             image: ExtendedNetworkImageProvider(
-                              app.backgroundImageUrl,
+                              item.backgroundImageUrl,
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -89,7 +97,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            app.name,
+                            item.name,
                             style: backdropBlurTextStyle(context),
                           ),
                         ),
@@ -102,10 +110,10 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: Hero(
-                                tag: app.id.id.toString(),
-                                child: UrlHelper.isValidUrl(app.coverImageUrl)
+                                tag: item.id.id.toString(),
+                                child: UrlHelper.isValidUrl(item.coverImageUrl)
                                     ? ExtendedImage.network(
-                                        app.coverImageUrl,
+                                        item.coverImageUrl,
                                         height: 200,
                                         loadStateChanged:
                                             (ExtendedImageState state) {
@@ -137,7 +145,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               onPressed: () async {
                                 context
                                     .read<GeburaBloc>()
-                                    .add(GeburaRunAppEvent(app.id));
+                                    .add(GeburaRunAppEvent(item.id));
                               },
                               child: const Text('启动'),
                             )
@@ -152,9 +160,9 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('开发商：${app.details.developer}'),
-                            Text('发行商：${app.details.publisher}'),
-                            Text('发行日期：${app.details.releaseDate}'),
+                            Text('开发商：${item.details.developer}'),
+                            Text('发行商：${item.details.publisher}'),
+                            Text('发行日期：${item.details.releaseDate}'),
                           ],
                         ),
                         const SizedBox(
@@ -173,14 +181,14 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         if (PlatformHelper.isWindowsApp())
                           ElevatedButton(
                             onPressed: () {
-                              unawaited(showDialog<void>(
-                                context: context,
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<GeburaBloc>(),
-                                  child: GeburaAppLauncherSettingDialog(
-                                      app.id.id.toInt(), setting),
-                                ),
-                              ));
+                              // unawaited(showDialog<void>(
+                              //   context: context,
+                              //   builder: (_) => BlocProvider.value(
+                              //     value: context.read<GeburaBloc>(),
+                              //     child: GeburaAppLauncherSettingDialog(
+                              //         item.id.id.toInt(), setting),
+                              //   ),
+                              // ));
                             },
                             child: const Icon(Icons.settings),
                           )
@@ -189,15 +197,117 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                   ),
                 ),
                 SpacingHelper.defaultDivider,
-                // Padding(
-                //   padding: const EdgeInsets.all(8),
-                //   child: Text(data.app.shortDescription),
-                // ),
+                _GeburaLibraryDetailInstList(item: item),
               ],
             ),
           ),
         );
       },
     );
+  }
+}
+
+class _GeburaLibraryDetailInstList extends StatelessWidget {
+  const _GeburaLibraryDetailInstList({required this.item});
+
+  final AppInfoMixed item;
+
+  Widget _steamItem(BuildContext context, String steamAppID) {
+    final steamApp = context
+        .read<GeburaBloc>()
+        .state
+        .localSteamAppInsts
+        ?.firstWhere((element) => element.appId == steamAppID);
+    return ListTile(
+      title: const Text('由Steam管理'),
+      subtitle: Text(steamApp?.launcherPath ?? ''),
+      trailing: steamApp != null
+          ? ElevatedButton.icon(
+              onPressed: () async {
+                await context
+                    .read<GeburaBloc>()
+                    .showSteamAppDetails(steamApp.appId);
+              },
+              icon: const Icon(FontAwesomeIcons.steam, size: 16),
+              label: const Text('查看'),
+            )
+          : null,
+    );
+  }
+
+  Widget _localItem(BuildContext context, AppLauncherSetting settings) {
+    return ListTile(
+      title: Text(settings.processName),
+      subtitle: Text(settings.path),
+      trailing: ElevatedButton.icon(
+        onPressed: () async {
+          unawaited(showDialog<void>(
+            context: context,
+            builder: (_) => BlocProvider.value(
+              value: context.read<GeburaBloc>(),
+              child: GeburaAppLauncherSettingDialog(
+                item.id.id.toInt(),
+                settings,
+              ),
+            ),
+          ));
+        },
+        icon: const Icon(Icons.settings, size: 16),
+        label: const Text('设置'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
+      final List<AppInst> appInsts = state.ownedAppInsts != null
+          ? List.from(state.ownedAppInsts!.where((inst) {
+              final app = state.ownedApps?.firstWhere(
+                    (element) => inst.appId.id == element.id.id,
+                    orElse: App.new,
+                  ) ??
+                  App();
+              return inst.appId.id == item.id.id ||
+                  app.assignedAppInfoId.id == item.id.id;
+            }))
+          : [];
+      final deviceID = context.read<MainBloc>().state.currentDeviceId;
+      final List<AppInst> localAppInsts = deviceID != null
+          ? List.from(appInsts.where(
+              (inst) => inst.deviceId.id == deviceID.id,
+            ))
+          : [];
+      return ListView(
+        shrinkWrap: true,
+        children: [
+          for (final inst in localAppInsts)
+            if (state.importedSteamAppInsts?.any(
+                  (e) => e.internalID == inst.id.id.toInt(),
+                ) ??
+                false)
+              _steamItem(
+                context,
+                state.importedSteamAppInsts!
+                    .firstWhere(
+                      (e) => e.internalID == inst.id.id.toInt(),
+                    )
+                    .steamAppID,
+              )
+            else if (context
+                    .read<GeburaBloc>()
+                    .getAppLauncherSetting(inst.id) !=
+                null)
+              _localItem(
+                context,
+                context.read<GeburaBloc>().getAppLauncherSetting(inst.id)!,
+              ),
+          if (appInsts.length > localAppInsts.length)
+            ListTile(
+              title: Text('${appInsts.length - localAppInsts.length}个在其他设备上'),
+            ),
+        ],
+      );
+    });
   }
 }

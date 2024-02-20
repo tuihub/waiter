@@ -4,8 +4,10 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:path/path.dart';
+import 'package:pinyin/pinyin.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../common/platform.dart';
@@ -23,8 +25,9 @@ part 'gebura_state.dart';
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   final ApiHelper _api;
   final GeburaRepo _repo;
+  final InternalID? _deviceID;
 
-  GeburaBloc(this._api, this._repo) : super(GeburaState()) {
+  GeburaBloc(this._api, this._repo, this._deviceID) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
       if (state.ownedApps == null) {
         add(GeburaRefreshLibraryEvent());
@@ -59,15 +62,37 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
               msg: resp.error));
           return;
         }
-        if (appResp.getData().appPackages.isEmpty) {
+        if (appResp.getData().apps.isEmpty) {
           break;
         }
-        ownedApps.addAll(appResp.getData().appPackages);
+        ownedApps.addAll(appResp.getData().apps);
+      }
+      final ownedAppInsts = <AppInst>[];
+      for (var i = 0; i < 1000; i++) {
+        final appInstResp = await _api.doRequest(
+          (client) => client.listAppInsts,
+          ListAppInstsRequest(
+            paging: PagingRequest(
+              pageSize: Int64(100),
+              pageNum: Int64(i + 1),
+            ),
+          ),
+        );
+        if (appInstResp.status != ApiStatus.success) {
+          emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+              msg: resp.error));
+          return;
+        }
+        if (appInstResp.getData().appInsts.isEmpty) {
+          break;
+        }
+        ownedAppInsts.addAll(appInstResp.getData().appInsts);
       }
       emit(GeburaRefreshLibraryState(
         state.copyWith(
           purchasedAppInfos: resp.getData().appInfos,
           ownedApps: ownedApps,
+          ownedAppInsts: ownedAppInsts,
         ),
         EventStatus.success,
         msg: resp.error,
@@ -87,14 +112,19 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       );
       final appInfoMap = state.appInfoMap ?? {};
       for (final App app in state.ownedApps ?? []) {
-        if (app.hasAssignedAppInfoId()) {
-          if (appInfoMap[app.assignedAppInfoId.id] != null) {
+        if (app.hasAssignedAppInfoId() && app.assignedAppInfoId.id > 0) {
+          if (libraryItemMap[app.assignedAppInfoId.id] != null) {
+            continue;
+          } else if (appInfoMap[app.assignedAppInfoId.id] != null) {
             libraryItemMap[app.assignedAppInfoId.id] =
                 appInfoToMixed(mixAppInfo(
               appInfoMap[app.assignedAppInfoId.id]!,
             ));
           } else {
-            add(GeburaFetchBoundAppInfosEvent(app.assignedAppInfoId));
+            add(GeburaFetchBoundAppInfosEvent(
+              app.assignedAppInfoId,
+              refreshAfterSuccess: true,
+            ));
           }
         } else {
           libraryItemMap[app.id.id] = AppInfoMixed(
@@ -108,7 +138,16 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       if (settings.query != null && settings.query!.isNotEmpty) {
         final query = settings.query!.toLowerCase();
         libraryItemMap = Map.fromEntries(libraryItemMap.entries.where(
-          (element) => element.value.name.toLowerCase().contains(query),
+          (element) {
+            final text = element.value.name;
+            final selected =
+                element.value.id.id.toInt() == state.selectedLibraryItem;
+            return selected ||
+                text.toLowerCase().contains(query) ||
+                PinyinHelper.getPinyinE(text, separator: '')
+                    .toLowerCase()
+                    .contains(query);
+          },
         ));
       }
       // sort by name
@@ -328,10 +367,56 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             ? S.current.newApplicationFound(unImported.length)
             : '',
         localSteamScanResult: result,
-        localSteamApps: apps,
-        importedSteamApps: imported,
+        localSteamAppInsts: apps,
+        importedSteamAppInsts: imported,
         localSteamLibraryFolders: folders,
       ));
+    }, transformer: droppable());
+
+    on<GeburaImportNewAppInstEvent>((event, emit) async {
+      emit(GeburaImportNewAppInstState(state, EventStatus.processing));
+      final appResp = await _api.doRequest(
+        (client) => client.createApp,
+        CreateAppRequest(
+          app: App(
+            name: event.name,
+          ),
+        ),
+      );
+      if (appResp.status != ApiStatus.success) {
+        emit(GeburaImportNewAppInstState(state, EventStatus.failed,
+            msg: appResp.error));
+        return;
+      }
+      final instResp = await _api.doRequest(
+        (client) => client.createAppInst,
+        CreateAppInstRequest(
+          appInst: AppInst(
+            appId: appResp.getData().id,
+            deviceId: _deviceID,
+          ),
+        ),
+      );
+      if (instResp.status != ApiStatus.success) {
+        emit(GeburaImportNewAppInstState(state, EventStatus.failed,
+            msg: instResp.error));
+        return;
+      }
+      await _repo.setLocalAppInstIndependent(LocalAppInstIndependent(
+        appInstID: instResp.getData().id.id.toInt(),
+        path: event.path,
+      ));
+      await _repo.setAppLauncherSetting(AppLauncherSetting(
+        appInstID: instResp.getData().id.id.toInt(),
+        path: event.path,
+        realPath: '',
+        processName: '',
+        sleepTime: 0,
+        advancedTracing: false,
+      ));
+      add(GeburaRefreshLibraryEvent());
+      emit(GeburaImportNewAppInstState(state, EventStatus.success,
+          msg: instResp.error));
     }, transformer: droppable());
 
     on<GeburaImportSteamAppsEvent>((event, emit) async {
@@ -345,22 +430,24 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       var processCount = 0;
       var failedCount = 0;
       final importedSteamApps = _repo.getImportedSteamApps();
-      for (final app in event.appIDs) {
+      for (final steamAppID in event.steamAppIDs) {
         processCount += 1;
         emit(GeburaImportSteamAppsState(
             state.copyWith(
               localLibraryState:
-                  '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.appIDs.length}',
+                  '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.steamAppIDs.length}',
             ),
             EventStatus.processing));
-        if (importedSteamApps.any((element) => element.steamAppID == app)) {
+        if (importedSteamApps
+            .any((element) => element.steamAppID == steamAppID)) {
           continue;
         }
         await _api.doRequest(
           (client) => client.syncAppInfos,
           SyncAppInfosRequest(
             appInfoIds: [
-              AppInfoID(internal: false, source: 'steam', sourceAppId: app)
+              AppInfoID(
+                  internal: false, source: 'steam', sourceAppId: steamAppID)
             ],
             waitData: true,
           ),
@@ -368,8 +455,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         final purchaseResp = await _api.doRequest(
           (client) => client.purchaseAppInfo,
           PurchaseAppInfoRequest(
-            appInfoId:
-                AppInfoID(internal: false, source: 'steam', sourceAppId: app),
+            appInfoId: AppInfoID(
+                internal: false, source: 'steam', sourceAppId: steamAppID),
           ),
         );
         if (purchaseResp.status != ApiStatus.success) {
@@ -380,8 +467,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           (client) => client.createApp,
           CreateAppRequest(
             app: App(
-              name: (state.localSteamApps ?? [])
-                  .firstWhere((element) => element.appId == app)
+              name: (state.localSteamAppInsts ?? [])
+                  .firstWhere((element) => element.appId == steamAppID)
                   .name,
             ),
           ),
@@ -403,7 +490,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         }
         importedSteamApps.add(ImportedSteamApp(
           internalID: purchaseResp.getData().id.id.toInt(),
-          steamAppID: app,
+          steamAppID: steamAppID,
         ));
       }
       await _repo.setImportedSteamApps(importedSteamApps);
@@ -412,7 +499,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           state.copyWith(
             localLibraryState: S.current.importSteamApplicationFinished(
                 processCount - failedCount, failedCount),
-            importedSteamApps: importedSteamApps,
+            importedSteamAppInsts: importedSteamApps,
           ),
           EventStatus.success));
     }, transformer: droppable());
@@ -437,7 +524,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         EventStatus.success,
         msg: resp.error,
       ));
-    }, transformer: droppable());
+      if (event.refreshAfterSuccess ?? false) {
+        add(GeburaApplyLibrarySettingsEvent());
+      }
+    });
   }
 
   AppLauncherSetting? getAppLauncherSetting(InternalID id) {
@@ -466,6 +556,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       ),
     );
     return resp.getData();
+  }
+
+  Future<void> showSteamAppDetails(String steamAppID) async {
+    await launchUrlString('steam://nav/games/details/$steamAppID');
   }
 }
 

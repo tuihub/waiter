@@ -20,7 +20,7 @@ AppLauncherSetting _$AppLauncherSettingFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AppLauncherSetting {
-  int get appID => throw _privateConstructorUsedError;
+  int get appInstID => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
   bool get advancedTracing => throw _privateConstructorUsedError;
   String get processName => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $AppLauncherSettingCopyWith<$Res> {
       _$AppLauncherSettingCopyWithImpl<$Res, AppLauncherSetting>;
   @useResult
   $Res call(
-      {int appID,
+      {int appInstID,
       String path,
       bool advancedTracing,
       String processName,
@@ -61,7 +61,7 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appID = null,
+    Object? appInstID = null,
     Object? path = null,
     Object? advancedTracing = null,
     Object? processName = null,
@@ -69,9 +69,9 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
     Object? sleepTime = null,
   }) {
     return _then(_value.copyWith(
-      appID: null == appID
-          ? _value.appID
-          : appID // ignore: cast_nullable_to_non_nullable
+      appInstID: null == appInstID
+          ? _value.appInstID
+          : appInstID // ignore: cast_nullable_to_non_nullable
               as int,
       path: null == path
           ? _value.path
@@ -106,7 +106,7 @@ abstract class _$$AppLauncherSettingImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int appID,
+      {int appInstID,
       String path,
       bool advancedTracing,
       String processName,
@@ -125,7 +125,7 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appID = null,
+    Object? appInstID = null,
     Object? path = null,
     Object? advancedTracing = null,
     Object? processName = null,
@@ -133,9 +133,9 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
     Object? sleepTime = null,
   }) {
     return _then(_$AppLauncherSettingImpl(
-      appID: null == appID
-          ? _value.appID
-          : appID // ignore: cast_nullable_to_non_nullable
+      appInstID: null == appInstID
+          ? _value.appInstID
+          : appInstID // ignore: cast_nullable_to_non_nullable
               as int,
       path: null == path
           ? _value.path
@@ -165,7 +165,7 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AppLauncherSettingImpl implements _AppLauncherSetting {
   const _$AppLauncherSettingImpl(
-      {required this.appID,
+      {required this.appInstID,
       required this.path,
       required this.advancedTracing,
       required this.processName,
@@ -176,7 +176,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
       _$$AppLauncherSettingImplFromJson(json);
 
   @override
-  final int appID;
+  final int appInstID;
   @override
   final String path;
   @override
@@ -190,7 +190,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @override
   String toString() {
-    return 'AppLauncherSetting(appID: $appID, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
+    return 'AppLauncherSetting(appInstID: $appInstID, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
   }
 
   @override
@@ -198,7 +198,8 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AppLauncherSettingImpl &&
-            (identical(other.appID, appID) || other.appID == appID) &&
+            (identical(other.appInstID, appInstID) ||
+                other.appInstID == appInstID) &&
             (identical(other.path, path) || other.path == path) &&
             (identical(other.advancedTracing, advancedTracing) ||
                 other.advancedTracing == advancedTracing) &&
@@ -212,7 +213,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, appID, path, advancedTracing,
+  int get hashCode => Object.hash(runtimeType, appInstID, path, advancedTracing,
       processName, realPath, sleepTime);
 
   @JsonKey(ignore: true)
@@ -232,7 +233,7 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
 abstract class _AppLauncherSetting implements AppLauncherSetting {
   const factory _AppLauncherSetting(
-      {required final int appID,
+      {required final int appInstID,
       required final String path,
       required final bool advancedTracing,
       required final String processName,
@@ -243,7 +244,7 @@ abstract class _AppLauncherSetting implements AppLauncherSetting {
       _$AppLauncherSettingImpl.fromJson;
 
   @override
-  int get appID;
+  int get appInstID;
   @override
   String get path;
   @override
@@ -727,4 +728,304 @@ abstract class _LibrarySettings implements LibrarySettings {
   @JsonKey(ignore: true)
   _$$LibrarySettingsImplCopyWith<_$LibrarySettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+LocalAppInstFolder _$LocalAppInstFolderFromJson(Map<String, dynamic> json) {
+  return _LocalAppInstFolder.fromJson(json);
+}
+
+/// @nodoc
+mixin _$LocalAppInstFolder {
+  String get path => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $LocalAppInstFolderCopyWith<LocalAppInstFolder> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LocalAppInstFolderCopyWith<$Res> {
+  factory $LocalAppInstFolderCopyWith(
+          LocalAppInstFolder value, $Res Function(LocalAppInstFolder) then) =
+      _$LocalAppInstFolderCopyWithImpl<$Res, LocalAppInstFolder>;
+  @useResult
+  $Res call({String path});
+}
+
+/// @nodoc
+class _$LocalAppInstFolderCopyWithImpl<$Res, $Val extends LocalAppInstFolder>
+    implements $LocalAppInstFolderCopyWith<$Res> {
+  _$LocalAppInstFolderCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? path = null,
+  }) {
+    return _then(_value.copyWith(
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$LocalAppInstFolderImplCopyWith<$Res>
+    implements $LocalAppInstFolderCopyWith<$Res> {
+  factory _$$LocalAppInstFolderImplCopyWith(_$LocalAppInstFolderImpl value,
+          $Res Function(_$LocalAppInstFolderImpl) then) =
+      __$$LocalAppInstFolderImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String path});
+}
+
+/// @nodoc
+class __$$LocalAppInstFolderImplCopyWithImpl<$Res>
+    extends _$LocalAppInstFolderCopyWithImpl<$Res, _$LocalAppInstFolderImpl>
+    implements _$$LocalAppInstFolderImplCopyWith<$Res> {
+  __$$LocalAppInstFolderImplCopyWithImpl(_$LocalAppInstFolderImpl _value,
+      $Res Function(_$LocalAppInstFolderImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? path = null,
+  }) {
+    return _then(_$LocalAppInstFolderImpl(
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$LocalAppInstFolderImpl implements _LocalAppInstFolder {
+  const _$LocalAppInstFolderImpl({required this.path});
+
+  factory _$LocalAppInstFolderImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LocalAppInstFolderImplFromJson(json);
+
+  @override
+  final String path;
+
+  @override
+  String toString() {
+    return 'LocalAppInstFolder(path: $path)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LocalAppInstFolderImpl &&
+            (identical(other.path, path) || other.path == path));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, path);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LocalAppInstFolderImplCopyWith<_$LocalAppInstFolderImpl> get copyWith =>
+      __$$LocalAppInstFolderImplCopyWithImpl<_$LocalAppInstFolderImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$LocalAppInstFolderImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _LocalAppInstFolder implements LocalAppInstFolder {
+  const factory _LocalAppInstFolder({required final String path}) =
+      _$LocalAppInstFolderImpl;
+
+  factory _LocalAppInstFolder.fromJson(Map<String, dynamic> json) =
+      _$LocalAppInstFolderImpl.fromJson;
+
+  @override
+  String get path;
+  @override
+  @JsonKey(ignore: true)
+  _$$LocalAppInstFolderImplCopyWith<_$LocalAppInstFolderImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+LocalAppInstIndependent _$LocalAppInstIndependentFromJson(
+    Map<String, dynamic> json) {
+  return _LocalAppInstIndependent.fromJson(json);
+}
+
+/// @nodoc
+mixin _$LocalAppInstIndependent {
+  int get appInstID => throw _privateConstructorUsedError;
+  String get path => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $LocalAppInstIndependentCopyWith<LocalAppInstIndependent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LocalAppInstIndependentCopyWith<$Res> {
+  factory $LocalAppInstIndependentCopyWith(LocalAppInstIndependent value,
+          $Res Function(LocalAppInstIndependent) then) =
+      _$LocalAppInstIndependentCopyWithImpl<$Res, LocalAppInstIndependent>;
+  @useResult
+  $Res call({int appInstID, String path});
+}
+
+/// @nodoc
+class _$LocalAppInstIndependentCopyWithImpl<$Res,
+        $Val extends LocalAppInstIndependent>
+    implements $LocalAppInstIndependentCopyWith<$Res> {
+  _$LocalAppInstIndependentCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appInstID = null,
+    Object? path = null,
+  }) {
+    return _then(_value.copyWith(
+      appInstID: null == appInstID
+          ? _value.appInstID
+          : appInstID // ignore: cast_nullable_to_non_nullable
+              as int,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$LocalAppInstIndependentImplCopyWith<$Res>
+    implements $LocalAppInstIndependentCopyWith<$Res> {
+  factory _$$LocalAppInstIndependentImplCopyWith(
+          _$LocalAppInstIndependentImpl value,
+          $Res Function(_$LocalAppInstIndependentImpl) then) =
+      __$$LocalAppInstIndependentImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int appInstID, String path});
+}
+
+/// @nodoc
+class __$$LocalAppInstIndependentImplCopyWithImpl<$Res>
+    extends _$LocalAppInstIndependentCopyWithImpl<$Res,
+        _$LocalAppInstIndependentImpl>
+    implements _$$LocalAppInstIndependentImplCopyWith<$Res> {
+  __$$LocalAppInstIndependentImplCopyWithImpl(
+      _$LocalAppInstIndependentImpl _value,
+      $Res Function(_$LocalAppInstIndependentImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appInstID = null,
+    Object? path = null,
+  }) {
+    return _then(_$LocalAppInstIndependentImpl(
+      appInstID: null == appInstID
+          ? _value.appInstID
+          : appInstID // ignore: cast_nullable_to_non_nullable
+              as int,
+      path: null == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$LocalAppInstIndependentImpl implements _LocalAppInstIndependent {
+  const _$LocalAppInstIndependentImpl(
+      {required this.appInstID, required this.path});
+
+  factory _$LocalAppInstIndependentImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LocalAppInstIndependentImplFromJson(json);
+
+  @override
+  final int appInstID;
+  @override
+  final String path;
+
+  @override
+  String toString() {
+    return 'LocalAppInstIndependent(appInstID: $appInstID, path: $path)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LocalAppInstIndependentImpl &&
+            (identical(other.appInstID, appInstID) ||
+                other.appInstID == appInstID) &&
+            (identical(other.path, path) || other.path == path));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, appInstID, path);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LocalAppInstIndependentImplCopyWith<_$LocalAppInstIndependentImpl>
+      get copyWith => __$$LocalAppInstIndependentImplCopyWithImpl<
+          _$LocalAppInstIndependentImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$LocalAppInstIndependentImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _LocalAppInstIndependent implements LocalAppInstIndependent {
+  const factory _LocalAppInstIndependent(
+      {required final int appInstID,
+      required final String path}) = _$LocalAppInstIndependentImpl;
+
+  factory _LocalAppInstIndependent.fromJson(Map<String, dynamic> json) =
+      _$LocalAppInstIndependentImpl.fromJson;
+
+  @override
+  int get appInstID;
+  @override
+  String get path;
+  @override
+  @JsonKey(ignore: true)
+  _$$LocalAppInstIndependentImplCopyWith<_$LocalAppInstIndependentImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

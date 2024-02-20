@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path/path.dart';
 import 'package:universal_io/io.dart' as io;
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:universal_io/io.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/steam/local_library.dart';
@@ -24,8 +28,8 @@ class GeburaLibrarySettings extends StatelessWidget {
         }
         final localLibraryState = state.localLibraryState ?? '';
         final localSteamScanResult = state.localSteamScanResult;
-        final localSteamApps = state.localSteamApps ?? [];
-        final importedSteamApps = state.importedSteamApps ?? [];
+        final localSteamApps = state.localSteamAppInsts ?? [];
+        final importedSteamApps = state.importedSteamAppInsts ?? [];
         final unImportedSteamApps = localSteamApps
             .where(
                 (l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
@@ -58,9 +62,38 @@ class GeburaLibrarySettings extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Text('本地库'),
+                            const Text('本地'),
+                            const Expanded(child: SizedBox()),
+                            Wrap(
+                              spacing: 8,
+                              children: [
+                                OutlinedButton.icon(
+                                  label: const Text('添加应用'),
+                                  icon: const Icon(FontAwesomeIcons.circlePlus),
+                                  onPressed: () {
+                                    unawaited(
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: context.read<GeburaBloc>(),
+                                            child:
+                                                const _NewLocalAppInstDialog(),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                                OutlinedButton.icon(
+                                  label: const Text('添加库'),
+                                  icon: const Icon(FontAwesomeIcons.folderPlus),
+                                  onPressed: null,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -312,8 +345,9 @@ class _SteamGameListState extends State<_SteamGameList> {
                     alignment: Alignment.centerRight,
                     child: OutlinedButton.icon(
                       onPressed: () async {
-                        await launchUrlString(
-                            'steam://nav/games/details/${e.appId}');
+                        await context
+                            .read<GeburaBloc>()
+                            .showSteamAppDetails(e.appId);
                       },
                       icon: Icon(const FaIcon(FontAwesomeIcons.steam).icon,
                           size: 16),
@@ -324,6 +358,144 @@ class _SteamGameListState extends State<_SteamGameList> {
           );
         },
       ).toList(),
+    );
+  }
+}
+
+class _NewLocalAppInstDialog extends StatefulWidget {
+  const _NewLocalAppInstDialog();
+
+  @override
+  State<_NewLocalAppInstDialog> createState() => _NewLocalAppInstDialogState();
+}
+
+class _NewLocalAppInstDialogState extends State<_NewLocalAppInstDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _pathController = TextEditingController();
+  bool _nameReadOnly = true;
+  String? msg;
+
+  Future<void> _selectPath() async {
+    try {
+      final p =
+          await FilePicker.platform.getDirectoryPath(lockParentWindow: true);
+      if (p != null) {
+        setState(() {
+          _pathController.text = p;
+          _nameController.text = basename(p);
+        });
+      }
+    } catch (e) {
+      setState(() {
+        msg = e.toString();
+      });
+      debugPrint(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<GeburaBloc, GeburaState>(
+      listener: (context, state) {
+        if (state is GeburaImportNewAppInstState && state.success) {
+          Navigator.of(context).pop();
+        }
+        if (state is GeburaImportNewAppInstState && !state.success) {
+          setState(() {
+            msg = state.msg;
+          });
+        }
+      },
+      builder: (context, state) {
+        return AlertDialog(
+          title: const Text('添加新应用'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _pathController,
+                  decoration: InputDecoration(
+                    labelText: '应用路径',
+                    suffixIcon: TextButton(
+                      onPressed: () async {
+                        await _selectPath();
+                      },
+                      child: const Text('选择'),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请输入应用路径';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _nameController,
+                  readOnly: _nameReadOnly,
+                  decoration: InputDecoration(
+                    labelText: '应用名称',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _nameReadOnly = !_nameReadOnly;
+                        });
+                      },
+                      icon: Icon(_nameReadOnly ? Icons.lock : Icons.lock_open),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请输入应用名称';
+                    }
+                    return null;
+                  },
+                ),
+                if (msg != null)
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 16),
+                    child: Text(msg!),
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  if (Directory(_pathController.text).existsSync()) {
+                    context.read<GeburaBloc>().add(
+                          GeburaImportNewAppInstEvent(
+                            _pathController.text,
+                            _nameController.text,
+                          ),
+                        );
+                  } else {
+                    setState(() {
+                      msg = '应用路径不存在';
+                    });
+                  }
+                }
+              },
+              child: (state is GeburaImportNewAppInstState && state.processing)
+                  ? const CircularProgressIndicator()
+                  : const Text('添加'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('取消'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

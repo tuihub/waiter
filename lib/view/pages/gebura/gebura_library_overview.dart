@@ -19,7 +19,7 @@ class GeburaLibraryOverview extends StatelessWidget {
         if (firstBuild) {
           firstBuild = false;
         }
-        final apps = state.purchasedAppInfos ?? [];
+        final apps = state.libraryItems ?? [];
         final localLibraryState = state.localLibraryState ?? '';
         return Scaffold(
           body: Column(

@@ -132,7 +132,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                       .read<GeburaBloc>()
                       .add(GeburaSetAppLauncherSettingEvent(
                         setting?.copyWith(
-                              appID: appID,
+                              appInstID: appID,
                               path: pathController.text,
                               advancedTracing: advancedTracing,
                               processName: processName,
@@ -140,7 +140,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                               sleepTime: sleepTime,
                             ) ??
                             AppLauncherSetting(
-                              appID: appID,
+                              appInstID: appID,
                               path: pathController.text,
                               advancedTracing: advancedTracing,
                               processName: processName,

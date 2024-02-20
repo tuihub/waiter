@@ -58,12 +58,13 @@ class GeburaNav extends StatelessWidget {
             selected: function == GeburaFunctions.library &&
                 state.selectedLibraryItem == null,
           ),
+          SpacingHelper.defaultDivider,
           Container(
-            padding: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.filter_alt_outlined),
                 suffixIcon: state.librarySettings?.query?.isNotEmpty ?? false
                     ? IconButton(
                         icon: const Icon(Icons.clear),
@@ -75,7 +76,16 @@ class GeburaNav extends StatelessWidget {
                         },
                       )
                     : null,
-                contentPadding: const EdgeInsets.all(4),
+                contentPadding: EdgeInsets.zero,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderSide: const BorderSide(
+                    style: BorderStyle.none,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: SpacingHelper.defaultBorderRadius,
+                ),
               ),
               onChanged: (query) {
                 context
@@ -84,7 +94,6 @@ class GeburaNav extends StatelessWidget {
               },
             ),
           ),
-          SpacingHelper.defaultDivider,
           Expanded(
             child: DynMouseScroll(
               builder: (context, controller, physics) {

@@ -78,13 +78,21 @@ final class GeburaRunAppEvent extends GeburaEvent {
 final class GeburaScanLocalLibraryEvent extends GeburaEvent {}
 
 final class GeburaImportSteamAppsEvent extends GeburaEvent {
-  final List<String> appIDs;
+  final List<String> steamAppIDs;
 
-  GeburaImportSteamAppsEvent(this.appIDs);
+  GeburaImportSteamAppsEvent(this.steamAppIDs);
+}
+
+final class GeburaImportNewAppInstEvent extends GeburaEvent {
+  final String path;
+  final String name;
+
+  GeburaImportNewAppInstEvent(this.path, this.name);
 }
 
 final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {
   final InternalID appID;
+  final bool? refreshAfterSuccess;
 
-  GeburaFetchBoundAppInfosEvent(this.appID);
+  GeburaFetchBoundAppInfosEvent(this.appID, {this.refreshAfterSuccess});
 }

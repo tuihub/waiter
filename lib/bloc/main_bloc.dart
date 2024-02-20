@@ -72,7 +72,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final yesodRepo = await YesodRepo.init(repoPath);
 
     _tipherethBloc = TipherethBloc(_api);
-    _geburaBloc = GeburaBloc(_api, geburaRepo);
+    _geburaBloc = GeburaBloc(_api, geburaRepo, state.currentDeviceId);
     _yesodBloc = YesodBloc(_api, yesodRepo);
     _chesedBloc = ChesedBloc(_api);
     _netzachBloc = NetzachBloc(_api);

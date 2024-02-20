@@ -97,17 +97,16 @@ class AppPackageTableSource extends AsyncDataTableSource {
         .listApps(pageSize, startIndex ~/ pageSize + 1);
     return AsyncRowsResponse(
       data.paging.totalSize.toInt(),
-      data.appPackages.map(
-        (appPackage) {
+      data.apps.map(
+        (app) {
           return DataRow2(
               cells: [
-                DataCell(Text(appPackage.id.id.toHexString())),
-                DataCell(Text(appPackage.name)),
-                DataCell(Text(appPackage.description)),
+                DataCell(Text(app.id.id.toHexString())),
+                DataCell(Text(app.name)),
+                DataCell(Text(app.description)),
               ],
               onTap: () {
-                AppRoutes.settingsAppPackageEdit()
-                    .go(context, extra: appPackage);
+                AppRoutes.settingsAppPackageEdit().go(context, extra: app);
               });
         },
       ).toList(),

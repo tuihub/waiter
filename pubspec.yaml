@@ -54,7 +54,7 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/tuihub/protos.git
-      ref: v0.4.1
+      ref: v0.4.2
   fixnum: ^1.1.0
 
   # theme
@@ -121,6 +121,7 @@ dependencies:
   petitparser: ^6.0.2
   url_launcher: ^6.2.4
   flutter_markdown: ^0.6.19
+  pinyin: ^3.2.0
 
   # others
   json_annotation: ^4.8.1

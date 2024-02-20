@@ -9,7 +9,7 @@ part of 'gebura_model.dart';
 _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
         Map<String, dynamic> json) =>
     _$AppLauncherSettingImpl(
-      appID: json['appID'] as int,
+      appInstID: json['appInstID'] as int,
       path: json['path'] as String,
       advancedTracing: json['advancedTracing'] as bool,
       processName: json['processName'] as String,
@@ -20,7 +20,7 @@ _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
 Map<String, dynamic> _$$AppLauncherSettingImplToJson(
         _$AppLauncherSettingImpl instance) =>
     <String, dynamic>{
-      'appID': instance.appID,
+      'appInstID': instance.appInstID,
       'path': instance.path,
       'advancedTracing': instance.advancedTracing,
       'processName': instance.processName,
@@ -70,4 +70,30 @@ Map<String, dynamic> _$$LibrarySettingsImplToJson(
         _$LibrarySettingsImpl instance) =>
     <String, dynamic>{
       'query': instance.query,
+    };
+
+_$LocalAppInstFolderImpl _$$LocalAppInstFolderImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LocalAppInstFolderImpl(
+      path: json['path'] as String,
+    );
+
+Map<String, dynamic> _$$LocalAppInstFolderImplToJson(
+        _$LocalAppInstFolderImpl instance) =>
+    <String, dynamic>{
+      'path': instance.path,
+    };
+
+_$LocalAppInstIndependentImpl _$$LocalAppInstIndependentImplFromJson(
+        Map<String, dynamic> json) =>
+    _$LocalAppInstIndependentImpl(
+      appInstID: json['appInstID'] as int,
+      path: json['path'] as String,
+    );
+
+Map<String, dynamic> _$$LocalAppInstIndependentImplToJson(
+        _$LocalAppInstIndependentImpl instance) =>
+    <String, dynamic>{
+      'appInstID': instance.appInstID,
+      'path': instance.path,
     };
