@@ -157,6 +157,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             return;
           } catch (e) {
             debugPrint('login by refresh token failed');
+            emit(MainAutoLoginState(
+              state,
+              EventStatus.failed,
+              msg: e.toString(),
+            ));
           }
         }
       }

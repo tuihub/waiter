@@ -42,6 +42,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   ServerConfig? _selected;
   double translate = 1;
   bool _minimized = false;
+  bool _fullscreen = false;
   static const minimizedHeight = 64.0;
 
   void fullscreen() {
@@ -49,6 +50,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
     setState(() {
       _selected = _current;
       _minimized = false;
+      _fullscreen = true;
     });
   }
 
@@ -56,6 +58,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
     _animateTo(minimizedHeight - _height);
     setState(() {
       _minimized = true;
+      _fullscreen = false;
     });
   }
 
@@ -63,6 +66,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
     _animateTo(-_height, onComplete: () {
       setState(() {
         _minimized = false;
+        _fullscreen = false;
       });
     });
   }
@@ -93,6 +97,13 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   void didUpdateWidget(covariant ServerSelectOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
     _current = context.read<MainBloc>().state.currentServer;
+    if (_minimized) {
+      minimize();
+    } else if (_fullscreen) {
+      fullscreen();
+    } else {
+      hide();
+    }
   }
 
   @override
@@ -108,10 +119,12 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
               minimize();
             }
             if (state is MainAutoLoginState && state.failed) {
-              Toast(
-                title: '',
-                message: S.of(context).loginFailed(state.msg ?? ''),
-              ).show(context);
+              if (state.msg != null) {
+                Toast(
+                  title: '',
+                  message: S.of(context).loginFailed(state.msg ?? ''),
+                ).show(context);
+              }
               context.read<MainBloc>().add(
                     MainSetNextServerConfigEvent(_selected!),
                   );

@@ -43,7 +43,7 @@ class _InitPageState extends State<InitPage> {
               PlatformHelper.isWeb() &&
               (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
                   DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
-            ServerSelectOverlay.of(context)?.fullscreen();
+            ServerSelectOverlay.of(context)?.hide();
             AppRoutes.webLanding.go(context);
           }
         },
