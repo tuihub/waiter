@@ -5,6 +5,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:local_hero/local_hero.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
@@ -117,7 +118,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             xxs: 3,
                             child: Padding(
                               padding: const EdgeInsets.all(8),
-                              child: Hero(
+                              child: LocalHero(
                                 tag: item.id.id.toString(),
                                 child: UrlHelper.isValidUrl(item.coverImageUrl)
                                     ? ExtendedImage.network(

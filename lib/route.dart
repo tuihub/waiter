@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local_hero/local_hero.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -73,13 +74,13 @@ class AppRoutes {
     }
   }
 
-  void push(BuildContext context, {Object? extra}) {
-    unawaited(GoRouter.of(context).push(path, extra: extra));
-    if (isAction) {
-      OverlappingPanels.of(context)?.reveal(RevealSide.right);
-      FramePage.of(context)?.openDrawer();
-    }
-  }
+  // void push(BuildContext context, {Object? extra}) {
+  //   unawaited(GoRouter.of(context).push(path, extra: extra));
+  //   if (isAction) {
+  //     OverlappingPanels.of(context)?.reveal(RevealSide.right);
+  //     FramePage.of(context)?.openDrawer();
+  //   }
+  // }
 
   void pop(BuildContext context) {
     if (isAction) {
@@ -438,12 +439,15 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   return CustomTransitionPage(
                     key: state.pageKey,
                     transitionsBuilder: (_, __, ___, child) => child,
-                    child: FramePage(
-                      selectedNav: ModuleName.gebura,
-                      leftPart: GeburaNav(
-                        function: function,
+                    child: LocalHeroScope(
+                      curve: Curves.easeInOut,
+                      child: FramePage(
+                        selectedNav: ModuleName.gebura,
+                        leftPart: GeburaNav(
+                          function: function,
+                        ),
+                        middlePart: page,
                       ),
-                      middlePart: page,
                     ),
                   );
                 },

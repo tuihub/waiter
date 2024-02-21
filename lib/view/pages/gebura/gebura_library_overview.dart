@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_hero/local_hero.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -115,8 +116,7 @@ class _GeburaLibraryOverviewItemState
           context
               .read<GeburaBloc>()
               .add(GeburaSetSelectedLibraryItemEvent(widget.item.id));
-          AppRoutes.geburaLibraryDetail(widget.item.id.id.toInt())
-              .push(context);
+          AppRoutes.geburaLibraryDetail(widget.item.id.id.toInt()).go(context);
         },
         child: Stack(
           children: [
@@ -130,7 +130,7 @@ class _GeburaLibraryOverviewItemState
               child: Center(child: Text(noCoverImage ? name : '')),
             ),
             Center(
-              child: Hero(
+              child: LocalHero(
                 tag: widget.item.id.id.toString(),
                 child: noCoverImage
                     ? Container()
