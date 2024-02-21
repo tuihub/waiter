@@ -21,7 +21,9 @@ class GeburaStorePage extends StatelessWidget {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
       if (state is GeburaSearchAppInfosState) {
         apps = state.apps;
-        if (state.processing) {
+        if (controller.text.isEmpty) {
+          msg = '输入应用名称进行搜索';
+        } else if (state.processing) {
           msg = '加载中';
         } else if (state.failed) {
           msg = '加载失败';
@@ -30,17 +32,13 @@ class GeburaStorePage extends StatelessWidget {
         }
       }
       return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child:
-              apps != null ? StoreList(apps: apps!) : Center(child: Text(msg)),
-        ),
+        body: apps != null && apps!.isNotEmpty
+            ? StoreList(apps: apps!)
+            : Center(child: Text(msg)),
         appBar: AppBar(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+          shape: RoundedRectangleBorder(
+            borderRadius: SpacingHelper.defaultBorderRadius,
           ),
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           title: BootstrapContainer(
             children: [
               BootstrapColumn(
@@ -83,13 +81,16 @@ class GeburaStorePage extends StatelessWidget {
                             ),
                             onPressed: () {
                               controller.text = '';
+                              context.read<GeburaBloc>().add(
+                                    GeburaSearchAppInfosEvent(''),
+                                  );
                             },
                             splashColor: Theme.of(context).primaryColor,
                             color: Theme.of(context).primaryColor,
                           )),
-                      onEditingComplete: () {
+                      onChanged: (text) {
                         context.read<GeburaBloc>().add(
-                              GeburaSearchAppInfosEvent(controller.text),
+                              GeburaSearchAppInfosEvent(text),
                             );
                       },
                     ),
@@ -114,128 +115,117 @@ class StoreList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(children: [
-      Expanded(child: DynMouseScroll(builder: (context, controller, physics) {
-        return CustomScrollView(
-          controller: controller,
-          physics: physics,
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                childCount: apps.length,
-                (context, index) {
-                  final app = apps.elementAt(index);
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: OpenContainer(
-                      openBuilder: (_, closedContainer) {
-                        return BlocProvider.value(
-                          value: context.read<GeburaBloc>(),
-                          child: Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            child: GeburaStoreDetail(appID: app.id),
-                          ),
-                        );
-                      },
-                      openColor: theme.colorScheme.primary,
-                      closedShape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                      closedElevation: 0,
-                      closedColor: theme.cardColor,
-                      closedBuilder: (context, openContainer) {
-                        return SizedBox(
-                          width: 384,
-                          height: 128,
-                          child: Material(
+    return DynMouseScroll(builder: (context, controller, physics) {
+      return CustomScrollView(
+        controller: controller,
+        physics: physics,
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              childCount: apps.length,
+              (context, index) {
+                final app = apps.elementAt(index);
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: OpenContainer(
+                    openBuilder: (_, closedContainer) {
+                      return BlocProvider.value(
+                        value: context.read<GeburaBloc>(),
+                        child: Container(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: GeburaStoreDetail(appID: app.id),
+                        ),
+                      );
+                    },
+                    openColor: theme.colorScheme.primary,
+                    closedShape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    closedColor: theme.scaffoldBackgroundColor,
+                    closedElevation: 0,
+                    closedBuilder: (context, openContainer) {
+                      return SizedBox(
+                        height: 128,
+                        child: Card(
+                          child: InkWell(
                             borderRadius: SpacingHelper.defaultBorderRadius,
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: SpacingHelper.defaultBorderRadius,
-                              ),
-                              child: InkWell(
-                                borderRadius: SpacingHelper.defaultBorderRadius,
-                                onTap: () {
-                                  openContainer();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              SpacingHelper.defaultBorderRadius,
-                                          image: DecorationImage(
-                                              image:
-                                                  ExtendedNetworkImageProvider(
-                                                app.coverImageUrl,
-                                              ),
-                                              fit: BoxFit.scaleDown),
-                                        ),
-                                        width: 150,
-                                        height: 200,
-                                      ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              app.id.id.toHexString(),
-                                              style: TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 10,
-                                                  color: Theme.of(context)
-                                                      .disabledColor),
-                                              maxLines: 2,
-                                            ),
-                                            const SizedBox(
-                                              height: 4,
-                                            ),
-                                            Text(
-                                              app.name,
-                                              style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 2,
-                                            ),
-                                            const SizedBox(
-                                              height: 4,
-                                            ),
-                                            Text(
-                                              app.shortDescription,
-                                              style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 10,
-                                              ),
-                                              maxLines: 3,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                            onTap: () {
+                              openContainer();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          SpacingHelper.defaultBorderRadius,
+                                      image: DecorationImage(
+                                          image: ExtendedNetworkImageProvider(
+                                            app.coverImageUrl,
+                                          ),
+                                          fit: BoxFit.scaleDown),
+                                    ),
+                                    width: 150,
+                                    height: 200,
                                   ),
-                                ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          app.id.id.toHexString(),
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontSize: 10,
+                                              color: Theme.of(context)
+                                                  .disabledColor),
+                                          maxLines: 2,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          app.name,
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          app.shortDescription,
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: 10,
+                                          ),
+                                          maxLines: 3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
             ),
-          ],
-        );
-      })),
-    ]);
+          ),
+        ],
+      );
+    });
   }
 }

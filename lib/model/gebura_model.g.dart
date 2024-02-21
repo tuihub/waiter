@@ -6,9 +6,9 @@ part of 'gebura_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
+_$LocalAppInstLauncherSettingImpl _$$LocalAppInstLauncherSettingImplFromJson(
         Map<String, dynamic> json) =>
-    _$AppLauncherSettingImpl(
+    _$LocalAppInstLauncherSettingImpl(
       appInstID: json['appInstID'] as int,
       installPath: json['installPath'] as String,
       path: json['path'] as String,
@@ -18,8 +18,8 @@ _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
       sleepTime: json['sleepTime'] as int,
     );
 
-Map<String, dynamic> _$$AppLauncherSettingImplToJson(
-        _$AppLauncherSettingImpl instance) =>
+Map<String, dynamic> _$$LocalAppInstLauncherSettingImplToJson(
+        _$LocalAppInstLauncherSettingImpl instance) =>
     <String, dynamic>{
       'appInstID': instance.appInstID,
       'installPath': instance.installPath,
@@ -29,6 +29,27 @@ Map<String, dynamic> _$$AppLauncherSettingImplToJson(
       'realPath': instance.realPath,
       'sleepTime': instance.sleepTime,
     };
+
+_$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AppLauncherSettingImpl(
+      type: $enumDecode(_$AppLauncherTypeEnumMap, json['type']),
+      localAppInstID: json['localAppInstID'] as int?,
+      steamAppID: json['steamAppID'] as String?,
+    );
+
+Map<String, dynamic> _$$AppLauncherSettingImplToJson(
+        _$AppLauncherSettingImpl instance) =>
+    <String, dynamic>{
+      'type': _$AppLauncherTypeEnumMap[instance.type]!,
+      'localAppInstID': instance.localAppInstID,
+      'steamAppID': instance.steamAppID,
+    };
+
+const _$AppLauncherTypeEnumMap = {
+  AppLauncherType.steam: 'steam',
+  AppLauncherType.local: 'local',
+};
 
 _$AppRunStateImpl _$$AppRunStateImplFromJson(Map<String, dynamic> json) =>
     _$AppRunStateImpl(

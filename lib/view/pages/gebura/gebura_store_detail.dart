@@ -26,13 +26,13 @@ class GeburaStoreDetail extends StatelessWidget {
         msg = state.msg ?? msg;
       }
     }, builder: (context, state) {
-      final apps = state.appInfoMap != null ? state.appInfoMap![appID] : null;
+      final apps =
+          state.appInfoMap != null ? state.appInfoMap![appID.id] : null;
       final app = apps != null ? mixAppInfo(apps) : null;
       if (firstBuild && apps == null) {
         firstBuild = false;
         context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(appID));
       }
-      debugPrint(app.toString());
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [

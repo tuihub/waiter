@@ -32,10 +32,10 @@ final class GeburaPurchaseEvent extends GeburaEvent {
   GeburaPurchaseEvent(this.id);
 }
 
-final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
-  final AppLauncherSetting setting;
+final class GeburaSetLocalAppInstLauncherSettingEvent extends GeburaEvent {
+  final LocalAppInstLauncherSetting setting;
 
-  GeburaSetAppLauncherSettingEvent(this.setting);
+  GeburaSetLocalAppInstLauncherSettingEvent(this.setting);
 }
 
 final class GeburaAddAppInfoEvent extends GeburaEvent {
@@ -95,4 +95,17 @@ final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {
   final bool? refreshAfterSuccess;
 
   GeburaFetchBoundAppInfosEvent(this.appID, {this.refreshAfterSuccess});
+}
+
+final class GeburaSetAppLauncherSettingEvent extends GeburaEvent {
+  final InternalID appID;
+  final AppLauncherSetting setting;
+
+  GeburaSetAppLauncherSettingEvent(this.appID, this.setting);
+}
+
+final class GeburaFetchAppLauncherSettingEvent extends GeburaEvent {
+  final InternalID appID;
+
+  GeburaFetchAppLauncherSettingEvent(this.appID);
 }

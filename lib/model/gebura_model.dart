@@ -4,8 +4,8 @@ part 'gebura_model.freezed.dart';
 part 'gebura_model.g.dart';
 
 @freezed
-class AppLauncherSetting with _$AppLauncherSetting {
-  const factory AppLauncherSetting({
+class LocalAppInstLauncherSetting with _$LocalAppInstLauncherSetting {
+  const factory LocalAppInstLauncherSetting({
     required int appInstID,
     required String installPath,
     required String path,
@@ -13,6 +13,23 @@ class AppLauncherSetting with _$AppLauncherSetting {
     required String processName,
     required String realPath,
     required int sleepTime,
+  }) = _LocalAppInstLauncherSetting;
+
+  factory LocalAppInstLauncherSetting.fromJson(Map<String, Object?> json) =>
+      _$LocalAppInstLauncherSettingFromJson(json);
+}
+
+enum AppLauncherType {
+  steam,
+  local,
+}
+
+@freezed
+class AppLauncherSetting with _$AppLauncherSetting {
+  const factory AppLauncherSetting({
+    required AppLauncherType type,
+    int? localAppInstID,
+    String? steamAppID,
   }) = _AppLauncherSetting;
 
   factory AppLauncherSetting.fromJson(Map<String, Object?> json) =>

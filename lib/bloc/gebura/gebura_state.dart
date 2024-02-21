@@ -9,6 +9,7 @@ class GeburaState {
   late int? selectedLibraryItem;
   late List<AppInst>? ownedAppInsts;
 
+  late Map<Int64, AppLauncherSetting>? appLauncherSettings;
   late Map<InternalID, AppRunState>? runState;
 
   late String? localLibraryState;
@@ -16,6 +17,19 @@ class GeburaState {
   late List<InstalledSteamApps>? localSteamAppInsts;
   late List<ImportedSteamAppInst>? importedSteamAppInsts;
   late List<String>? localSteamLibraryFolders;
+
+  List<AppInst> getAppInsts(Int64 appID) {
+    return ownedAppInsts != null
+        ? List.from(ownedAppInsts!.where((inst) {
+            final app = ownedApps?.firstWhere(
+                  (element) => inst.appId.id == element.id.id,
+                  orElse: App.new,
+                ) ??
+                App();
+            return inst.appId.id == appID || app.assignedAppInfoId.id == appID;
+          }))
+        : [];
+  }
 
   GeburaState({
     this.appInfoMap,
@@ -25,6 +39,7 @@ class GeburaState {
     this.librarySettings,
     this.selectedLibraryItem,
     this.ownedAppInsts,
+    this.appLauncherSettings,
     this.runState,
     this.localLibraryState,
     this.localSteamScanResult,
@@ -41,6 +56,7 @@ class GeburaState {
     LibrarySettings? librarySettings,
     int? selectedLibraryItem,
     List<AppInst>? ownedAppInsts,
+    Map<Int64, AppLauncherSetting>? appLauncherSettings,
     Map<InternalID, AppRunState>? runState,
     String? localLibraryState,
     SteamScanResult? localSteamScanResult,
@@ -56,6 +72,7 @@ class GeburaState {
       librarySettings: librarySettings ?? this.librarySettings,
       selectedLibraryItem: selectedLibraryItem ?? this.selectedLibraryItem,
       ownedAppInsts: ownedAppInsts ?? this.ownedAppInsts,
+      appLauncherSettings: appLauncherSettings ?? this.appLauncherSettings,
       runState: runState ?? this.runState,
       localLibraryState: localLibraryState ?? this.localLibraryState,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
@@ -75,6 +92,7 @@ class GeburaState {
     librarySettings = other.librarySettings;
     selectedLibraryItem = other.selectedLibraryItem;
     ownedAppInsts = other.ownedAppInsts;
+    appLauncherSettings = other.appLauncherSettings;
     runState = other.runState;
     localLibraryState = other.localLibraryState;
     localSteamScanResult = other.localSteamScanResult;

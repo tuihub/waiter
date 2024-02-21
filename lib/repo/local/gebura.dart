@@ -4,53 +4,75 @@ import 'package:hive/hive.dart';
 
 import '../../model/gebura_model.dart';
 
-const _appSettingsFile = 'gebura_app_settings';
+const _appLauncherSettingsFile = 'gebura_app_launcher_settings';
+const _localAppInstSettingsFile = 'gebura_local_app_inst_settings';
 const _importedSteamAppInstsFile = 'gebura_imported_steam_app_insts';
 const _localAppInstFoldersFile = 'gebura_local_app_inst_folders';
 const _localAppInstIndependentsFile = 'gebura_local_app_inst_independents';
 
 class GeburaRepo {
-  late Box<String> _appSettings;
+  late Box<String> _appLauncherSettings;
+  late Box<String> _localAppInstSettings;
   late Box<String> _importedSteamAppInsts;
   late Box<String> _localAppInstFolders;
   late Box<String> _localAppInstIndependents;
 
   GeburaRepo._init(
-    Box<String> appSettings,
+    Box<String> appLauncherSettings,
+    Box<String> localAppInstSettings,
     Box<String> importedSteamAppInsts,
     Box<String> localAppInstFolders,
     Box<String> localAppInstIndependents,
   ) {
+    _appLauncherSettings = appLauncherSettings;
     _importedSteamAppInsts = importedSteamAppInsts;
-    _appSettings = appSettings;
+    _localAppInstSettings = localAppInstSettings;
     _localAppInstFolders = localAppInstFolders;
     _localAppInstIndependents = localAppInstIndependents;
   }
 
   static Future<GeburaRepo> init(String? path) async {
-    final appSettings =
-        await Hive.openBox<String>(_appSettingsFile, path: path);
+    final appLauncherSettings =
+        await Hive.openBox<String>(_appLauncherSettingsFile, path: path);
+    final localAppInstSettings =
+        await Hive.openBox<String>(_localAppInstSettingsFile, path: path);
     final importedSteamAppInsts =
         await Hive.openBox<String>(_importedSteamAppInstsFile, path: path);
     final localAppInstFolders =
         await Hive.openBox<String>(_localAppInstFoldersFile, path: path);
     final localAppInstIndependents =
         await Hive.openBox<String>(_localAppInstIndependentsFile, path: path);
-    return GeburaRepo._init(appSettings, importedSteamAppInsts,
-        localAppInstFolders, localAppInstIndependents);
+    return GeburaRepo._init(appLauncherSettings, localAppInstSettings,
+        importedSteamAppInsts, localAppInstFolders, localAppInstIndependents);
   }
 
-  Future<void> setAppLauncherSetting(AppLauncherSetting setting) async {
-    await _appSettings.put(
+  Future<void> setAppLauncherSetting(
+      int appID, AppLauncherSetting setting) async {
+    await _appLauncherSettings.put(
+        appID.toString(), jsonEncode(setting.toJson()));
+  }
+
+  AppLauncherSetting? getAppLauncherSetting(int appID) {
+    final setting = _appLauncherSettings.get(appID.toString());
+    if (setting != null) {
+      return AppLauncherSetting.fromJson(
+          jsonDecode(setting) as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  Future<void> setLocalAppInstLauncherSetting(
+      LocalAppInstLauncherSetting setting) async {
+    await _localAppInstSettings.put(
       setting.appInstID.toString(),
       jsonEncode(setting.toJson()),
     );
   }
 
-  AppLauncherSetting? getAppLauncherSetting(int appInstID) {
-    final setting = _appSettings.get(appInstID.toString());
+  LocalAppInstLauncherSetting? getLocalAppInstLauncherSetting(int appInstID) {
+    final setting = _localAppInstSettings.get(appInstID.toString());
     if (setting != null) {
-      return AppLauncherSetting.fromJson(
+      return LocalAppInstLauncherSetting.fromJson(
           jsonDecode(setting) as Map<String, dynamic>);
     }
     return null;

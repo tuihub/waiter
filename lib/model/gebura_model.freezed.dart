@@ -14,12 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-AppLauncherSetting _$AppLauncherSettingFromJson(Map<String, dynamic> json) {
-  return _AppLauncherSetting.fromJson(json);
+LocalAppInstLauncherSetting _$LocalAppInstLauncherSettingFromJson(
+    Map<String, dynamic> json) {
+  return _LocalAppInstLauncherSetting.fromJson(json);
 }
 
 /// @nodoc
-mixin _$AppLauncherSetting {
+mixin _$LocalAppInstLauncherSetting {
   int get appInstID => throw _privateConstructorUsedError;
   String get installPath => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
@@ -30,15 +31,17 @@ mixin _$AppLauncherSetting {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $AppLauncherSettingCopyWith<AppLauncherSetting> get copyWith =>
-      throw _privateConstructorUsedError;
+  $LocalAppInstLauncherSettingCopyWith<LocalAppInstLauncherSetting>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AppLauncherSettingCopyWith<$Res> {
-  factory $AppLauncherSettingCopyWith(
-          AppLauncherSetting value, $Res Function(AppLauncherSetting) then) =
-      _$AppLauncherSettingCopyWithImpl<$Res, AppLauncherSetting>;
+abstract class $LocalAppInstLauncherSettingCopyWith<$Res> {
+  factory $LocalAppInstLauncherSettingCopyWith(
+          LocalAppInstLauncherSetting value,
+          $Res Function(LocalAppInstLauncherSetting) then) =
+      _$LocalAppInstLauncherSettingCopyWithImpl<$Res,
+          LocalAppInstLauncherSetting>;
   @useResult
   $Res call(
       {int appInstID,
@@ -51,9 +54,10 @@ abstract class $AppLauncherSettingCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
-    implements $AppLauncherSettingCopyWith<$Res> {
-  _$AppLauncherSettingCopyWithImpl(this._value, this._then);
+class _$LocalAppInstLauncherSettingCopyWithImpl<$Res,
+        $Val extends LocalAppInstLauncherSetting>
+    implements $LocalAppInstLauncherSettingCopyWith<$Res> {
+  _$LocalAppInstLauncherSettingCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -105,11 +109,12 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
 }
 
 /// @nodoc
-abstract class _$$AppLauncherSettingImplCopyWith<$Res>
-    implements $AppLauncherSettingCopyWith<$Res> {
-  factory _$$AppLauncherSettingImplCopyWith(_$AppLauncherSettingImpl value,
-          $Res Function(_$AppLauncherSettingImpl) then) =
-      __$$AppLauncherSettingImplCopyWithImpl<$Res>;
+abstract class _$$LocalAppInstLauncherSettingImplCopyWith<$Res>
+    implements $LocalAppInstLauncherSettingCopyWith<$Res> {
+  factory _$$LocalAppInstLauncherSettingImplCopyWith(
+          _$LocalAppInstLauncherSettingImpl value,
+          $Res Function(_$LocalAppInstLauncherSettingImpl) then) =
+      __$$LocalAppInstLauncherSettingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,11 +128,13 @@ abstract class _$$AppLauncherSettingImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$AppLauncherSettingImplCopyWithImpl<$Res>
-    extends _$AppLauncherSettingCopyWithImpl<$Res, _$AppLauncherSettingImpl>
-    implements _$$AppLauncherSettingImplCopyWith<$Res> {
-  __$$AppLauncherSettingImplCopyWithImpl(_$AppLauncherSettingImpl _value,
-      $Res Function(_$AppLauncherSettingImpl) _then)
+class __$$LocalAppInstLauncherSettingImplCopyWithImpl<$Res>
+    extends _$LocalAppInstLauncherSettingCopyWithImpl<$Res,
+        _$LocalAppInstLauncherSettingImpl>
+    implements _$$LocalAppInstLauncherSettingImplCopyWith<$Res> {
+  __$$LocalAppInstLauncherSettingImplCopyWithImpl(
+      _$LocalAppInstLauncherSettingImpl _value,
+      $Res Function(_$LocalAppInstLauncherSettingImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -141,7 +148,7 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
     Object? realPath = null,
     Object? sleepTime = null,
   }) {
-    return _then(_$AppLauncherSettingImpl(
+    return _then(_$LocalAppInstLauncherSettingImpl(
       appInstID: null == appInstID
           ? _value.appInstID
           : appInstID // ignore: cast_nullable_to_non_nullable
@@ -176,8 +183,9 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AppLauncherSettingImpl implements _AppLauncherSetting {
-  const _$AppLauncherSettingImpl(
+class _$LocalAppInstLauncherSettingImpl
+    implements _LocalAppInstLauncherSetting {
+  const _$LocalAppInstLauncherSettingImpl(
       {required this.appInstID,
       required this.installPath,
       required this.path,
@@ -186,8 +194,9 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
       required this.realPath,
       required this.sleepTime});
 
-  factory _$AppLauncherSettingImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AppLauncherSettingImplFromJson(json);
+  factory _$LocalAppInstLauncherSettingImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$LocalAppInstLauncherSettingImplFromJson(json);
 
   @override
   final int appInstID;
@@ -206,14 +215,14 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
 
   @override
   String toString() {
-    return 'AppLauncherSetting(appInstID: $appInstID, installPath: $installPath, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
+    return 'LocalAppInstLauncherSetting(appInstID: $appInstID, installPath: $installPath, path: $path, advancedTracing: $advancedTracing, processName: $processName, realPath: $realPath, sleepTime: $sleepTime)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppLauncherSettingImpl &&
+            other is _$LocalAppInstLauncherSettingImpl &&
             (identical(other.appInstID, appInstID) ||
                 other.appInstID == appInstID) &&
             (identical(other.installPath, installPath) ||
@@ -237,30 +246,31 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AppLauncherSettingImplCopyWith<_$AppLauncherSettingImpl> get copyWith =>
-      __$$AppLauncherSettingImplCopyWithImpl<_$AppLauncherSettingImpl>(
-          this, _$identity);
+  _$$LocalAppInstLauncherSettingImplCopyWith<_$LocalAppInstLauncherSettingImpl>
+      get copyWith => __$$LocalAppInstLauncherSettingImplCopyWithImpl<
+          _$LocalAppInstLauncherSettingImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AppLauncherSettingImplToJson(
+    return _$$LocalAppInstLauncherSettingImplToJson(
       this,
     );
   }
 }
 
-abstract class _AppLauncherSetting implements AppLauncherSetting {
-  const factory _AppLauncherSetting(
+abstract class _LocalAppInstLauncherSetting
+    implements LocalAppInstLauncherSetting {
+  const factory _LocalAppInstLauncherSetting(
       {required final int appInstID,
       required final String installPath,
       required final String path,
       required final bool advancedTracing,
       required final String processName,
       required final String realPath,
-      required final int sleepTime}) = _$AppLauncherSettingImpl;
+      required final int sleepTime}) = _$LocalAppInstLauncherSettingImpl;
 
-  factory _AppLauncherSetting.fromJson(Map<String, dynamic> json) =
-      _$AppLauncherSettingImpl.fromJson;
+  factory _LocalAppInstLauncherSetting.fromJson(Map<String, dynamic> json) =
+      _$LocalAppInstLauncherSettingImpl.fromJson;
 
   @override
   int get appInstID;
@@ -276,6 +286,182 @@ abstract class _AppLauncherSetting implements AppLauncherSetting {
   String get realPath;
   @override
   int get sleepTime;
+  @override
+  @JsonKey(ignore: true)
+  _$$LocalAppInstLauncherSettingImplCopyWith<_$LocalAppInstLauncherSettingImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+AppLauncherSetting _$AppLauncherSettingFromJson(Map<String, dynamic> json) {
+  return _AppLauncherSetting.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AppLauncherSetting {
+  AppLauncherType get type => throw _privateConstructorUsedError;
+  int? get localAppInstID => throw _privateConstructorUsedError;
+  String? get steamAppID => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AppLauncherSettingCopyWith<AppLauncherSetting> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AppLauncherSettingCopyWith<$Res> {
+  factory $AppLauncherSettingCopyWith(
+          AppLauncherSetting value, $Res Function(AppLauncherSetting) then) =
+      _$AppLauncherSettingCopyWithImpl<$Res, AppLauncherSetting>;
+  @useResult
+  $Res call({AppLauncherType type, int? localAppInstID, String? steamAppID});
+}
+
+/// @nodoc
+class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
+    implements $AppLauncherSettingCopyWith<$Res> {
+  _$AppLauncherSettingCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? localAppInstID = freezed,
+    Object? steamAppID = freezed,
+  }) {
+    return _then(_value.copyWith(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AppLauncherType,
+      localAppInstID: freezed == localAppInstID
+          ? _value.localAppInstID
+          : localAppInstID // ignore: cast_nullable_to_non_nullable
+              as int?,
+      steamAppID: freezed == steamAppID
+          ? _value.steamAppID
+          : steamAppID // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AppLauncherSettingImplCopyWith<$Res>
+    implements $AppLauncherSettingCopyWith<$Res> {
+  factory _$$AppLauncherSettingImplCopyWith(_$AppLauncherSettingImpl value,
+          $Res Function(_$AppLauncherSettingImpl) then) =
+      __$$AppLauncherSettingImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({AppLauncherType type, int? localAppInstID, String? steamAppID});
+}
+
+/// @nodoc
+class __$$AppLauncherSettingImplCopyWithImpl<$Res>
+    extends _$AppLauncherSettingCopyWithImpl<$Res, _$AppLauncherSettingImpl>
+    implements _$$AppLauncherSettingImplCopyWith<$Res> {
+  __$$AppLauncherSettingImplCopyWithImpl(_$AppLauncherSettingImpl _value,
+      $Res Function(_$AppLauncherSettingImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? localAppInstID = freezed,
+    Object? steamAppID = freezed,
+  }) {
+    return _then(_$AppLauncherSettingImpl(
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as AppLauncherType,
+      localAppInstID: freezed == localAppInstID
+          ? _value.localAppInstID
+          : localAppInstID // ignore: cast_nullable_to_non_nullable
+              as int?,
+      steamAppID: freezed == steamAppID
+          ? _value.steamAppID
+          : steamAppID // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AppLauncherSettingImpl implements _AppLauncherSetting {
+  const _$AppLauncherSettingImpl(
+      {required this.type, this.localAppInstID, this.steamAppID});
+
+  factory _$AppLauncherSettingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppLauncherSettingImplFromJson(json);
+
+  @override
+  final AppLauncherType type;
+  @override
+  final int? localAppInstID;
+  @override
+  final String? steamAppID;
+
+  @override
+  String toString() {
+    return 'AppLauncherSetting(type: $type, localAppInstID: $localAppInstID, steamAppID: $steamAppID)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppLauncherSettingImpl &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.localAppInstID, localAppInstID) ||
+                other.localAppInstID == localAppInstID) &&
+            (identical(other.steamAppID, steamAppID) ||
+                other.steamAppID == steamAppID));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, type, localAppInstID, steamAppID);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AppLauncherSettingImplCopyWith<_$AppLauncherSettingImpl> get copyWith =>
+      __$$AppLauncherSettingImplCopyWithImpl<_$AppLauncherSettingImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AppLauncherSettingImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AppLauncherSetting implements AppLauncherSetting {
+  const factory _AppLauncherSetting(
+      {required final AppLauncherType type,
+      final int? localAppInstID,
+      final String? steamAppID}) = _$AppLauncherSettingImpl;
+
+  factory _AppLauncherSetting.fromJson(Map<String, dynamic> json) =
+      _$AppLauncherSettingImpl.fromJson;
+
+  @override
+  AppLauncherType get type;
+  @override
+  int? get localAppInstID;
+  @override
+  String? get steamAppID;
   @override
   @JsonKey(ignore: true)
   _$$AppLauncherSettingImplCopyWith<_$AppLauncherSettingImpl> get copyWith =>

@@ -11,7 +11,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
   const GeburaAppLauncherSettingDialog(this.appID, this.setting, {super.key});
 
   final int appID;
-  final AppLauncherSetting? setting;
+  final LocalAppInstLauncherSetting? setting;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,14 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                     decoration: InputDecoration(
                       suffixIcon: TextButton(
                         onPressed: () async {
+                          final initialDirectory = setting?.installPath;
                           final pickResult =
-                              await file_picker.FilePicker.platform.pickFiles();
+                              await file_picker.FilePicker.platform.pickFiles(
+                            type: file_picker.FileType.custom,
+                            allowedExtensions: ['exe'],
+                            allowMultiple: false,
+                            initialDirectory: initialDirectory,
+                          );
                           if (pickResult != null) {
                             pathController.text = pickResult.paths.first!;
                           }
@@ -154,7 +160,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                   formKey.currentState!.save();
                   context
                       .read<GeburaBloc>()
-                      .add(GeburaSetAppLauncherSettingEvent(
+                      .add(GeburaSetLocalAppInstLauncherSettingEvent(
                         setting?.copyWith(
                               appInstID: appID,
                               path: pathController.text,
@@ -164,7 +170,7 @@ class GeburaAppLauncherSettingDialog extends StatelessWidget {
                               realPath: realPathController.text,
                               sleepTime: sleepTime,
                             ) ??
-                            AppLauncherSetting(
+                            LocalAppInstLauncherSetting(
                               appInstID: appID,
                               path: pathController.text,
                               installPath: installPathController.text,

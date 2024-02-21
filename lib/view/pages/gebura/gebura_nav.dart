@@ -34,10 +34,10 @@ class GeburaNav extends StatelessWidget {
               Icons.shopping_cart,
             ),
             onTap: () {
+              AppRoutes.geburaStore.go(context);
               context
                   .read<GeburaBloc>()
                   .add(GeburaSetSelectedLibraryItemEvent(null));
-              AppRoutes.geburaStore.go(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.main);
             },
             title: Text(S.of(context).store),
@@ -124,7 +124,7 @@ class GeburaNav extends StatelessWidget {
                                       ? const BoxDecoration()
                                       : BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(16),
+                                              BorderRadius.circular(4),
                                           image: DecorationImage(
                                             image: ExtendedNetworkImageProvider(
                                               app.iconImageUrl,
