@@ -37,7 +37,8 @@ dependencies:
   bloc: ^8.1.3
   bloc_concurrency: ^0.2.4
   flutter_bloc: ^8.1.4
-  go_router: ^13.2.0
+  # https://github.com/flutter/flutter/issues/140869
+  go_router: ^12.1.3
 
   # database
   floor: ^1.4.2

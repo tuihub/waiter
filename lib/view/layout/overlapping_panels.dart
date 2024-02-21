@@ -193,7 +193,7 @@ class OverlappingPanelsState extends State<OverlappingPanels>
         onWillPop: () async {
           if (translate < 0) {
             reveal(RevealSide.main);
-          } else if (translate == 0) {
+          } else if (translate == 0 && widget.left != null) {
             reveal(RevealSide.left);
           } else {
             return true;
