@@ -211,14 +211,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                 ),
               ),
               options: withAuth(token.accessToken));
+          deviceID = id.deviceId;
+          config = config.copyWith(deviceId: id.deviceId.id.toInt());
+          final Map<String, ServerConfig> servers =
+              Map.fromEntries(repo.servers?.entries ?? []);
+          servers[config.id] = config;
+          await _repo.set(repo.copyWith(servers: servers));
           final resp = await client.refreshToken(
               RefreshTokenRequest(deviceId: id.deviceId),
               options: withAuth(token.refreshToken));
           accessToken = resp.accessToken;
           refreshToken = resp.refreshToken;
-          deviceID = id.deviceId;
-          config = config.copyWith(deviceId: id.deviceId.id.toInt());
-          await _repo.set(repo);
         } else {
           deviceID = InternalID()..id = Int64(config.deviceId!);
           final resp = await client.getToken(

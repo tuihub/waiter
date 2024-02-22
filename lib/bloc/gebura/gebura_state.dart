@@ -18,17 +18,31 @@ class GeburaState {
   late List<ImportedSteamAppInst>? importedSteamAppInsts;
   late List<String>? localSteamLibraryFolders;
 
-  List<AppInst> getAppInsts(Int64 appID) {
-    return ownedAppInsts != null
-        ? List.from(ownedAppInsts!.where((inst) {
-            final app = ownedApps?.firstWhere(
-                  (element) => inst.appId.id == element.id.id,
-                  orElse: App.new,
-                ) ??
-                App();
-            return inst.appId.id == appID || app.assignedAppInfoId.id == appID;
-          }))
-        : [];
+  Map<App, List<AppInst>> getAppInsts(Int64 id) {
+    if (ownedAppInsts == null || ownedApps == null) {
+      return {};
+    }
+    final result = <App, List<AppInst>>{};
+    if (ownedApps!.any((element) => element.id.id == id)) {
+      final app = ownedApps!.firstWhere(
+        (element) => element.id.id == id,
+        orElse: App.new,
+      );
+      result[app] = ownedAppInsts!.where((inst) {
+        return inst.appId.id == id || app.assignedAppInfoId.id == id;
+      }).toList();
+    } else if (ownedApps!
+        .any((element) => element.assignedAppInfoId.id == id)) {
+      final apps = ownedApps!.where((element) {
+        return element.assignedAppInfoId.id == id;
+      }).toList();
+      for (final app in apps) {
+        result[app] = ownedAppInsts!.where((inst) {
+          return inst.appId.id == app.id.id;
+        }).toList();
+      }
+    }
+    return result;
   }
 
   GeburaState({

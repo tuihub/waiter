@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:local_hero/local_hero.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
@@ -13,13 +14,13 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
 import '../../../model/gebura_model.dart';
-import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../helper/url.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
+import 'gebura_new_local_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatelessWidget {
   const GeburaLibraryDetailPage({super.key, required this.id});
@@ -63,151 +64,158 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                 : null;
         return Scaffold(
           backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 400,
-                  child: Center(
-                      child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: SpacingHelper.defaultBorderRadius,
-                          image: DecorationImage(
-                            image: ExtendedNetworkImageProvider(
-                              item.backgroundImageUrl,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        // margin: EdgeInsets.all(32),
-                        height: 400,
-                      ),
-                      Positioned.fill(
-                        child: Container(
-                          padding: const EdgeInsets.only(top: 400 - 96),
+          body: DynMouseScroll(builder: (context, controller, physics) {
+            return SingleChildScrollView(
+              controller: controller,
+              physics: physics,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 400,
+                    child: Center(
+                        child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Container(
                           decoration: BoxDecoration(
                             borderRadius: SpacingHelper.defaultBorderRadius,
-                          ),
-                          child: ClipRRect(
-                            borderRadius: SpacingHelper.defaultBorderRadius,
-                            child: const BackdropBlur(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                            image: DecorationImage(
+                              image: ExtendedNetworkImageProvider(
+                                item.backgroundImageUrl,
+                              ),
+                              fit: BoxFit.cover,
                             ),
                           ),
+                          // margin: EdgeInsets.all(32),
+                          height: 400,
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            item.name,
-                            style: backdropBlurTextStyle(context),
-                          ),
-                        ),
-                      ),
-                      BootstrapContainer(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          BootstrapColumn(
-                            xxs: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: LocalHero(
-                                tag: item.id.id.toString(),
-                                child: UrlHelper.isValidUrl(item.coverImageUrl)
-                                    ? ExtendedImage.network(
-                                        item.coverImageUrl,
-                                        height: 200,
-                                        loadStateChanged:
-                                            (ExtendedImageState state) {
-                                          if (state.extendedImageLoadState ==
-                                              LoadState.failed) {
-                                            return const SizedBox();
-                                          }
-                                          return null;
-                                        },
-                                      )
-                                    : Container(),
+                        Positioned.fill(
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 400 - 96),
+                            decoration: BoxDecoration(
+                              borderRadius: SpacingHelper.defaultBorderRadius,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: SpacingHelper.defaultBorderRadius,
+                              child: const BackdropBlur(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                    ],
-                  )),
-                ),
-                SizedBox(
-                  height: 100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        if (PlatformHelper.isWindowsApp())
-                          if (setting != null)
-                            ElevatedButton.icon(
-                              onPressed: () async {
-                                context
-                                    .read<GeburaBloc>()
-                                    .add(GeburaRunAppEvent(item.id));
-                              },
-                              icon: Icon(
-                                setting.type == AppLauncherType.steam
-                                    ? FontAwesomeIcons.steam
-                                    : Icons.play_arrow,
-                              ),
-                              label: const Text('启动'),
-                            )
-                          else
-                            ElevatedButton.icon(
-                              onPressed: null,
-                              icon: const Icon(Icons.play_arrow),
-                              label: const Text('启动'),
-                            ),
-                        const SizedBox(
-                          width: 24,
+                          ),
                         ),
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Text('开发商：${item.details.developer}'),
-                        //     Text('发行商：${item.details.publisher}'),
-                        //     Text('发行日期：${item.details.releaseDate}'),
-                        //   ],
-                        // ),
-                        // const SizedBox(
-                        //   width: 24,
-                        // ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              item.name,
+                              style: backdropBlurTextStyle(context),
+                            ),
+                          ),
+                        ),
+                        BootstrapContainer(
+                          alignment: Alignment.bottomRight,
                           children: [
-                            Text(
-                                '运行状态：${runState?.running ?? false ? '运行中' : '未运行'}'),
-                            Text('启动时间：${runState?.startTime ?? ''}'),
-                            Text('停止时间：${runState?.endTime ?? ''}'),
+                            BootstrapColumn(
+                              xxs: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: LocalHero(
+                                  key: ValueKey(item.id.id),
+                                  tag: item.id.id.toString(),
+                                  child:
+                                      UrlHelper.isValidUrl(item.coverImageUrl)
+                                          ? ExtendedImage.network(
+                                              item.coverImageUrl,
+                                              height: 200,
+                                              loadStateChanged:
+                                                  (ExtendedImageState state) {
+                                                if (state
+                                                        .extendedImageLoadState ==
+                                                    LoadState.failed) {
+                                                  return const SizedBox();
+                                                }
+                                                return null;
+                                              },
+                                            )
+                                          : Container(),
+                                ),
+                              ),
+                            )
                           ],
                         ),
-                        const Expanded(child: SizedBox()),
-                        // if (PlatformHelper.isWindowsApp())
-                        //   ElevatedButton(
-                        //     onPressed: () {
-                        //     },
-                        //     child: const Icon(Icons.arrow_drop_down),
-                        //   )
                       ],
+                    )),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          if (PlatformHelper.isWindowsApp())
+                            if (setting != null)
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  context
+                                      .read<GeburaBloc>()
+                                      .add(GeburaRunAppEvent(item.id));
+                                },
+                                icon: Icon(
+                                  setting.type == AppLauncherType.steam
+                                      ? FontAwesomeIcons.steam
+                                      : Icons.play_arrow,
+                                ),
+                                label: const Text('启动'),
+                              )
+                            else
+                              ElevatedButton.icon(
+                                onPressed: null,
+                                icon: const Icon(Icons.play_arrow),
+                                label: const Text('启动'),
+                              ),
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Text('开发商：${item.details.developer}'),
+                          //     Text('发行商：${item.details.publisher}'),
+                          //     Text('发行日期：${item.details.releaseDate}'),
+                          //   ],
+                          // ),
+                          // const SizedBox(
+                          //   width: 24,
+                          // ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '运行状态：${runState?.running ?? false ? '运行中' : '未运行'}'),
+                              Text('启动时间：${runState?.startTime ?? ''}'),
+                              Text('停止时间：${runState?.endTime ?? ''}'),
+                            ],
+                          ),
+                          const Expanded(child: SizedBox()),
+                          // if (PlatformHelper.isWindowsApp())
+                          //   ElevatedButton(
+                          //     onPressed: () {
+                          //     },
+                          //     child: const Icon(Icons.arrow_drop_down),
+                          //   )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SpacingHelper.defaultDivider,
-                _GeburaLibraryDetailInstList(item: item),
-              ],
-            ),
-          ),
+                  SpacingHelper.defaultDivider,
+                  _GeburaLibraryDetailInstList(item: item),
+                ],
+              ),
+            );
+          }),
         );
       },
     );
@@ -230,22 +238,32 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
     }
   }
 
-  Widget _activeRadio(BuildContext context, AppLauncherSetting setting) {
+  Widget _activeRadio(BuildContext context, AppLauncherSetting setting,
+      bool triggerActivation) {
     final launcherSettings =
         context.read<GeburaBloc>().state.appLauncherSettings?[item.id.id];
+    void doActivation() {
+      context.read<GeburaBloc>().add(GeburaSetAppLauncherSettingEvent(
+            item.id,
+            setting,
+          ));
+    }
+
+    if (triggerActivation) {
+      doActivation();
+    }
+
     return Radio<String>(
       value: _launcherID(setting) ?? '',
       groupValue: _launcherID(launcherSettings),
       onChanged: (String? value) {
-        context.read<GeburaBloc>().add(GeburaSetAppLauncherSettingEvent(
-              item.id,
-              setting,
-            ));
+        doActivation();
       },
     );
   }
 
-  Widget _steamItem(BuildContext context, String steamAppID) {
+  Widget _steamItem(
+      BuildContext context, String steamAppID, bool triggerActivation) {
     final steamApp = context
         .read<GeburaBloc>()
         .state
@@ -258,6 +276,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
           type: AppLauncherType.steam,
           steamAppID: steamAppID,
         ),
+        triggerActivation,
       ),
       title: const Text('由Steam管理'),
       subtitle: Text(steamApp?.installPath ?? ''),
@@ -275,8 +294,8 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
     );
   }
 
-  Widget _localItem(
-      BuildContext context, LocalAppInstLauncherSetting settings) {
+  Widget _localItem(BuildContext context, LocalAppInstLauncherSetting settings,
+      bool triggerActivation) {
     return ListTile(
       leading: _activeRadio(
         context,
@@ -284,6 +303,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
           type: AppLauncherType.local,
           localAppInstID: settings.appInstID,
         ),
+        triggerActivation,
       ),
       title: Text(settings.installPath),
       trailing: ElevatedButton.icon(
@@ -308,57 +328,121 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final List<AppInst> appInsts = state.getAppInsts(item.id.id);
+      final Map<App, List<AppInst>> appInsts = state.getAppInsts(item.id.id);
       final deviceID = context.read<MainBloc>().state.currentDeviceId;
-      final List<AppInst> localAppInsts = deviceID != null
-          ? List.from(appInsts.where(
-              (inst) => inst.deviceId.id == deviceID.id,
-            ))
-          : [];
-      final msg = localAppInsts.isEmpty
-          ? '未安装'
-          : localAppInsts.length == 1
-              ? '已安装'
-              : '已安装 ${localAppInsts.length} 个在当前设备';
-      return ExpansionTile(
-        initiallyExpanded: true,
-        title: Text(msg),
-        children: [
-          for (final inst in localAppInsts)
-            if (state.importedSteamAppInsts?.any(
-                  (e) => e.instID == inst.id.id.toInt(),
-                ) ??
-                false)
-              _steamItem(
-                context,
-                state.importedSteamAppInsts!
-                    .firstWhere(
-                      (e) => e.instID == inst.id.id.toInt(),
-                    )
-                    .steamAppID,
-              )
-            else if (context
-                    .read<GeburaBloc>()
-                    .getAppLauncherSetting(inst.id) !=
-                null)
-              _localItem(
-                context,
-                context.read<GeburaBloc>().getAppLauncherSetting(inst.id)!,
+      final List<Widget> listTiles = [];
+      for (final app in appInsts.keys) {
+        final insts = appInsts[app]!;
+        final List<AppInst> localAppInsts = deviceID != null
+            ? List.from(insts.where(
+                (inst) => inst.deviceId.id == deviceID.id,
+              ))
+            : [];
+        var msg = localAppInsts.isEmpty
+            ? '未安装'
+            : localAppInsts.length == 1
+                ? '已安装'
+                : '已安装 ${localAppInsts.length} 个在当前设备';
+        if (appInsts.length > 1) {
+          msg = '${app.name} $msg';
+        }
+        final instCount = appInsts.values.fold(
+          0,
+          (previousValue, element) => previousValue + element.length,
+        );
+
+        final listTile = ExpansionTile(
+          initiallyExpanded: true,
+          title: Text(msg),
+          children: [
+            for (final inst in localAppInsts)
+              if (state.importedSteamAppInsts?.any(
+                    (e) => e.instID == inst.id.id.toInt(),
+                  ) ??
+                  false)
+                _steamItem(
+                  context,
+                  state.importedSteamAppInsts!
+                      .firstWhere(
+                        (e) => e.instID == inst.id.id.toInt(),
+                      )
+                      .steamAppID,
+                  instCount == 1,
+                )
+              else if (context
+                      .read<GeburaBloc>()
+                      .getAppLauncherSetting(inst.id) !=
+                  null)
+                _localItem(
+                  context,
+                  context.read<GeburaBloc>().getAppLauncherSetting(inst.id)!,
+                  instCount == 1,
+                ),
+            if (localAppInsts.isEmpty)
+              ListTile(
+                title: ElevatedButton(
+                  onPressed: () async {
+                    unawaited(
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return BlocProvider.value(
+                            value: context.read<GeburaBloc>(),
+                            child: NewLocalAppInstDialog(
+                              app: app,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: const Text('添加安装位置'),
+                ),
               ),
-          if (localAppInsts.isEmpty)
-            ListTile(
-              title: ElevatedButton(
-                onPressed: () async {
-                  AppRoutes.geburaLibrarySettings.go(context);
-                },
-                child: const Text('添加安装位置'),
+            if (appInsts[app]!.length > localAppInsts.length)
+              ListTile(
+                title: Text(
+                    '${appInsts[app]!.length - localAppInsts.length} 个在其他设备上'),
               ),
+          ],
+        );
+
+        listTiles.add(listTile);
+      }
+
+      if (state.ownedApps!
+          .any((element) => element.assignedAppInfoId.id == item.id.id)) {
+        listTiles.add(
+          ListTile(
+            title: ElevatedButton(
+              onPressed: () async {
+                unawaited(
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return BlocProvider.value(
+                        value: context.read<GeburaBloc>(),
+                        child: NewLocalAppInstDialog(
+                          app: state.ownedApps!.firstWhere(
+                            (element) =>
+                                element.assignedAppInfoId.id == item.id.id,
+                          ),
+                          newAppWithSameInfo: true,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              child: const Text('添加应用版本'),
             ),
-          if (appInsts.length > localAppInsts.length)
-            ListTile(
-              title: Text('${appInsts.length - localAppInsts.length} 个在其他设备上'),
-            ),
-        ],
+          ),
+        );
+      }
+
+      return ListView(
+        shrinkWrap: true,
+        children: listTiles,
       );
     });
   }

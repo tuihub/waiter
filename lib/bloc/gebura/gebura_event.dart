@@ -86,8 +86,15 @@ final class GeburaImportSteamAppsEvent extends GeburaEvent {
 final class GeburaImportNewAppInstEvent extends GeburaEvent {
   final String path;
   final String name;
+  final InternalID? appID;
+  final InternalID? newAppWithInfoID;
 
-  GeburaImportNewAppInstEvent(this.path, this.name);
+  GeburaImportNewAppInstEvent(
+    this.path,
+    this.name, {
+    this.appID,
+    this.newAppWithInfoID,
+  });
 }
 
 final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {

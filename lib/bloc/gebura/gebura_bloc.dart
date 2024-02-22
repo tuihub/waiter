@@ -397,24 +397,42 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
 
     on<GeburaImportNewAppInstEvent>((event, emit) async {
       emit(GeburaImportNewAppInstState(state, EventStatus.processing));
-      final appResp = await _api.doRequest(
-        (client) => client.createApp,
-        CreateAppRequest(
-          app: App(
-            name: event.name,
+      var id = event.appID;
+      if (id == null || event.newAppWithInfoID != null) {
+        final appResp = await _api.doRequest(
+          (client) => client.createApp,
+          CreateAppRequest(
+            app: App(
+              name: event.name,
+            ),
           ),
-        ),
-      );
-      if (appResp.status != ApiStatus.success) {
-        emit(GeburaImportNewAppInstState(state, EventStatus.failed,
-            msg: appResp.error));
-        return;
+        );
+        if (appResp.status != ApiStatus.success) {
+          emit(GeburaImportNewAppInstState(state, EventStatus.failed,
+              msg: appResp.error));
+          return;
+        }
+        id = appResp.getData().id;
+        if (event.newAppWithInfoID != null) {
+          final assignResp = await _api.doRequest(
+            (client) => client.assignApp,
+            AssignAppRequest(
+              appInfoId: event.newAppWithInfoID,
+              appId: id,
+            ),
+          );
+          if (assignResp.status != ApiStatus.success) {
+            emit(GeburaImportNewAppInstState(state, EventStatus.failed,
+                msg: appResp.error));
+            return;
+          }
+        }
       }
       final instResp = await _api.doRequest(
         (client) => client.createAppInst,
         CreateAppInstRequest(
           appInst: AppInst(
-            appId: appResp.getData().id,
+            appId: id,
             deviceId: _deviceID,
           ),
         ),
@@ -567,6 +585,11 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaSetAppLauncherSettingEvent>((event, emit) async {
+      if (state.appLauncherSettings != null &&
+          state.appLauncherSettings![event.appID.id]?.toJson() ==
+              event.setting.toJson()) {
+        return;
+      }
       await _repo.setAppLauncherSetting(event.appID.id.toInt(), event.setting);
       emit(state.copyWith(
         appLauncherSettings: {

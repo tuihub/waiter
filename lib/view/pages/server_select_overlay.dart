@@ -46,29 +46,25 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   static const minimizedHeight = 64.0;
 
   void fullscreen() {
-    _animateTo(0);
-    setState(() {
-      _selected = _current;
-      _minimized = false;
-      _fullscreen = true;
+    _minimized = false;
+    _fullscreen = true;
+    _animateTo(0, onComplete: () {
+      setState(() {
+        _selected = _current;
+      });
     });
   }
 
   void minimize() {
+    _minimized = true;
+    _fullscreen = false;
     _animateTo(minimizedHeight - _height);
-    setState(() {
-      _minimized = true;
-      _fullscreen = false;
-    });
   }
 
   void hide() {
-    _animateTo(-_height, onComplete: () {
-      setState(() {
-        _minimized = false;
-        _fullscreen = false;
-      });
-    });
+    _minimized = false;
+    _fullscreen = false;
+    _animateTo(-_height);
   }
 
   void _animateTo(double goal, {void Function()? onComplete}) {
