@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -92,28 +93,42 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         ),
                         Positioned.fill(
                           child: Container(
-                            padding: const EdgeInsets.only(top: 400 - 96),
-                            decoration: BoxDecoration(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
-                              child: const BackdropBlur(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(top: 400 - 96),
+                              decoration: BoxDecoration(
+                                borderRadius: SpacingHelper.defaultBorderRadius,
                               ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(
-                              item.name,
-                              style: backdropBlurTextStyle(context),
-                            ),
-                          ),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius:
+                                        SpacingHelper.defaultBorderRadius,
+                                    child: const BackdropBlur(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                  ),
+                                  BootstrapContainer(
+                                    alignment: Alignment.bottomLeft,
+                                    children: [
+                                      BootstrapColumn(
+                                        xxs: 10,
+                                        child: Container(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: AutoSizeText(
+                                              item.name,
+                                              style: backdropBlurTextStyle(
+                                                  context),
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
                         ),
                         BootstrapContainer(
                           alignment: Alignment.bottomRight,
