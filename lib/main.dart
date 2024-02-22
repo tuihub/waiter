@@ -14,10 +14,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:uni_links_desktop/uni_links_desktop.dart';
+import 'package:universal_io/io.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';
@@ -29,6 +32,7 @@ import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'common/bloc_observer.dart';
 import 'common/platform.dart';
+import 'consts.dart';
 import 'l10n/l10n.dart';
 import 'model/common_model.dart';
 import 'repo/grpc/api_helper.dart';
@@ -45,7 +49,21 @@ void main(List<String> args) async {
 
   final app = await init();
 
-  runApp(app);
+  if (DotEnvValue.enableSentry.isNotEmpty &&
+      DotEnvValue.enableSentry == true.toString()) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn =
+            'https://a4fa2605bdb04fb19704f862469d0a1b@app.glitchtip.com/5885';
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(app),
+    );
+  } else {
+    runApp(app);
+  }
 
   if (PlatformHelper.isWindowsApp()) {
     doWhenWindowReady(() {

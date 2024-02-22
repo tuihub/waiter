@@ -1,16 +1,33 @@
 part of 'main.dart';
 
 Future<MyApp> init() async {
-  // dotenv
-  await dotenv.load(fileName: '.env');
-
-  // dao
+  WidgetsFlutterBinding.ensureInitialized();
+  final packageInfo = await PackageInfo.fromPlatform();
 
   // https://github.com/hivedb/hive/issues/1044
-  final path = PlatformHelper.isWeb()
+  final dataPath = PlatformHelper.isWeb()
       ? null
       : (await getApplicationSupportDirectory()).path;
-  await Hive.initFlutter(path);
+
+  // dotenv
+  var enableSentry = false;
+  if (File(path.join(dataPath ?? '', '.enable_sentry')).existsSync()) {
+    enableSentry = true;
+  }
+  if (packageInfo.version.contains('dev') ||
+      packageInfo.version.contains('alpha')) {
+    enableSentry = true;
+  }
+  if (enableSentry) {
+    await dotenv.load(mergeWith: {
+      'ENABLE_SENTRY': enableSentry.toString(),
+    });
+  } else {
+    await dotenv.load();
+  }
+
+  // dao
+  await Hive.initFlutter(dataPath);
 
   // repo
   final common = await ClientCommonRepo.init();
@@ -20,8 +37,6 @@ Future<MyApp> init() async {
 
   // system tray
   await _initSystemTray();
-
-  WidgetsFlutterBinding.ensureInitialized();
 
   // deep link
   if (PlatformHelper.isWindowsApp()) {
@@ -38,12 +53,11 @@ Future<MyApp> init() async {
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  final packageInfo = await PackageInfo.fromPlatform();
   final deviceInfo = await _genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
   final deepLinkBloc = DeepLinkBloc(initialUri);
   final mainBloc = MainBloc(api, common, clientSettingBloc, deepLinkBloc,
-      packageInfo, deviceInfo, path);
+      packageInfo, deviceInfo, dataPath);
 
   // router
   final router = getRouter(mainBloc, api);
