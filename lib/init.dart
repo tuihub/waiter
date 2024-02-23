@@ -11,7 +11,8 @@ Future<MyApp> init() async {
 
   // dotenv
   var enableSentry = false;
-  if (File(path.join(dataPath ?? '', '.enable_sentry')).existsSync()) {
+  if ((!PlatformHelper.isWeb()) &&
+      File(path.join(dataPath ?? '', '.enable_sentry')).existsSync()) {
     enableSentry = true;
   }
   if (packageInfo.version.contains('dev') ||
