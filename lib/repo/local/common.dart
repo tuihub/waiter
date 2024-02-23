@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:sentry_hive/sentry_hive.dart';
 
 import '../../model/common_model.dart';
 
@@ -15,7 +16,7 @@ class ClientCommonRepo {
   }
 
   static Future<ClientCommonRepo> init() async {
-    final box = await Hive.openBox<String>(_clientCommonBoxFile);
+    final box = await SentryHive.openBox<String>(_clientCommonBoxFile);
     return ClientCommonRepo._init(box);
   }
 

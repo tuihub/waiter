@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   sentry_flutter: ^7.16.1
+  sentry_hive: ^7.16.1
 
   # state management
   bloc: ^8.1.3

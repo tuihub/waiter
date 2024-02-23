@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_hero/local_hero.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -280,11 +281,15 @@ final mainWindowKey = GlobalKey();
 GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
     initialLocation: AppRoutes.init.toString(),
-    observers: [HeroController()],
+    observers: [
+      HeroController(),
+      SentryNavigatorObserver(),
+    ],
     debugLogDiagnostics: kDebugMode,
     routes: [
       GoRoute(
         path: AppRoutes.init.toString(),
+        name: AppRoutes.init.toString(),
         pageBuilder: (context, state) => NoTransitionPage(
           child: MainWindow(
             key: mainWindowKey,
@@ -294,6 +299,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
       ),
       GoRoute(
         path: AppRoutes.webLanding.toString(),
+        name: AppRoutes.webLanding.toString(),
         pageBuilder: (context, state) => NoTransitionPage(
           child: MainWindow(
             key: mainWindowKey,
@@ -303,6 +309,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
       ),
       GoRoute(
         path: '${AppRoutes._imageViewer}/:index',
+        name: AppRoutes._imageViewer,
         pageBuilder: (context, state) {
           final indexStr = state.pathParameters['index'];
           final index = indexStr != null ? int.tryParse(indexStr) : null;
@@ -341,9 +348,11 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
         branches: [
           StatefulShellBranch(
             navigatorKey: _tipherethNavigateKey,
+            observers: [SentryNavigatorObserver()],
             routes: [
               GoRoute(
                 path: AppRoutes.tiphereth.toString(),
+                name: AppRoutes.tiphereth.toString(),
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
                     child: FramePage(
@@ -357,15 +366,18 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           ),
           StatefulShellBranch(
             navigatorKey: _yesodNavigateKey,
+            observers: [SentryNavigatorObserver()],
             routes: [
               GoRoute(
                 path: AppRoutes.yesod.toString(),
+                name: AppRoutes.yesod.toString(),
                 redirect: (context, state) {
                   return AppRoutes.yesodRecent.toString();
                 },
               ),
               GoRoute(
                 path: '${AppRoutes.yesod}/:function',
+                name: '${AppRoutes.yesod}/:function',
                 pageBuilder: (context, state) {
                   final yesodPages = {
                     _YesodFunctions.recent: const YesodRecentPage(),
@@ -402,10 +414,11 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           ),
           StatefulShellBranch(
             navigatorKey: _geburaNavigateKey,
-            observers: [HeroController()],
+            observers: [HeroController(), SentryNavigatorObserver()],
             routes: [
               GoRoute(
                 path: AppRoutes.gebura.toString(),
+                name: AppRoutes.gebura.toString(),
                 redirect: (context, state) {
                   if (context.read<GeburaBloc>().state.selectedLibraryItem !=
                       null) {
@@ -421,6 +434,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
               ),
               GoRoute(
                 path: '${AppRoutes.gebura}/:function',
+                name: '${AppRoutes.gebura}/:function',
                 pageBuilder: (context, state) {
                   final function = state.pathParameters['function'] ??
                       AppRoutes.geburaStore.toString();
@@ -456,9 +470,11 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           ),
           StatefulShellBranch(
             navigatorKey: _chesedNavigateKey,
+            observers: [SentryNavigatorObserver()],
             routes: [
               GoRoute(
                 path: AppRoutes.chesed.toString(),
+                name: AppRoutes.chesed.toString(),
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
                     child: FramePage(
@@ -472,15 +488,18 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
           ),
           StatefulShellBranch(
             navigatorKey: _settingsNavigateKey,
+            observers: [SentryNavigatorObserver()],
             routes: [
               GoRoute(
                 path: AppRoutes.settings.toString(),
+                name: AppRoutes.settings.toString(),
                 redirect: (context, state) {
                   return AppRoutes.settingsClient.toString();
                 },
               ),
               GoRoute(
                 path: '${AppRoutes.settings}/:function',
+                name: '${AppRoutes.settings}/:function',
                 pageBuilder: (context, state) {
                   final settingsPages = {
                     _SettingsFunctions.client: const ClientSettingPage(),

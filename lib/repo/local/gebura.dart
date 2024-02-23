@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:sentry_hive/sentry_hive.dart';
 
 import '../../model/gebura_model.dart';
 
@@ -33,15 +34,17 @@ class GeburaRepo {
 
   static Future<GeburaRepo> init(String? path) async {
     final appLauncherSettings =
-        await Hive.openBox<String>(_appLauncherSettingsFile, path: path);
+        await SentryHive.openBox<String>(_appLauncherSettingsFile, path: path);
     final localAppInstSettings =
-        await Hive.openBox<String>(_localAppInstSettingsFile, path: path);
-    final importedSteamAppInsts =
-        await Hive.openBox<String>(_importedSteamAppInstsFile, path: path);
+        await SentryHive.openBox<String>(_localAppInstSettingsFile, path: path);
+    final importedSteamAppInsts = await SentryHive.openBox<String>(
+        _importedSteamAppInstsFile,
+        path: path);
     final localAppInstFolders =
-        await Hive.openBox<String>(_localAppInstFoldersFile, path: path);
-    final localAppInstIndependents =
-        await Hive.openBox<String>(_localAppInstIndependentsFile, path: path);
+        await SentryHive.openBox<String>(_localAppInstFoldersFile, path: path);
+    final localAppInstIndependents = await SentryHive.openBox<String>(
+        _localAppInstIndependentsFile,
+        path: path);
     return GeburaRepo._init(appLauncherSettings, localAppInstSettings,
         importedSteamAppInsts, localAppInstFolders, localAppInstIndependents);
   }

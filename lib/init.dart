@@ -27,7 +27,7 @@ Future<MyApp> init() async {
   }
 
   // dao
-  await Hive.initFlutter(dataPath);
+  await SentryHive.initFlutter(dataPath);
 
   // repo
   final common = await ClientCommonRepo.init();

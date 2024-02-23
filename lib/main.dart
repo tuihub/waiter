@@ -17,6 +17,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sentry_hive/sentry_hive.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:uni_links_desktop/uni_links_desktop.dart';
@@ -45,7 +46,7 @@ part 'init.dart';
 // main function is the entry point of the app
 void main(List<String> args) async {
   // Required for Android App
-  await Hive.initFlutter();
+  await SentryHive.initFlutter();
 
   final app = await init();
 
@@ -59,7 +60,12 @@ void main(List<String> args) async {
         // We recommend adjusting this value in production.
         options.tracesSampleRate = 1.0;
       },
-      appRunner: () => runApp(app),
+      appRunner: () => runApp(
+        DefaultAssetBundle(
+          bundle: SentryAssetBundle(),
+          child: app,
+        ),
+      ),
     );
   } else {
     runApp(app);

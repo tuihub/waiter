@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:sentry_hive/sentry_hive.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
@@ -12,7 +13,8 @@ class YesodRepo {
   }
 
   static Future<YesodRepo> init(String? path) async {
-    final box = await Hive.openBox<String>(_feedItemCacheBoxFile, path: path);
+    final box =
+        await SentryHive.openBox<String>(_feedItemCacheBoxFile, path: path);
     return YesodRepo._init(box);
   }
 
