@@ -228,17 +228,19 @@ class _MyAppWidget extends StatelessWidget {
 }
 
 ThemeData _customizeTheme(Brightness brightness, ThemeData theme) {
-  // Temporary fix for font issue
-  // https://github.com/flutter/flutter/issues/48381
-  return theme
-      .copyWith(
-        listTileTheme: theme.listTileTheme.copyWith(
-          selectedColor: theme.colorScheme.onPrimary,
-          selectedTileColor: theme.colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: SpacingHelper.defaultBorderRadius,
-          ),
-        ),
-      )
-      .useSystemChineseFont(brightness);
+  final t = theme.copyWith(
+    listTileTheme: theme.listTileTheme.copyWith(
+      selectedColor: theme.colorScheme.onPrimary,
+      selectedTileColor: theme.colorScheme.primary,
+      shape: RoundedRectangleBorder(
+        borderRadius: SpacingHelper.defaultBorderRadius,
+      ),
+    ),
+  );
+  if (!PlatformHelper.isWeb()) {
+    // Temporary fix for font issue
+    // https://github.com/flutter/flutter/issues/48381
+    t.useSystemChineseFont(brightness);
+  }
+  return t;
 }

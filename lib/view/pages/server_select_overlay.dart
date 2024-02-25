@@ -121,9 +121,11 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                   message: S.of(context).loginFailed(state.msg ?? ''),
                 ).show(context);
               }
-              context.read<MainBloc>().add(
-                    MainSetNextServerConfigEvent(_selected!),
-                  );
+              if (_selected != null) {
+                context.read<MainBloc>().add(
+                      MainSetNextServerConfigEvent(_selected!),
+                    );
+              }
             }
             if (state is MainManualLoginState && state.success) {
               AppRoutes.tiphereth.go(context);
