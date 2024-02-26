@@ -54,7 +54,7 @@ class ClientSettingPage extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
+                        child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ThemePresent(
@@ -68,28 +68,26 @@ class ClientSettingPage extends StatelessWidget {
                               selected: true,
                               brightness: Theme.of(context).brightness,
                             ),
-                            const VerticalDivider(
+                            const Divider(
                               thickness: 2,
                             ),
-                            Expanded(
-                              child: Wrap(
-                                spacing: 8.0,
-                                runSpacing: 4.0,
-                                children: [
-                                  for (final theme in themeData)
-                                    ChoiceChip(
-                                      label: Text(theme.name),
-                                      selected: state.theme.name == theme.name,
-                                      onSelected: (selected) {
-                                        if (selected) {
-                                          context
-                                              .read<ClientSettingBloc>()
-                                              .add(ChangeThemeEvent(theme));
-                                        }
-                                      },
-                                    ),
-                                ],
-                              ),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 4.0,
+                              children: [
+                                for (final theme in themeData)
+                                  ChoiceChip(
+                                    label: Text(theme.name),
+                                    selected: state.theme.name == theme.name,
+                                    onSelected: (selected) {
+                                      if (selected) {
+                                        context
+                                            .read<ClientSettingBloc>()
+                                            .add(ChangeThemeEvent(theme));
+                                      }
+                                    },
+                                  ),
+                              ],
                             ),
                           ],
                         ),

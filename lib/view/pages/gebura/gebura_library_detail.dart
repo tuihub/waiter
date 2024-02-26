@@ -15,6 +15,7 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
 import '../../../model/gebura_model.dart';
+import '../../../repo/grpc/l10n.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../helper/url.dart';
@@ -215,12 +216,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             ],
                           ),
                           const Expanded(child: SizedBox()),
-                          // if (PlatformHelper.isWindowsApp())
-                          //   ElevatedButton(
-                          //     onPressed: () {
-                          //     },
-                          //     child: const Icon(Icons.arrow_drop_down),
-                          //   )
+                          _GeburaLibraryDetailAppSettings(item: item),
                         ],
                       ),
                     ),
@@ -453,6 +449,34 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
             ),
           ),
         );
+      } else if (state.purchasedAppInfos!
+          .any((element) => element.id.id == item.id.id)) {
+        listTiles.add(
+          ListTile(
+            title: ElevatedButton(
+              onPressed: () async {
+                unawaited(
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return BlocProvider.value(
+                        value: context.read<GeburaBloc>(),
+                        child: NewLocalAppInstDialog(
+                          app: App(
+                            name: item.name,
+                            assignedAppInfoId: item.id,
+                          ),
+                          newAppWithSameInfo: true,
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              child: const Text('添加应用版本'),
+            ),
+          ),
+        );
       }
 
       return ListView(
@@ -460,5 +484,136 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         children: listTiles,
       );
     });
+  }
+}
+
+class _GeburaLibraryDetailAppSettings extends StatefulWidget {
+  const _GeburaLibraryDetailAppSettings({
+    required this.item,
+  });
+
+  final AppInfoMixed item;
+
+  @override
+  State<_GeburaLibraryDetailAppSettings> createState() =>
+      _GeburaLibraryDetailAppSettingsState();
+}
+
+class _GeburaLibraryDetailAppSettingsState
+    extends State<_GeburaLibraryDetailAppSettings> {
+  int? selectedItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
+      return PopupMenuButton<int>(
+        initialValue: selectedItem,
+        onSelected: (int item) {
+          setState(() {
+            selectedItem = item;
+          });
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+          PopupMenuItem<int>(
+            value: 1,
+            enabled: state.ownedApps!
+                .any((element) => element.id.id == widget.item.id.id),
+            child: const Text('设置应用信息'),
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: (_) {
+                  return BlocProvider.value(
+                    value: context.read<MainBloc>(),
+                    child: _GeburaLibraryDetailChangeAppInfoDialog(
+                      item: App(
+                        id: widget.item.id,
+                        name: widget.item.name,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      );
+    });
+  }
+}
+
+class _GeburaLibraryDetailChangeAppInfoDialog extends StatefulWidget {
+  const _GeburaLibraryDetailChangeAppInfoDialog({
+    required this.item,
+  });
+
+  final App item;
+
+  @override
+  State<_GeburaLibraryDetailChangeAppInfoDialog> createState() =>
+      _GeburaLibraryDetailChangeAppInfoDialogState();
+}
+
+class _GeburaLibraryDetailChangeAppInfoDialogState
+    extends State<_GeburaLibraryDetailChangeAppInfoDialog> {
+  String? source;
+  String? sourceAppID;
+
+  @override
+  Widget build(BuildContext context) {
+    final sources = context
+            .read<MainBloc>()
+            .state
+            .serverFeatureSummary
+            ?.supportedAppInfoSources ??
+        [];
+    return AlertDialog(
+      title: const Text('设置应用信息'),
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (sources.isEmpty)
+              Container(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: const Text('服务端没有可用的应用信息来源'),
+              ),
+            DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  labelText: '应用信息来源',
+                ),
+                items: [
+                  for (final s in sources)
+                    DropdownMenuItem(value: s, child: Text(appSourceString(s)))
+                ],
+                onChanged: (String? value) {
+                  setState(() {
+                    source = value;
+                  });
+                }),
+            const SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: '应用ID',
+              ),
+              onSaved: (String? value) {
+                setState(() {
+                  sourceAppID = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('取消'),
+        ),
+      ],
+    );
   }
 }
