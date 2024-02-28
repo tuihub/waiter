@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/orgs/tuihub/discussions
+    about: Ask any questions or problems here. | 提出任何问题，我们仅在此处接受中文内容。
+  - name: Crowdin Translations
+    url: https://crowdin.com/project/tuihub-waiter
+    about: Translations are managed here.

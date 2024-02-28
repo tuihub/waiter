@@ -1,0 +1,17 @@
+name: Feature Request
+description: Suggest an idea for this project
+body:
+  - type: markdown
+    attributes:
+      value: |
+        1. Please use English only. 我们仅在 [Discussions](https://github.com/orgs/tuihub/discussions) 中接受中文内容
+        2. Please ask questions and problems at [Discussions](https://github.com/orgs/tuihub/discussions).
+        3. Please take a moment to check that your feature hasn't already been suggested.
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      placeholder: |
+        A clear and concise description of what you want to happen.
+    validations:
+      required: true

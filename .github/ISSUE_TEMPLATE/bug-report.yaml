@@ -1,0 +1,51 @@
+name: Bug Report
+description: Report UI or crash bugs
+body:
+  - type: markdown
+    attributes:
+      value: |
+        1. Please use English only. 我们仅在 [Discussions](https://github.com/orgs/tuihub/discussions) 中接受中文内容
+        2. Please ask questions and problems at [Discussions](https://github.com/orgs/tuihub/discussions).
+        3. Make sure the bug is **a client-side bug** and
+           take a moment to check that your issue hasn't been reported before.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        A clear and concise description of what the bug is.
+  - type: input
+    id: waiter-version
+    attributes:
+      label: Waiter Version
+      description: Waiter version you are using.
+    validations:
+      required: true
+  - type: dropdown
+    id: can-reproduce
+    attributes:
+      label: Can you provide reproduction of the bug?
+      description: |
+        If so, please provide a detailed description of how to reproduce the bug.
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Can provide one or more screenshots
+  - type: input
+    id: server
+    attributes:
+      label: Server
+      description: Server implementation and version you are using.
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: Operating System
+      description: The operating system you are using to run Waiter.
