@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../bloc/client_setting/client_setting_bloc.dart';
 import '../../../../bloc/main_bloc.dart';
+import '../../../../common/platform.dart';
 import '../../../../consts.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../helper/spacing.dart';

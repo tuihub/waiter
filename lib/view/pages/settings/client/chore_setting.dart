@@ -14,17 +14,18 @@ class ChoreSetting extends StatelessWidget {
           child: ExpansionTile(
             title: const Text('杂项'),
             children: [
-              ListTile(
-                title: const Text('使用系统代理（实验性）'),
-                trailing: Switch(
-                  value: state.useSystemProxy ?? false,
-                  onChanged: (value) {
-                    context
-                        .read<ClientSettingBloc>()
-                        .add(ChangeUseSystemProxyEvent(value));
-                  },
-                ),
-              )
+              if (!PlatformHelper.isWeb())
+                ListTile(
+                  title: const Text('使用系统代理（实验性）'),
+                  trailing: Switch(
+                    value: state.useSystemProxy ?? false,
+                    onChanged: (value) {
+                      context
+                          .read<ClientSettingBloc>()
+                          .add(ChangeUseSystemProxyEvent(value));
+                    },
+                  ),
+                )
             ],
           ),
         ),
