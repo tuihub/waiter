@@ -18,3 +18,9 @@ class ChangeThemeEvent extends ClientSettingEvent {
 
   ChangeThemeEvent(this.theme);
 }
+
+class ChangeUseSystemProxyEvent extends ClientSettingEvent {
+  final bool useSystemProxy;
+
+  ChangeUseSystemProxyEvent(this.useSystemProxy);
+}

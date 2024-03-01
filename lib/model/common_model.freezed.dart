@@ -282,6 +282,7 @@ mixin _$ClientCommonData {
   String? get themeName => throw _privateConstructorUsedError;
   int? get themeMode => throw _privateConstructorUsedError;
   Map<String, ServerConfig>? get servers => throw _privateConstructorUsedError;
+  bool? get useSystemProxy => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -299,7 +300,8 @@ abstract class $ClientCommonDataCopyWith<$Res> {
       {String? lastServerId,
       String? themeName,
       int? themeMode,
-      Map<String, ServerConfig>? servers});
+      Map<String, ServerConfig>? servers,
+      bool? useSystemProxy});
 }
 
 /// @nodoc
@@ -319,6 +321,7 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
     Object? themeName = freezed,
     Object? themeMode = freezed,
     Object? servers = freezed,
+    Object? useSystemProxy = freezed,
   }) {
     return _then(_value.copyWith(
       lastServerId: freezed == lastServerId
@@ -337,6 +340,10 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
           ? _value.servers
           : servers // ignore: cast_nullable_to_non_nullable
               as Map<String, ServerConfig>?,
+      useSystemProxy: freezed == useSystemProxy
+          ? _value.useSystemProxy
+          : useSystemProxy // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -353,7 +360,8 @@ abstract class _$$ClientCommonDataImplCopyWith<$Res>
       {String? lastServerId,
       String? themeName,
       int? themeMode,
-      Map<String, ServerConfig>? servers});
+      Map<String, ServerConfig>? servers,
+      bool? useSystemProxy});
 }
 
 /// @nodoc
@@ -371,6 +379,7 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
     Object? themeName = freezed,
     Object? themeMode = freezed,
     Object? servers = freezed,
+    Object? useSystemProxy = freezed,
   }) {
     return _then(_$ClientCommonDataImpl(
       lastServerId: freezed == lastServerId
@@ -389,6 +398,10 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
           ? _value._servers
           : servers // ignore: cast_nullable_to_non_nullable
               as Map<String, ServerConfig>?,
+      useSystemProxy: freezed == useSystemProxy
+          ? _value.useSystemProxy
+          : useSystemProxy // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -400,7 +413,8 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
       {this.lastServerId,
       this.themeName,
       this.themeMode,
-      final Map<String, ServerConfig>? servers})
+      final Map<String, ServerConfig>? servers,
+      this.useSystemProxy})
       : _servers = servers;
 
   factory _$ClientCommonDataImpl.fromJson(Map<String, dynamic> json) =>
@@ -423,8 +437,11 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
   }
 
   @override
+  final bool? useSystemProxy;
+
+  @override
   String toString() {
-    return 'ClientCommonData(lastServerId: $lastServerId, themeName: $themeName, themeMode: $themeMode, servers: $servers)';
+    return 'ClientCommonData(lastServerId: $lastServerId, themeName: $themeName, themeMode: $themeMode, servers: $servers, useSystemProxy: $useSystemProxy)';
   }
 
   @override
@@ -438,13 +455,15 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
                 other.themeName == themeName) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
-            const DeepCollectionEquality().equals(other._servers, _servers));
+            const DeepCollectionEquality().equals(other._servers, _servers) &&
+            (identical(other.useSystemProxy, useSystemProxy) ||
+                other.useSystemProxy == useSystemProxy));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, lastServerId, themeName,
-      themeMode, const DeepCollectionEquality().hash(_servers));
+      themeMode, const DeepCollectionEquality().hash(_servers), useSystemProxy);
 
   @JsonKey(ignore: true)
   @override
@@ -466,7 +485,8 @@ abstract class _ClientCommonData implements ClientCommonData {
       {final String? lastServerId,
       final String? themeName,
       final int? themeMode,
-      final Map<String, ServerConfig>? servers}) = _$ClientCommonDataImpl;
+      final Map<String, ServerConfig>? servers,
+      final bool? useSystemProxy}) = _$ClientCommonDataImpl;
 
   factory _ClientCommonData.fromJson(Map<String, dynamic> json) =
       _$ClientCommonDataImpl.fromJson;
@@ -479,6 +499,8 @@ abstract class _ClientCommonData implements ClientCommonData {
   int? get themeMode;
   @override
   Map<String, ServerConfig>? get servers;
+  @override
+  bool? get useSystemProxy;
   @override
   @JsonKey(ignore: true)
   _$$ClientCommonDataImplCopyWith<_$ClientCommonDataImpl> get copyWith =>

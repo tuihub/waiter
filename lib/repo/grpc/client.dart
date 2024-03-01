@@ -8,6 +8,14 @@ CallOptions withAuth(String token) {
   return CallOptions(metadata: {'Authorization': 'Bearer $token'});
 }
 
-LibrarianSephirahServiceClient clientFactory({required ServerConfig config}) {
-  return newGrpc(host: config.host, port: config.port, tls: config.tls);
+Future<LibrarianSephirahServiceClient> clientFactory({
+  required ServerConfig config,
+  bool? useSystemProxy,
+}) {
+  return newGrpc(
+    host: config.host,
+    port: config.port,
+    tls: config.tls,
+    useSystemProxy: useSystemProxy ?? false,
+  );
 }

@@ -60,6 +60,16 @@ fn wire_process_runner_impl(
         },
     )
 }
+fn wire_get_system_proxy_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, (bool, String, u16), _>(
+        WrapInfo {
+            debug_name: "get_system_proxy",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| get_system_proxy(),
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks

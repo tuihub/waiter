@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../consts.dart';
@@ -24,6 +23,7 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
         final themeMode = ThemeMode.values[common.themeMode!];
         emit(state.copyWith(themeMode: themeMode));
       }
+      emit(state.copyWith(useSystemProxy: common.useSystemProxy));
     });
 
     on<ChangeThemeEvent>((event, emit) async {
@@ -45,6 +45,11 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
           emit(state.copyWith(themeMode: ThemeMode.system));
         }
       }
+    });
+
+    on<ChangeUseSystemProxyEvent>((event, emit) async {
+      await _repo.set(common.copyWith(useSystemProxy: event.useSystemProxy));
+      emit(state.copyWith(useSystemProxy: event.useSystemProxy));
     });
   }
 }

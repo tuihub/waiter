@@ -54,4 +54,9 @@ class FFI extends FFIBase {
           : rust_ffi.TraceMode.ByName,
     );
   }
+
+  @override
+  Future<(bool, String, int)> getSystemProxy() {
+    return _ffi.getSystemProxy();
+  }
 }

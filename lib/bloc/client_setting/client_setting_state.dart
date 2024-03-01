@@ -1,23 +1,27 @@
 part of 'client_setting_bloc.dart';
 
-class ClientSettingState extends Equatable {
+class ClientSettingState {
   final ThemeMode themeMode;
   final AppTheme theme;
+  final bool? useSystemProxy;
 
-  const ClientSettingState(this.themeMode, this.theme);
+  const ClientSettingState(
+    this.themeMode,
+    this.theme, {
+    this.useSystemProxy,
+  });
 
   ClientSettingState copyWith({
     ThemeMode? themeMode,
     AppTheme? theme,
+    bool? useSystemProxy,
   }) {
     return ClientSettingState(
       themeMode ?? this.themeMode,
       theme ?? this.theme,
+      useSystemProxy: useSystemProxy ?? this.useSystemProxy,
     );
   }
-
-  @override
-  List<Object> get props => [themeMode, theme];
 }
 
 class DefaultAppState extends ClientSettingState {

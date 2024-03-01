@@ -13,6 +13,7 @@ log = "0.4.14"
 strum = "0.25.0"
 strum_macros = "0.25.3"
 sysinfo = "0.29.0"
+sysproxy = "0.3.0"
 time = "0.3.21"
 walkdir = "2"
 winapi = { version = "0.3.9", features = ["processthreadsapi"] }

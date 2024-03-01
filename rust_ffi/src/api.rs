@@ -16,6 +16,7 @@ use anyhow::{anyhow as err_msg, Result};
 use log::info;
 use strum_macros::{Display, EnumString};
 use sysinfo::{PidExt, Process, ProcessExt, System, SystemExt};
+use sysproxy;
 use time;
 
 /// trace mode
@@ -181,4 +182,10 @@ fn wait_for_process_exit(pid: u32) -> Result<i32> {
 
         Ok(exit_code as i32)
     }
+}
+
+/// get system proxy settings, support windows, macos and linux
+pub fn get_system_proxy() -> Result<(bool, String, u16)> {
+    let proxy = sysproxy::Sysproxy::get_system_proxy()?;
+    Ok((proxy.enable, proxy.host, proxy.port))
 }

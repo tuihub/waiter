@@ -42,7 +42,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
       });
     }
 
-    final client = clientFactory(config: widget.config);
+    final client = await clientFactory(config: widget.config);
     try {
       final startTime = DateTime.now();
       final response =

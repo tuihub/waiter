@@ -117,7 +117,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             final deviceID = config.deviceId != null
                 ? InternalID(id: Int64(config.deviceId!))
                 : null;
-            final client = clientFactory(config: config);
+            final client = await clientFactory(
+                config: config, useSystemProxy: repo.useSystemProxy);
             final refreshToken = config.refreshToken!;
             final resp = await client.refreshToken(
                 RefreshTokenRequest(deviceId: deviceID),
@@ -198,7 +199,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       try {
         var config = state.nextServer!;
-        final client = clientFactory(config: config);
+        final client = await clientFactory(
+            config: config, useSystemProxy: repo.useSystemProxy);
         late InternalID deviceID;
         late String accessToken;
         late String refreshToken;

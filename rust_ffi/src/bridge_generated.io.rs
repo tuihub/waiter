@@ -24,6 +24,11 @@ pub extern "C" fn wire_process_runner(
     )
 }
 
+#[no_mangle]
+pub extern "C" fn wire_get_system_proxy(port_: i64) {
+    wire_get_system_proxy_impl(port_)
+}
+
 // Section: allocate functions
 
 #[no_mangle]

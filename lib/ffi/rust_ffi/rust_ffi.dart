@@ -23,6 +23,11 @@ abstract class RustFfi {
       dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kProcessRunnerConstMeta;
+
+  /// get system proxy settings, support windows, macos and linux
+  Future<(bool, String, int)> getSystemProxy({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetSystemProxyConstMeta;
 }
 
 /// trace mode
@@ -92,6 +97,23 @@ class RustFfiImpl implements RustFfi {
         ],
       );
 
+  Future<(bool, String, int)> getSystemProxy({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_get_system_proxy(port_),
+      parseSuccessData: _wire2api___record__bool_String_u16,
+      parseErrorData: _wire2api_FrbAnyhowException,
+      constMeta: kGetSystemProxyConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGetSystemProxyConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_system_proxy",
+        argNames: [],
+      );
+
   void dispose() {
     _platform.dispose();
   }
@@ -103,6 +125,18 @@ class RustFfiImpl implements RustFfi {
 
   String _wire2api_String(dynamic raw) {
     return raw as String;
+  }
+
+  (bool, String, int) _wire2api___record__bool_String_u16(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) {
+      throw Exception('Expected 3 elements, got ${arr.length}');
+    }
+    return (
+      _wire2api_bool(arr[0]),
+      _wire2api_String(arr[1]),
+      _wire2api_u16(arr[2]),
+    );
   }
 
   (int, int, bool) _wire2api___record__i64_i64_bool(dynamic raw) {
@@ -123,6 +157,10 @@ class RustFfiImpl implements RustFfi {
 
   int _wire2api_i64(dynamic raw) {
     return castInt(raw);
+  }
+
+  int _wire2api_u16(dynamic raw) {
+    return raw as int;
   }
 
   int _wire2api_u8(dynamic raw) {
@@ -318,6 +356,20 @@ class RustFfiWire implements FlutterRustBridgeWireBase {
           ffi.Pointer<wire_uint_8_list>,
           int,
           int)>();
+
+  void wire_get_system_proxy(
+    int port_,
+  ) {
+    return _wire_get_system_proxy(
+      port_,
+    );
+  }
+
+  late final _wire_get_system_proxyPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_system_proxy');
+  late final _wire_get_system_proxy =
+      _wire_get_system_proxyPtr.asFunction<void Function(int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

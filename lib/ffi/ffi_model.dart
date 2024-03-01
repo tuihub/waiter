@@ -10,6 +10,10 @@ abstract class FFIBase {
   ) {
     throw UnimplementedError();
   }
+
+  Future<(bool, String, int)> getSystemProxy() {
+    throw UnimplementedError();
+  }
 }
 
 enum TraceMode {

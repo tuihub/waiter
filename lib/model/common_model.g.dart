@@ -37,6 +37,7 @@ _$ClientCommonDataImpl _$$ClientCommonDataImplFromJson(
       servers: (json['servers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, ServerConfig.fromJson(e as Map<String, dynamic>)),
       ),
+      useSystemProxy: json['useSystemProxy'] as bool?,
     );
 
 Map<String, dynamic> _$$ClientCommonDataImplToJson(
@@ -46,6 +47,7 @@ Map<String, dynamic> _$$ClientCommonDataImplToJson(
       'themeName': instance.themeName,
       'themeMode': instance.themeMode,
       'servers': instance.servers,
+      'useSystemProxy': instance.useSystemProxy,
     };
 
 _$ClientDeviceInfoImpl _$$ClientDeviceInfoImplFromJson(

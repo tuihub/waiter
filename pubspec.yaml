@@ -52,6 +52,7 @@ dependencies:
   system_tray: ^2.0.3
 
   # api connection
+  http2: ^2.3.0
   grpc: ^3.2.4
   protobuf: ^3.1.0
   tuihub_protos:
@@ -127,6 +128,7 @@ dependencies:
   url_launcher: ^6.2.4
   flutter_markdown: ^0.6.19
   pinyin: ^3.2.0
+  native_flutter_proxy: ^0.1.15
 
   # others
   json_annotation: ^4.8.1
@@ -141,7 +143,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
-  ffigen: ^11.0.0
+  ffigen: ^9.0.1
   build_runner: ^2.4.8
   freezed: ^2.4.7
   floor_generator: ^1.4.2
