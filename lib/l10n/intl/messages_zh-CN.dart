@@ -101,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "USER_TYPE_NORMAL": MessageLookupByLibrary.simpleMessage("普通"),
         "USER_TYPE_SENTINEL": MessageLookupByLibrary.simpleMessage("扫描器"),
         "USER_TYPE_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
+        "addApplication": MessageLookupByLibrary.simpleMessage("添加应用"),
         "address": MessageLookupByLibrary.simpleMessage("地址"),
         "applicationExitAbnormally":
             MessageLookupByLibrary.simpleMessage("应用程序异常退出"),
@@ -140,6 +141,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "durationYears": m6,
         "gebura": MessageLookupByLibrary.simpleMessage("Gebura"),
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),
+        "hide": MessageLookupByLibrary.simpleMessage("隐藏"),
         "id": MessageLookupByLibrary.simpleMessage("ID"),
         "importSteamApplicationFinished": m7,
         "importingSteamApplications":
@@ -154,6 +156,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginFailed": m9,
         "logoutDevice": MessageLookupByLibrary.simpleMessage("注销设备"),
         "newApplicationFound": m10,
+        "noAppInLibrary": MessageLookupByLibrary.simpleMessage("库中没有应用"),
         "operatingSystem": MessageLookupByLibrary.simpleMessage("操作系统"),
         "parseFailed": MessageLookupByLibrary.simpleMessage("解析失败"),
         "password": MessageLookupByLibrary.simpleMessage("密码"),

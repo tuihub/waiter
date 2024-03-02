@@ -15,6 +15,7 @@ import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
+import 'settings/client/client_setting_page.dart';
 
 class ServerSelectOverlay extends StatefulWidget {
   const ServerSelectOverlay({super.key, required this.child});
@@ -40,6 +41,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   double _height = 0;
   ServerConfig? _current;
   ServerConfig? _selected;
+  bool _preloginSettings = false;
   double translate = 1;
   bool _minimized = false;
   bool _fullscreen = false;
@@ -48,11 +50,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
   void fullscreen() {
     _minimized = false;
     _fullscreen = true;
-    _animateTo(0, onComplete: () {
-      setState(() {
-        _selected = _current;
-      });
-    });
+    _animateTo(0);
   }
 
   void minimize() {
@@ -111,6 +109,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
           listener: (context, state) {
             if (state is MainAutoLoginState && state.success) {
               _current = context.read<MainBloc>().state.currentServer;
+              _selected = _current;
               AppRoutes.tiphereth.go(context);
               minimize();
             }
@@ -208,6 +207,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                               selected: _current?.id == _selected?.id,
                               onPressed: () {
                                 setState(() {
+                                  _preloginSettings = false;
                                   _selected = _current;
                                 });
                               },
@@ -223,6 +223,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                                 selected: server.id == _selected?.id,
                                 onPressed: () {
                                   setState(() {
+                                    _preloginSettings = false;
                                     _selected = server;
                                   });
                                 },
@@ -231,7 +232,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                         trailing: [
                           if (_minimized)
                             AvatarMenuItem(
-                              name: _current!.host,
+                              name: _current?.host ?? '',
                               image: '',
                               selected: _current?.id == _selected?.id,
                               onPressed: () {
@@ -241,10 +242,21 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                           else
                             IconMenuItem(
                               icon: Icons.add,
-                              selected: _selected == null,
+                              selected: !_preloginSettings && _selected == null,
                               onPressed: () {
                                 setState(() {
+                                  _preloginSettings = false;
                                   _selected = null;
+                                });
+                              },
+                            ),
+                          if (_current == null)
+                            IconMenuItem(
+                              icon: Icons.settings,
+                              selected: _preloginSettings,
+                              onPressed: () {
+                                setState(() {
+                                  _preloginSettings = true;
                                 });
                               },
                             ),
@@ -258,9 +270,11 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                               xxs: 11,
                               md: 8,
                               lg: 6,
-                              child: _selected != null
-                                  ? ServerDetail(config: _selected!)
-                                  : const NewServer(),
+                              child: _preloginSettings
+                                  ? const ClientSettingPage()
+                                  : _selected != null
+                                      ? ServerDetail(config: _selected!)
+                                      : const NewServer(),
                             )
                           ],
                         ),

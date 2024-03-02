@@ -240,6 +240,16 @@ class S {
     );
   }
 
+  /// `隐藏`
+  String get hide {
+    return Intl.message(
+      '隐藏',
+      name: 'hide',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(
@@ -667,6 +677,26 @@ class S {
       name: 'importSteamApplicationFinished',
       desc: '',
       args: [success, failed],
+    );
+  }
+
+  /// `库中没有应用`
+  String get noAppInLibrary {
+    return Intl.message(
+      '库中没有应用',
+      name: 'noAppInLibrary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加应用`
+  String get addApplication {
+    return Intl.message(
+      '添加应用',
+      name: 'addApplication',
+      desc: '',
+      args: [],
     );
   }
 

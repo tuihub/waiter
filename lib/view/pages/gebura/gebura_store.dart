@@ -31,6 +31,9 @@ class GeburaStorePage extends StatelessWidget {
           msg = '无结果';
         }
       }
+      if (msg == '') {
+        msg = '输入应用名称进行搜索';
+      }
       return Scaffold(
         body: apps != null && apps!.isNotEmpty
             ? StoreList(apps: apps!)

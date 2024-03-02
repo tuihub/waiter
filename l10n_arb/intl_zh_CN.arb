@@ -19,6 +19,7 @@
   "loadFailed": "加载失败{reason}",
   "applySuccess": "更改已应用",
   "id": "ID",
+  "hide": "隐藏",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",
@@ -66,6 +67,8 @@
   "newApplicationFound": "发现 {number} 个新应用",
   "importingSteamApplications": "正在导入Steam应用程序",
   "importSteamApplicationFinished": "导入Steam应用程序完成，成功 {success} 个，失败 {failed} 个。",
+  "noAppInLibrary": "库中没有应用",
+  "addApplication": "添加应用",
 
   "settings": "设置",
   "currentDevice": "当前设备",

@@ -114,6 +114,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       for (final App app in state.ownedApps ?? []) {
         if (app.hasAssignedAppInfoId() && app.assignedAppInfoId.id > 0) {
           if (libraryItemMap[app.assignedAppInfoId.id] != null) {
+            if (libraryItemMap[app.assignedAppInfoId.id]!.name.isEmpty) {
+              libraryItemMap[app.assignedAppInfoId.id]!.name = app.name;
+            }
             continue;
           } else if (appInfoMap[app.assignedAppInfoId.id] != null) {
             libraryItemMap[app.assignedAppInfoId.id] =
@@ -609,6 +612,12 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           },
         ));
       }
+    });
+
+    on<GeburaClearLocalLibraryStateEvent>((event, emit) async {
+      emit(state.copyWith(
+        localLibraryState: '',
+      ));
     });
   }
 

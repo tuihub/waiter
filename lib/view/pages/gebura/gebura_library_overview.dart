@@ -27,21 +27,37 @@ class GeburaLibraryOverview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(8),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemCount: apps.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = apps.elementAt(index);
-                    return _GeburaLibraryOverviewItem(
-                      index: index,
-                      item: item,
-                    );
-                  },
-                ),
+                child: apps.isNotEmpty
+                    ? GridView.builder(
+                        padding: const EdgeInsets.all(8),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 0.75,
+                        ),
+                        itemCount: apps.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item = apps.elementAt(index);
+                          return _GeburaLibraryOverviewItem(
+                            index: index,
+                            item: item,
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(S.of(context).noAppInLibrary),
+                          const SizedBox(height: 12),
+                          OutlinedButton(
+                            onPressed: () {
+                              AppRoutes.geburaLibrarySettings.go(context);
+                            },
+                            child: Text(S.of(context).addApplication),
+                          ),
+                        ],
+                      )),
               ),
               const Row(
                 children: [
@@ -75,6 +91,14 @@ class GeburaLibraryOverview extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<GeburaBloc>()
+                          .add(GeburaClearLocalLibraryStateEvent());
+                    },
+                    child: Text(S.of(context).hide),
                   ),
                   const SizedBox(width: 64),
                 ],

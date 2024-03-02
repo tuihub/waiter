@@ -10,6 +10,7 @@ import 'package:universal_io/io.dart' as io;
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/steam/local_library.dart';
+import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import 'gebura_new_local_dialog.dart';
 
@@ -62,7 +63,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Text('本地'),
+                            const Text('概览'),
                             const Expanded(child: SizedBox()),
                             Wrap(
                               spacing: 8,
@@ -115,11 +116,26 @@ class GeburaLibrarySettings extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Icon(
-                                              const FaIcon(
-                                                      FontAwesomeIcons.folder)
-                                                  .icon,
-                                              size: 48),
+                                          Stack(
+                                            children: [
+                                              const Center(
+                                                child: Icon(
+                                                  FontAwesomeIcons.folder,
+                                                  size: 48,
+                                                ),
+                                              ),
+                                              Center(
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 16),
+                                                  child: const Icon(
+                                                      FontAwesomeIcons.steam,
+                                                      size: 24),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                           const SizedBox(height: 8),
                                           Text(folder),
                                         ],
@@ -147,7 +163,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                           children: [
                             Icon(const FaIcon(FontAwesomeIcons.steam).icon),
                             const SizedBox(width: 16),
-                            const Text('Steam'),
+                            const Text('Steam 集成'),
                             if (localSteamStateMsg == null)
                               Container()
                             else
@@ -202,7 +218,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -231,6 +247,14 @@ class GeburaLibrarySettings extends StatelessWidget {
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context
+                          .read<GeburaBloc>()
+                          .add(GeburaClearLocalLibraryStateEvent());
+                    },
+                    child: Text(S.of(context).hide),
                   ),
                   const SizedBox(width: 64),
                 ],

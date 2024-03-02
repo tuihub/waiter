@@ -238,6 +238,10 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
 
   final AppInfoMixed item;
 
+  AppLauncherSetting? _launcherSetting(BuildContext context) {
+    return context.read<GeburaBloc>().state.appLauncherSettings?[item.id.id];
+  }
+
   String? _launcherID(AppLauncherSetting? setting) {
     switch (setting?.type) {
       case AppLauncherType.steam:
@@ -251,8 +255,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
 
   Widget _activeRadio(BuildContext context, AppLauncherSetting setting,
       bool triggerActivation) {
-    final launcherSettings =
-        context.read<GeburaBloc>().state.appLauncherSettings?[item.id.id];
+    final launcherSettings = _launcherSetting(context);
     void doActivation() {
       context.read<GeburaBloc>().add(GeburaSetAppLauncherSettingEvent(
             item.id,
@@ -341,6 +344,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
       final Map<App, List<AppInst>> appInsts = state.getAppInsts(item.id.id);
       final deviceID = context.read<MainBloc>().state.currentDeviceId;
+      final launcherSettings = _launcherSetting(context);
       final List<Widget> listTiles = [];
       for (final app in appInsts.keys) {
         final insts = appInsts[app]!;
@@ -378,7 +382,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
                         (e) => e.instID == inst.id.id.toInt(),
                       )
                       .steamAppID,
-                  instCount == 1,
+                  launcherSettings == null && instCount == 1,
                 )
               else if (context
                       .read<GeburaBloc>()
@@ -387,7 +391,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
                 _localItem(
                   context,
                   context.read<GeburaBloc>().getAppLauncherSetting(inst.id)!,
-                  instCount == 1,
+                  launcherSettings == null && instCount == 1,
                 ),
             if (localAppInsts.isEmpty)
               ListTile(
