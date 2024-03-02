@@ -509,7 +509,21 @@ class _GeburaLibraryDetailAppSettingsState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
+    return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
+      if (state is GeburaRefreshAppInfoState) {
+        String msg = '';
+        if (state.processing) {
+          msg = '正在刷新应用信息';
+        }
+        if (state.failed) {
+          msg = '刷新应用信息失败 ${state.msg}';
+        }
+        if (state.success) {
+          msg = '刷新应用信息成功';
+        }
+        Toast(title: '', message: msg).show(context);
+      }
+    }, builder: (context, state) {
       return PopupMenuButton<int>(
         initialValue: selectedItem,
         onSelected: (int item) {
@@ -538,6 +552,28 @@ class _GeburaLibraryDetailAppSettingsState
                   );
                 },
               );
+            },
+          ),
+          PopupMenuItem<int>(
+            value: 2,
+            enabled: state.appInfoMap!.values
+                .expand((element) => element)
+                .any((element) => element.id.id == widget.item.id.id),
+            child: const Text('刷新应用信息'),
+            onTap: () {
+              final appInfos = state.appInfoMap!.values.firstWhere(
+                (element) => element.any((e) => e.id.id == widget.item.id.id),
+              );
+              final appInfoIDs = appInfos
+                  .map((e) => AppInfoID(
+                        internal: e.internal,
+                        source: e.source,
+                        sourceAppId: e.sourceAppId,
+                      ))
+                  .toList();
+              context
+                  .read<GeburaBloc>()
+                  .add(GeburaRefreshAppInfoEvent(appInfoIDs));
             },
           ),
         ],

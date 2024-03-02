@@ -276,3 +276,15 @@ class GeburaImportNewAppInstState extends GeburaState with EventStatusMixin {
   @override
   final String? msg;
 }
+
+class GeburaRefreshAppInfoState extends GeburaState with EventStatusMixin {
+  GeburaRefreshAppInfoState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}

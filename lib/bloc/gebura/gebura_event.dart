@@ -118,3 +118,9 @@ final class GeburaFetchAppLauncherSettingEvent extends GeburaEvent {
 }
 
 final class GeburaClearLocalLibraryStateEvent extends GeburaEvent {}
+
+final class GeburaRefreshAppInfoEvent extends GeburaEvent {
+  final List<AppInfoID> appInfoID;
+
+  GeburaRefreshAppInfoEvent(this.appInfoID);
+}

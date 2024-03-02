@@ -619,6 +619,28 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         localLibraryState: '',
       ));
     });
+
+    on<GeburaRefreshAppInfoEvent>((event, emit) async {
+      emit(GeburaRefreshAppInfoState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.syncAppInfos,
+        SyncAppInfosRequest(
+          appInfoIds: event.appInfoID,
+          waitData: true,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaRefreshAppInfoState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaRefreshAppInfoState(
+        state,
+        EventStatus.success,
+        msg: resp.error,
+      ));
+      add(GeburaRefreshLibraryEvent());
+    });
   }
 
   LocalAppInstLauncherSetting? getAppLauncherSetting(InternalID id) {
