@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GHA_CUSTOM_PAT }}
 
       - name: crowdin action
         uses: crowdin/github-action@v1
