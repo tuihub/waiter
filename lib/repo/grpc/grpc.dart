@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
@@ -20,35 +21,12 @@ Future<LibrarianSephirahServiceClient> newGrpc({
   } else {
     credentials = const ChannelCredentials.insecure();
   }
-  Proxy? proxy;
-  if (useSystemProxy) {
-    if (PlatformHelper.isAndroidApp()) {
-      try {
-        final ProxySetting settings = await NativeProxyReader.proxySetting;
-        if (settings.enabled) {
-          proxy = Proxy(
-            host: settings.host!,
-            port: settings.port!,
-          );
-        }
-      } catch (e) {
-        debugPrint('Failed to get system proxy: $e');
-      }
-    }
-    if (PlatformHelper.isWindowsApp()) {
-      try {
-        final (enabled, host, port) = await FFI().getSystemProxy();
-        if (enabled) {
-          proxy = Proxy(
-            host: host,
-            port: port,
-          );
-        }
-      } catch (e) {
-        debugPrint('Failed to get system proxy: $e');
-      }
-    }
+
+  var proxy = await _readSystemProxy();
+  if (!useSystemProxy) {
+    proxy = null;
   }
+
   final channel = ClientChannel(
     host,
     port: port,
@@ -60,4 +38,56 @@ Future<LibrarianSephirahServiceClient> newGrpc({
     ),
   );
   return LibrarianSephirahServiceClient(channel);
+}
+
+Future<void> applySystemProxyImpl() async {
+  final proxy = await _readSystemProxy();
+  HttpOverrides.global =
+      ProxiedHttpOverrides(proxy?.host, proxy?.port.toString());
+}
+
+Future<Proxy?> _readSystemProxy() async {
+  Proxy? proxy;
+  if (PlatformHelper.isAndroidApp()) {
+    try {
+      final ProxySetting settings = await NativeProxyReader.proxySetting;
+      if (settings.enabled) {
+        proxy = Proxy(
+          host: settings.host!,
+          port: settings.port!,
+        );
+      }
+    } catch (e) {
+      debugPrint('Failed to get system proxy: $e');
+    }
+  }
+  if (PlatformHelper.isWindowsApp()) {
+    try {
+      final (enabled, host, port) = await FFI().getSystemProxy();
+      if (enabled) {
+        proxy = Proxy(
+          host: host,
+          port: port,
+        );
+      }
+    } catch (e) {
+      debugPrint('Failed to get system proxy: $e');
+    }
+  }
+  return proxy;
+}
+
+class ProxiedHttpOverrides extends HttpOverrides {
+  final String? _port;
+  final String? _host;
+  ProxiedHttpOverrides(this._host, this._port);
+
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      // set proxy
+      ..findProxy = (uri) {
+        return _host != null ? 'PROXY $_host:$_port;' : 'DIRECT';
+      };
+  }
 }

@@ -19,3 +19,7 @@ Future<LibrarianSephirahServiceClient> clientFactory({
     useSystemProxy: useSystemProxy ?? false,
   );
 }
+
+Future<void> applySystemProxy() {
+  return applySystemProxyImpl();
+}

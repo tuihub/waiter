@@ -16,3 +16,7 @@ Future<LibrarianSephirahServiceClient> newGrpc({
   final channel = GrpcWebClientChannel.xhr(Uri.parse('$schema$host:$port'));
   return LibrarianSephirahServiceClient(channel);
 }
+
+Future<void> applySystemProxyImpl() async {
+  // do nothing
+}

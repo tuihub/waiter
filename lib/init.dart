@@ -27,6 +27,9 @@ Future<MyApp> init() async {
     await dotenv.load();
   }
 
+  // proxy
+  await applySystemProxy();
+
   // dao
   await SentryHive.initFlutter(dataPath);
 
