@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         run: |
-          flutter config --enable-windows-desktop
+          flutter pub get
           flutter build windows
 
   build-web:
