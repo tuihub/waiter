@@ -61,20 +61,30 @@ class S {
   }
 
   /// `确认`
-  String get buttonConfirm {
+  String get confirm {
     return Intl.message(
       '确认',
-      name: 'buttonConfirm',
+      name: 'confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `提交`
+  String get submit {
+    return Intl.message(
+      '提交',
+      name: 'submit',
       desc: '',
       args: [],
     );
   }
 
   /// `关闭`
-  String get buttonClose {
+  String get close {
     return Intl.message(
       '关闭',
-      name: 'buttonClose',
+      name: 'close',
       desc: '',
       args: [],
     );
@@ -111,30 +121,30 @@ class S {
   }
 
   /// `退出`
-  String get buttonExit {
+  String get exit {
     return Intl.message(
       '退出',
-      name: 'buttonExit',
+      name: 'exit',
       desc: '',
       args: [],
     );
   }
 
   /// `最小化到托盘`
-  String get buttonMinimizeToTray {
+  String get minimizeToTray {
     return Intl.message(
       '最小化到托盘',
-      name: 'buttonMinimizeToTray',
+      name: 'minimizeToTray',
       desc: '',
       args: [],
     );
   }
 
   /// `取消`
-  String get buttonCancel {
+  String get cancel {
     return Intl.message(
       '取消',
-      name: 'buttonCancel',
+      name: 'cancel',
       desc: '',
       args: [],
     );
@@ -441,10 +451,10 @@ class S {
   }
 
   /// `检查`
-  String get buttonCheck {
+  String get check {
     return Intl.message(
       '检查',
-      name: 'buttonCheck',
+      name: 'check',
       desc: '',
       args: [],
     );
@@ -461,10 +471,10 @@ class S {
   }
 
   /// `重试`
-  String get buttonRetry {
+  String get retry {
     return Intl.message(
       '重试',
-      name: 'buttonRetry',
+      name: 'retry',
       desc: '',
       args: [],
     );
@@ -481,10 +491,10 @@ class S {
   }
 
   /// `返回`
-  String get buttonBackward {
+  String get backward {
     return Intl.message(
       '返回',
-      name: 'buttonBackward',
+      name: 'backward',
       desc: '',
       args: [],
     );
@@ -505,16 +515,6 @@ class S {
     return Intl.message(
       '密码',
       name: 'password',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `登录`
-  String get buttonLogin {
-    return Intl.message(
-      '登录',
-      name: 'buttonLogin',
       desc: '',
       args: [],
     );

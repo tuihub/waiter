@@ -100,16 +100,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Application exit abnormally"),
         "areYouSureToClose":
             MessageLookupByLibrary.simpleMessage("Are you sure to close?"),
-        "buttonBackward": MessageLookupByLibrary.simpleMessage("Backward"),
-        "buttonCancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-        "buttonCheck": MessageLookupByLibrary.simpleMessage("Check"),
-        "buttonClose": MessageLookupByLibrary.simpleMessage("Close"),
-        "buttonConfirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-        "buttonExit": MessageLookupByLibrary.simpleMessage("Exit"),
-        "buttonLogin": MessageLookupByLibrary.simpleMessage("Login"),
-        "buttonMinimizeToTray":
-            MessageLookupByLibrary.simpleMessage("Minimize to tray"),
-        "buttonRetry": MessageLookupByLibrary.simpleMessage("Retry"),
         "chesed": MessageLookupByLibrary.simpleMessage("Chesed"),
         "clickLoginToStart":
             MessageLookupByLibrary.simpleMessage("CLICK LOGIN TO START"),

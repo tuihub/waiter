@@ -62,11 +62,11 @@ class TitleBar extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text(S.of(context).buttonClose),
+                      title: Text(S.of(context).close),
                       content: Text(S.of(context).areYouSureToClose),
                       actions: <Widget>[
                         TextButton(
-                          child: Text(S.of(context).buttonExit),
+                          child: Text(S.of(context).exit),
                           onPressed: () {
                             final SystemTray systemTray = SystemTray();
                             systemTray.destroy();
@@ -74,14 +74,14 @@ class TitleBar extends StatelessWidget {
                           },
                         ),
                         TextButton(
-                          child: Text(S.of(context).buttonMinimizeToTray),
+                          child: Text(S.of(context).minimizeToTray),
                           onPressed: () {
                             Navigator.of(context).pop();
                             appWindow.hide();
                           },
                         ),
                         TextButton(
-                          child: Text(S.of(context).buttonCancel),
+                          child: Text(S.of(context).cancel),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

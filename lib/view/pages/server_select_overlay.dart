@@ -299,7 +299,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                           icon: const Icon(Icons.login),
                           label: Text(_selected!.id == state.currentServer?.id
                               ? S.of(context).continueInCurrentServer
-                              : S.of(context).buttonLogin),
+                              : S.of(context).login),
                         )
                       : null,
                 ),
@@ -437,7 +437,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
                 minimumSize: const Size(128, 32),
               ),
               onPressed: submit,
-              child: Text(S.of(context).buttonCheck),
+              child: Text(S.of(context).check),
             ),
             ServerConnectivityWidget(
               config: server,
@@ -499,7 +499,7 @@ class _LoginFormState extends State<LoginForm> {
             title: '',
             message: S.of(context).loginFailed(state.msg ?? ''),
             action: SnackBarAction(
-              label: S.of(context).buttonRetry,
+              label: S.of(context).retry,
               onPressed: login,
             ),
           ).show(context);
@@ -529,7 +529,7 @@ class _LoginFormState extends State<LoginForm> {
                           .read<MainBloc>()
                           .add(MainClearNextServerConfigEvent());
                     },
-                    child: Text('< ${S.of(context).buttonBackward}'),
+                    child: Text('< ${S.of(context).backward}'),
                   ),
                 ),
               ),
@@ -586,7 +586,7 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       )
                     : Text(
-                        S.of(context).buttonLogin,
+                        S.of(context).login,
                         style: const TextStyle(
                           fontSize: 16,
                         ),

@@ -25,35 +25,35 @@ import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/settings/about_page.dart';
-import 'view/pages/settings/app/app_add_page.dart';
-import 'view/pages/settings/app/app_edit_page.dart';
+import 'view/pages/settings/app/app_add_panel.dart';
+import 'view/pages/settings/app/app_edit_panel.dart';
 import 'view/pages/settings/app/app_manage_page.dart';
-import 'view/pages/settings/app_package/app_package_add_page.dart';
-import 'view/pages/settings/app_package/app_package_edit_page.dart';
+import 'view/pages/settings/app_package/app_package_add_panel.dart';
+import 'view/pages/settings/app_package/app_package_edit_panel.dart';
 import 'view/pages/settings/app_package/app_package_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
-import 'view/pages/settings/notify/notify_flow_add_page.dart';
-import 'view/pages/settings/notify/notify_flow_edit_page.dart';
+import 'view/pages/settings/notify/notify_flow_add_panel.dart';
+import 'view/pages/settings/notify/notify_flow_edit_panel.dart';
 import 'view/pages/settings/notify/notify_flow_page.dart';
-import 'view/pages/settings/notify/notify_target_add_page.dart';
-import 'view/pages/settings/notify/notify_target_edit_page.dart';
+import 'view/pages/settings/notify/notify_target_add_panel.dart';
+import 'view/pages/settings/notify/notify_target_edit_panel.dart';
 import 'view/pages/settings/notify/notify_target_page.dart';
-import 'view/pages/settings/porter/porter_edit_page.dart';
+import 'view/pages/settings/porter/porter_edit_panel.dart';
 import 'view/pages/settings/porter/porter_manage_page.dart';
-import 'view/pages/settings/session/session_edit_page.dart';
+import 'view/pages/settings/session/session_edit_panel.dart';
 import 'view/pages/settings/session/session_manage_page.dart';
 import 'view/pages/settings/settings_nav.dart';
-import 'view/pages/settings/user/user_add_page.dart';
-import 'view/pages/settings/user/user_edit_page.dart';
+import 'view/pages/settings/user/user_add_panel.dart';
+import 'view/pages/settings/user/user_edit_panel.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/web_landing_page.dart';
-import 'view/pages/yesod/yesod_config_add_page.dart';
-import 'view/pages/yesod/yesod_config_edit_page.dart';
+import 'view/pages/yesod/yesod_config_add_panel.dart';
+import 'view/pages/yesod/yesod_config_edit_panel.dart';
 import 'view/pages/yesod/yesod_config_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
-import 'view/pages/yesod/yesod_recent_setting_page.dart';
+import 'view/pages/yesod/yesod_recent_setting_panel.dart';
 
 class AppRoutes {
   const AppRoutes._(this.path, {this.isAction = false});
@@ -392,9 +392,9 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                   }
 
                   final yesodActions = {
-                    _YesodActions.configEdit: const YesodConfigEditPage(),
-                    _YesodActions.configAdd: const YesodConfigAddPage(),
-                    _YesodActions.recentFilter: const YesodRecentSettingPage(),
+                    _YesodActions.configEdit: const YesodConfigEditPanel(),
+                    _YesodActions.configAdd: const YesodConfigAddPanel(),
+                    _YesodActions.recentFilter: const YesodRecentSettingPanel(),
                   };
                   final gestureRight = function != _YesodFunctions.config;
                   return NoTransitionPage(
@@ -518,27 +518,28 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       _SettingsFunctions.client;
                   final settingsActions = {
                     _SettingsActions.notifyTargetAdd:
-                        const NotifyTargetAddPage(),
+                        const NotifyTargetAddPanel(),
                     _SettingsActions.notifyTargetEdit:
-                        const NotifyTargetEditPage(),
-                    _SettingsActions.notifyFlowAdd: const NotifyFlowAddPage(),
-                    _SettingsActions.notifyFlowEdit: const NotifyFlowEditPage(),
-                    _SettingsActions.sessionEdit: const SessionEditPage(),
-                    _SettingsActions.porterEdit: const PorterEditPage(),
-                    _SettingsActions.userAdd: const UserAddPage(),
-                    _SettingsActions.userEdit: UserEditPage(
+                        const NotifyTargetEditPanel(),
+                    _SettingsActions.notifyFlowAdd: const NotifyFlowAddPanel(),
+                    _SettingsActions.notifyFlowEdit:
+                        const NotifyFlowEditPanel(),
+                    _SettingsActions.sessionEdit: const SessionEditPanel(),
+                    _SettingsActions.porterEdit: const PorterEditPanel(),
+                    _SettingsActions.userAdd: const UserAddPanel(),
+                    _SettingsActions.userEdit: UserEditPanel(
                       key: ValueKey(state.extra),
                       user: state.extra is User ? state.extra! as User : User(),
                     ),
-                    _SettingsActions.appAdd: const AppAddPage(),
-                    _SettingsActions.appEdit: AppEditPage(
+                    _SettingsActions.appAdd: const AppAddPanel(),
+                    _SettingsActions.appEdit: AppEditPanel(
                       key: ValueKey(state.extra),
                       app: state.extra is AppInfo
                           ? state.extra! as AppInfo
                           : AppInfo(),
                     ),
-                    _SettingsActions.appPackageAdd: const AppPackageAddPage(),
-                    _SettingsActions.appPackageEdit: AppPackageEditPage(
+                    _SettingsActions.appPackageAdd: const AppPackageAddPanel(),
+                    _SettingsActions.appPackageEdit: AppPackageEditPanel(
                       key: ValueKey(state.extra),
                       appPackage:
                           state.extra is App ? state.extra! as App : App(),

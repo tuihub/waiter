@@ -56,7 +56,7 @@ class Toast {
             child: TextButton(
               onPressed: () => ScaffoldMessenger.of(context)
                   .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss),
-              child: Text(S.of(context).buttonClose),
+              child: Text(S.of(context).close),
             ),
           ),
         ),
