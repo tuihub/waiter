@@ -641,6 +641,88 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       ));
       add(GeburaRefreshLibraryEvent());
     });
+
+    on<GeburaSearchNewAppInfoEvent>((event, emit) async {
+      emit(GeburaSearchNewAppInfoState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.searchNewAppInfos,
+        SearchNewAppInfosRequest(
+          paging: PagingRequest(
+            pageSize: Int64(10),
+            pageNum: Int64(1),
+          ),
+          name: event.query,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaSearchNewAppInfoState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaSearchNewAppInfoState(
+        state,
+        EventStatus.success,
+        msg: resp.error,
+        infos: resp.getData().appInfos,
+      ));
+    }, transformer: droppable());
+
+    on<GeburaAssignAppWithNewInfoEvent>((event, emit) async {
+      emit(GeburaAssignAppInfoState(state, EventStatus.processing));
+      final syncResp = await _api.doRequest(
+          (client) => client.syncAppInfos,
+          SyncAppInfosRequest(
+            appInfoIds: [
+              AppInfoID(
+                  internal: false,
+                  source: event.appInfoSource,
+                  sourceAppId: event.appInfoSourceID)
+            ],
+            waitData: true,
+          ));
+      if (syncResp.status != ApiStatus.success) {
+        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+            msg: syncResp.error));
+        return;
+      }
+      final boundInfoResp = await _api.doRequest(
+          (client) => client.getBoundAppInfos,
+          GetBoundAppInfosRequest(
+            appInfoId: syncResp.getData().appInfos.first.id,
+          ));
+      if (boundInfoResp.status != ApiStatus.success) {
+        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+            msg: boundInfoResp.error));
+        return;
+      }
+      if (!boundInfoResp
+          .getData()
+          .appInfos
+          .any((element) => element.internal)) {
+        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+            msg: 'No internal app info found'));
+      }
+      final appInfoId = boundInfoResp
+          .getData()
+          .appInfos
+          .firstWhere((element) => element.internal)
+          .id;
+      final resp = await _api.doRequest(
+        (client) => client.assignApp,
+        AssignAppRequest(
+          appInfoId: appInfoId,
+          appId: event.appID,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaAssignAppInfoState(state, EventStatus.success,
+          msg: resp.error));
+      add(GeburaRefreshLibraryEvent());
+    }, transformer: droppable());
   }
 
   LocalAppInstLauncherSetting? getAppLauncherSetting(InternalID id) {

@@ -16,6 +16,7 @@ import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
 import '../../../model/gebura_model.dart';
 import '../../../repo/grpc/l10n.dart';
+import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../helper/url.dart';
@@ -39,6 +40,12 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        if (state.libraryItems == null ||
+            !state.libraryItems!.any(
+              (element) => element.id.id == Int64(id),
+            )) {
+          AppRoutes.geburaLibrary.go(context);
+        }
         final item = state.libraryItems!.firstWhere(
           (element) => element.id.id == Int64(id),
         );
@@ -534,29 +541,18 @@ class _GeburaLibraryDetailAppSettingsState
         itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
           PopupMenuItem<int>(
             value: 1,
-            enabled: state.ownedApps!
+            enabled: (state.ownedApps ?? [])
                 .any((element) => element.id.id == widget.item.id.id),
             child: const Text('设置应用信息'),
             onTap: () {
-              showDialog<void>(
-                context: context,
-                builder: (_) {
-                  return BlocProvider.value(
-                    value: context.read<MainBloc>(),
-                    child: _GeburaLibraryDetailChangeAppInfoDialog(
-                      item: App(
-                        id: widget.item.id,
-                        name: widget.item.name,
-                      ),
-                    ),
-                  );
-                },
-              );
+              AppRoutes.geburaLibraryAssignApp(widget.item.id.id.toInt())
+                  .go(context);
             },
           ),
           PopupMenuItem<int>(
             value: 2,
-            enabled: state.appInfoMap!.values
+            enabled: (state.appInfoMap ?? <Int64, List<AppInfo>>{})
+                .values
                 .expand((element) => element)
                 .any((element) => element.id.id == widget.item.id.id),
             child: const Text('刷新应用信息'),

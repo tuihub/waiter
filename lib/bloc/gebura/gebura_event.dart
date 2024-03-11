@@ -124,3 +124,18 @@ final class GeburaRefreshAppInfoEvent extends GeburaEvent {
 
   GeburaRefreshAppInfoEvent(this.appInfoID);
 }
+
+final class GeburaAssignAppWithNewInfoEvent extends GeburaEvent {
+  final InternalID appID;
+  final String appInfoSource;
+  final String appInfoSourceID;
+
+  GeburaAssignAppWithNewInfoEvent(
+      this.appID, this.appInfoSource, this.appInfoSourceID);
+}
+
+final class GeburaSearchNewAppInfoEvent extends GeburaEvent {
+  final String query;
+
+  GeburaSearchNewAppInfoEvent(this.query);
+}

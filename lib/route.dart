@@ -17,6 +17,7 @@ import 'repo/grpc/api_helper.dart';
 import 'view/layout/overlapping_panels.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
+import 'view/pages/gebura/gebura_assign_app_panel.dart';
 import 'view/pages/gebura/gebura_library_detail.dart';
 import 'view/pages/gebura/gebura_library_overview.dart';
 import 'view/pages/gebura/gebura_library_settings.dart';
@@ -135,6 +136,9 @@ class AppRoutes {
       AppRoutes._('$_gebura/${GeburaFunctions.librarySettings}');
   static AppRoutes geburaLibraryDetail(int id) =>
       AppRoutes._('$geburaLibrary?id=$id');
+  static AppRoutes geburaLibraryAssignApp(int id) =>
+      AppRoutes._('$geburaLibrary?id=$id&action=${_GeburaActions.assignApp}',
+          isAction: true);
 
   static const String _chesed = '$_module/${ModuleName._chesed}';
   static const AppRoutes chesed = AppRoutes._(_chesed);
@@ -236,6 +240,10 @@ class GeburaFunctions {
   static const String store = 'store';
   static const String library = 'library';
   static const String librarySettings = 'librarySettings';
+}
+
+class _GeburaActions {
+  static const String assignApp = 'assignApp';
 }
 
 class _SettingsFunctions {
@@ -438,11 +446,16 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                 pageBuilder: (context, state) {
                   final function = state.pathParameters['function'] ??
                       AppRoutes.geburaStore.toString();
+                  final action = state.uri.queryParameters['action'] ??
+                      _GeburaActions.assignApp;
                   final geburaPages = {
                     GeburaFunctions.store: const GeburaStorePage(),
                     GeburaFunctions.library: const GeburaLibraryOverview(),
                     GeburaFunctions.librarySettings:
                         const GeburaLibrarySettings(),
+                  };
+                  final geburaActions = {
+                    _GeburaActions.assignApp: const GeburaAssignAppPanel(),
                   };
                   Widget? page = geburaPages[function];
                   if (state.uri.queryParameters['id']?.isNotEmpty ?? false) {
@@ -461,6 +474,7 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                           function: function,
                         ),
                         middlePart: page,
+                        rightPart: geburaActions[action],
                       ),
                     ),
                   );
