@@ -31,6 +31,8 @@ Future<LibrarianSephirahServiceClient> newGrpc({
     host,
     port: port,
     options: ChannelOptions(
+      connectTimeout: const Duration(seconds: 10),
+      idleTimeout: const Duration(seconds: 10),
       credentials: credentials,
       codecRegistry:
           CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),

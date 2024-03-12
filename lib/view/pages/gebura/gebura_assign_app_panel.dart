@@ -125,11 +125,11 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                             },
                           ),
                         ),
-                        onChanged: (value) {
+                        onEditingComplete: () {
                           context
                               .read<GeburaBloc>()
                               .add(GeburaSearchNewAppInfoEvent(
-                                value,
+                                _searchController.text,
                               ));
                         },
                       ),
@@ -166,8 +166,18 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                       const SizedBox(
                         height: 8,
                       ),
-                      Text('受影响的应用: ${app?.name}'),
-                      Text('新应用信息: ${selectedAppInfo?.name}'),
+                      ListTile(
+                        title: const Text('受影响的应用'),
+                        subtitle: Text('${app?.name}'),
+                      ),
+                      ListTile(
+                        title: const Text('新应用信息'),
+                        subtitle: Text('${selectedAppInfo?.name}'),
+                      ),
+                      ListTile(
+                        title: const Text('应用信息来源'),
+                        subtitle: Text('${selectedAppInfo?.source}'),
+                      ),
                     ],
                   ),
                 ),

@@ -678,7 +678,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                   source: event.appInfoSource,
                   sourceAppId: event.appInfoSourceID)
             ],
-            waitData: true,
+            waitData: false,
           ));
       if (syncResp.status != ApiStatus.success) {
         emit(GeburaAssignAppInfoState(state, EventStatus.failed,

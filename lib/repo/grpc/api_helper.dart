@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
@@ -56,6 +57,7 @@ class ApiHelper {
       final resp = await requestFunc(req, options: option);
       return ApiResponse(resp, ApiStatus.success, null);
     } catch (e) {
+      await Sentry.captureException(e);
       if (e is GrpcError &&
           e.code == StatusCode.unauthenticated &&
           await doRefresh()) {
@@ -63,6 +65,7 @@ class ApiHelper {
           final resp = await requestFunc(req, options: option);
           return ApiResponse(resp, ApiStatus.success, null);
         } catch (e) {
+          await Sentry.captureException(e);
           if (e is GrpcError) {
             return ApiResponse(null, ApiStatus.error,
                 e.message ?? S.current.unknownErrorOccurred);
