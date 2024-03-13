@@ -316,64 +316,79 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             return;
           }
           await launchUrlString('steam://run/${appSetting.steamAppID}');
+          emit(GeburaRunAppState(state, event.appID, EventStatus.success));
         case AppLauncherType.local:
           if (appSetting.localAppInstID == null) {
             emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
                 msg: S.current.pleaseSetupApplicationPath));
             return;
           }
-          state.runState ??= {};
-          emit(GeburaRunAppState(state, event.appID, EventStatus.processing));
-          final setting =
-              _repo.getLocalAppInstLauncherSetting(event.appID.id.toInt());
-          if (setting == null || setting.path.isEmpty) {
-            emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-                msg: S.current.pleaseSetupApplicationPath));
-            return;
-          }
-          if (state.runState![event.appID] != null &&
-              state.runState![event.appID]!.running) {
-            emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-                msg: S.current.pleaseDontReRunApplication));
-            return;
-          }
-          state.runState![event.appID] =
-              const AppRunState(running: true, startTime: null, endTime: null);
-          emit(GeburaRunAppState(state, event.appID, EventStatus.processing));
-          try {
-            final (start, end, suceess) = await FFI().processRunner(
-                setting.advancedTracing ? TraceMode.ByName : TraceMode.Simple,
-                setting.processName,
-                setting.path,
-                setting.realPath,
-                dirname(setting.path),
-                setting.sleepTime,
-                1000);
-            if (!suceess) {
-              state.runState![event.appID] =
-                  state.runState![event.appID]!.copyWith(running: false);
-              emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-                  msg: S.current.applicationExitAbnormally));
-              return;
-            }
-            state.runState![event.appID] = AppRunState(
-              running: false,
-              startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
-              endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
-            );
-            emit(GeburaRunAppState(
-              state,
-              event.appID,
-              EventStatus.success,
-            ));
-          } catch (e) {
-            state.runState![event.appID] =
-                state.runState![event.appID]!.copyWith(running: false);
-            emit(GeburaRunAppState(state, event.appID, EventStatus.failed,
-                msg:
-                    '${S.current.launcherError} ${e is FrbAnyhowException ? e.anyhow : e}'));
-            return;
-          }
+          add(GeburaRunLocalAppEvent(
+            InternalID(id: Int64(appSetting.localAppInstID!)),
+          ));
+      }
+    });
+
+    on<GeburaRunLocalAppEvent>((event, emit) async {
+      if (!(state.ownedAppInsts?.any((inst) => inst.id == event.appInstID) ??
+          false)) {
+        emit(GeburaRunAppState(state, event.appInstID, EventStatus.failed,
+            msg: S.current.unknownErrorOccurred));
+        return;
+      }
+      final appID = state.ownedAppInsts!
+          .firstWhere((inst) => inst.id == event.appInstID)
+          .appId;
+      state.runState ??= {};
+      emit(GeburaRunAppState(state, appID, EventStatus.processing));
+      final setting =
+          _repo.getLocalAppInstLauncherSetting(event.appInstID.id.toInt());
+      if (setting == null || setting.path.isEmpty) {
+        emit(GeburaRunAppState(state, appID, EventStatus.failed,
+            msg: S.current.pleaseSetupApplicationPath));
+        return;
+      }
+      if (state.runState![appID] != null && state.runState![appID]!.running) {
+        emit(GeburaRunAppState(state, appID, EventStatus.failed,
+            msg: S.current.pleaseDontReRunApplication));
+        return;
+      }
+      state.runState![appID] =
+          const AppRunState(running: true, startTime: null, endTime: null);
+      emit(GeburaRunAppState(state, appID, EventStatus.processing));
+      try {
+        final (start, end, suceess) = await FFI().processRunner(
+            setting.advancedTracing ? TraceMode.ByName : TraceMode.Simple,
+            setting.processName,
+            setting.path,
+            setting.realPath,
+            dirname(setting.path),
+            setting.sleepTime,
+            1000);
+        if (!suceess) {
+          state.runState![appID] =
+              state.runState![appID]!.copyWith(running: false);
+          emit(GeburaRunAppState(state, appID, EventStatus.failed,
+              msg: S.current.applicationExitAbnormally));
+          return;
+        }
+        state.runState![appID] = AppRunState(
+          running: false,
+          startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
+          endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
+        );
+        emit(GeburaRunAppState(
+          state,
+          appID,
+          EventStatus.success,
+        ));
+      } catch (e) {
+        state.runState![appID] =
+            state.runState![appID]!.copyWith(running: false);
+        emit(GeburaRunAppState(state, appID, EventStatus.failed,
+            msg:
+                '${S.current.launcherError} ${e is FrbAnyhowException ? e.anyhow : e}'));
+        return;
       }
     });
 

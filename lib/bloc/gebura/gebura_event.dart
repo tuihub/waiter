@@ -75,6 +75,12 @@ final class GeburaRunAppEvent extends GeburaEvent {
   GeburaRunAppEvent(this.appID);
 }
 
+final class GeburaRunLocalAppEvent extends GeburaEvent {
+  final InternalID appInstID;
+
+  GeburaRunLocalAppEvent(this.appInstID);
+}
+
 final class GeburaScanLocalLibraryEvent extends GeburaEvent {}
 
 final class GeburaImportSteamAppsEvent extends GeburaEvent {

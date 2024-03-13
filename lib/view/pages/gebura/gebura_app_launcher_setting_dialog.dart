@@ -6,14 +6,16 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../model/gebura_model.dart';
+import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
 import '../../layout/bootstrap_container.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
-  const GeburaAppLauncherSettingDialog(this.appID, this.setting, {super.key});
+  const GeburaAppLauncherSettingDialog(this.appInstID, this.setting,
+      {super.key});
 
-  final int appID;
+  final int appInstID;
   final LocalAppInstLauncherSetting? setting;
 
   @override
@@ -45,33 +47,31 @@ class GeburaAppLauncherSettingDialogState
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Hero(
-                      tag: heroTag,
-                      child: GeburaAppLauncherSettingForm(
-                        key: heroTag,
-                        widget.appID,
-                        newSetting ?? widget.setting,
-                        onChanged: (setting) {
+                    GeburaAppLauncherSettingForm(
+                      widget.appInstID,
+                      newSetting ?? widget.setting,
+                      onChanged: (setting) {
+                        setState(() {
                           newSetting = setting;
-                        },
-                      ),
+                        });
+                      },
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 16),
                       child: ElevatedButton(
                         onPressed: () async {
-                          await Navigator.push(
-                            context,
+                          Navigator.of(context).pop();
+                          await Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) {
                               return GeburaAppLauncherSettingTestPage(
-                                widget.appID,
+                                widget.appInstID,
                                 newSetting ?? widget.setting,
                                 heroTag,
                               );
                             }),
                           );
                         },
-                        child: const Text('测试设置'),
+                        child: const Text('遇到问题？打开调试窗口'),
                       ),
                     ),
                   ],
@@ -105,10 +105,11 @@ class GeburaAppLauncherSettingDialogState
 }
 
 class GeburaAppLauncherSettingTestPage extends StatefulWidget {
-  const GeburaAppLauncherSettingTestPage(this.appID, this.setting, this.heroTag,
+  const GeburaAppLauncherSettingTestPage(
+      this.appInstID, this.setting, this.heroTag,
       {super.key});
 
-  final int appID;
+  final int appInstID;
   final LocalAppInstLauncherSetting? setting;
   final UniqueKey heroTag;
 
@@ -121,28 +122,50 @@ class _GeburaAppLauncherSettingTestPageState
     extends State<GeburaAppLauncherSettingTestPage> {
   int currentStep = 0;
   LocalAppInstLauncherSetting? newSetting;
-  InternalID get appID => InternalID(id: Int64(widget.appID));
+  InternalID get appInstID => InternalID(id: Int64(widget.appInstID));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('应用启动测试'),
+        title: const Text('调试应用启动设置'),
       ),
       body: BootstrapContainer(
         children: [
           BootstrapColumn(
             xxs: 6,
-            child: Hero(
-              tag: widget.heroTag,
-              child: GeburaAppLauncherSettingForm(
-                key: widget.heroTag,
-                widget.appID,
-                widget.setting,
-                onChanged: (setting) {
-                  newSetting = setting;
-                },
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('本窗口会帮助您测试您的启动设置，在下方更改您的设置，之后根据右侧的引导执行测试'),
+                const SizedBox(
+                  height: 16,
+                ),
+                GeburaAppLauncherSettingForm(
+                  widget.appInstID,
+                  widget.setting,
+                  onChanged: (setting) {
+                    newSetting = setting;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (newSetting != null) {
+                      context.read<GeburaBloc>().add(
+                            GeburaSetLocalAppInstLauncherSettingEvent(
+                                newSetting!),
+                          );
+                    } else {
+                      const Toast(title: '', message: '没有需要保存的更改')
+                          .show(context);
+                    }
+                  },
+                  child: const Text('保存'),
+                ),
+              ],
             ),
           ),
           BootstrapColumn(
@@ -151,19 +174,34 @@ class _GeburaAppLauncherSettingTestPageState
               listener: (context, state) {
                 if (state is GeburaSetAppLauncherSettingState &&
                     state.success) {
+                  const Toast(title: '', message: '保存成功').show(context);
                   setState(() {
                     currentStep = 1;
                   });
                 }
               },
               builder: (context, state) {
+                if (!(state.ownedAppInsts
+                        ?.any((inst) => inst.id == appInstID) ??
+                    false)) {
+                  return const Text('客户端数据异常');
+                }
+                final appID = state.ownedAppInsts!
+                    .firstWhere((inst) => inst.id == appInstID)
+                    .appId;
                 final runState =
-                    state.runState != null && state.runState!.containsKey(appID)
-                        ? state.runState![appID]
-                        : null;
+                    state.runState != null ? state.runState![appID] : null;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          currentStep = 0;
+                        });
+                      },
+                      child: const Text('重置测试'),
+                    ),
                     Stepper(
                       currentStep: currentStep,
                       controlsBuilder: (context, _) {
@@ -174,7 +212,11 @@ class _GeburaAppLauncherSettingTestPageState
                           title: const Text('保存应用启动设置'),
                           content: Column(
                             children: [
-                              const Text('保存您的设置\n请在运行测试之前检查您的应用已经关闭'),
+                              const Text(
+                                '请在运行测试之前检查您的应用已经关闭',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              const Text('点击确定将会保存您当前的设置'),
                               ElevatedButton(
                                 onPressed: () async {
                                   if (newSetting != null) {
@@ -205,7 +247,7 @@ class _GeburaAppLauncherSettingTestPageState
                                   if (setting != null) {
                                     context
                                         .read<GeburaBloc>()
-                                        .add(GeburaRunAppEvent(appID));
+                                        .add(GeburaRunLocalAppEvent(appInstID));
                                     setState(() {
                                       currentStep = 2;
                                     });
@@ -217,14 +259,17 @@ class _GeburaAppLauncherSettingTestPageState
                           ),
                         ),
                         Step(
-                          title: const Text('启动阶段测试'),
+                          title: const Text('启动阶段'),
                           content: Column(
                             children: [
                               const Text('请使您的应用保持运行一段时间'),
                               if (runState?.running ?? false)
                                 const Text('运行状态正常')
                               else
-                                const Text('运行状态异常，未捕获进程'),
+                                const Text(
+                                  '运行状态异常，未捕获进程',
+                                  style: TextStyle(color: Colors.red),
+                                ),
                               if (runState?.running ?? false)
                                 ElevatedButton(
                                   onPressed: () async {
@@ -233,38 +278,23 @@ class _GeburaAppLauncherSettingTestPageState
                                     });
                                   },
                                   child: const Text('下一步'),
-                                )
-                              else
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      currentStep = 0;
-                                    });
-                                  },
-                                  child: const Text('重置测试'),
                                 ),
                             ],
                           ),
                         ),
                         Step(
-                          title: const Text('关闭阶段测试'),
+                          title: const Text('关闭阶段'),
                           content: Column(
                             children: [
                               const Text('请关闭您的应用'),
                               if (runState?.running ?? false)
-                                const Text('未检测到关闭')
-                              else
-                                const Text('应用已关闭'),
-                              if (runState?.running ?? false)
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      currentStep = 0;
-                                    });
-                                  },
-                                  child: const Text('重置测试'),
+                                const Text(
+                                  '等待应用关闭',
+                                  style: TextStyle(color: Colors.red),
                                 )
                               else
+                                const Text('应用已关闭'),
+                              if (!(runState?.running ?? false))
                                 ElevatedButton(
                                   onPressed: () async {
                                     setState(() {
@@ -277,19 +307,17 @@ class _GeburaAppLauncherSettingTestPageState
                           ),
                         ),
                         Step(
-                          title: const Text('确认测试结果'),
+                          title: const Text('检查结果'),
                           content: Column(
                             children: [
                               Text('启动时间：${runState?.startTime ?? ''}'),
                               Text('停止时间：${runState?.endTime ?? ''}'),
                               ElevatedButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    currentStep = 0;
-                                  });
+                                onPressed: () {
+                                  Navigator.of(context).pop();
                                 },
-                                child: const Text('重置测试'),
-                              )
+                                child: const Text('关闭本窗口'),
+                              ),
                             ],
                           ),
                         ),
@@ -307,10 +335,10 @@ class _GeburaAppLauncherSettingTestPageState
 }
 
 class GeburaAppLauncherSettingForm extends StatefulWidget {
-  const GeburaAppLauncherSettingForm(this.appID, this.setting,
+  const GeburaAppLauncherSettingForm(this.appInstID, this.setting,
       {super.key, this.onChanged});
 
-  final int appID;
+  final int appInstID;
   final LocalAppInstLauncherSetting? setting;
   final void Function(LocalAppInstLauncherSetting)? onChanged;
 
@@ -354,7 +382,7 @@ class _GeburaAppLauncherSettingFormState
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       return widget.setting?.copyWith(
-            appInstID: widget.appID,
+            appInstID: widget.appInstID,
             path: pathController.text,
             installPath: installPathController.text,
             advancedTracing: advancedTracing,
@@ -363,7 +391,7 @@ class _GeburaAppLauncherSettingFormState
             sleepTime: sleepTime,
           ) ??
           LocalAppInstLauncherSetting(
-            appInstID: widget.appID,
+            appInstID: widget.appInstID,
             path: pathController.text,
             installPath: installPathController.text,
             advancedTracing: advancedTracing,
@@ -397,6 +425,7 @@ class _GeburaAppLauncherSettingFormState
                   );
                   if (pickResult != null) {
                     pathController.text = pickResult.paths.first!;
+                    onChanged();
                   }
                 },
                 child: const Text('选择'),
@@ -419,6 +448,7 @@ class _GeburaAppLauncherSettingFormState
                       await file_picker.FilePicker.platform.getDirectoryPath();
                   if (pickResult != null) {
                     installPathController.text = pickResult;
+                    onChanged();
                   }
                 },
                 child: const Text('选择'),
@@ -462,6 +492,7 @@ class _GeburaAppLauncherSettingFormState
                       await file_picker.FilePicker.platform.pickFiles();
                   if (pickResult != null) {
                     realPathController.text = pickResult.paths.first!;
+                    onChanged();
                   }
                 },
                 child: const Text('选择'),
@@ -479,7 +510,7 @@ class _GeburaAppLauncherSettingFormState
             initialValue: sleepTime.toString(),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: '等待时间',
+              labelText: '等待时间（秒）',
             ),
             inputFormatters: [IntInputFormatter()],
             validator: (value) {

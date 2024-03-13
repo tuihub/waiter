@@ -68,9 +68,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         }
 
         final runState =
-            state.runState != null && state.runState!.containsKey(item.id)
-                ? state.runState![item.id]
-                : null;
+            state.runState != null ? state.runState![item.id] : null;
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: DynMouseScroll(builder: (context, controller, physics) {
@@ -315,8 +313,8 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
     );
   }
 
-  Widget _localItem(BuildContext context, LocalAppInstLauncherSetting settings,
-      bool triggerActivation) {
+  Widget _localItem(BuildContext context, InternalID appInstID,
+      LocalAppInstLauncherSetting settings, bool triggerActivation) {
     return ListTile(
       leading: _activeRadio(
         context,
@@ -334,7 +332,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
             builder: (_) => BlocProvider.value(
               value: context.read<GeburaBloc>(),
               child: GeburaAppLauncherSettingDialog(
-                item.id.id.toInt(),
+                appInstID.id.toInt(),
                 settings,
               ),
             ),
@@ -397,6 +395,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
                   null)
                 _localItem(
                   context,
+                  inst.id,
                   context.read<GeburaBloc>().getAppLauncherSetting(inst.id)!,
                   launcherSettings == null && instCount == 1,
                 ),
