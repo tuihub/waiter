@@ -10,9 +10,9 @@ class NavRail extends StatelessWidget {
       this.leading = const [],
       this.trailing = const []});
 
-  final List<_MenuItem> leading;
-  final List<_MenuItem> body;
-  final List<_MenuItem> trailing;
+  final List<MenuItem> leading;
+  final List<MenuItem> body;
+  final List<MenuItem> trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class NavRail extends StatelessWidget {
 }
 
 @immutable
-class _MenuItem extends StatefulWidget {
-  const _MenuItem({
+class MenuItem extends StatefulWidget {
+  const MenuItem({
     super.key,
     required this.onPressed,
     required this.selected,
@@ -54,20 +54,24 @@ class _MenuItem extends StatefulWidget {
   final bool selected;
   final double containerSize;
 
+  Color? get overrideBackgroundColor => null;
+
   Widget content(BuildContext context, bool isHover) {
     return Container();
   }
 
   @override
-  State<_MenuItem> createState() => _MenuItemState();
+  State<MenuItem> createState() => _MenuItemState();
 }
 
-class _MenuItemState extends State<_MenuItem> {
+class _MenuItemState extends State<MenuItem> {
   bool isHover = false;
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final backgroundColor = widget.overrideBackgroundColor ??
+        (widget.selected | isHover ? primaryColor : primaryColor.withAlpha(28));
     return SizedBox(
       width: widget.containerSize,
       height: widget.containerSize,
@@ -75,9 +79,7 @@ class _MenuItemState extends State<_MenuItem> {
         margin: const EdgeInsets.all(8),
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: widget.selected | isHover
-              ? primaryColor
-              : primaryColor.withAlpha(28),
+          color: backgroundColor,
           borderRadius: BorderRadius.all(
               Radius.circular(widget.selected | isHover ? 12 : 24)),
         ),
@@ -98,7 +100,7 @@ class _MenuItemState extends State<_MenuItem> {
   }
 }
 
-class IconMenuItem extends _MenuItem {
+class IconMenuItem extends MenuItem {
   const IconMenuItem({
     super.key,
     required this.icon,
@@ -129,7 +131,7 @@ class IconMenuItem extends _MenuItem {
   }
 }
 
-class AvatarMenuItem extends _MenuItem {
+class AvatarMenuItem extends MenuItem {
   const AvatarMenuItem({
     super.key,
     required this.name,
@@ -151,6 +153,10 @@ class AvatarMenuItem extends _MenuItem {
   final bool selected;
   @override
   final double containerSize;
+
+  @override
+  Color? get overrideBackgroundColor =>
+      image != null && image!.isNotEmpty ? Colors.transparent : null;
 
   @override
   Widget content(BuildContext context, bool isHover) {

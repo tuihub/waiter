@@ -28,7 +28,7 @@ class Avatar extends StatelessWidget {
         ),
       ),
       child: Text(
-        name.isNotEmpty ? name[0].toUpperCase() : '',
+        name.isNotEmpty && image.isEmpty ? name[0].toUpperCase() : '',
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,

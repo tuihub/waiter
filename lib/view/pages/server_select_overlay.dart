@@ -209,7 +209,11 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                           if (_current != null)
                             AvatarMenuItem(
                               name: _current!.host,
-                              image: '',
+                              image: state
+                                      .knownServerInstanceSummary?[
+                                          _current?.id ?? '']
+                                      ?.logoUrl ??
+                                  '',
                               selected: _current?.id == _selected?.id,
                               onPressed: () {
                                 setState(() {
@@ -225,7 +229,10 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                             if (server.id != _current?.id)
                               AvatarMenuItem(
                                 name: server.host,
-                                image: '',
+                                image: state
+                                        .knownServerInstanceSummary?[server.id]
+                                        ?.logoUrl ??
+                                    '',
                                 selected: server.id == _selected?.id,
                                 onPressed: () {
                                   setState(() {
@@ -239,8 +246,12 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                           if (_minimized)
                             AvatarMenuItem(
                               name: _current?.host ?? '',
-                              image: '',
-                              selected: _current?.id == _selected?.id,
+                              image: state
+                                      .knownServerInstanceSummary?[
+                                          _current?.id ?? '']
+                                      ?.logoUrl ??
+                                  '',
+                              selected: false,
                               onPressed: () {
                                 ServerSelectOverlay.of(context)?.fullscreen();
                               },
@@ -333,16 +344,41 @@ class ServerDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
-      return Card(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(config.host),
-            ],
-          ),
-        ),
+      final instanceSummary =
+          (state.knownServerInstanceSummary ?? {})[config.id];
+      return Column(
+        children: [
+          if (instanceSummary != null)
+            Container(
+              height: 128,
+              width: 128,
+              margin: const EdgeInsets.all(16),
+              child: ExtendedImage.network(
+                instanceSummary.logoUrl,
+                fit: BoxFit.contain,
+              ),
+            ),
+          Card(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    instanceSummary?.name ?? config.id,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  if (instanceSummary?.description.isNotEmpty ?? false)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(instanceSummary!.description,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ),
+                ],
+              ),
+            ),
+          )
+        ],
       );
     });
   }

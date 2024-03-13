@@ -168,6 +168,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             );
             await _initChild(newState);
             emit(newState);
+            add(MainGetServerInstanceInfoEvent(config));
             return;
           } catch (e) {
             debugPrint('login by refresh token failed');
@@ -183,9 +184,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(MainAutoLoginState(state, EventStatus.failed));
     }, transformer: droppable());
 
-    on<MainSetNextServerConfigEvent>((event, emit) async {
-      debugPrint('set next server config ${event.config}');
-      var newState = state.copyWith(nextServer: event.config);
+    on<MainGetServerInstanceInfoEvent>((event, emit) async {
       if (state.knownServerInstanceSummary == null ||
           state.knownServerInstanceSummary![event.config.id] == null) {
         try {
@@ -193,17 +192,22 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               config: event.config, useSystemProxy: repo.useSystemProxy);
           final resp =
               await client.getServerInformation(GetServerInformationRequest());
-          newState = newState.copyWith(
+          emit(state.copyWith(
             knownServerInstanceSummary: {
               ...state.knownServerInstanceSummary ?? {},
               event.config.id: resp.serverInstanceSummary,
             },
-          );
+          ));
         } catch (e) {
           debugPrint(e.toString());
         }
       }
-      emit(MainNewServerSetState(newState));
+    });
+
+    on<MainSetNextServerConfigEvent>((event, emit) async {
+      debugPrint('set next server config ${event.config}');
+      add(MainGetServerInstanceInfoEvent(event.config));
+      emit(MainNewServerSetState(state.copyWith(nextServer: event.config)));
     });
 
     on<MainClearNextServerConfigEvent>((event, emit) async {
@@ -308,6 +312,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               })),
         );
         await _initChild(newState);
+        add(MainGetServerInstanceInfoEvent(config));
         emit(newState);
       } catch (e) {
         debugPrint(e.toString());

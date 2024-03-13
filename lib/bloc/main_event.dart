@@ -35,3 +35,9 @@ class MainRegisterEvent extends MainEvent {
   MainRegisterEvent(this.username, this.password,
       {this.captchaID, this.captchaAns});
 }
+
+class MainGetServerInstanceInfoEvent extends MainEvent {
+  final ServerConfig config;
+
+  MainGetServerInstanceInfoEvent(this.config);
+}
