@@ -25,3 +25,13 @@ class MainManualLoginEvent extends MainEvent {
 }
 
 class MainLogoutEvent extends MainEvent {}
+
+class MainRegisterEvent extends MainEvent {
+  final String username;
+  final String password;
+  final String? captchaID;
+  final String? captchaAns;
+
+  MainRegisterEvent(this.username, this.password,
+      {this.captchaID, this.captchaAns});
+}

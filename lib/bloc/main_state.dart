@@ -9,6 +9,7 @@ class MainState {
   late InternalID? currentDeviceId;
   late ClientDeviceInfo? deviceInfo;
   late List<ServerConfig>? knownServers;
+  late Map<String, ServerInstanceSummary>? knownServerInstanceSummary;
 
   MainState({
     this.currentServer,
@@ -19,6 +20,7 @@ class MainState {
     this.currentDeviceId,
     this.deviceInfo,
     this.knownServers,
+    this.knownServerInstanceSummary,
   });
 
   MainState copyWith({
@@ -31,6 +33,7 @@ class MainState {
     InternalID? currentDeviceId,
     ClientDeviceInfo? deviceInfo,
     List<ServerConfig>? knownServers,
+    Map<String, ServerInstanceSummary>? knownServerInstanceSummary,
   }) {
     return MainState(
       currentServer: currentServer ?? this.currentServer,
@@ -41,6 +44,8 @@ class MainState {
       currentDeviceId: currentDeviceId ?? this.currentDeviceId,
       deviceInfo: deviceInfo ?? this.deviceInfo,
       knownServers: knownServers ?? this.knownServers,
+      knownServerInstanceSummary:
+          knownServerInstanceSummary ?? this.knownServerInstanceSummary,
     );
   }
 
@@ -53,6 +58,7 @@ class MainState {
     currentDeviceId = other.currentDeviceId;
     deviceInfo = other.deviceInfo;
     knownServers = other.knownServers;
+    knownServerInstanceSummary = other.knownServerInstanceSummary;
   }
 }
 
@@ -82,4 +88,20 @@ class MainNewServerSetState extends MainState {
   MainNewServerSetState(MainState state) : super() {
     _from(state);
   }
+}
+
+class MainRegisterState extends MainState with EventStatusMixin {
+  MainRegisterState(MainState state, this.statusCode,
+      {this.msg, this.captchaID, this.captchaImage})
+      : super() {
+    _from(state);
+  }
+
+  final String? captchaID;
+  final Uint8List? captchaImage;
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
 }

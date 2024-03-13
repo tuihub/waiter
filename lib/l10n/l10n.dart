@@ -520,6 +520,76 @@ class S {
     );
   }
 
+  /// `再次输入密码`
+  String get repeatPassword {
+    return Intl.message(
+      '再次输入密码',
+      name: 'repeatPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注册`
+  String get register {
+    return Intl.message(
+      '注册',
+      name: 'register',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `注册到 {server}`
+  String registerInTo(Object server) {
+    return Intl.message(
+      '注册到 $server',
+      name: 'registerInTo',
+      desc: '',
+      args: [server],
+    );
+  }
+
+  /// `注册成功`
+  String get registerSuccess {
+    return Intl.message(
+      '注册成功',
+      name: 'registerSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `需要验证码`
+  String get captchaRequired {
+    return Intl.message(
+      '需要验证码',
+      name: 'captchaRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `验证码`
+  String get captcha {
+    return Intl.message(
+      '验证码',
+      name: 'captcha',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `密码不一致`
+  String get passwordInconsistent {
+    return Intl.message(
+      '密码不一致',
+      name: 'passwordInconsistent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Chesed`
   String get chesed {
     return Intl.message(

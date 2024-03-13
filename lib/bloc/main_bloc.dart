@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:fixnum/fixnum.dart';
@@ -14,6 +15,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../common/bloc_event_status_mixin.dart';
 import '../common/platform.dart';
 import '../consts.dart';
+import '../l10n/l10n.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
 import '../repo/grpc/api_helper.dart';
@@ -183,7 +185,25 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
     on<MainSetNextServerConfigEvent>((event, emit) async {
       debugPrint('set next server config ${event.config}');
-      emit(MainNewServerSetState(state.copyWith(nextServer: event.config)));
+      var newState = state.copyWith(nextServer: event.config);
+      if (state.knownServerInstanceSummary == null ||
+          state.knownServerInstanceSummary![event.config.id] == null) {
+        try {
+          final client = await clientFactory(
+              config: event.config, useSystemProxy: repo.useSystemProxy);
+          final resp =
+              await client.getServerInformation(GetServerInformationRequest());
+          newState = newState.copyWith(
+            knownServerInstanceSummary: {
+              ...state.knownServerInstanceSummary ?? {},
+              event.config.id: resp.serverInstanceSummary,
+            },
+          );
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+      }
+      emit(MainNewServerSetState(newState));
     });
 
     on<MainClearNextServerConfigEvent>((event, emit) async {
@@ -300,6 +320,61 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       _pruneChild();
       emit(MainState());
     });
+
+    on<MainRegisterEvent>((event, emit) async {
+      if (state.nextServer == null) {
+        return;
+      }
+      emit(MainRegisterState(state, EventStatus.processing));
+
+      try {
+        final config = state.nextServer!;
+        final client = await clientFactory(
+            config: config, useSystemProxy: repo.useSystemProxy);
+        final captcha = event.captchaID != null && event.captchaAns != null
+            ? RegisterUserRequest_Captcha(
+                id: event.captchaID, value: event.captchaAns)
+            : null;
+        final resp = await client.registerUser(RegisterUserRequest(
+          username: event.username,
+          password: event.password,
+          captcha: captcha,
+        ));
+        if (resp.hasRefreshToken()) {
+          emit(
+            MainRegisterState(
+                state.copyWith(
+                  nextServer: state.nextServer!.copyWith(
+                    refreshToken: resp.refreshToken,
+                  ),
+                ),
+                EventStatus.success),
+          );
+        } else if (resp.hasCaptcha()) {
+          final image = Uint8List.fromList(resp.captcha.image);
+          emit(
+            MainRegisterState(
+              state,
+              EventStatus.failed,
+              captchaID: resp.captcha.id,
+              captchaImage: image,
+              msg: S.current.captchaRequired,
+            ),
+          );
+        } else {
+          emit(
+            MainRegisterState(
+              state,
+              EventStatus.failed,
+              msg: S.current.unknownErrorOccurred,
+            ),
+          );
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(MainRegisterState(state, EventStatus.failed, msg: e.toString()));
+      }
+    }, transformer: droppable());
   }
 
   int cacheSize() {

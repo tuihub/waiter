@@ -96,7 +96,7 @@ class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
             }
           case ChesedUploadImageType.capture:
             {
-              // TODO linux platform rely on gnome-screenshot
+              // TODOlinux platform rely on gnome-screenshot
               if (!await ScreenCapturer.instance.isAccessAllowed()) {
                 return;
               }

@@ -49,6 +49,13 @@
   "backward": "返回",
   "username": "用户名",
   "password": "密码",
+  "repeatPassword": "再次输入密码",
+  "register": "注册",
+  "registerInTo": "注册到 {server}",
+  "registerSuccess": "注册成功",
+  "captchaRequired": "需要验证码",
+  "captcha": "验证码",
+  "passwordInconsistent": "密码不一致",
 
   "chesed": "Chesed",
   "updateImageUserCanceledPick": "用户取消了选择",

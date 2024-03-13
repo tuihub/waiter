@@ -45,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(number) => "发现 ${number} 个新应用";
 
+  static String m12(server) => "注册到 ${server}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "ACCOUNT_PLATFORM": MessageLookupByLibrary.simpleMessage("平台"),
@@ -110,6 +112,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "backward": MessageLookupByLibrary.simpleMessage("返回"),
         "cache": MessageLookupByLibrary.simpleMessage("缓存"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "captcha": MessageLookupByLibrary.simpleMessage("验证码"),
+        "captchaRequired": MessageLookupByLibrary.simpleMessage("需要验证码"),
         "changeServer": MessageLookupByLibrary.simpleMessage("切换服务器"),
         "check": MessageLookupByLibrary.simpleMessage("检查"),
         "chesed": MessageLookupByLibrary.simpleMessage("Chesed"),
@@ -158,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "operatingSystem": MessageLookupByLibrary.simpleMessage("操作系统"),
         "parseFailed": MessageLookupByLibrary.simpleMessage("解析失败"),
         "password": MessageLookupByLibrary.simpleMessage("密码"),
+        "passwordInconsistent": MessageLookupByLibrary.simpleMessage("密码不一致"),
         "pleaseDontReRunApplication":
             MessageLookupByLibrary.simpleMessage("请不要重复运行应用程序"),
         "pleaseInputServerAddress":
@@ -168,6 +173,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请设置应用程序路径"),
         "port": MessageLookupByLibrary.simpleMessage("端口"),
         "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
+        "register": MessageLookupByLibrary.simpleMessage("注册"),
+        "registerInTo": m12,
+        "registerSuccess": MessageLookupByLibrary.simpleMessage("注册成功"),
+        "repeatPassword": MessageLookupByLibrary.simpleMessage("再次输入密码"),
         "retry": MessageLookupByLibrary.simpleMessage("重试"),
         "scanningLocalFiles": MessageLookupByLibrary.simpleMessage("正在扫描本地文件"),
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),
