@@ -348,7 +348,7 @@ class ServerDetail extends StatelessWidget {
           (state.knownServerInstanceSummary ?? {})[config.id];
       return Column(
         children: [
-          if (instanceSummary != null)
+          if (instanceSummary != null && instanceSummary.logoUrl.isNotEmpty)
             Container(
               height: 128,
               width: 128,
@@ -365,7 +365,9 @@ class ServerDetail extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    instanceSummary?.name ?? config.id,
+                    (instanceSummary?.name.isNotEmpty ?? false)
+                        ? instanceSummary!.name
+                        : config.id,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   if (instanceSummary?.description.isNotEmpty ?? false)
@@ -406,7 +408,7 @@ class _NewServerState extends State<NewServer> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (instanceSummary != null)
+              if (instanceSummary != null && instanceSummary.logoUrl.isNotEmpty)
                 Container(
                   height: 128,
                   width: 128,
@@ -440,10 +442,13 @@ class _NewServerState extends State<NewServer> {
               FlipCard(
                 controller: flipCardController,
                 flipOnTouch: false,
-                front: const Card(child: LoginForm()),
-                back: Card(child: RegisterForm(onRegistered: () async {
-                  await flipCardController.toggleCard();
-                })),
+                front: Card(child: LoginForm(readOnly: !flipCardIsFront)),
+                back: Card(
+                  child: RegisterForm(
+                    readOnly: flipCardIsFront,
+                    onRegistered: flipCardController.toggleCard,
+                  ),
+                ),
               ),
               if (instanceSummary != null) const SizedBox(height: 128),
             ],
@@ -557,7 +562,9 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  const LoginForm({super.key, this.readOnly = false});
+
+  final bool readOnly;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -611,88 +618,92 @@ class _LoginFormState extends State<LoginForm> {
         final instanceSummary =
             (state.knownServerInstanceSummary ?? {})[state.nextServer?.id];
         final instanceName = instanceSummary?.name ?? '';
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  instanceName.isNotEmpty
-                      ? instanceName
-                      : S.of(context).loggingInTo('${state.nextServer?.id}'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              if (instanceSummary?.description.isNotEmpty ?? false)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(instanceSummary!.description,
-                      style: Theme.of(context).textTheme.bodyMedium),
-                ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: TextButton(
-                    onPressed: () {
-                      context
-                          .read<MainBloc>()
-                          .add(MainClearNextServerConfigEvent());
-                    },
-                    child: Text('< ${S.of(context).backward}'),
+        return Form(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    instanceName.isNotEmpty
+                        ? instanceName
+                        : S.of(context).loggingInTo('${state.nextServer?.id}'),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: S.of(context).username,
-                ),
-                controller: _usernameController,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextField(
-                obscureText: hidePassword,
-                decoration: InputDecoration(
-                  labelText: S.of(context).password,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                    icon: hidePassword
-                        ? const Icon(Icons.visibility)
-                        : const Icon(Icons.visibility_off),
+                if (instanceSummary?.description.isNotEmpty ?? false)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(instanceSummary!.description,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: TextButton(
+                      onPressed: () {
+                        context
+                            .read<MainBloc>()
+                            .add(MainClearNextServerConfigEvent());
+                      },
+                      child: Text('< ${S.of(context).backward}'),
+                    ),
                   ),
                 ),
-                controller: _passwordController,
-                obscuringCharacter: '*',
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                onPressed: login,
-                child: state is MainManualLoginState && state.processing
-                    ? const SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: S.of(context).username,
+                  ),
+                  controller: _usernameController,
+                  readOnly: widget.readOnly,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  obscureText: hidePassword,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).password,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
+                      icon: hidePassword
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
+                    ),
+                  ),
+                  controller: _passwordController,
+                  obscuringCharacter: '*',
+                  readOnly: widget.readOnly,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  onPressed: login,
+                  child: state is MainManualLoginState && state.processing
+                      ? const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        )
+                      : Text(
+                          S.of(context).loggingInTo('${state.nextServer?.id}'),
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      )
-                    : Text(
-                        S.of(context).loggingInTo('${state.nextServer?.id}'),
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -701,8 +712,9 @@ class _LoginFormState extends State<LoginForm> {
 }
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key, this.onRegistered});
+  const RegisterForm({super.key, this.readOnly = false, this.onRegistered});
 
+  final bool readOnly;
   final void Function()? onRegistered;
 
   @override
@@ -795,104 +807,110 @@ class _RegisterFormState extends State<RegisterForm> {
         final instanceSummary =
             (state.knownServerInstanceSummary ?? {})[state.nextServer?.id];
         final instanceName = instanceSummary?.name ?? '';
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  instanceName.isNotEmpty
-                      ? instanceName
-                      : S.of(context).loggingInTo('${state.nextServer?.id}'),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: S.of(context).username,
-                ),
-                controller: _usernameController,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextField(
-                obscureText: hidePassword,
-                decoration: InputDecoration(
-                  labelText: S.of(context).password,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                    icon: hidePassword
-                        ? const Icon(Icons.visibility)
-                        : const Icon(Icons.visibility_off),
+        return Form(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    instanceName.isNotEmpty
+                        ? instanceName
+                        : S.of(context).loggingInTo('${state.nextServer?.id}'),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                controller: _passwordController,
-                obscuringCharacter: '*',
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              TextField(
-                obscureText: hidePassword,
-                decoration: InputDecoration(
-                  labelText: S.of(context).repeatPassword,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                    icon: hidePassword
-                        ? const Icon(Icons.visibility)
-                        : const Icon(Icons.visibility_off),
-                  ),
-                ),
-                controller: _repeatPasswordController,
-                obscuringCharacter: '*',
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              if (_captchaImage != null) ExtendedImage.memory(_captchaImage!),
-              if (_captchaID != null)
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).captcha,
-                  ),
-                  controller: _captchaAnsController,
-                ),
-              if (_captchaID != null)
                 const SizedBox(
                   height: 16,
                 ),
-              ElevatedButton(
-                onPressed: register,
-                child: state is MainManualLoginState && state.processing
-                    ? const SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: S.of(context).username,
+                  ),
+                  controller: _usernameController,
+                  readOnly: widget.readOnly,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  obscureText: hidePassword,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).password,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
+                      icon: hidePassword
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
+                    ),
+                  ),
+                  controller: _passwordController,
+                  obscuringCharacter: '*',
+                  readOnly: widget.readOnly,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  obscureText: hidePassword,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).repeatPassword,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
+                      icon: hidePassword
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
+                    ),
+                  ),
+                  controller: _repeatPasswordController,
+                  obscuringCharacter: '*',
+                  readOnly: widget.readOnly,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                if (_captchaImage != null) ExtendedImage.memory(_captchaImage!),
+                if (_captchaID != null)
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: S.of(context).captcha,
+                    ),
+                    controller: _captchaAnsController,
+                    readOnly: widget.readOnly,
+                  ),
+                if (_captchaID != null)
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ElevatedButton(
+                  onPressed: register,
+                  child: state is MainManualLoginState && state.processing
+                      ? const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        )
+                      : Text(
+                          S.of(context).registerInTo('${state.nextServer?.id}'),
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      )
-                    : Text(
-                        S.of(context).registerInTo('${state.nextServer?.id}'),
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },
