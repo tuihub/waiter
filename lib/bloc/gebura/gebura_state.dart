@@ -11,6 +11,7 @@ class GeburaState {
 
   late Map<Int64, AppLauncherSetting>? appLauncherSettings;
   late Map<InternalID, AppRunState>? runState;
+  late Map<InternalID, Duration>? appInstRunTimes;
 
   late String? localLibraryState;
   late SteamScanResult? localSteamScanResult;
@@ -45,6 +46,29 @@ class GeburaState {
     return result;
   }
 
+  Duration? getRunTime(Int64 id) {
+    if (appInstRunTimes == null) {
+      return null;
+    }
+    final insts = getAppInsts(id);
+    if (insts.isEmpty) {
+      return null;
+    }
+    return insts.values.fold<Duration>(
+      Duration.zero,
+      (previousValue, element) {
+        return previousValue +
+            element.fold<Duration>(
+              Duration.zero,
+              (previousValue, element) {
+                return previousValue +
+                    (appInstRunTimes![element.id] ?? Duration.zero);
+              },
+            );
+      },
+    );
+  }
+
   GeburaState({
     this.appInfoMap,
     this.purchasedAppInfos,
@@ -60,6 +84,7 @@ class GeburaState {
     this.localSteamAppInsts,
     this.importedSteamAppInsts,
     this.localSteamLibraryFolders,
+    this.appInstRunTimes,
   });
 
   GeburaState copyWith({
@@ -77,6 +102,7 @@ class GeburaState {
     List<InstalledSteamApps>? localSteamAppInsts,
     List<ImportedSteamAppInst>? importedSteamAppInsts,
     List<String>? localSteamLibraryFolders,
+    Map<InternalID, Duration>? appInstRunTimes,
   }) {
     return GeburaState(
       appInfoMap: appInfoMap ?? this.appInfoMap,
@@ -95,6 +121,7 @@ class GeburaState {
           importedSteamAppInsts ?? this.importedSteamAppInsts,
       localSteamLibraryFolders:
           localSteamLibraryFolders ?? this.localSteamLibraryFolders,
+      appInstRunTimes: appInstRunTimes ?? this.appInstRunTimes,
     );
   }
 
@@ -113,6 +140,7 @@ class GeburaState {
     localSteamAppInsts = other.localSteamAppInsts;
     importedSteamAppInsts = other.importedSteamAppInsts;
     localSteamLibraryFolders = other.localSteamLibraryFolders;
+    appInstRunTimes = other.appInstRunTimes;
   }
 }
 
@@ -309,6 +337,18 @@ class GeburaSearchNewAppInfoState extends GeburaState with EventStatusMixin {
   }
 
   final List<AppInfo>? infos;
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaReportAppRunTimeState extends GeburaState with EventStatusMixin {
+  GeburaReportAppRunTimeState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
 
   @override
   final EventStatus? statusCode;

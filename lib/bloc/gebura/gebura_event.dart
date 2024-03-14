@@ -145,3 +145,15 @@ final class GeburaSearchNewAppInfoEvent extends GeburaEvent {
 
   GeburaSearchNewAppInfoEvent(this.query);
 }
+
+final class GeburaReportAppRunTimeEvent extends GeburaEvent {
+  final InternalID appInstID;
+  final DateTime startTime;
+  final DateTime endTime;
+
+  GeburaReportAppRunTimeEvent(
+    this.appInstID,
+    this.startTime,
+    this.endTime,
+  );
+}

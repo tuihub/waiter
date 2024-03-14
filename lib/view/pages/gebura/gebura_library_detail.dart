@@ -66,7 +66,22 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                 .add(GeburaFetchAppLauncherSettingEvent(item.id));
           }
         }
-
+        final runTime = state.getRunTime(item.id.id);
+        late String runTimeStr;
+        if (runTime != null) {
+          if (runTime.inSeconds == 0) {
+            runTimeStr = '';
+          } else if (runTime.inSeconds < 100) {
+            runTimeStr = '${runTime.inSeconds} 秒';
+          } else if (runTime.inMinutes < 100) {
+            runTimeStr = '${runTime.inMinutes} 分钟';
+          } else {
+            runTimeStr =
+                '${((runTime.inSeconds.toDouble()) / 3600).toStringAsFixed(1)} 小时';
+          }
+        } else {
+          runTimeStr = '错误';
+        }
         final runState =
             state.runState != null ? state.runState![item.id] : null;
         return Scaffold(
@@ -175,15 +190,18 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           if (PlatformHelper.isWindowsApp())
                             if (setting != null)
                               ElevatedButton.icon(
-                                onPressed: () async {
-                                  context
-                                      .read<GeburaBloc>()
-                                      .add(GeburaRunAppEvent(item.id));
-                                },
+                                onPressed: (runState?.running ?? false)
+                                    ? null
+                                    : () async {
+                                        context
+                                            .read<GeburaBloc>()
+                                            .add(GeburaRunAppEvent(item.id));
+                                      },
                                 icon: Icon(
                                   setting.type == AppLauncherType.steam
                                       ? FontAwesomeIcons.steam
@@ -200,26 +218,17 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           const SizedBox(
                             width: 24,
                           ),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     Text('开发商：${item.details.developer}'),
-                          //     Text('发行商：${item.details.publisher}'),
-                          //     Text('发行日期：${item.details.releaseDate}'),
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   width: 24,
-                          // ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '运行状态：${runState?.running ?? false ? '运行中' : '未运行'}'),
-                              Text('启动时间：${runState?.startTime ?? ''}'),
-                              Text('停止时间：${runState?.endTime ?? ''}'),
-                            ],
-                          ),
+                          if (runTimeStr.isNotEmpty)
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('总运行时间',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall),
+                                Text(runTimeStr),
+                              ],
+                            ),
                           const Expanded(child: SizedBox()),
                           _GeburaLibraryDetailAppSettings(item: item),
                         ],

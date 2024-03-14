@@ -17,6 +17,7 @@ import '../../ffi/ffi_model.dart';
 import '../../l10n/l10n.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
+import '../../repo/grpc/type_helper.dart';
 import '../../repo/local/gebura.dart';
 
 part 'gebura_event.dart';
@@ -88,11 +89,35 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         }
         ownedAppInsts.addAll(appInstResp.getData().appInsts);
       }
+      final appInstRunTimes = <InternalID, Duration>{};
+      for (final appInst in ownedAppInsts) {
+        final runTimeResp = await _api.doRequest(
+          (client) => client.sumAppInstRunTime,
+          SumAppInstRunTimeRequest(
+            appInstId: appInst.id,
+            timeAggregation: TimeAggregation(
+              aggregationType:
+                  TimeAggregation_AggregationType.AGGREGATION_TYPE_OVERALL,
+              timeRange: toPBTimeRange(
+                  DateTime.now().subtract(const Duration(days: 365 * 10)),
+                  DateTime.now()),
+            ),
+          ),
+        );
+        if (runTimeResp.status != ApiStatus.success) {
+          continue;
+        }
+        if (runTimeResp.getData().runTimeGroups.isNotEmpty) {
+          final group = runTimeResp.getData().runTimeGroups.first;
+          appInstRunTimes[appInst.id] = fromPBDuration(group.duration);
+        }
+      }
       emit(GeburaRefreshLibraryState(
         state.copyWith(
           purchasedAppInfos: resp.getData().appInfos,
           ownedApps: ownedApps,
           ownedAppInsts: ownedAppInsts,
+          appInstRunTimes: appInstRunTimes,
         ),
         EventStatus.success,
         msg: resp.error,
@@ -372,11 +397,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
               msg: S.current.applicationExitAbnormally));
           return;
         }
-        state.runState![appID] = AppRunState(
+        final runState = AppRunState(
           running: false,
           startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
           endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
         );
+        state.runState![appID] = runState;
+        add(GeburaReportAppRunTimeEvent(
+          event.appInstID,
+          runState.startTime!,
+          runState.endTime!,
+        ));
         emit(GeburaRunAppState(
           state,
           appID,
@@ -738,6 +769,31 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           msg: resp.error));
       add(GeburaRefreshLibraryEvent());
     }, transformer: droppable());
+
+    on<GeburaReportAppRunTimeEvent>((event, emit) async {
+      emit(GeburaReportAppRunTimeState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.addAppInstRunTime,
+        AddAppInstRunTimeRequest(
+          appInstId: event.appInstID,
+          timeRange: toPBTimeRange(
+            event.startTime,
+            event.endTime,
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(GeburaReportAppRunTimeState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      emit(GeburaReportAppRunTimeState(
+        state,
+        EventStatus.success,
+        msg: resp.error,
+      ));
+      add(GeburaRefreshLibraryEvent());
+    });
   }
 
   LocalAppInstLauncherSetting? getAppLauncherSetting(InternalID id) {
