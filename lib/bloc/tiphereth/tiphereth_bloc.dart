@@ -32,7 +32,7 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       emit(TipherethEditUserState(state, EventStatus.processing));
       final resp = await _api.doRequest(
         (client) => client.updateUser,
-        UpdateUserRequest(user: event.user),
+        UpdateUserRequest(user: event.user, password: event.password),
       );
       if (resp.status != ApiStatus.success) {
         emit(
