@@ -17,7 +17,7 @@ final moduleList = [
   // App('Home', Icons.home, const HomePage()),
   App(ModuleName.gebura, Icons.casino),
   App(ModuleName.yesod, Icons.rss_feed),
-  App(ModuleName.chesed, Icons.photo_album),
+  // App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];
 
