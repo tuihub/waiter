@@ -590,6 +590,16 @@ class S {
     );
   }
 
+  /// `刷新验证码`
+  String get refreshCaptcha {
+    return Intl.message(
+      '刷新验证码',
+      name: 'refreshCaptcha',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Chesed`
   String get chesed {
     return Intl.message(

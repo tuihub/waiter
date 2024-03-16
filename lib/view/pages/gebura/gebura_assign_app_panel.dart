@@ -187,13 +187,21 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
           errorMsg: state is GeburaAssignAppInfoState && state.failed
               ? state.msg
               : null,
-          onSubmit: () {
-            context.read<GeburaBloc>().add(GeburaAssignAppWithNewInfoEvent(
-                  app!.id,
-                  selectedAppInfo!.source,
-                  selectedAppInfo!.sourceAppId,
-                ));
-          },
+          onSubmit: app == null
+              ? null
+              : () {
+                  if (selectedAppInfo == null) {
+                    const Toast(title: '', message: '未选择应用信息').show(context);
+                  } else {
+                    context
+                        .read<GeburaBloc>()
+                        .add(GeburaAssignAppWithNewInfoEvent(
+                          app.id,
+                          selectedAppInfo!.source,
+                          selectedAppInfo!.sourceAppId,
+                        ));
+                  }
+                },
           submitting: state is GeburaAssignAppInfoState && state.processing,
           close: () => close(context),
         );

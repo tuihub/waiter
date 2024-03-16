@@ -215,7 +215,7 @@ class _AccountCard extends StatelessWidget {
   }
 }
 
-class LinkAccountForm extends StatelessWidget {
+class LinkAccountForm extends StatefulWidget {
   const LinkAccountForm(
       {super.key, required this.platform, required this.callback});
 
@@ -223,83 +223,91 @@ class LinkAccountForm extends StatelessWidget {
   final void Function() callback;
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    late String platformAccountID;
+  State<LinkAccountForm> createState() => _LinkAccountFormState();
+}
 
+class _LinkAccountFormState extends State<LinkAccountForm> {
+  final formKey = GlobalKey<FormState>();
+  String platformAccountID = '';
+
+  @override
+  Widget build(BuildContext context) {
     return BlocConsumer<TipherethBloc, TipherethState>(
-        listener: (context, state) {
-      if (state is TipherethLinkAccountState && state.success) {
-        callback();
-      }
-    }, builder: (context, state) {
-      return BootstrapContainer(
-        children: [
-          BootstrapColumn(
-            xxs: 12,
-            sm: 10,
-            md: 8,
-            lg: 6,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        onSaved: (newValue) => platformAccountID = newValue!,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return '请输入ID';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        height:
-                            state is TipherethLinkAccountState && state.failed
-                                ? 48
-                                : 0,
-                        child:
-                            state is TipherethLinkAccountState && state.failed
-                                ? Card(
-                                    child: Center(
-                                      child: Text(
-                                        state.msg ?? '未知错误',
-                                        textAlign: TextAlign.center,
+      listener: (context, state) {
+        if (state is TipherethLinkAccountState && state.success) {
+          widget.callback();
+        }
+      },
+      builder: (context, state) {
+        return BootstrapContainer(
+          children: [
+            BootstrapColumn(
+              xxs: 12,
+              sm: 10,
+              md: 8,
+              lg: 6,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          onSaved: (newValue) => platformAccountID = newValue!,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '请输入ID';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          height:
+                              state is TipherethLinkAccountState && state.failed
+                                  ? 48
+                                  : 0,
+                          child:
+                              state is TipherethLinkAccountState && state.failed
+                                  ? Card(
+                                      child: Center(
+                                        child: Text(
+                                          state.msg ?? '未知错误',
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : const SizedBox(),
-                      ),
-                    ],
+                                    )
+                                  : const SizedBox(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      context.read<TipherethBloc>().add(
-                          TipherethLinkAccountEvent(
-                              platform, platformAccountID));
-                    }
-                  },
-                  child: state is TipherethLinkAccountState && state.processing
-                      ? const CircularProgressIndicator()
-                      : const Text('绑定账户'),
-                ),
-              ],
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+                        context.read<TipherethBloc>().add(
+                            TipherethLinkAccountEvent(
+                                widget.platform, platformAccountID));
+                      }
+                    },
+                    child:
+                        state is TipherethLinkAccountState && state.processing
+                            ? const CircularProgressIndicator()
+                            : const Text('绑定账户'),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 }
 

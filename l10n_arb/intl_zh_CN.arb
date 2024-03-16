@@ -56,6 +56,7 @@
   "captchaRequired": "需要验证码",
   "captcha": "验证码",
   "passwordInconsistent": "密码不一致",
+  "refreshCaptcha": "刷新验证码",
 
   "chesed": "Chesed",
   "updateImageUserCanceledPick": "用户取消了选择",

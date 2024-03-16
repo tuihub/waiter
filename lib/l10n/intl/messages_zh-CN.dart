@@ -173,6 +173,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请设置应用程序路径"),
         "port": MessageLookupByLibrary.simpleMessage("端口"),
         "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
+        "refreshCaptcha": MessageLookupByLibrary.simpleMessage("刷新验证码"),
         "register": MessageLookupByLibrary.simpleMessage("注册"),
         "registerInTo": m12,
         "registerSuccess": MessageLookupByLibrary.simpleMessage("注册成功"),

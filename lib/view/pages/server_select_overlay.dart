@@ -395,6 +395,16 @@ class NewServer extends StatefulWidget {
 
 class _NewServerState extends State<NewServer> {
   bool flipCardIsFront = true;
+  final flipCardController = FlipCardController();
+
+  Future<void> toggleCard() async {
+    await flipCardController.toggleCard();
+    if (flipCardController.state != null) {
+      setState(() {
+        flipCardIsFront = !flipCardController.state!.isFront;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -403,7 +413,6 @@ class _NewServerState extends State<NewServer> {
         if (state.nextServer != null && state.nextServer!.host.isNotEmpty) {
           final instanceSummary =
               (state.knownServerInstanceSummary ?? {})[state.nextServer?.id];
-          final flipCardController = FlipCardController();
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -423,14 +432,7 @@ class _NewServerState extends State<NewServer> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 4),
                   child: ElevatedButton(
-                    onPressed: () async {
-                      await flipCardController.toggleCard();
-                      if (flipCardController.state != null) {
-                        setState(() {
-                          flipCardIsFront = !flipCardController.state!.isFront;
-                        });
-                      }
-                    },
+                    onPressed: toggleCard,
                     child: Text(
                       flipCardIsFront
                           ? S.of(context).register
@@ -446,7 +448,7 @@ class _NewServerState extends State<NewServer> {
                 back: Card(
                   child: RegisterForm(
                     readOnly: flipCardIsFront,
-                    onRegistered: flipCardController.toggleCard,
+                    onRegistered: toggleCard,
                   ),
                 ),
               ),
@@ -747,7 +749,7 @@ class _RegisterFormState extends State<RegisterForm> {
     super.dispose();
   }
 
-  void register() {
+  void register({bool newCaptcha = false}) {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     final repeatPassword = _repeatPasswordController.text.trim();
@@ -761,14 +763,14 @@ class _RegisterFormState extends State<RegisterForm> {
       return;
     }
 
-    if (_captchaID != null) {
+    if (_captchaID == null || newCaptcha) {
       context.read<MainBloc>().add(
-            MainRegisterEvent(username, password,
-                captchaID: _captchaID, captchaAns: captchaAns),
+            MainRegisterEvent(username, password),
           );
     } else {
       context.read<MainBloc>().add(
-            MainRegisterEvent(username, password),
+            MainRegisterEvent(username, password,
+                captchaID: _captchaID, captchaAns: captchaAns),
           );
     }
   }
@@ -818,7 +820,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Text(
                     instanceName.isNotEmpty
                         ? instanceName
-                        : S.of(context).loggingInTo('${state.nextServer?.id}'),
+                        : S.of(context).registerInTo('${state.nextServer?.id}'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -880,6 +882,11 @@ class _RegisterFormState extends State<RegisterForm> {
                   height: 16,
                 ),
                 if (_captchaImage != null) ExtendedImage.memory(_captchaImage!),
+                if (_captchaImage != null)
+                  TextButton(
+                    onPressed: () => register(newCaptcha: true),
+                    child: Text(S.of(context).refreshCaptcha),
+                  ),
                 if (_captchaID != null)
                   TextFormField(
                     decoration: InputDecoration(
