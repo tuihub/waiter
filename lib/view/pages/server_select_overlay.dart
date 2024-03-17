@@ -41,7 +41,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
     _current = context.read<MainBloc>().state.currentServer;
   }
 
-  double _height = 0;
+  double _height = double.negativeInfinity;
   ServerConfig? _current;
   ServerConfig? _selected;
   bool _preloginSettings = false;
