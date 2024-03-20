@@ -37,7 +37,9 @@ class YesodRecentPage extends StatelessWidget {
         maxPageNum = state.maxPage;
       }
       final items = state.feedItemDigests ?? [];
-      final listConfig = context.read<YesodBloc>().repo.getFeedItemListConfig();
+      final listConfig =
+          context.read<YesodBloc>().repo.getFeedItemListConfig(0) ??
+              YesodFeedItemListConfig(0);
 
       return DecoratedBox(
         decoration: BoxDecoration(
