@@ -5,9 +5,14 @@ Future<MyApp> init() async {
   final packageInfo = await PackageInfo.fromPlatform();
 
   // https://github.com/hivedb/hive/issues/1044
-  final dataPath = PlatformHelper.isWeb()
-      ? null
-      : (await getApplicationSupportDirectory()).path;
+  late String? dataPath;
+  if (PlatformHelper.isWeb()) {
+    dataPath = null;
+  } else if (PlatformHelper.isWindowsApp() && !kDebugMode) {
+    dataPath = path.join(path.dirname(Platform.resolvedExecutable), 'data');
+  } else {
+    dataPath = (await getApplicationSupportDirectory()).path;
+  }
 
   // dotenv
   var enableSentry = false;
@@ -60,6 +65,9 @@ Future<MyApp> init() async {
   final deviceInfo = await _genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
   final deepLinkBloc = DeepLinkBloc(initialUri);
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: dataPath == null ? Directory('') : Directory(dataPath),
+  );
   final mainBloc = MainBloc(api, common, clientSettingBloc, deepLinkBloc,
       packageInfo, deviceInfo, dataPath);
 

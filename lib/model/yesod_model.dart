@@ -1,3 +1,10 @@
+enum FeedListType {
+  table,
+  magazine,
+  card,
+}
+
+@Deprecated('delete')
 class RssSubscription {
   final String title;
   final String link;
@@ -12,6 +19,7 @@ class RssSubscription {
   });
 }
 
+@Deprecated('delete')
 class RssPostItem {
   String? title;
   String? link;
@@ -30,24 +38,21 @@ class RssPostItem {
   });
 }
 
+@Deprecated('delete')
 class RssDescriptionContent {
   final String content;
 
   RssDescriptionContent(this.content);
 }
 
+@Deprecated('delete')
 class TextContent extends RssDescriptionContent {
   TextContent(super.content);
 }
 
+@Deprecated('delete')
 class ImgTextContent extends RssDescriptionContent {
   final String imgUrl;
 
   ImgTextContent(super.content, this.imgUrl);
-}
-
-enum FeedListType {
-  table,
-  magazine,
-  card,
 }

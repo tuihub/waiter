@@ -1,18 +1,30 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:universal_io/io.dart';
 
 import '../common/platform.dart';
 import '../model/common_model.dart';
+
+part 'deeplink_bloc.g.dart';
 
 @immutable
 sealed class DeepLinkEvent {}
 
 class DeepLinkInitEvent extends DeepLinkEvent {}
 
-class DeepLinkState {}
+@JsonSerializable()
+class DeepLinkState {
+  DeepLinkState();
+
+  factory DeepLinkState.fromJson(Map<String, dynamic> json) =>
+      _$DeepLinkStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DeepLinkStateToJson(this);
+}
 
 class DeepLinkConnectState extends DeepLinkState {
   final ServerConfig serverConfig;
@@ -21,8 +33,8 @@ class DeepLinkConnectState extends DeepLinkState {
 }
 
 // DeepLinkBloc manages deep link events and states.
-class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
-  StreamSubscription? _sub;
+class DeepLinkBloc extends HydratedBloc<DeepLinkEvent, DeepLinkState> {
+  StreamSubscription<Uri?>? _sub;
 
   DeepLinkBloc(Uri? initialUri) : super(DeepLinkState()) {
     on<DeepLinkInitEvent>((event, emit) async {
@@ -48,7 +60,7 @@ class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
         process(initialUri);
         _sub = uriLinkStream.listen(process);
         while (_sub != null) {
-          await Future.delayed(const Duration(seconds: 1));
+          sleep(const Duration(seconds: 1));
         }
       } catch (e) {
         debugPrint('DeepLinkBloc: $e');
@@ -58,8 +70,18 @@ class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
     add(DeepLinkInitEvent());
   }
 
-  void dispose() {
-    _sub?.cancel();
-    super.close();
+  Future<void> dispose() async {
+    await _sub?.cancel();
+    await super.close();
+  }
+
+  @override
+  DeepLinkState? fromJson(Map<String, dynamic> json) {
+    return DeepLinkState.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(DeepLinkState state) {
+    return state.toJson();
   }
 }
