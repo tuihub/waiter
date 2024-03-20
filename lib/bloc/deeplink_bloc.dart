@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:universal_io/io.dart';
 
 import '../common/platform.dart';
 import '../model/common_model.dart';
@@ -60,7 +59,7 @@ class DeepLinkBloc extends HydratedBloc<DeepLinkEvent, DeepLinkState> {
         process(initialUri);
         _sub = uriLinkStream.listen(process);
         while (_sub != null) {
-          sleep(const Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
         }
       } catch (e) {
         debugPrint('DeepLinkBloc: $e');

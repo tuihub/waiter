@@ -19,12 +19,6 @@ final class YesodConfigAddEvent extends YesodEvent {
   YesodConfigAddEvent(this.config);
 }
 
-final class YesodSetConfigEditIndexEvent extends YesodEvent {
-  final int index;
-
-  YesodSetConfigEditIndexEvent(this.index);
-}
-
 final class YesodConfigEditEvent extends YesodEvent {
   final FeedConfig config;
 
@@ -38,12 +32,6 @@ final class YesodFeedItemDigestsLoadEvent extends YesodEvent {
   YesodFeedItemDigestsLoadEvent(this.pageNum, {this.refresh});
 }
 
-final class YesodFeedItemDigestsSetFilterEvent extends YesodEvent {
-  final YesodFeedItemFilter filter;
-
-  YesodFeedItemDigestsSetFilterEvent(this.filter);
-}
-
 final class YesodFeedItemLoadEvent extends YesodEvent {
   final InternalID id;
 
@@ -51,12 +39,6 @@ final class YesodFeedItemLoadEvent extends YesodEvent {
 }
 
 final class YesodFeedCategoriesLoadEvent extends YesodEvent {}
-
-final class YesodFeedListTypeSetEvent extends YesodEvent {
-  final FeedListType type;
-
-  YesodFeedListTypeSetEvent(this.type);
-}
 
 final class YesodFeedItemReadEvent extends YesodEvent {
   final InternalID id;

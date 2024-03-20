@@ -26,7 +26,7 @@ class YesodPreviewCard extends StatelessWidget {
   final String title;
   final String? description;
   final void Function() callback;
-  final FeedListType listType;
+  final FeedItemListType listType;
   final BorderRadius? cardBorderRadius;
 
   @override
@@ -40,7 +40,8 @@ class YesodPreviewCard extends StatelessWidget {
       const cardPaddingH = 16.0;
       const imgPadding = 8;
       const iconSize = 18.0;
-      final double leftImageSize = listType == FeedListType.magazine ? 128 : 0;
+      final double leftImageSize =
+          listType == FeedItemListType.magazine ? 128 : 0;
       final double bottomImageSize = constraints.biggest.width < 406
           ? (constraints.biggest.width - 2 * imgPadding - 2 * cardPaddingH) / 3
           : 130;
@@ -58,7 +59,7 @@ class YesodPreviewCard extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(
                   cardPaddingH, cardPaddingV, cardPaddingH, cardPaddingV),
               child: Row(children: [
-                if (listType == FeedListType.magazine)
+                if (listType == FeedItemListType.magazine)
                   Container(
                     width: leftImageSize,
                     padding: const EdgeInsets.only(right: cardPaddingV),
@@ -79,7 +80,7 @@ class YesodPreviewCard extends StatelessWidget {
                   width: constraints.biggest.width -
                       2 * cardPaddingH -
                       leftImageSize,
-                  constraints: listType == FeedListType.magazine
+                  constraints: listType == FeedItemListType.magazine
                       ? BoxConstraints(
                           minHeight: leftImageSize,
                         )
@@ -87,10 +88,10 @@ class YesodPreviewCard extends StatelessWidget {
                   child: ClipRect(
                     child: Flex(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: listType == FeedListType.table
+                      crossAxisAlignment: listType == FeedItemListType.table
                           ? CrossAxisAlignment.center
                           : CrossAxisAlignment.start,
-                      direction: listType == FeedListType.table
+                      direction: listType == FeedItemListType.table
                           ? Axis.horizontal
                           : Axis.vertical,
                       children: [
@@ -142,7 +143,7 @@ class YesodPreviewCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (listType == FeedListType.card &&
+                        if (listType == FeedItemListType.card &&
                             images != null &&
                             images!.isNotEmpty)
                           ConstrainedBox(

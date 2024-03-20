@@ -1,31 +1,75 @@
+import 'dart:convert';
+
 import 'package:hive/hive.dart';
 import 'package:sentry_hive/sentry_hive.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
+import '../../model/yesod_model.dart';
+
+const _yesodCommonBoxFile = 'yesod_common';
 const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
 
-class YesodRepo {
-  late Box<String> _feedItemCacheBox;
+const _defaultFeedItemListConfigKey = 'listConfig:default';
 
-  YesodRepo._init(Box<String> box) {
-    _feedItemCacheBox = box;
+class YesodRepo {
+  late Box<String> _yesodCommonBox;
+  late LazyBox<String> _feedItemCacheBox;
+
+  YesodRepo._init(
+    Box<String> yesodCommonBox,
+    LazyBox<String> feedItemCacheBox,
+  ) {
+    _yesodCommonBox = yesodCommonBox;
+    _feedItemCacheBox = feedItemCacheBox;
   }
 
   static Future<YesodRepo> init(String? path) async {
-    final box =
-        await SentryHive.openBox<String>(_feedItemCacheBoxFile, path: path);
-    return YesodRepo._init(box);
+    final feedItemListConfigBox =
+        await SentryHive.openBox<String>(_yesodCommonBoxFile, path: path);
+    final feedItemCacheBox =
+        await SentryHive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
+    return YesodRepo._init(
+      feedItemListConfigBox,
+      feedItemCacheBox,
+    );
+  }
+
+  Future<void> dispose() async {
+    await _yesodCommonBox.close();
+    await _feedItemCacheBox.close();
+  }
+
+  Future<void> setFeedItemListConfig(YesodFeedItemListConfig data) {
+    return _yesodCommonBox.put(
+        _defaultFeedItemListConfigKey, jsonEncode(data.toJson()));
+  }
+
+  YesodFeedItemListConfig getFeedItemListConfig() {
+    try {
+      final data = _yesodCommonBox.get(_defaultFeedItemListConfigKey);
+      if (data != null) {
+        return YesodFeedItemListConfig.fromJson(
+            jsonDecode(data) as Map<String, dynamic>);
+      }
+    } catch (e) {
+      // ignore
+    }
+    return const YesodFeedItemListConfig();
   }
 
   Future<void> setFeedItem(InternalID id, FeedItem data) {
     return _feedItemCacheBox.put(id.toString(), data.writeToJson());
   }
 
-  FeedItem? getFeedItem(InternalID id) {
-    final data = _feedItemCacheBox.get(id.toString());
-    if (data != null) {
-      return FeedItem.fromJson(data);
+  Future<FeedItem?> getFeedItem(InternalID id) async {
+    try {
+      final data = await _feedItemCacheBox.get(id.toString());
+      if (data != null) {
+        return FeedItem.fromJson(data);
+      }
+    } catch (e) {
+      // ignore
     }
     return null;
   }

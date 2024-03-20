@@ -63,7 +63,7 @@ class YesodConfigAddPanel extends StatelessWidget {
                 description: feedPreview!.description,
                 title: feedPreview!.title ?? '',
                 callback: () {},
-                listType: FeedListType.card,
+                listType: FeedItemListType.card,
               ),
             Text(state is YesodConfigPreviewState && state.failed
                 ? state.msg ?? ''

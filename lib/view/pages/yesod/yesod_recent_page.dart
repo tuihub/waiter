@@ -37,6 +37,7 @@ class YesodRecentPage extends StatelessWidget {
         maxPageNum = state.maxPage;
       }
       final items = state.feedItemDigests ?? [];
+      final listConfig = context.read<YesodBloc>().repo.getFeedItemListConfig();
 
       return DecoratedBox(
         decoration: BoxDecoration(
@@ -85,7 +86,7 @@ class YesodRecentPage extends StatelessWidget {
                   cacheExtent: MediaQuery.sizeOf(context).height * 2,
                   itemBuilder: (context, index) {
                     if (index < items.length) {
-                      if ((state.feedItemFilter?.hideRead ?? false) &&
+                      if ((listConfig.hideRead ?? false) &&
                           items[index].readCount > 0) {
                         return const SizedBox();
                       }
@@ -139,8 +140,8 @@ class YesodRecentPage extends StatelessWidget {
                                             iconUrl: item.feedAvatarUrl,
                                             images: item.imageUrls,
                                             description: item.shortDescription,
-                                            listType: state.feedListType ??
-                                                FeedListType.card,
+                                            listType: listConfig.listType ??
+                                                FeedItemListType.card,
                                             cardBorderRadius: filled
                                                 ? BorderRadius.zero
                                                 : null,

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../model/yesod_model.dart';
@@ -13,8 +12,20 @@ import '../../form/form_field.dart';
 import '../../helper/spacing.dart';
 import '../../specialized/right_panel_form.dart';
 
-class YesodRecentSettingPanel extends StatelessWidget {
+class YesodRecentSettingPanel extends StatefulWidget {
   const YesodRecentSettingPanel({super.key});
+
+  @override
+  State<YesodRecentSettingPanel> createState() =>
+      YesodRecentSettingPanelState();
+}
+
+class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
+  bool initialized = false;
+  List<String> feedIDFilter = [];
+  List<String> categoryFilter = [];
+  bool hideRead = false;
+  FeedItemListType listType = FeedItemListType.card;
 
   void close(BuildContext context) {
     AppRoutes.yesodRecentFilter().pop(context);
@@ -22,16 +33,17 @@ class YesodRecentSettingPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<InternalID> feedIDFilter = [];
-    List<String> categoryFilter = [];
-    bool hideRead;
-
     return BlocBuilder<YesodBloc, YesodState>(
       builder: (context, state) {
-        feedIDFilter = state.feedItemFilter?.feedIdFilter?.toList() ?? [];
-        categoryFilter = state.feedItemFilter?.categoryFilter?.toList() ?? [];
-        final listType = state.feedListType ?? FeedListType.card;
-        hideRead = state.feedItemFilter?.hideRead ?? false;
+        if (!initialized) {
+          final listConfig =
+              context.read<YesodBloc>().repo.getFeedItemListConfig();
+          feedIDFilter = listConfig.feedIdFilter?.toList() ?? [];
+          categoryFilter = listConfig.categoryFilter?.toList() ?? [];
+          listType = listConfig.listType ?? FeedItemListType.card;
+          hideRead = listConfig.hideRead ?? false;
+          initialized = true;
+        }
 
         return RightPanelForm(
           title: const Text('设置'),
@@ -44,9 +56,9 @@ class YesodRecentSettingPanel extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            AnimatedToggleSwitch<FeedListType>.size(
+            AnimatedToggleSwitch<FeedItemListType>.size(
               current: listType,
-              values: FeedListType.values,
+              values: FeedItemListType.values,
               iconOpacity: 1.0,
               selectedIconScale: 1.0,
               indicatorSize: const Size.fromWidth(100),
@@ -62,9 +74,9 @@ class YesodRecentSettingPanel extends StatelessWidget {
                                 local.animationValue))));
               },
               onChanged: (value) {
-                context.read<YesodBloc>().add(
-                      YesodFeedListTypeSetEvent(value),
-                    );
+                setState(() {
+                  listType = value;
+                });
               },
             ),
             const SizedBox(
@@ -94,7 +106,7 @@ class YesodRecentSettingPanel extends StatelessWidget {
                 for (final ListFeedConfigsResponse_FeedWithConfig config
                     in state.feedConfigs ?? [])
                   MultiSelectItem(
-                      config.config.id,
+                      config.config.id.id.toString(),
                       config.feed.title.isNotEmpty
                           ? config.feed.title
                           : config.config.feedUrl),
@@ -128,18 +140,16 @@ class YesodRecentSettingPanel extends StatelessWidget {
               ),
             ),
           ],
-          onSubmit: () {
-            context.read<YesodBloc>().add(
-                  YesodFeedItemDigestsSetFilterEvent(
-                    YesodFeedItemFilter(
-                      feedIdFilter: feedIDFilter,
-                      categoryFilter: categoryFilter,
-                      hideRead: hideRead,
-                    ),
-                  ),
-                );
-            close(context);
-          },
+          onSubmit: () async => context
+              .read<YesodBloc>()
+              .repo
+              .setFeedItemListConfig(YesodFeedItemListConfig(
+                feedIdFilter: feedIDFilter,
+                categoryFilter: categoryFilter,
+                hideRead: hideRead,
+                listType: listType,
+              ))
+              .then((value) => close(context)),
           close: () => close(context),
         );
       },

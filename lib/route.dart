@@ -113,8 +113,8 @@ class AppRoutes {
       AppRoutes._('$_yesod/${_YesodFunctions.timeline}');
   static const AppRoutes yesodConfig =
       AppRoutes._('$_yesod/${_YesodFunctions.config}');
-  static AppRoutes yesodConfigEdit() => AppRoutes._(
-        '$yesodConfig?action=${_YesodActions.configEdit}',
+  static AppRoutes yesodConfigEdit(int id) => AppRoutes._(
+        '$yesodConfig?action=${_YesodActions.configEdit}&id=$id',
         isAction: true,
       );
   static AppRoutes yesodConfigAdd() => AppRoutes._(
@@ -395,12 +395,14 @@ GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
                       _YesodFunctions.recent;
                   var action = state.uri.queryParameters['action'] ??
                       _YesodActions.configAdd;
+                  final idStr = state.uri.queryParameters['id'];
+                  final id = idStr != null ? int.tryParse(idStr) : null;
                   if (function == _YesodFunctions.recent) {
                     action = _YesodActions.recentFilter;
                   }
 
                   final yesodActions = {
-                    _YesodActions.configEdit: const YesodConfigEditPanel(),
+                    _YesodActions.configEdit: YesodConfigEditPanel(index: id),
                     _YesodActions.configAdd: const YesodConfigAddPanel(),
                     _YesodActions.recentFilter: const YesodRecentSettingPanel(),
                   };

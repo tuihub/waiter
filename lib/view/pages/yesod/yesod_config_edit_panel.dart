@@ -12,10 +12,12 @@ import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
 
 class YesodConfigEditPanel extends StatelessWidget {
-  const YesodConfigEditPanel({super.key});
+  const YesodConfigEditPanel({super.key, required this.index});
+
+  final int? index;
 
   void close(BuildContext context) {
-    AppRoutes.yesodConfigEdit().pop(context);
+    AppRoutes.yesodConfigEdit(0).pop(context);
   }
 
   @override
@@ -27,13 +29,10 @@ class YesodConfigEditPanel extends StatelessWidget {
           close(context);
         }
       },
-      buildWhen: (previous, current) =>
-          previous.feedConfigEditIndex != current.feedConfigEditIndex,
       builder: (context, state) {
-        final config =
-            state.feedConfigEditIndex != null && state.feedConfigs != null
-                ? state.feedConfigs![state.feedConfigEditIndex!].config
-                : FeedConfig();
+        final config = index != null && state.feedConfigs != null
+            ? state.feedConfigs![index!].config
+            : FeedConfig();
         var name = config.name;
         var feedUrl = config.feedUrl;
         var feedEnabled =

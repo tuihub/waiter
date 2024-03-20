@@ -19,9 +19,9 @@ part 'yesod_state.dart';
 
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
   final ApiHelper _api;
-  final YesodRepo _repo;
+  final YesodRepo repo;
 
-  YesodBloc(this._api, this._repo) : super(YesodState()) {
+  YesodBloc(this._api, this.repo) : super(YesodState()) {
     on<YesodInitEvent>((event, emit) async {
       if (state.feedConfigs == null) {
         add(YesodConfigLoadEvent());
@@ -176,21 +176,11 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       ));
     }, transformer: droppable());
 
-    on<YesodSetConfigEditIndexEvent>((event, emit) async {
-      emit(state.copyWith(
-        feedConfigEditIndex: event.index,
-      ));
-    }, transformer: restartable());
-
     on<YesodConfigEditEvent>((event, emit) async {
       emit(YesodConfigEditState(
         state,
         EventStatus.processing,
       ));
-      final index = state.feedConfigEditIndex;
-      if (index == null) {
-        return;
-      }
       final resp = await _api.doRequest(
         (client) => client.updateFeedConfig,
         UpdateFeedConfigRequest(
@@ -206,10 +196,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       final configs = state.feedConfigs ?? [];
-      configs[index] = ListFeedConfigsResponse_FeedWithConfig(
-        config: event.config,
-        feed: configs[index].feed,
-      );
+      add(YesodConfigLoadEvent());
       emit(YesodConfigEditState(
         state.copyWith(feedConfigs: configs),
         EventStatus.success,
@@ -229,6 +216,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             : state,
         EventStatus.processing,
       ));
+      final listConfig = repo.getFeedItemListConfig();
       final resp = await _api.doRequest(
         (client) => client.listFeedItems,
         ListFeedItemsRequest(
@@ -236,8 +224,9 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             pageSize: Int64(pageSize),
             pageNum: Int64(pageNum),
           ),
-          feedIdFilter: state.feedItemFilter?.feedIdFilter,
-          categoryFilter: state.feedItemFilter?.categoryFilter,
+          feedIdFilter: listConfig.feedIdFilter
+              ?.map((e) => InternalID(id: Int64.parseInt(e))),
+          categoryFilter: listConfig.categoryFilter,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -260,23 +249,12 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       ));
     }, transformer: droppable());
 
-    on<YesodFeedItemDigestsSetFilterEvent>((event, emit) async {
-      emit(state.copyWith(feedItemFilter: event.filter));
-      add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
-    }, transformer: restartable());
-
     on<YesodFeedItemLoadEvent>((event, emit) async {
       emit(YesodFeedItemLoadState(
         state,
         EventStatus.processing,
       ));
-      if (_repo.existFeedItem(event.id)) {
-        state.feedItems ??= {};
-        final item = _repo.getFeedItem(event.id);
-        if (item != null) {
-          state.feedItems![event.id] = item;
-        }
-      } else {
+      if (!repo.existFeedItem(event.id)) {
         final resp = await _api.doRequest(
           (client) => client.getFeedItem,
           GetFeedItemRequest(
@@ -292,15 +270,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           return;
         } else {
           final item = resp.getData().item;
-          await _repo.setFeedItem(event.id, item);
-          state.feedItems ??= {};
-          state.feedItems![event.id] = item;
-          emit(YesodFeedItemLoadState(
-            state,
-            EventStatus.success,
-          ));
+          await repo.setFeedItem(event.id, item);
         }
       }
+      emit(YesodFeedItemLoadState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<YesodFeedCategoriesLoadEvent>((event, emit) async {
@@ -326,10 +302,6 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       ));
     }, transformer: droppable());
 
-    on<YesodFeedListTypeSetEvent>((event, emit) async {
-      emit(state.copyWith(feedListType: event.type));
-    });
-
     on<YesodFeedItemReadEvent>((event, emit) async {
       await _api.doRequest(
         (client) => client.readFeedItem,
@@ -339,10 +311,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
   }
 
   int cacheSize() {
-    return _repo.cacheSize();
+    return repo.cacheSize();
   }
 
   Future<void> clearCache() async {
-    await _repo.clearCache();
+    await repo.clearCache();
   }
 }

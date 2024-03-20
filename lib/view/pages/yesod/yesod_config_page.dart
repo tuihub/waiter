@@ -31,10 +31,7 @@ class YesodConfigPage extends StatelessWidget {
             final item = listData.elementAt(index);
 
             void openEditPage() {
-              context
-                  .read<YesodBloc>()
-                  .add(YesodSetConfigEditIndexEvent(index));
-              AppRoutes.yesodConfigEdit().go(context);
+              AppRoutes.yesodConfigEdit(index).go(context);
             }
 
             return SelectionArea(
