@@ -216,7 +216,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             : state,
         EventStatus.processing,
       ));
-      final listConfig = repo.getFeedItemListConfig(0);
+      final listConfig = repo.getFeedItemListConfig();
       final resp = await _api.doRequest(
         (client) => client.listFeedItems,
         ListFeedItemsRequest(
@@ -224,9 +224,9 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             pageSize: Int64(pageSize),
             pageNum: Int64(pageNum),
           ),
-          feedIdFilter: listConfig?.feedIdFilter
+          feedIdFilter: listConfig.feedIdFilter
               ?.map((e) => InternalID(id: Int64.parseInt(e))),
-          categoryFilter: listConfig?.categoryFilter,
+          categoryFilter: listConfig.categoryFilter,
         ),
       );
       if (resp.status != ApiStatus.success) {
@@ -254,7 +254,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         state,
         EventStatus.processing,
       ));
-      if (await repo.getFeedItem(event.id) != null) {
+      if (!repo.existFeedItem(event.id)) {
         final resp = await _api.doRequest(
           (client) => client.getFeedItem,
           GetFeedItemRequest(
@@ -270,7 +270,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           return;
         } else {
           final item = resp.getData().item;
-          await repo.setFeedItem(item);
+          await repo.setFeedItem(event.id, item);
         }
       }
       emit(YesodFeedItemLoadState(

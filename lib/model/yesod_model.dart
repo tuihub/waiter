@@ -1,20 +1,21 @@
-import 'package:isar/isar.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'yesod_model.freezed.dart';
 part 'yesod_model.g.dart';
 
-@collection
-class YesodFeedItemListConfig {
-  final Id id;
+@freezed
+class YesodFeedItemListConfig with _$YesodFeedItemListConfig {
+  const factory YesodFeedItemListConfig({
+    Iterable<String>? feedIdFilter,
+    Iterable<String>? authorIdFilter,
+    Iterable<String>? publishPlatformFilter,
+    Iterable<String>? categoryFilter,
+    bool? hideRead,
+    FeedItemListType? listType,
+  }) = _YesodFeedItemListConfig;
 
-  YesodFeedItemListConfig(this.id);
-
-  List<String>? feedIdFilter;
-  List<String>? authorIdFilter;
-  List<String>? publishPlatformFilter;
-  List<String>? categoryFilter;
-  bool? hideRead;
-  @Enumerated(EnumType.name)
-  FeedItemListType? listType;
+  factory YesodFeedItemListConfig.fromJson(Map<String, dynamic> json) =>
+      _$YesodFeedItemListConfigFromJson(json);
 }
 
 enum FeedItemListType {

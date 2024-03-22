@@ -1,68 +1,72 @@
-import 'package:isar/isar.dart';
+import 'dart:convert';
+
+import 'package:hive/hive.dart';
+import 'package:sentry_hive/sentry_hive.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
-import '../../model/common_model.dart';
 import '../../model/yesod_model.dart';
 
+const _yesodCommonBoxFile = 'yesod_common';
+const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
+
+const _defaultFeedItemListConfigKey = 'listConfig:default';
+
 class YesodRepo {
-  late Isar _isar;
-  late Isar _feedItemIsar;
+  late Box<String> _yesodCommonBox;
+  late LazyBox<String> _feedItemCacheBox;
 
   YesodRepo._init(
-    Isar isar,
-    Isar feedItemIsar,
+    Box<String> yesodCommonBox,
+    LazyBox<String> feedItemCacheBox,
   ) {
-    _isar = isar;
-    _feedItemIsar = feedItemIsar;
+    _yesodCommonBox = yesodCommonBox;
+    _feedItemCacheBox = feedItemCacheBox;
   }
 
-  static Future<YesodRepo> init(String path) async {
-    final isar = await Isar.open(
-      [
-        YesodFeedItemListConfigSchema,
-      ],
-      directory: path,
-      name: 'yesod',
-    );
-    final feedItemIsar = await Isar.open(
-      [KVCollectionSchema],
-      directory: path,
-      name: 'yesod_feed_item',
-    );
+  static Future<YesodRepo> init(String? path) async {
+    final feedItemListConfigBox =
+        await SentryHive.openBox<String>(_yesodCommonBoxFile, path: path);
+    final feedItemCacheBox =
+        await SentryHive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
     return YesodRepo._init(
-      isar,
-      feedItemIsar,
+      feedItemListConfigBox,
+      feedItemCacheBox,
     );
   }
 
   Future<void> dispose() async {
-    await _isar.close();
-    await _feedItemIsar.close();
+    await _yesodCommonBox.close();
+    await _feedItemCacheBox.close();
   }
 
-  Future<void> setFeedItemListConfig(YesodFeedItemListConfig data) async {
-    return _isar.writeTxn(() => _isar.yesodFeedItemListConfigs.put(data));
+  Future<void> setFeedItemListConfig(YesodFeedItemListConfig data) {
+    return _yesodCommonBox.put(
+        _defaultFeedItemListConfigKey, jsonEncode(data.toJson()));
   }
 
-  YesodFeedItemListConfig? getFeedItemListConfig(int id) {
-    return _isar.yesodFeedItemListConfigs.getSync(id);
+  YesodFeedItemListConfig getFeedItemListConfig() {
+    try {
+      final data = _yesodCommonBox.get(_defaultFeedItemListConfigKey);
+      if (data != null) {
+        return YesodFeedItemListConfig.fromJson(
+            jsonDecode(data) as Map<String, dynamic>);
+      }
+    } catch (e) {
+      // ignore
+    }
+    return const YesodFeedItemListConfig();
   }
 
-  Future<void> setFeedItem(FeedItem data) {
-    return _feedItemIsar.writeTxn(
-        () => _feedItemIsar.kVCollections.put(KVCollection.fromInternalID(
-              data.id,
-              data.writeToJson(),
-            )));
+  Future<void> setFeedItem(InternalID id, FeedItem data) {
+    return _feedItemCacheBox.put(id.toString(), data.writeToJson());
   }
 
   Future<FeedItem?> getFeedItem(InternalID id) async {
     try {
-      final data = await _feedItemIsar.kVCollections
-          .get(KVCollection.idFromInternalID(id));
-      if (data != null && data.value != null) {
-        return FeedItem.fromJson(data.value!);
+      final data = await _feedItemCacheBox.get(id.toString());
+      if (data != null) {
+        return FeedItem.fromJson(data);
       }
     } catch (e) {
       // ignore
@@ -70,10 +74,14 @@ class YesodRepo {
     return null;
   }
 
+  bool existFeedItem(InternalID id) {
+    return _feedItemCacheBox.containsKey(id.toString());
+  }
+
   int cacheSize() {
-    if (_feedItemIsar.path != null) {
+    if (_feedItemCacheBox.path != null) {
       try {
-        return File(_feedItemIsar.path!).lengthSync();
+        return File(_feedItemCacheBox.path!).lengthSync();
       } catch (e) {
         return 0;
       }
@@ -82,6 +90,7 @@ class YesodRepo {
   }
 
   Future<void> clearCache() async {
-    await _feedItemIsar.clear();
+    await _feedItemCacheBox.clear();
+    await _feedItemCacheBox.compact();
   }
 }

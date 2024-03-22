@@ -37,11 +37,11 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
       builder: (context, state) {
         if (!initialized) {
           final listConfig =
-              context.read<YesodBloc>().repo.getFeedItemListConfig(0);
-          feedIDFilter = listConfig?.feedIdFilter?.toList() ?? [];
-          categoryFilter = listConfig?.categoryFilter?.toList() ?? [];
-          listType = listConfig?.listType ?? FeedItemListType.card;
-          hideRead = listConfig?.hideRead ?? false;
+              context.read<YesodBloc>().repo.getFeedItemListConfig();
+          feedIDFilter = listConfig.feedIdFilter?.toList() ?? [];
+          categoryFilter = listConfig.categoryFilter?.toList() ?? [];
+          listType = listConfig.listType ?? FeedItemListType.card;
+          hideRead = listConfig.hideRead ?? false;
           initialized = true;
         }
 
@@ -143,13 +143,12 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
           onSubmit: () async => context
               .read<YesodBloc>()
               .repo
-              .setFeedItemListConfig(
-                YesodFeedItemListConfig(0)
-                  ..feedIdFilter = feedIDFilter
-                  ..categoryFilter = categoryFilter
-                  ..hideRead = hideRead
-                  ..listType = listType,
-              )
+              .setFeedItemListConfig(YesodFeedItemListConfig(
+                feedIdFilter: feedIDFilter,
+                categoryFilter: categoryFilter,
+                hideRead: hideRead,
+                listType: listType,
+              ))
               .then((value) => close(context)),
           close: () => close(context),
         );
