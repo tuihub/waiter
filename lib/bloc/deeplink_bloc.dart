@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:uni_links/uni_links.dart';
 
 import '../common/platform.dart';
@@ -32,7 +32,7 @@ class DeepLinkConnectState extends DeepLinkState {
 }
 
 // DeepLinkBloc manages deep link events and states.
-class DeepLinkBloc extends HydratedBloc<DeepLinkEvent, DeepLinkState> {
+class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
   StreamSubscription<Uri?>? _sub;
 
   DeepLinkBloc(Uri? initialUri) : super(DeepLinkState()) {

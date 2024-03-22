@@ -62,9 +62,6 @@ Future<MyApp> init() async {
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: dataPath == null ? Directory('') : Directory(dataPath),
-  );
   final deviceInfo = await _genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
   final deepLinkBloc = DeepLinkBloc(initialUri);

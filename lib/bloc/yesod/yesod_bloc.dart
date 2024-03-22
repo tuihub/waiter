@@ -216,7 +216,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             : state,
         EventStatus.processing,
       ));
-      final listConfig = repo.getFeedItemListConfig();
+      final listConfig = await repo.getFeedItemListConfig();
       final resp = await _api.doRequest(
         (client) => client.listFeedItems,
         ListFeedItemsRequest(

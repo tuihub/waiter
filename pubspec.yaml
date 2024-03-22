@@ -39,14 +39,14 @@ dependencies:
   bloc: ^8.1.3
   bloc_concurrency: ^0.2.4
   flutter_bloc: ^8.1.4
-  hydrated_bloc: ^9.1.4
   # https://github.com/flutter/flutter/issues/140869
   go_router: ^12.1.3
 
   # database
-  floor: ^1.4.2
   hive_flutter: ^1.1.0
   hive: ^2.2.3
+  drift: ^2.15.0
+  sqlite3_flutter_libs: ^0.5.20
 
   # window manage util
   bitsdojo_window: ^0.1.6
@@ -59,7 +59,7 @@ dependencies:
   tuihub_protos:
     git:
       url: https://github.com/tuihub/protos.git
-      ref: v0.4.7
+      ref: v0.4.9
   fixnum: ^1.1.0
 
   # theme
@@ -125,7 +125,7 @@ dependencies:
   # utils
   package_info_plus: ^5.0.1
   device_info_plus: ^9.1.2
-  path: ^1.8.3
+  path: ^1.9.0
   petitparser: ^6.0.2
   url_launcher: ^6.2.4
   flutter_markdown: ^0.6.19
@@ -148,8 +148,8 @@ dev_dependencies:
   ffigen: ^9.0.1
   build_runner: ^2.4.8
   freezed: ^2.4.7
-  floor_generator: ^1.4.2
   json_serializable: ^6.7.1
+  drift_dev: ^2.15.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

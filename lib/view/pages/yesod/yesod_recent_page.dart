@@ -15,8 +15,21 @@ import '../../layout/bootstrap_container.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
-class YesodRecentPage extends StatelessWidget {
+class YesodRecentPage extends StatefulWidget {
   const YesodRecentPage({super.key});
+
+  @override
+  State<YesodRecentPage> createState() => YesodRecentPageState();
+}
+
+class YesodRecentPageState extends State<YesodRecentPage> {
+  YesodFeedItemListConfig? listConfig;
+
+  Future<void> init() async {
+    setState(() async {
+      listConfig = await context.read<YesodBloc>().repo.getFeedItemListConfig();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +50,6 @@ class YesodRecentPage extends StatelessWidget {
         maxPageNum = state.maxPage;
       }
       final items = state.feedItemDigests ?? [];
-      final listConfig = context.read<YesodBloc>().repo.getFeedItemListConfig();
 
       return DecoratedBox(
         decoration: BoxDecoration(
@@ -86,7 +98,7 @@ class YesodRecentPage extends StatelessWidget {
                   cacheExtent: MediaQuery.sizeOf(context).height * 2,
                   itemBuilder: (context, index) {
                     if (index < items.length) {
-                      if ((listConfig.hideRead ?? false) &&
+                      if ((listConfig?.hideRead ?? false) &&
                           items[index].readCount > 0) {
                         return const SizedBox();
                       }
@@ -140,7 +152,7 @@ class YesodRecentPage extends StatelessWidget {
                                             iconUrl: item.feedAvatarUrl,
                                             images: item.imageUrls,
                                             description: item.shortDescription,
-                                            listType: listConfig.listType ??
+                                            listType: listConfig?.listType ??
                                                 FeedItemListType.card,
                                             cardBorderRadius: filled
                                                 ? BorderRadius.zero

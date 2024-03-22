@@ -70,7 +70,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             '${state.currentServer!.host}#${state.currentServer!.port}',
             state.currentUser!.id.id.toHexString(),
           )
-        : null;
+        : '';
     final geburaRepo = await GeburaRepo.init(repoPath);
     final yesodRepo = await YesodRepo.init(repoPath);
 
