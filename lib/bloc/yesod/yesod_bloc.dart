@@ -35,8 +35,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     }, transformer: restartable());
 
     on<YesodConfigLoadEvent>((event, emit) async {
-      emit(YesodConfigLoadState(state, EventStatus.processing));
-      final List<ListFeedConfigsResponse_FeedWithConfig> configs = [];
+      final List<ListFeedConfigsResponse_FeedWithConfig> configs =
+          await repo.getFeedConfigs();
+      emit(YesodConfigLoadState(
+          state.copyWith(
+            feedConfigs: configs,
+          ),
+          EventStatus.processing));
 
       final resp = await _api.doRequest(
         (client) => client.listFeedConfigs,
@@ -48,7 +53,12 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(YesodConfigLoadState(state, EventStatus.failed, msg: resp.error));
+        emit(YesodConfigLoadState(
+            state.copyWith(
+              feedConfigs: configs,
+            ),
+            EventStatus.failed,
+            msg: resp.error));
         return;
       }
 
@@ -170,6 +180,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         )
       ];
       configs.addAll(state.feedConfigs ?? []);
+      await repo.setFeedConfigs(configs);
       emit(YesodConfigAddState(
         state.copyWith(feedConfigs: configs),
         EventStatus.success,
@@ -196,6 +207,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       final configs = state.feedConfigs ?? [];
+      await repo.setFeedConfigs(configs);
       add(YesodConfigLoadEvent());
       emit(YesodConfigEditState(
         state.copyWith(feedConfigs: configs),

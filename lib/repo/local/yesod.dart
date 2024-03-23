@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:hive/hive.dart';
 import 'package:sentry_hive/sentry_hive.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
 import '../../dao/database.dart';
+import '../../dao/feed_config.dart';
 import '../../dao/kv.dart';
 import '../../model/yesod_model.dart';
 
@@ -72,6 +74,28 @@ class YesodRepo {
 
   bool existFeedItem(InternalID id) {
     return _feedItemCacheBox.containsKey(id.toString());
+  }
+
+  Future<void> setFeedConfigs(
+      List<ListFeedConfigsResponse_FeedWithConfig> data) {
+    return FeedConfigDao(_db).setAll(
+      data
+          .map((e) => FeedConfigTableData(
+                internalId: e.config.id.toString(),
+                name: e.config.name,
+                feedUrl: e.config.feedUrl,
+                category: e.config.category,
+                jsonData: e.writeToJson(),
+              ))
+          .toList(),
+    );
+  }
+
+  Future<List<ListFeedConfigsResponse_FeedWithConfig>> getFeedConfigs() async {
+    final data = await FeedConfigDao(_db).getAll();
+    return data
+        .map((e) => ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
+        .toList();
   }
 
   int cacheSize() {
