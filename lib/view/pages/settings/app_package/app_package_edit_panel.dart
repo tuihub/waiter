@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 import 'app_package_assign_dialog.dart';
 
 class AppPackageEditPanel extends StatefulWidget {
@@ -31,7 +31,7 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
   }
 
   void close(BuildContext context) {
-    AppRoutes.settingsAppPackageEdit().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

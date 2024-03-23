@@ -113,7 +113,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
             if (state is MainAutoLoginState && state.success) {
               _current = context.read<MainBloc>().state.currentServer;
               _selected = _current;
-              AppRoutes.tiphereth.go(context);
+              const TipherethRootRoute().go(context);
               minimize();
             }
             if (state is MainAutoLoginState && state.failed) {
@@ -130,7 +130,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
               }
             }
             if (state is MainManualLoginState && state.success) {
-              AppRoutes.tiphereth.go(context);
+              const TipherethRootRoute().go(context);
               minimize();
             }
             if (state is MainNewServerSetState) {

@@ -43,7 +43,9 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
               const Expanded(child: SizedBox()),
               FilledButton.tonalIcon(
                 onPressed: () {
-                  AppRoutes.settingsAppPackageAdd().go(context);
+                  const SettingsFunctionRoute(SettingsFunctions.appPackage,
+                          action: SettingsActions.appPackageAdd)
+                      .go(context);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -106,7 +108,9 @@ class AppPackageTableSource extends AsyncDataTableSource {
                 DataCell(Text(app.description)),
               ],
               onTap: () {
-                AppRoutes.settingsAppPackageEdit().go(context, extra: app);
+                SettingsFunctionRoute(SettingsFunctions.appPackage,
+                        action: SettingsActions.appPackageEdit, $extra: app)
+                    .go(context);
               });
         },
       ).toList(),

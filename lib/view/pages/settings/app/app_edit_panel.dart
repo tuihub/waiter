@@ -4,9 +4,9 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class AppEditPanel extends StatefulWidget {
   final AppInfo app;
@@ -38,7 +38,7 @@ class _AppEditPanelState extends State<AppEditPanel> {
   }
 
   void close(BuildContext context) {
-    AppRoutes.settingsAppEdit().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

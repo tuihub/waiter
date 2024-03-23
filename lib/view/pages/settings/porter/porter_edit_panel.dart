@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class PorterEditPanel extends StatelessWidget {
   const PorterEditPanel({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.settingsPorterEdit().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

@@ -6,7 +6,7 @@ part 'feed_config.g.dart';
 
 // FeedConfigTable is used to store feed config data.
 class FeedConfigTable extends Table {
-  TextColumn get internalId => text().unique()();
+  TextColumn get internalId => text()();
   TextColumn get name => text()();
   TextColumn get feedUrl => text()();
   TextColumn get category => text()();

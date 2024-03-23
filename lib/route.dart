@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_hero/local_hero.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
@@ -14,7 +13,6 @@ import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
-import 'view/layout/overlapping_panels.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_assign_app_panel.dart';
@@ -56,152 +54,7 @@ import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_recent_setting_panel.dart';
 
-class AppRoutes {
-  const AppRoutes._(this.path, {this.isAction = false});
-
-  final String path;
-  final bool isAction;
-  @override
-  String toString() => path;
-
-  void go(BuildContext context, {Object? extra}) {
-    if (path.startsWith(_imageViewer)) {
-      unawaited(GoRouter.of(context).push(path, extra: extra));
-    } else {
-      GoRouter.of(context).go(path, extra: extra);
-    }
-    if (isAction) {
-      OverlappingPanels.of(context)?.reveal(RevealSide.right);
-      FramePage.of(context)?.openDrawer();
-    }
-  }
-
-  // void push(BuildContext context, {Object? extra}) {
-  //   unawaited(GoRouter.of(context).push(path, extra: extra));
-  //   if (isAction) {
-  //     OverlappingPanels.of(context)?.reveal(RevealSide.right);
-  //     FramePage.of(context)?.openDrawer();
-  //   }
-  // }
-
-  void pop(BuildContext context) {
-    if (isAction) {
-      final o = OverlappingPanels.of(context);
-      o != null ? o.reveal(RevealSide.main) : GoRouter.of(context).pop();
-    } else {
-      GoRouter.of(context).pop();
-    }
-  }
-
-  static const AppRoutes init = AppRoutes._('/');
-  static const AppRoutes webLanding = AppRoutes._('/webLanding');
-  static const String _imageViewer = '/imageViewer';
-  static AppRoutes imageViewer(int index) =>
-      AppRoutes._('$_imageViewer/$index');
-  static const String _module = '/module';
-  static AppRoutes module(ModuleName? moduleName) =>
-      AppRoutes._('$_module${moduleName != null ? '/$moduleName' : ''}');
-
-  static const AppRoutes tiphereth =
-      AppRoutes._('$_module/${ModuleName._tiphereth}');
-
-  static const String _yesod = '$_module/${ModuleName._yesod}';
-  static const AppRoutes yesod = AppRoutes._(_yesod);
-  static const AppRoutes yesodRecent =
-      AppRoutes._('$_yesod/${_YesodFunctions.recent}');
-  static const AppRoutes yesodTimeline =
-      AppRoutes._('$_yesod/${_YesodFunctions.timeline}');
-  static const AppRoutes yesodConfig =
-      AppRoutes._('$_yesod/${_YesodFunctions.config}');
-  static AppRoutes yesodConfigEdit(int id) => AppRoutes._(
-        '$yesodConfig?action=${_YesodActions.configEdit}&id=$id',
-        isAction: true,
-      );
-  static AppRoutes yesodConfigAdd() => AppRoutes._(
-        '$yesodConfig?action=${_YesodActions.configAdd}',
-        isAction: true,
-      );
-  static AppRoutes yesodRecentFilter() => AppRoutes._(
-        '$yesodRecent?action=${_YesodActions.recentFilter}',
-        isAction: true,
-      );
-
-  static const String _gebura = '$_module/${ModuleName._gebura}';
-  static const AppRoutes gebura = AppRoutes._(_gebura);
-  static const AppRoutes geburaStore =
-      AppRoutes._('$_gebura/${GeburaFunctions.store}');
-  static const AppRoutes geburaLibrary =
-      AppRoutes._('$_gebura/${GeburaFunctions.library}');
-  static const AppRoutes geburaLibrarySettings =
-      AppRoutes._('$_gebura/${GeburaFunctions.librarySettings}');
-  static AppRoutes geburaLibraryDetail(int id) =>
-      AppRoutes._('$geburaLibrary?id=$id');
-  static AppRoutes geburaLibraryAssignApp(int id) =>
-      AppRoutes._('$geburaLibrary?id=$id&action=${_GeburaActions.assignApp}',
-          isAction: true);
-
-  static const String _chesed = '$_module/${ModuleName._chesed}';
-  static const AppRoutes chesed = AppRoutes._(_chesed);
-
-  static const String _settings = '$_module/${ModuleName._settings}';
-  static const AppRoutes settings = AppRoutes._(_settings);
-  static const AppRoutes settingsClient =
-      AppRoutes._('$_settings/${_SettingsFunctions.client}');
-
-  static const AppRoutes notifyTarget =
-      AppRoutes._('$_settings/${_SettingsFunctions.notifyTarget}');
-  static AppRoutes notifyTargetAdd() =>
-      AppRoutes._('$notifyTarget?action=${_SettingsActions.notifyTargetAdd}',
-          isAction: true);
-  static AppRoutes notifyTargetEdit() =>
-      AppRoutes._('$notifyTarget?action=${_SettingsActions.notifyTargetEdit}',
-          isAction: true);
-  static const AppRoutes notifyFlow =
-      AppRoutes._('$_settings/${_SettingsFunctions.notifyFlow}');
-  static AppRoutes notifyFlowAdd() =>
-      AppRoutes._('$notifyFlow?action=${_SettingsActions.notifyFlowAdd}',
-          isAction: true);
-  static AppRoutes notifyFlowEdit() =>
-      AppRoutes._('$notifyFlow?action=${_SettingsActions.notifyFlowEdit}',
-          isAction: true);
-  static AppRoutes settingsSession =
-      const AppRoutes._('$_settings/${_SettingsFunctions.session}');
-  static AppRoutes settingsSessionEdit() =>
-      AppRoutes._('$settingsSession?action=${_SettingsActions.sessionEdit}',
-          isAction: true);
-
-  static const AppRoutes settingsPorter =
-      AppRoutes._('$_settings/${_SettingsFunctions.porter}');
-  static AppRoutes settingsPorterEdit() =>
-      AppRoutes._('$settingsPorter?action=${_SettingsActions.porterEdit}',
-          isAction: true);
-  static const AppRoutes settingsUser =
-      AppRoutes._('$_settings/${_SettingsFunctions.user}');
-  static AppRoutes settingsUserAdd() =>
-      AppRoutes._('$settingsUser?action=${_SettingsActions.userAdd}',
-          isAction: true);
-  static AppRoutes settingsUserEdit() =>
-      AppRoutes._('$settingsUser?action=${_SettingsActions.userEdit}',
-          isAction: true);
-  static const AppRoutes settingsApp =
-      AppRoutes._('$_settings/${_SettingsFunctions.app}');
-  static AppRoutes settingsAppEdit() =>
-      AppRoutes._('$settingsApp?action=${_SettingsActions.appEdit}',
-          isAction: true);
-  static AppRoutes settingsAppAdd() =>
-      AppRoutes._('$settingsApp?action=${_SettingsActions.appAdd}',
-          isAction: true);
-  static const AppRoutes settingsAppPackage =
-      AppRoutes._('$_settings/${_SettingsFunctions.appPackage}');
-  static AppRoutes settingsAppPackageEdit() => AppRoutes._(
-      '$settingsAppPackage?action=${_SettingsActions.appPackageEdit}',
-      isAction: true);
-  static AppRoutes settingsAppPackageAdd() => AppRoutes._(
-      '$settingsAppPackage?action=${_SettingsActions.appPackageAdd}',
-      isAction: true);
-  static const AppRoutes settingsAbout =
-      AppRoutes._('$_settings/${_SettingsFunctions.about}');
-}
+part 'route.g.dart';
 
 enum ModuleName {
   tiphereth._(_tiphereth),
@@ -224,55 +77,16 @@ enum ModuleName {
   String toString() => name;
 }
 
-class _YesodFunctions {
+class YesodFunctions {
   static const String recent = 'recent';
   static const String timeline = 'timeline';
   static const String config = 'config';
-}
-
-class _YesodActions {
-  static const String configEdit = 'editConfig';
-  static const String configAdd = 'addConfig';
-  static const String recentFilter = 'filterRecent';
 }
 
 class GeburaFunctions {
   static const String store = 'store';
   static const String library = 'library';
   static const String librarySettings = 'librarySettings';
-}
-
-class _GeburaActions {
-  static const String assignApp = 'assignApp';
-}
-
-class _SettingsFunctions {
-  static const String client = 'client';
-  static const String notifyTarget = 'notifyTarget';
-  static const String notifyFlow = 'notifyFlow';
-  static const String session = 'session';
-
-  static const String porter = 'porter';
-  static const String user = 'user';
-  static const String app = 'app';
-  static const String appPackage = 'appPackage';
-  static const String about = 'about';
-}
-
-class _SettingsActions {
-  static const String notifyTargetAdd = 'addNotifyTarget';
-  static const String notifyTargetEdit = 'editNotifyTarget';
-  static const String notifyFlowAdd = 'addNotifyFlow';
-  static const String notifyFlowEdit = 'editNotifyFlow';
-  static const String sessionEdit = 'editSession';
-
-  static const String porterEdit = 'editPorter';
-  static const String userEdit = 'editUser';
-  static const String userAdd = 'addUser';
-  static const String appEdit = 'editApp';
-  static const String appAdd = 'addApp';
-  static const String appPackageEdit = 'editAppPackage';
-  static const String appPackageAdd = 'addAppPackage';
 }
 
 final GlobalKey<NavigatorState> _tipherethNavigateKey =
@@ -286,298 +100,454 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 final mainWindowKey = GlobalKey();
 
+@TypedGoRoute<AppRoute>(
+  path: '/',
+  routes: [
+    TypedGoRoute<InitRoute>(path: 'init'),
+    TypedGoRoute<WebLandingRoute>(path: 'webLanding'),
+    TypedGoRoute<ImageViewerRoute>(path: 'imageViewer/:index'),
+    TypedStatefulShellRoute<ModuleRoute>(
+      branches: [
+        TypedStatefulShellBranch<TipherethRoute>(
+          routes: [TypedGoRoute<TipherethRootRoute>(path: 'module/Tiphereth')],
+        ),
+        TypedStatefulShellBranch<YesodRoute>(
+          routes: [
+            TypedGoRoute<YesodRootRoute>(path: 'module/Yesod'),
+            TypedGoRoute<YesodRecentRoute>(path: 'module/Yesod/recent'),
+            TypedGoRoute<YesodConfigRoute>(path: 'module/Yesod/config'),
+          ],
+        ),
+        TypedStatefulShellBranch<GeburaRoute>(
+          routes: [
+            TypedGoRoute<GeburaRootRoute>(path: 'module/Gebura'),
+            TypedGoRoute<GeburaStoreRoute>(path: 'module/Gebura/store'),
+            TypedGoRoute<GeburaLibraryRoute>(path: 'module/Gebura/library'),
+            TypedGoRoute<GeburaLibrarySettingsRoute>(
+                path: 'module/Gebura/librarySettings'),
+            TypedGoRoute<GeburaLibraryDetailRoute>(
+                path: 'module/Gebura/library/:id'),
+          ],
+        ),
+        TypedStatefulShellBranch<ChesedRoute>(
+          routes: [TypedGoRoute<ChesedRootRoute>(path: 'module/Chesed')],
+        ),
+        TypedStatefulShellBranch<SettingsRoute>(
+          routes: [
+            TypedGoRoute<SettingsRootRoute>(path: 'module/Settings'),
+            TypedGoRoute<SettingsFunctionRoute>(
+                path: 'module/Settings/:function'),
+          ],
+        ),
+      ],
+    )
+  ],
+)
+class AppRoute extends GoRouteData {
+  const AppRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class InitRoute extends GoRouteData {
+  const InitRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
+      NoTransitionPage(
+        child: MainWindow(
+          key: mainWindowKey,
+          child: const InitPage(),
+        ),
+      );
+}
+
+class WebLandingRoute extends GoRouteData {
+  const WebLandingRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
+      NoTransitionPage(
+        child: MainWindow(
+          key: mainWindowKey,
+          child: const WebLandingPage(),
+        ),
+      );
+}
+
+class ImageViewerRoute extends GoRouteData {
+  const ImageViewerRoute(this.index, this.$extra);
+
+  final int index;
+  final List<PicSwiperItem>? $extra;
+
+  @override
+  CustomTransitionPage<void> buildPage(
+      BuildContext context, GoRouterState state) {
+    return CustomTransitionPage(
+      fullscreenDialog: true,
+      opaque: false,
+      transitionsBuilder: (_, __, ___, child) => child,
+      child: PicSwiper(
+        index: index,
+        pics: $extra,
+      ),
+    );
+  }
+}
+
+class ModuleRoute extends StatefulShellRouteData {
+  const ModuleRoute();
+
+  @override
+  NoTransitionPage<void> pageBuilder(
+    BuildContext context,
+    GoRouterState state,
+    StatefulNavigationShell navigationShell,
+  ) {
+    return NoTransitionPage(child: BlocBuilder<MainBloc, MainState>(
+      builder: (context, state) {
+        if (state.currentUser != null ||
+            context.read<MainBloc>().tipherethBloc != null) {
+          return MainWindow(
+            key: mainWindowKey,
+            child: navigationShell,
+          );
+        }
+        return MainWindow(
+          key: mainWindowKey,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    ));
+  }
+}
+
+class TipherethRoute extends StatefulShellBranchData {
+  const TipherethRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _tipherethNavigateKey;
+}
+
+class TipherethRootRoute extends GoRouteData {
+  const TipherethRootRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.tiphereth,
+        leftPart: TipherethFramePage(),
+      ),
+    );
+  }
+}
+
+class YesodRoute extends StatefulShellBranchData {
+  const YesodRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _yesodNavigateKey;
+}
+
+class YesodRootRoute extends GoRouteData {
+  const YesodRootRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    return const YesodRecentRoute().location;
+  }
+}
+
+enum YesodRecentActions { setting }
+
+class YesodRecentRoute extends GoRouteData {
+  const YesodRecentRoute({this.action});
+
+  final YesodRecentActions? action;
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final actions = {
+      YesodRecentActions.setting: const YesodRecentSettingPanel(),
+    };
+    return NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.yesod,
+        leftPart: const YesodNav(
+          function: YesodFunctions.recent,
+        ),
+        middlePart: const YesodRecentPage(),
+        rightPart: actions[action],
+        gestureRight: false,
+      ),
+    );
+  }
+}
+
+enum YesodConfigActions { edit, add }
+
+class YesodConfigRoute extends GoRouteData {
+  const YesodConfigRoute({this.action, this.id});
+
+  final YesodConfigActions? action;
+  final int? id;
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final actions = {
+      YesodConfigActions.edit: YesodConfigEditPanel(
+        index: id,
+      ),
+      YesodConfigActions.add: const YesodConfigAddPanel(),
+    };
+    return NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.yesod,
+        leftPart: const YesodNav(
+          function: YesodFunctions.config,
+        ),
+        middlePart: const YesodConfigPage(),
+        rightPart: actions[action],
+        gestureRight: true,
+      ),
+    );
+  }
+}
+
+class GeburaRoute extends StatefulShellBranchData {
+  const GeburaRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _geburaNavigateKey;
+}
+
+class GeburaRootRoute extends GoRouteData {
+  const GeburaRootRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    if (context.read<GeburaBloc>().state.selectedLibraryItem != null) {
+      return GeburaLibraryDetailRoute(
+              id: context.read<GeburaBloc>().state.selectedLibraryItem)
+          .location;
+    } else {
+      return const GeburaLibraryRoute().location;
+    }
+  }
+}
+
+class GeburaStoreRoute extends GoRouteData {
+  const GeburaStoreRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.gebura,
+        leftPart: GeburaNav(
+          function: GeburaFunctions.store,
+        ),
+        middlePart: GeburaStorePage(),
+      ),
+    );
+  }
+}
+
+class GeburaLibraryRoute extends GoRouteData {
+  const GeburaLibraryRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.gebura,
+        leftPart: GeburaNav(
+          function: GeburaFunctions.library,
+        ),
+        middlePart: GeburaLibraryOverview(),
+      ),
+    );
+  }
+}
+
+class GeburaLibrarySettingsRoute extends GoRouteData {
+  const GeburaLibrarySettingsRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.gebura,
+        leftPart: GeburaNav(
+          function: GeburaFunctions.librarySettings,
+        ),
+        middlePart: GeburaLibrarySettings(),
+      ),
+    );
+  }
+}
+
+enum GeburaLibraryDetailActions { assignApp }
+
+class GeburaLibraryDetailRoute extends GoRouteData {
+  const GeburaLibraryDetailRoute({this.action, this.id});
+
+  final GeburaLibraryDetailActions? action;
+  final int? id;
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final actions = {
+      GeburaLibraryDetailActions.assignApp: const GeburaAssignAppPanel(),
+    };
+    return NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.gebura,
+        leftPart: const GeburaNav(
+          function: GeburaFunctions.library,
+        ),
+        middlePart: GeburaLibraryDetailPage(id: id ?? 0),
+        rightPart: actions[action],
+      ),
+    );
+  }
+}
+
+class ChesedRoute extends StatefulShellBranchData {
+  const ChesedRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _chesedNavigateKey;
+}
+
+class ChesedRootRoute extends GoRouteData {
+  const ChesedRootRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.chesed,
+        leftPart: ChesedHome(),
+      ),
+    );
+  }
+}
+
+class SettingsRoute extends StatefulShellBranchData {
+  const SettingsRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _settingsNavigateKey;
+}
+
+class SettingsRootRoute extends GoRouteData {
+  const SettingsRootRoute();
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    return const SettingsFunctionRoute(SettingsFunctions.client).location;
+  }
+}
+
+enum SettingsFunctions {
+  client,
+  notifyTarget,
+  notifyFlow,
+  session,
+  porter,
+  user,
+  app,
+  appPackage,
+  about
+}
+
+enum SettingsActions {
+  notifyTargetAdd,
+  notifyTargetEdit,
+  notifyFlowAdd,
+  notifyFlowEdit,
+  sessionEdit,
+  porterEdit,
+  userEdit,
+  userAdd,
+  appEdit,
+  appAdd,
+  appPackageEdit,
+  appPackageAdd
+}
+
+class SettingsFunctionRoute extends GoRouteData {
+  const SettingsFunctionRoute(this.function, {this.action, this.$extra});
+
+  final SettingsFunctions function;
+  final SettingsActions? action;
+  final dynamic $extra;
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final settingsPages = {
+      SettingsFunctions.client: const ClientSettingPage(),
+      SettingsFunctions.notifyTarget: const NotifyTargetPage(),
+      SettingsFunctions.notifyFlow: const NotifyFlowPage(),
+      SettingsFunctions.session: const SessionManagePage(),
+      SettingsFunctions.porter: const PorterManagePage(),
+      SettingsFunctions.user: const UserManagePage(),
+      SettingsFunctions.app: const AppManagePage(),
+      SettingsFunctions.appPackage: const AppPackageManagePage(),
+      SettingsFunctions.about: const AboutPage(),
+    };
+    final settingsActions = {
+      SettingsActions.notifyTargetAdd: const NotifyTargetAddPanel(),
+      SettingsActions.notifyTargetEdit: const NotifyTargetEditPanel(),
+      SettingsActions.notifyFlowAdd: const NotifyFlowAddPanel(),
+      SettingsActions.notifyFlowEdit: const NotifyFlowEditPanel(),
+      SettingsActions.sessionEdit: const SessionEditPanel(),
+      SettingsActions.porterEdit: const PorterEditPanel(),
+      SettingsActions.userAdd: const UserAddPanel(),
+      SettingsActions.userEdit: UserEditPanel(
+        key: ValueKey($extra),
+        user: $extra is User ? $extra! as User : User(),
+      ),
+      SettingsActions.appAdd: const AppAddPanel(),
+      SettingsActions.appEdit: AppEditPanel(
+        key: ValueKey($extra),
+        app: $extra is AppInfo ? $extra! as AppInfo : AppInfo(),
+      ),
+      SettingsActions.appPackageAdd: const AppPackageAddPanel(),
+      SettingsActions.appPackageEdit: AppPackageEditPanel(
+        key: ValueKey($extra),
+        appPackage: $extra is App ? $extra! as App : App(),
+      ),
+    };
+    return NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.settings,
+        leftPart: const SettingsNav(
+          function: '',
+        ),
+        middlePart: settingsPages[function] ?? Container(),
+        rightPart: settingsActions[action] ?? Container(),
+        gestureRight: false,
+      ),
+    );
+  }
+}
+
 GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
   return GoRouter(
-    initialLocation: AppRoutes.init.toString(),
+    initialLocation: const InitRoute().location,
     observers: [
       HeroController(),
       SentryNavigatorObserver(),
     ],
     debugLogDiagnostics: kDebugMode,
-    routes: [
-      GoRoute(
-        path: AppRoutes.init.toString(),
-        name: AppRoutes.init.toString(),
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: MainWindow(
-            key: mainWindowKey,
-            child: const InitPage(),
-          ),
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.webLanding.toString(),
-        name: AppRoutes.webLanding.toString(),
-        pageBuilder: (context, state) => NoTransitionPage(
-          child: MainWindow(
-            key: mainWindowKey,
-            child: const WebLandingPage(),
-          ),
-        ),
-      ),
-      GoRoute(
-        path: '${AppRoutes._imageViewer}/:index',
-        name: AppRoutes._imageViewer,
-        pageBuilder: (context, state) {
-          final indexStr = state.pathParameters['index'];
-          final index = indexStr != null ? int.tryParse(indexStr) : null;
-          final pics = state.extra as List<PicSwiperItem>?;
-          return CustomTransitionPage(
-            fullscreenDialog: true,
-            opaque: false,
-            transitionsBuilder: (_, __, ___, child) => child,
-            child: PicSwiper(
-              index: index,
-              pics: pics,
-            ),
-          );
-        },
-      ),
-      StatefulShellRoute.indexedStack(
-        pageBuilder: (BuildContext context, GoRouterState state, Widget child) {
-          return NoTransitionPage(child: BlocBuilder<MainBloc, MainState>(
-            builder: (context, state) {
-              if (state.currentUser != null ||
-                  context.read<MainBloc>().tipherethBloc != null) {
-                return MainWindow(
-                  key: mainWindowKey,
-                  child: child,
-                );
-              }
-              return MainWindow(
-                key: mainWindowKey,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-          ));
-        },
-        branches: [
-          StatefulShellBranch(
-            navigatorKey: _tipherethNavigateKey,
-            observers: [SentryNavigatorObserver()],
-            routes: [
-              GoRoute(
-                path: AppRoutes.tiphereth.toString(),
-                name: AppRoutes.tiphereth.toString(),
-                pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.tiphereth,
-                      leftPart: TipherethFramePage(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _yesodNavigateKey,
-            observers: [SentryNavigatorObserver()],
-            routes: [
-              GoRoute(
-                path: AppRoutes.yesod.toString(),
-                name: AppRoutes.yesod.toString(),
-                redirect: (context, state) {
-                  return AppRoutes.yesodRecent.toString();
-                },
-              ),
-              GoRoute(
-                path: '${AppRoutes.yesod}/:function',
-                name: '${AppRoutes.yesod}/:function',
-                pageBuilder: (context, state) {
-                  final yesodPages = {
-                    _YesodFunctions.recent: const YesodRecentPage(),
-                    _YesodFunctions.config: const YesodConfigPage()
-                  };
-                  final function = state.pathParameters['function'] ??
-                      _YesodFunctions.recent;
-                  var action = state.uri.queryParameters['action'] ??
-                      _YesodActions.configAdd;
-                  final idStr = state.uri.queryParameters['id'];
-                  final id = idStr != null ? int.tryParse(idStr) : null;
-                  if (function == _YesodFunctions.recent) {
-                    action = _YesodActions.recentFilter;
-                  }
-
-                  final yesodActions = {
-                    _YesodActions.configEdit: YesodConfigEditPanel(index: id),
-                    _YesodActions.configAdd: const YesodConfigAddPanel(),
-                    _YesodActions.recentFilter: const YesodRecentSettingPanel(),
-                  };
-                  final gestureRight = function != _YesodFunctions.config;
-                  return NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.yesod,
-                      leftPart: YesodNav(
-                        function: function,
-                      ),
-                      middlePart: yesodPages[function],
-                      rightPart: yesodActions[action],
-                      gestureRight: gestureRight,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _geburaNavigateKey,
-            observers: [HeroController(), SentryNavigatorObserver()],
-            routes: [
-              GoRoute(
-                path: AppRoutes.gebura.toString(),
-                name: AppRoutes.gebura.toString(),
-                redirect: (context, state) {
-                  if (context.read<GeburaBloc>().state.selectedLibraryItem !=
-                      null) {
-                    return AppRoutes.geburaLibraryDetail(context
-                            .read<GeburaBloc>()
-                            .state
-                            .selectedLibraryItem!)
-                        .toString();
-                  } else {
-                    return AppRoutes.geburaLibrary.toString();
-                  }
-                },
-              ),
-              GoRoute(
-                path: '${AppRoutes.gebura}/:function',
-                name: '${AppRoutes.gebura}/:function',
-                pageBuilder: (context, state) {
-                  final function = state.pathParameters['function'] ??
-                      AppRoutes.geburaStore.toString();
-                  final action = state.uri.queryParameters['action'] ??
-                      _GeburaActions.assignApp;
-                  final geburaPages = {
-                    GeburaFunctions.store: const GeburaStorePage(),
-                    GeburaFunctions.library: const GeburaLibraryOverview(),
-                    GeburaFunctions.librarySettings:
-                        const GeburaLibrarySettings(),
-                  };
-                  final geburaActions = {
-                    _GeburaActions.assignApp: const GeburaAssignAppPanel(),
-                  };
-                  Widget? page = geburaPages[function];
-                  if (state.uri.queryParameters['id']?.isNotEmpty ?? false) {
-                    final idStr = state.uri.queryParameters['id'] ?? '';
-                    final id = int.tryParse(idStr) ?? 0;
-                    page = GeburaLibraryDetailPage(id: id);
-                  }
-                  return CustomTransitionPage(
-                    key: state.pageKey,
-                    transitionsBuilder: (_, __, ___, child) => child,
-                    child: LocalHeroScope(
-                      curve: Curves.easeInOut,
-                      child: FramePage(
-                        selectedNav: ModuleName.gebura,
-                        leftPart: GeburaNav(
-                          function: function,
-                        ),
-                        middlePart: page,
-                        rightPart: geburaActions[action],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _chesedNavigateKey,
-            observers: [SentryNavigatorObserver()],
-            routes: [
-              GoRoute(
-                path: AppRoutes.chesed.toString(),
-                name: AppRoutes.chesed.toString(),
-                pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.chesed,
-                      leftPart: ChesedHome(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: _settingsNavigateKey,
-            observers: [SentryNavigatorObserver()],
-            routes: [
-              GoRoute(
-                path: AppRoutes.settings.toString(),
-                name: AppRoutes.settings.toString(),
-                redirect: (context, state) {
-                  return AppRoutes.settingsClient.toString();
-                },
-              ),
-              GoRoute(
-                path: '${AppRoutes.settings}/:function',
-                name: '${AppRoutes.settings}/:function',
-                pageBuilder: (context, state) {
-                  final settingsPages = {
-                    _SettingsFunctions.client: const ClientSettingPage(),
-                    _SettingsFunctions.notifyTarget: const NotifyTargetPage(),
-                    _SettingsFunctions.notifyFlow: const NotifyFlowPage(),
-                    _SettingsFunctions.session: const SessionManagePage(),
-                    _SettingsFunctions.porter: const PorterManagePage(),
-                    _SettingsFunctions.user: const UserManagePage(),
-                    _SettingsFunctions.app: const AppManagePage(),
-                    _SettingsFunctions.appPackage: const AppPackageManagePage(),
-                    _SettingsFunctions.about: const AboutPage(),
-                  };
-                  final action = state.uri.queryParameters['action'] ??
-                      _SettingsActions.userAdd;
-                  final function = state.pathParameters['function'] ??
-                      _SettingsFunctions.client;
-                  final settingsActions = {
-                    _SettingsActions.notifyTargetAdd:
-                        const NotifyTargetAddPanel(),
-                    _SettingsActions.notifyTargetEdit:
-                        const NotifyTargetEditPanel(),
-                    _SettingsActions.notifyFlowAdd: const NotifyFlowAddPanel(),
-                    _SettingsActions.notifyFlowEdit:
-                        const NotifyFlowEditPanel(),
-                    _SettingsActions.sessionEdit: const SessionEditPanel(),
-                    _SettingsActions.porterEdit: const PorterEditPanel(),
-                    _SettingsActions.userAdd: const UserAddPanel(),
-                    _SettingsActions.userEdit: UserEditPanel(
-                      key: ValueKey(state.extra),
-                      user: state.extra is User ? state.extra! as User : User(),
-                    ),
-                    _SettingsActions.appAdd: const AppAddPanel(),
-                    _SettingsActions.appEdit: AppEditPanel(
-                      key: ValueKey(state.extra),
-                      app: state.extra is AppInfo
-                          ? state.extra! as AppInfo
-                          : AppInfo(),
-                    ),
-                    _SettingsActions.appPackageAdd: const AppPackageAddPanel(),
-                    _SettingsActions.appPackageEdit: AppPackageEditPanel(
-                      key: ValueKey(state.extra),
-                      appPackage:
-                          state.extra is App ? state.extra! as App : App(),
-                    ),
-                  };
-                  return NoTransitionPage(
-                    child: FramePage(
-                      selectedNav: ModuleName.settings,
-                      leftPart: SettingsNav(
-                        function: function,
-                      ),
-                      middlePart: settingsPages[function] ?? Container(),
-                      rightPart: settingsActions[action] ?? Container(),
-                      gestureRight: false,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    ],
+    routes: $appRoutes,
   );
 }

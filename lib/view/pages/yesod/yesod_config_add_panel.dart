@@ -7,18 +7,18 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../model/yesod_model.dart';
-import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
+import '../frame_page.dart';
 import 'yesod_preview_card.dart';
 
 class YesodConfigAddPanel extends StatelessWidget {
   const YesodConfigAddPanel({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.yesodConfigAdd().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

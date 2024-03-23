@@ -70,7 +70,8 @@ class YesodRecentPageState extends State<YesodRecentPage> {
             actions: [
               IconButton(
                 onPressed: () {
-                  AppRoutes.yesodRecentFilter().go(context);
+                  const YesodRecentRoute(action: YesodRecentActions.setting)
+                      .go(context);
                 },
                 icon: const Icon(Icons.settings),
               ),

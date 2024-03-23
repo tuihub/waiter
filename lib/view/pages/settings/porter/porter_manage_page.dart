@@ -43,7 +43,9 @@ class PorterManagePage extends StatelessWidget {
                     context
                         .read<TipherethBloc>()
                         .add(TipherethSetPorterEditIndexEvent(index));
-                    AppRoutes.settingsPorterEdit().go(context);
+                    const SettingsFunctionRoute(SettingsFunctions.porter,
+                            action: SettingsActions.porterEdit)
+                        .go(context);
                   }
 
                   return Padding(

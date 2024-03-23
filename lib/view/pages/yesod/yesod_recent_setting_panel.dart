@@ -7,10 +7,10 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../model/yesod_model.dart';
-import '../../../route.dart';
 import '../../form/form_field.dart';
 import '../../helper/spacing.dart';
 import '../../specialized/right_panel_form.dart';
+import '../frame_page.dart';
 
 class YesodRecentSettingPanel extends StatefulWidget {
   const YesodRecentSettingPanel({super.key});
@@ -28,7 +28,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
   FeedItemListType listType = FeedItemListType.card;
 
   void close(BuildContext context) {
-    AppRoutes.yesodRecentFilter().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   Future<void> init(BuildContext context) async {

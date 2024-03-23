@@ -163,11 +163,13 @@ class YesodPreviewCard extends StatelessWidget {
                               child: images!.length == 1
                                   ? GestureDetector(
                                       onTap: () {
-                                        AppRoutes.imageViewer(0).go(context,
-                                            extra: images
-                                                ?.map((e) =>
-                                                    PicSwiperItem(picUrl: e))
-                                                .toList());
+                                        ImageViewerRoute(
+                                                0,
+                                                images
+                                                    ?.map((e) => PicSwiperItem(
+                                                        picUrl: e))
+                                                    .toList())
+                                            .push(context);
                                       },
                                       child: Hero(
                                         tag: images![0],
@@ -192,13 +194,14 @@ class YesodPreviewCard extends StatelessWidget {
                                                 : bottomImageSize,
                                             child: GestureDetector(
                                               onTap: () {
-                                                AppRoutes.imageViewer(i).go(
-                                                    context,
-                                                    extra: images
-                                                        ?.map((e) =>
-                                                            PicSwiperItem(
-                                                                picUrl: e))
-                                                        .toList());
+                                                ImageViewerRoute(
+                                                        i,
+                                                        images
+                                                            ?.map((e) =>
+                                                                PicSwiperItem(
+                                                                    picUrl: e))
+                                                            .toList())
+                                                    .push(context);
                                               },
                                               child: Hero(
                                                 tag: images![i],

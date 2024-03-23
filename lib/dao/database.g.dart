@@ -233,9 +233,7 @@ class $FeedConfigTableTable extends FeedConfigTable
   @override
   late final GeneratedColumn<String> internalId = GeneratedColumn<String>(
       'internal_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(

@@ -105,7 +105,9 @@ class _UserManagePageState extends State<UserManagePage> {
               const Expanded(child: SizedBox()),
               FilledButton.tonalIcon(
                 onPressed: () {
-                  AppRoutes.settingsUserAdd().go(context);
+                  const SettingsFunctionRoute(SettingsFunctions.user,
+                          action: SettingsActions.userAdd)
+                      .go(context);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -174,7 +176,9 @@ class UserTableSource extends AsyncDataTableSource {
                 DataCell(Text(userStatusString(user.status))),
               ],
               onTap: () {
-                AppRoutes.settingsUserEdit().go(context, extra: user);
+                const SettingsFunctionRoute(SettingsFunctions.user,
+                        action: SettingsActions.userEdit)
+                    .go(context);
               });
         },
       ).toList(),

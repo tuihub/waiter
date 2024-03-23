@@ -4,9 +4,9 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class UserAddPanel extends StatefulWidget {
   const UserAddPanel({super.key});
@@ -23,7 +23,7 @@ class _UserAddPanelState extends State<UserAddPanel> {
   UserStatus userStatus = UserStatus.USER_STATUS_ACTIVE;
 
   void close(BuildContext context) {
-    AppRoutes.settingsUserAdd().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

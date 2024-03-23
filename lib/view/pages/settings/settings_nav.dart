@@ -28,7 +28,9 @@ class SettingsNav extends StatelessWidget {
                       children: [
                         ListTile(
                           onTap: () {
-                            AppRoutes.settingsClient.go(context);
+                            const SettingsFunctionRoute(
+                                    SettingsFunctions.client)
+                                .go(context);
                             OverlappingPanels.of(context)
                                 ?.reveal(RevealSide.main);
                           },
@@ -37,7 +39,9 @@ class SettingsNav extends StatelessWidget {
                         ),
                         ListTile(
                           onTap: () {
-                            AppRoutes.settingsSession.go(context);
+                            const SettingsFunctionRoute(
+                                    SettingsFunctions.session)
+                                .go(context);
                             OverlappingPanels.of(context)
                                 ?.reveal(RevealSide.main);
                           },
@@ -53,7 +57,9 @@ class SettingsNav extends StatelessWidget {
                             ListTile(
                               title: const Text('Token管理'),
                               onTap: () {
-                                AppRoutes.notifyTarget.go(context);
+                                const SettingsFunctionRoute(
+                                        SettingsFunctions.notifyTarget)
+                                    .go(context);
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
@@ -62,7 +68,9 @@ class SettingsNav extends StatelessWidget {
                             ListTile(
                               title: const Text('规则管理'),
                               onTap: () {
-                                AppRoutes.notifyFlow.go(context);
+                                const SettingsFunctionRoute(
+                                        SettingsFunctions.notifyFlow)
+                                    .go(context);
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
@@ -80,7 +88,9 @@ class SettingsNav extends StatelessWidget {
                               ListTile(
                                 title: const Text('插件管理'),
                                 onTap: () {
-                                  AppRoutes.settingsPorter.go(context);
+                                  const SettingsFunctionRoute(
+                                          SettingsFunctions.porter)
+                                      .go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -89,7 +99,9 @@ class SettingsNav extends StatelessWidget {
                               ListTile(
                                 title: const Text('用户管理'),
                                 onTap: () {
-                                  AppRoutes.settingsUser.go(context);
+                                  const SettingsFunctionRoute(
+                                          SettingsFunctions.user)
+                                      .go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -98,7 +110,9 @@ class SettingsNav extends StatelessWidget {
                               ListTile(
                                 title: const Text('应用管理'),
                                 onTap: () {
-                                  AppRoutes.settingsApp.go(context);
+                                  const SettingsFunctionRoute(
+                                          SettingsFunctions.app)
+                                      .go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -107,7 +121,9 @@ class SettingsNav extends StatelessWidget {
                               ListTile(
                                 title: const Text('应用包管理'),
                                 onTap: () {
-                                  AppRoutes.settingsAppPackage.go(context);
+                                  const SettingsFunctionRoute(
+                                          SettingsFunctions.appPackage)
+                                      .go(context);
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
@@ -125,7 +141,8 @@ class SettingsNav extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                AppRoutes.settingsAbout.go(context);
+                const SettingsFunctionRoute(SettingsFunctions.about)
+                    .go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: const Text('关于'),

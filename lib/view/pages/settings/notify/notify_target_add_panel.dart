@@ -5,16 +5,16 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class NotifyTargetAddPanel extends StatelessWidget {
   const NotifyTargetAddPanel({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.notifyTargetAdd().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

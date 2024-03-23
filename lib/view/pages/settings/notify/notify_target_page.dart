@@ -32,7 +32,10 @@ class NotifyTargetPage extends StatelessWidget {
                   const SizedBox(width: 8),
                   FilledButton.tonalIcon(
                     onPressed: () async {
-                      AppRoutes.notifyTargetAdd().go(context);
+                      const SettingsFunctionRoute(
+                              SettingsFunctions.notifyTarget,
+                              action: SettingsActions.notifyTargetAdd)
+                          .go(context);
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加'),
@@ -62,7 +65,10 @@ class NotifyTargetPage extends StatelessWidget {
                             context
                                 .read<NetzachBloc>()
                                 .add(NetzachSetTargetEditIndexEvent(index));
-                            AppRoutes.notifyTargetEdit().go(context);
+                            const SettingsFunctionRoute(
+                                    SettingsFunctions.notifyTarget,
+                                    action: SettingsActions.notifyTargetEdit)
+                                .go(context);
                           }
 
                           return SelectionArea(

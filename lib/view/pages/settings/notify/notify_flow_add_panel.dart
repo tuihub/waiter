@@ -9,12 +9,12 @@ import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
 import '../../../../model/netzach_model.dart';
 import '../../../../repo/grpc/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/chips_input.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../helper/spacing.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class NotifyFlowAddPanel extends StatefulWidget {
   const NotifyFlowAddPanel({super.key});
@@ -25,7 +25,7 @@ class NotifyFlowAddPanel extends StatefulWidget {
 
 class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
   void close(BuildContext context) {
-    AppRoutes.notifyFlowAdd().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   int _index = 0;

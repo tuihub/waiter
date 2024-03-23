@@ -34,7 +34,7 @@ class _InitPageState extends State<InitPage> {
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
           if (state is MainAutoLoginState && state.success) {
-            AppRoutes.tiphereth.go(context);
+            const TipherethRootRoute().go(context);
             ServerSelectOverlay.of(context)?.minimize();
             Toast(title: '', message: S.of(context).welcomeBack).show(context);
           }
@@ -44,7 +44,7 @@ class _InitPageState extends State<InitPage> {
               (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
                   DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
             ServerSelectOverlay.of(context)?.hide();
-            AppRoutes.webLanding.go(context);
+            const WebLandingRoute().go(context);
           }
         },
         builder: (context, state) {

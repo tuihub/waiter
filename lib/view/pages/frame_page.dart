@@ -38,9 +38,16 @@ class FramePage extends StatefulWidget {
 class FramePageState extends State<FramePage> {
   void openDrawer() {
     _frameScaffold.currentState?.openEndDrawer();
+    _overlappingPanelsKey.currentState?.reveal(RevealSide.right);
+  }
+
+  void closeDrawer() {
+    _frameScaffold.currentState?.closeEndDrawer();
+    _overlappingPanelsKey.currentState?.reveal(RevealSide.main);
   }
 
   final GlobalKey<ScaffoldState> _frameScaffold = GlobalKey();
+  final GlobalKey<OverlappingPanelsState> _overlappingPanelsKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +86,7 @@ class FramePageState extends State<FramePage> {
         if (width <= BootstrapBreakpoints.md) {
           content = widget.middlePart != null
               ? OverlappingPanels(
+                  key: _overlappingPanelsKey,
                   restWidth: restWidth,
                   gestureRight: widget.gestureRight,
                   left: Row(
@@ -111,6 +119,7 @@ class FramePageState extends State<FramePage> {
                       : null,
                 )
               : OverlappingPanels(
+                  key: _overlappingPanelsKey,
                   gestureRight: widget.gestureRight,
                   main: Row(
                     children: [
@@ -165,7 +174,7 @@ class _Nav extends StatelessWidget {
           selected: ModuleName.tiphereth == selectedNav,
           onPressed: () {
             ServerSelectOverlay.of(context)?.minimize();
-            AppRoutes.tiphereth.go(context);
+            const TipherethRootRoute().go(context);
           },
         ),
       ],
@@ -176,7 +185,7 @@ class _Nav extends StatelessWidget {
             selected: module.name == selectedNav,
             onPressed: () {
               ServerSelectOverlay.of(context)?.hide();
-              AppRoutes.module(module.name).go(context);
+              const GeburaRootRoute().go(context);
             },
           ),
       ],
@@ -186,7 +195,7 @@ class _Nav extends StatelessWidget {
           selected: ModuleName.settings == selectedNav,
           onPressed: () {
             ServerSelectOverlay.of(context)?.hide();
-            AppRoutes.settings.go(context);
+            const SettingsRootRoute().go(context);
           },
         ),
       ],

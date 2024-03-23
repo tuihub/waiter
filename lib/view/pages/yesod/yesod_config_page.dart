@@ -31,7 +31,8 @@ class YesodConfigPage extends StatelessWidget {
             final item = listData.elementAt(index);
 
             void openEditPage() {
-              AppRoutes.yesodConfigEdit(index).go(context);
+              YesodConfigRoute(action: YesodConfigActions.edit, id: index)
+                  .go(context);
             }
 
             return SelectionArea(
@@ -127,7 +128,8 @@ class YesodConfigPage extends StatelessWidget {
                   const SizedBox(width: 8),
                   FilledButton.tonalIcon(
                     onPressed: () async {
-                      AppRoutes.yesodConfigAdd().go(context);
+                      const YesodConfigRoute(action: YesodConfigActions.add)
+                          .go(context);
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加订阅'),

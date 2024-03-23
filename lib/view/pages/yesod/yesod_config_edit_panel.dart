@@ -5,11 +5,11 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
-import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
+import '../frame_page.dart';
 
 class YesodConfigEditPanel extends StatelessWidget {
   const YesodConfigEditPanel({super.key, required this.index});
@@ -17,7 +17,7 @@ class YesodConfigEditPanel extends StatelessWidget {
   final int? index;
 
   void close(BuildContext context) {
-    AppRoutes.yesodConfigEdit(0).pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

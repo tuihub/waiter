@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
-import '../../../../route.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../specialized/right_panel_form.dart';
+import '../frame_page.dart';
 
 class GeburaAssignAppPanel extends StatefulWidget {
   const GeburaAssignAppPanel({super.key});
@@ -16,7 +16,7 @@ class GeburaAssignAppPanel extends StatefulWidget {
 
 class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
   void close(BuildContext context) {
-    AppRoutes.geburaLibraryAssignApp(0).pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   int _index = 0;

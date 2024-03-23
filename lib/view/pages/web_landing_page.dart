@@ -35,7 +35,7 @@ class WebLandingPage extends StatelessWidget {
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
           if (state.currentUser != null) {
-            AppRoutes.tiphereth.go(context);
+            const TipherethRootRoute().go(context);
             Toast(title: '', message: S.of(context).welcome).show(context);
           }
         },
@@ -179,7 +179,7 @@ class WebLandingPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         OutlinedButton(
                           onPressed: () {
-                            AppRoutes.tiphereth.go(context);
+                            const TipherethRootRoute().go(context);
                             context.read<MainBloc>().add(
                                   MainSetNextServerConfigEvent(
                                     ServerConfig.empty(),

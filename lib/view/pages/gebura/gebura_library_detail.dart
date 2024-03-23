@@ -44,7 +44,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
             !state.libraryItems!.any(
               (element) => element.id.id == Int64(id),
             )) {
-          AppRoutes.geburaLibrary.go(context);
+          const GeburaLibraryRoute().go(context);
         }
         final item = state.libraryItems!.firstWhere(
           (element) => element.id.id == Int64(id),
@@ -553,8 +553,10 @@ class _GeburaLibraryDetailAppSettingsState
                 .any((element) => element.id.id == widget.item.id.id),
             child: const Text('设置应用信息'),
             onTap: () {
-              AppRoutes.geburaLibraryAssignApp(widget.item.id.id.toInt())
-                  .go(context);
+              GeburaLibraryDetailRoute(
+                action: GeburaLibraryDetailActions.assignApp,
+                id: widget.item.id.id.toInt(),
+              ).go(context);
             },
           ),
           PopupMenuItem<int>(

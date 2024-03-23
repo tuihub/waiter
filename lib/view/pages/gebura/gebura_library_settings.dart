@@ -224,7 +224,7 @@ class GeburaLibrarySettings extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              AppRoutes.geburaLibrary.go(context);
+              const GeburaLibraryRoute().go(context);
             },
             child: const Icon(Icons.apps),
           ),

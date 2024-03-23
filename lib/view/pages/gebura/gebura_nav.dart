@@ -39,7 +39,7 @@ class GeburaNav extends StatelessWidget {
                 Icons.shopping_cart,
               ),
               onTap: () {
-                AppRoutes.geburaStore.go(context);
+                const GeburaStoreRoute().go(context);
                 context
                     .read<GeburaBloc>()
                     .add(GeburaSetSelectedLibraryItemEvent(null));
@@ -53,7 +53,7 @@ class GeburaNav extends StatelessWidget {
                 Icons.apps,
               ),
               onTap: () {
-                AppRoutes.geburaLibrary.go(context);
+                const GeburaLibraryRoute().go(context);
                 context
                     .read<GeburaBloc>()
                     .add(GeburaSetSelectedLibraryItemEvent(null));
@@ -115,7 +115,7 @@ class GeburaNav extends StatelessWidget {
                               selected: app.id.id.toInt() ==
                                   state.selectedLibraryItem,
                               onTap: () {
-                                AppRoutes.geburaLibraryDetail(app.id.id.toInt())
+                                GeburaLibraryDetailRoute(id: app.id.id.toInt())
                                     .go(context);
                                 context.read<GeburaBloc>().add(
                                     GeburaSetSelectedLibraryItemEvent(app.id));

@@ -69,7 +69,9 @@ class _AppManagePageState extends State<AppManagePage> {
               const Expanded(child: SizedBox()),
               FilledButton.tonalIcon(
                 onPressed: () {
-                  AppRoutes.settingsAppAdd().go(context);
+                  const SettingsFunctionRoute(SettingsFunctions.app,
+                          action: SettingsActions.appAdd)
+                      .go(context);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -138,7 +140,9 @@ class AppTableSource extends AsyncDataTableSource {
                 DataCell(Text(appTypeString(app.type))),
               ],
               onTap: () {
-                AppRoutes.settingsAppEdit().go(context, extra: app);
+                const SettingsFunctionRoute(SettingsFunctions.app,
+                        action: SettingsActions.appEdit)
+                    .go(context);
               });
         },
       ).toList(),

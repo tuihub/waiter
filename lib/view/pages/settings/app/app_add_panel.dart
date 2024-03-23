@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class AppAddPanel extends StatelessWidget {
   const AppAddPanel({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.settingsAppAdd().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

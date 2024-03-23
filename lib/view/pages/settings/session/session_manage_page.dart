@@ -85,7 +85,9 @@ class SessionManagePage extends StatelessWidget {
                     context
                         .read<TipherethBloc>()
                         .add(TipherethSetSessionEditIndexEvent(index));
-                    AppRoutes.settingsSessionEdit().go(context);
+                    const SettingsFunctionRoute(SettingsFunctions.session,
+                            action: SettingsActions.sessionEdit)
+                        .go(context);
                   }
 
                   if (item.deviceInfo.deviceId ==

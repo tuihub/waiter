@@ -52,7 +52,7 @@ class GeburaLibraryOverview extends StatelessWidget {
                           const SizedBox(height: 12),
                           OutlinedButton(
                             onPressed: () {
-                              AppRoutes.geburaLibrarySettings.go(context);
+                              const GeburaLibrarySettingsRoute().go(context);
                             },
                             child: Text(S.of(context).addApplication),
                           ),
@@ -68,7 +68,7 @@ class GeburaLibraryOverview extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              AppRoutes.geburaLibrarySettings.go(context);
+              const GeburaLibrarySettingsRoute().go(context);
             },
             child: const Icon(Icons.settings),
           ),
@@ -140,7 +140,7 @@ class _GeburaLibraryOverviewItemState
           context
               .read<GeburaBloc>()
               .add(GeburaSetSelectedLibraryItemEvent(widget.item.id));
-          AppRoutes.geburaLibraryDetail(widget.item.id.id.toInt()).go(context);
+          GeburaLibraryDetailRoute(id: widget.item.id.id.toInt()).go(context);
         },
         child: Stack(
           children: [

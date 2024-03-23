@@ -4,15 +4,15 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class SessionEditPanel extends StatelessWidget {
   const SessionEditPanel({super.key});
 
   void close(BuildContext context) {
-    AppRoutes.settingsSessionEdit().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override

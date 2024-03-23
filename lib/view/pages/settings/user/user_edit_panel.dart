@@ -4,9 +4,9 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
-import '../../../../route.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../frame_page.dart';
 
 class UserEditPanel extends StatefulWidget {
   final User user;
@@ -34,7 +34,7 @@ class _UserEditPanelState extends State<UserEditPanel> {
   }
 
   void close(BuildContext context) {
-    AppRoutes.settingsUserEdit().pop(context);
+    FramePage.of(context)?.closeDrawer();
   }
 
   @override
