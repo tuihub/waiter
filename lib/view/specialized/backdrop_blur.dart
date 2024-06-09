@@ -16,8 +16,14 @@ class BackdropBlur extends StatelessWidget {
           begin: begin,
           end: end,
           colors: [
-            Theme.of(context).colorScheme.surfaceVariant.withOpacity(0),
-            Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.8125),
+            Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withOpacity(0),
+            Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withOpacity(0.8125),
           ],
         ),
       ),

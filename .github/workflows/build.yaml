@@ -23,7 +23,7 @@ jobs:
       - name: Check
         run: |
           flutter pub get
-          dart fix
+          dart fix --apply
           dart format .
           git diff --exit-code
           if [ $? -eq 0 ]; then

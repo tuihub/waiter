@@ -21,16 +21,17 @@ class WebLandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryButtonStyle = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         Theme.of(context).colorScheme.primary,
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
+      foregroundColor: WidgetStateProperty.all<Color>(
         Theme.of(context).colorScheme.onPrimary,
       ),
     );
     return Theme(
       data: Theme.of(context).copyWith(
-        scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        scaffoldBackgroundColor:
+            Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {

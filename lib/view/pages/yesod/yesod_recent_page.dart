@@ -54,7 +54,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
 
       return DecoratedBox(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Scaffold(
@@ -67,7 +67,8 @@ class YesodRecentPageState extends State<YesodRecentPage> {
               ),
             ),
             title: const Text('最近更新'),
-            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerHighest,
             actions: [
               IconButton(
                 onPressed: () {

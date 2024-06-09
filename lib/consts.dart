@@ -16,8 +16,12 @@ class App {
 
 final moduleList = [
   // App('Home', Icons.home, const HomePage()),
-  App(ModuleName.gebura, Icons.casino, (context){const GeburaRootRoute().go(context);}),
-  App(ModuleName.yesod, Icons.rss_feed, (context){const YesodRootRoute().go(context);}),
+  App(ModuleName.gebura, Icons.casino, (context) {
+    const GeburaRootRoute().go(context);
+  }),
+  App(ModuleName.yesod, Icons.rss_feed, (context) {
+    const YesodRootRoute().go(context);
+  }),
   // App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];

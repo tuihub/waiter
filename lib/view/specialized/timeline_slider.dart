@@ -16,7 +16,7 @@ class _TimelineSliderState extends State<TimelineSlider> {
   @override
   Widget build(BuildContext context) {
     return SfSliderTheme(
-      data: SfSliderThemeData(
+      data: const SfSliderThemeData(
         activeTrackHeight: 10,
         inactiveTrackHeight: 10,
         activeTrackColor: Colors.grey,
@@ -29,7 +29,7 @@ class _TimelineSliderState extends State<TimelineSlider> {
         inactiveDividerStrokeColor: Colors.white,
         activeDividerRadius: 5,
         inactiveDividerRadius: 5,
-        labelOffset: const Offset(-100.0, 0.0),
+        labelOffset: Offset(-100.0, 0.0),
       ),
       child: SfSlider.vertical(
         min: DateTime(2000, 01, 01, 00),

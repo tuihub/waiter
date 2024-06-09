@@ -67,7 +67,7 @@ class AppPackageAssignDialog extends StatelessWidget {
                   child: state is GeburaAssignAppPackageState && state.failed
                       ? Ink(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.background,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(kToolbarHeight),
                           ),
                           child: Center(

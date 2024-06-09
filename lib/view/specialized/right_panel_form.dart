@@ -79,7 +79,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
               child: widget.errorMsg != null
                   ? Ink(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(kToolbarHeight),
                       ),
                       child: Center(

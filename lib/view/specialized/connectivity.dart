@@ -80,7 +80,7 @@ class _ServerConnectivityWidgetState extends State<ServerConnectivityWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Material(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
         child: Ink(
           height: 40,

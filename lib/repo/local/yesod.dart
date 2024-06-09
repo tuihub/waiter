@@ -95,7 +95,8 @@ class YesodRepo {
     try {
       final data = await FeedConfigDao(_db).getAll();
       return data
-          .map((e) => ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
+          .map((e) =>
+              ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
           .toList();
     } catch (e) {
       return [];

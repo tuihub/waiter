@@ -63,7 +63,8 @@ class SettingsNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              selected: function == SettingsFunctions.notifyTarget,
+                              selected:
+                                  function == SettingsFunctions.notifyTarget,
                             ),
                             ListTile(
                               title: const Text('规则管理'),
@@ -74,7 +75,8 @@ class SettingsNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              selected: function == SettingsFunctions.notifyFlow,
+                              selected:
+                                  function == SettingsFunctions.notifyFlow,
                             ),
                           ],
                         ),
@@ -127,7 +129,8 @@ class SettingsNav extends StatelessWidget {
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
-                                selected: function == SettingsFunctions.appPackage,
+                                selected:
+                                    function == SettingsFunctions.appPackage,
                               ),
                             ],
                           )

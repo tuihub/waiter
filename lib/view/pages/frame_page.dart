@@ -103,7 +103,8 @@ class FramePageState extends State<FramePage> {
                   ),
                   main: DecoratedBox(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: widget.middlePart,

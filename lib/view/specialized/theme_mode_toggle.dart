@@ -12,10 +12,10 @@ class ThemeModeToggle extends StatelessWidget {
       builder: (context, state) {
         return IconButton(
           style: const ButtonStyle(
-            minimumSize: MaterialStatePropertyAll(
+            minimumSize: WidgetStatePropertyAll(
               Size(24, 24),
             ),
-            maximumSize: MaterialStatePropertyAll(
+            maximumSize: WidgetStatePropertyAll(
               Size(24, 24),
             ),
           ),

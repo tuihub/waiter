@@ -2,11 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
-import 'package:html/parser.dart';
-import 'package:http/http.dart' as http;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:webfeed_revised/domain/rss_feed.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../l10n/l10n.dart';
@@ -94,64 +91,15 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         state.copyWith(feedPreview: null),
         EventStatus.processing,
       ));
-      try {
-        final response = await http.get(Uri.parse(event.url));
-        final data = RssFeed.parse(response.body);
-
-        debugPrint(data.title);
-
-        debugPrint(data.description);
-
-        final subscription = RssSubscription(
-            title: data.title!,
-            link: event.url,
-            description: data.description!,
-            iconUrl: '');
-
-        final item = data.items!.first;
-
-        String? imgUrl;
-
-        String description = '';
-        if (item.description != null) {
-          try {
-            final doc = parse(item.description);
-            final imgElements = doc.getElementsByTagName('img');
-            if (imgElements.isNotEmpty) {
-              imgUrl = imgElements.first.attributes['src'];
-            }
-            doc.querySelectorAll('p,h1,h2,h3,h4,h5,span').forEach((element) {
-              description = description + element.text;
-            });
-            description.replaceAll('\n', ' ');
-            debugPrint(description);
-          } catch (e) {
-            description = item.description!;
-          }
-        }
-
-        final example = RssPostItem(
-          title: item.title,
-          link: item.link,
-          description: description,
-          subscription: subscription,
-          image: imgUrl,
-        );
-        emit(YesodConfigPreviewState(
-          state.copyWith(feedPreview: example),
-          EventStatus.success,
-        ));
-      } catch (e) {
-        emit(YesodConfigPreviewState(
-          state.copyWith(
-            feedPreview: RssPostItem(
-                subscription: RssSubscription(
-                    title: '', link: '', iconUrl: '', description: '')),
-          ),
-          EventStatus.failed,
-          msg: '${S.current.parseFailed} $e',
-        ));
-      }
+      emit(YesodConfigPreviewState(
+        state.copyWith(
+          feedPreview: RssPostItem(
+              subscription: RssSubscription(
+                  title: '', link: '', iconUrl: '', description: '')),
+        ),
+        EventStatus.failed,
+        msg: S.current.parseFailed,
+      ));
     }, transformer: droppable());
 
     on<YesodConfigAddEvent>((event, emit) async {

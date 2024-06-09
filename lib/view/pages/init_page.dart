@@ -29,7 +29,8 @@ class _InitPageState extends State<InitPage> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        scaffoldBackgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        scaffoldBackgroundColor:
+            Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {

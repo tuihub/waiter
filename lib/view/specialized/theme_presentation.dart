@@ -50,7 +50,7 @@ class ThemePresent extends StatelessWidget {
               child: Ink(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
-                  color: theme.colorScheme.background,
+                  color: theme.colorScheme.surface,
                 ),
                 width: 200,
                 height: 128,
@@ -63,7 +63,7 @@ class ThemePresent extends StatelessWidget {
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(18),
                         ),
-                        color: theme.colorScheme.surfaceVariant,
+                        color: theme.colorScheme.surfaceContainerHighest,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
