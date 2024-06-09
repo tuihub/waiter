@@ -92,10 +92,14 @@ class YesodRepo {
   }
 
   Future<List<ListFeedConfigsResponse_FeedWithConfig>> getFeedConfigs() async {
-    final data = await FeedConfigDao(_db).getAll();
-    return data
-        .map((e) => ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
-        .toList();
+    try {
+      final data = await FeedConfigDao(_db).getAll();
+      return data
+          .map((e) => ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   int cacheSize() {

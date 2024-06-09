@@ -286,7 +286,7 @@ class YesodRecentRoute extends GoRouteData {
           function: YesodFunctions.recent,
         ),
         middlePart: const YesodRecentPage(),
-        rightPart: actions[action],
+        rightPart: actions[action] ?? Container(),
         gestureRight: false,
       ),
     );
@@ -316,7 +316,7 @@ class YesodConfigRoute extends GoRouteData {
           function: YesodFunctions.config,
         ),
         middlePart: const YesodConfigPage(),
-        rightPart: actions[action],
+        rightPart: actions[action] ?? Container(),
         gestureRight: true,
       ),
     );
