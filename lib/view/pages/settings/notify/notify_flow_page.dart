@@ -5,6 +5,7 @@ import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
+import '../../frame_page.dart';
 
 class NotifyFlowPage extends StatelessWidget {
   const NotifyFlowPage({super.key});
@@ -35,6 +36,7 @@ class NotifyFlowPage extends StatelessWidget {
                       const SettingsFunctionRoute(SettingsFunctions.notifyFlow,
                               action: SettingsActions.notifyFlowAdd)
                           .go(context);
+                      FramePage.of(context)?.openDrawer();
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加'),
@@ -68,6 +70,7 @@ class NotifyFlowPage extends StatelessWidget {
                                     SettingsFunctions.notifyFlow,
                                     action: SettingsActions.notifyFlowEdit)
                                 .go(context);
+                            FramePage.of(context)?.openDrawer();
                           }
 
                           return SelectionArea(

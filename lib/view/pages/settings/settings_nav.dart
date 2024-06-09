@@ -10,7 +10,7 @@ import '../../layout/overlapping_panels.dart';
 class SettingsNav extends StatelessWidget {
   const SettingsNav({super.key, required this.function});
 
-  final String function;
+  final SettingsFunctions function;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class SettingsNav extends StatelessWidget {
                                 ?.reveal(RevealSide.main);
                           },
                           title: const Text('客户端设置'),
-                          selected: function == 'client',
+                          selected: function == SettingsFunctions.client,
                         ),
                         ListTile(
                           onTap: () {
@@ -46,7 +46,7 @@ class SettingsNav extends StatelessWidget {
                                 ?.reveal(RevealSide.main);
                           },
                           title: const Text('登录设备管理'),
-                          selected: function == 'session',
+                          selected: function == SettingsFunctions.session,
                         ),
                         ExpansionTile(
                           title: const Text(
@@ -63,7 +63,7 @@ class SettingsNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              selected: function == 'notifyTarget',
+                              selected: function == SettingsFunctions.notifyTarget,
                             ),
                             ListTile(
                               title: const Text('规则管理'),
@@ -74,7 +74,7 @@ class SettingsNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              selected: function == 'notifyFlow',
+                              selected: function == SettingsFunctions.notifyFlow,
                             ),
                           ],
                         ),
@@ -94,7 +94,7 @@ class SettingsNav extends StatelessWidget {
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
-                                selected: function == 'porter',
+                                selected: function == SettingsFunctions.porter,
                               ),
                               ListTile(
                                 title: const Text('用户管理'),
@@ -105,7 +105,7 @@ class SettingsNav extends StatelessWidget {
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
-                                selected: function == 'user',
+                                selected: function == SettingsFunctions.user,
                               ),
                               ListTile(
                                 title: const Text('应用管理'),
@@ -116,7 +116,7 @@ class SettingsNav extends StatelessWidget {
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
-                                selected: function == 'app',
+                                selected: function == SettingsFunctions.app,
                               ),
                               ListTile(
                                 title: const Text('应用包管理'),
@@ -127,7 +127,7 @@ class SettingsNav extends StatelessWidget {
                                   OverlappingPanels.of(context)
                                       ?.reveal(RevealSide.main);
                                 },
-                                selected: function == 'appPackage',
+                                selected: function == SettingsFunctions.appPackage,
                               ),
                             ],
                           )
@@ -146,7 +146,7 @@ class SettingsNav extends StatelessWidget {
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: const Text('关于'),
-              selected: function == 'about',
+              selected: function == SettingsFunctions.about,
             ),
           ],
         );

@@ -10,6 +10,7 @@ import '../../../../bloc/main_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
+import '../../frame_page.dart';
 
 class AppManagePage extends StatefulWidget {
   const AppManagePage({super.key});
@@ -72,6 +73,7 @@ class _AppManagePageState extends State<AppManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.app,
                           action: SettingsActions.appAdd)
                       .go(context);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -143,6 +145,7 @@ class AppTableSource extends AsyncDataTableSource {
                 const SettingsFunctionRoute(SettingsFunctions.app,
                         action: SettingsActions.appEdit)
                     .go(context);
+                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

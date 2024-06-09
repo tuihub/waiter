@@ -10,6 +10,7 @@ import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
 import '../../../helper/spacing.dart';
+import '../../frame_page.dart';
 
 class SessionManagePage extends StatelessWidget {
   const SessionManagePage({super.key});
@@ -88,6 +89,7 @@ class SessionManagePage extends StatelessWidget {
                     const SettingsFunctionRoute(SettingsFunctions.session,
                             action: SettingsActions.sessionEdit)
                         .go(context);
+                    FramePage.of(context)?.openDrawer();
                   }
 
                   if (item.deviceInfo.deviceId ==

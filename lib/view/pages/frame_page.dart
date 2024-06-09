@@ -185,7 +185,7 @@ class _Nav extends StatelessWidget {
             selected: module.name == selectedNav,
             onPressed: () {
               ServerSelectOverlay.of(context)?.hide();
-              const GeburaRootRoute().go(context);
+              module.go(context);
             },
           ),
       ],

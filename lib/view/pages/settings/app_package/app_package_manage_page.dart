@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
+import '../../frame_page.dart';
 
 class AppPackageManagePage extends StatefulWidget {
   const AppPackageManagePage({super.key});
@@ -46,6 +47,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.appPackage,
                           action: SettingsActions.appPackageAdd)
                       .go(context);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -111,6 +113,7 @@ class AppPackageTableSource extends AsyncDataTableSource {
                 SettingsFunctionRoute(SettingsFunctions.appPackage,
                         action: SettingsActions.appPackageEdit, $extra: app)
                     .go(context);
+                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

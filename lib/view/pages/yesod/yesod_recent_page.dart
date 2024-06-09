@@ -12,6 +12,7 @@ import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
+import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
 
@@ -72,6 +73,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                 onPressed: () {
                   const YesodRecentRoute(action: YesodRecentActions.setting)
                       .go(context);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.settings),
               ),

@@ -5,6 +5,7 @@ import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
+import '../../frame_page.dart';
 
 class NotifyTargetPage extends StatelessWidget {
   const NotifyTargetPage({super.key});
@@ -36,6 +37,7 @@ class NotifyTargetPage extends StatelessWidget {
                               SettingsFunctions.notifyTarget,
                               action: SettingsActions.notifyTargetAdd)
                           .go(context);
+                      FramePage.of(context)?.openDrawer();
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加'),
@@ -69,6 +71,7 @@ class NotifyTargetPage extends StatelessWidget {
                                     SettingsFunctions.notifyTarget,
                                     action: SettingsActions.notifyTargetEdit)
                                 .go(context);
+                            FramePage.of(context)?.openDrawer();
                           }
 
                           return SelectionArea(

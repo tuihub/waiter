@@ -10,6 +10,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
+import '../../frame_page.dart';
 
 class UserManagePage extends StatefulWidget {
   const UserManagePage({super.key});
@@ -108,6 +109,7 @@ class _UserManagePageState extends State<UserManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.user,
                           action: SettingsActions.userAdd)
                       .go(context);
+                  FramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -179,6 +181,7 @@ class UserTableSource extends AsyncDataTableSource {
                 const SettingsFunctionRoute(SettingsFunctions.user,
                         action: SettingsActions.userEdit)
                     .go(context);
+                FramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

@@ -529,8 +529,8 @@ class SettingsFunctionRoute extends GoRouteData {
     return NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.settings,
-        leftPart: const SettingsNav(
-          function: '',
+        leftPart: SettingsNav(
+          function: function,
         ),
         middlePart: settingsPages[function] ?? Container(),
         rightPart: settingsActions[action] ?? Container(),

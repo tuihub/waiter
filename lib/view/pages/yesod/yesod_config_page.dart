@@ -8,6 +8,7 @@ import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
+import '../frame_page.dart';
 
 class YesodConfigPage extends StatelessWidget {
   const YesodConfigPage({super.key});
@@ -33,6 +34,7 @@ class YesodConfigPage extends StatelessWidget {
             void openEditPage() {
               YesodConfigRoute(action: YesodConfigActions.edit, id: index)
                   .go(context);
+              FramePage.of(context)?.openDrawer();
             }
 
             return SelectionArea(
@@ -130,6 +132,7 @@ class YesodConfigPage extends StatelessWidget {
                     onPressed: () async {
                       const YesodConfigRoute(action: YesodConfigActions.add)
                           .go(context);
+                      FramePage.of(context)?.openDrawer();
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('添加订阅'),

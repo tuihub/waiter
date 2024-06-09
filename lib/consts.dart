@@ -9,14 +9,15 @@ const clientSourceCodeUrl = 'github.com/tuihub/waiter';
 class App {
   final ModuleName name;
   final IconData icon;
+  void Function(BuildContext context) go;
 
-  App(this.name, this.icon);
+  App(this.name, this.icon, this.go);
 }
 
 final moduleList = [
   // App('Home', Icons.home, const HomePage()),
-  App(ModuleName.gebura, Icons.casino),
-  App(ModuleName.yesod, Icons.rss_feed),
+  App(ModuleName.gebura, Icons.casino, (context){const GeburaRootRoute().go(context);}),
+  App(ModuleName.yesod, Icons.rss_feed, (context){const YesodRootRoute().go(context);}),
   // App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
 ];

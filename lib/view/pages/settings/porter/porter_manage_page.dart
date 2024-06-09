@@ -7,6 +7,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../../helper/spacing.dart';
+import '../../frame_page.dart';
 
 class PorterManagePage extends StatelessWidget {
   const PorterManagePage({super.key});
@@ -46,6 +47,7 @@ class PorterManagePage extends StatelessWidget {
                     const SettingsFunctionRoute(SettingsFunctions.porter,
                             action: SettingsActions.porterEdit)
                         .go(context);
+                    FramePage.of(context)?.openDrawer();
                   }
 
                   return Padding(
