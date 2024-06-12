@@ -84,6 +84,8 @@ class _YesodFeedList extends StatelessWidget {
                               fit: BoxFit.scaleDown,
                             ),
                           ),
+                    height: 24,
+                    width: 24,
                   ),
                   onTap: () {
                     OverlappingPanels.of(context)?.reveal(RevealSide.main);

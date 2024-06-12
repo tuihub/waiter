@@ -16,7 +16,7 @@ class YesodDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(builder: (context, state) {
+    return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       return FutureBuilder(
         future: context.read<YesodBloc>().repo.getFeedItem(itemId),
         builder: (context, snapshot) {
