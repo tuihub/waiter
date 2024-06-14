@@ -87,7 +87,7 @@ class YesodConfigPage extends StatelessWidget {
                             Text(
                                 '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
                             Text(
-                                '上次更新：${DurationHelper.recentString(item.config.latestUpdateTime.toDateTime())}')
+                                '上次更新：${DurationHelper.recentString(item.config.latestPullTime.toDateTime())}')
                           ],
                         ),
                         const Expanded(child: SizedBox()),

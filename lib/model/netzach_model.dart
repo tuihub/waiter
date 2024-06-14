@@ -3,23 +3,23 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 class NotifyFlowSourceModel {
   NotifyFlowSourceModel({
-    required this.sourceId,
+    required this.feedConfigId,
     required this.filter,
   });
 
-  InternalID sourceId;
+  InternalID feedConfigId;
   NotifyFilterModel filter;
 
   static NotifyFlowSourceModel fromProto(NotifyFlowSource proto) {
     return NotifyFlowSourceModel(
-      sourceId: proto.sourceId,
+      feedConfigId: proto.feedConfigId,
       filter: NotifyFilterModel.fromProto(proto.filter),
     );
   }
 
   NotifyFlowSource toProto() {
     return NotifyFlowSource(
-      sourceId: sourceId,
+      feedConfigId: feedConfigId,
       filter: filter.toProto(),
     );
   }

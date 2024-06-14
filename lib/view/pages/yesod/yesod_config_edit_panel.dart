@@ -140,7 +140,7 @@ class YesodConfigEditPanel extends StatelessWidget {
                       seconds: $fixnum.Int64(pullInterval * 60),
                     ),
                     category: category,
-                    latestUpdateTime: config.latestUpdateTime,
+                    latestPullTime: config.latestPullTime,
                     hideItems: hideItems,
                   ),
                 ));

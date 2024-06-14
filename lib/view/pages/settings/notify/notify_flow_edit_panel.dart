@@ -151,16 +151,16 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                                     ? config.feed.title
                                     : config.config.feedUrl),
                       ],
-                      initialValue: sources.map((e) => e.sourceId).toList(),
+                      initialValue: sources.map((e) => e.feedConfigId).toList(),
                       onConfirm: (values) {
                         final List<NotifyFlowSourceModel> newSources = [];
                         for (final value in values) {
-                          if (sources.map((e) => e.sourceId).contains(value)) {
+                          if (sources.map((e) => e.feedConfigId).contains(value)) {
                             newSources.add(
-                                sources.firstWhere((e) => e.sourceId == value));
+                                sources.firstWhere((e) => e.feedConfigId == value));
                           } else {
                             newSources.add(NotifyFlowSourceModel(
-                              sourceId: value,
+                              feedConfigId: value,
                               filter: NotifyFilterModel(
                                 excludeKeywords: [],
                                 includeKeywords: [],
@@ -189,7 +189,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                           alignment: Alignment.centerLeft,
                           child: Text(notifySources
                               .firstWhere(
-                                  (e) => e.config.id == sources[i].sourceId)
+                                  (e) => e.config.id == sources[i].feedConfigId)
                               .feed
                               .title),
                         ),
