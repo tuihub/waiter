@@ -9,13 +9,13 @@ part of 'gebura_model.dart';
 _$LocalAppInstLauncherSettingImpl _$$LocalAppInstLauncherSettingImplFromJson(
         Map<String, dynamic> json) =>
     _$LocalAppInstLauncherSettingImpl(
-      appInstID: json['appInstID'] as int,
+      appInstID: (json['appInstID'] as num).toInt(),
       installPath: json['installPath'] as String,
       path: json['path'] as String,
       advancedTracing: json['advancedTracing'] as bool,
       processName: json['processName'] as String,
       realPath: json['realPath'] as String,
-      sleepTime: json['sleepTime'] as int,
+      sleepTime: (json['sleepTime'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$LocalAppInstLauncherSettingImplToJson(
@@ -34,7 +34,7 @@ _$AppLauncherSettingImpl _$$AppLauncherSettingImplFromJson(
         Map<String, dynamic> json) =>
     _$AppLauncherSettingImpl(
       type: $enumDecode(_$AppLauncherTypeEnumMap, json['type']),
-      localAppInstID: json['localAppInstID'] as int?,
+      localAppInstID: (json['localAppInstID'] as num?)?.toInt(),
       steamAppID: json['steamAppID'] as String?,
     );
 
@@ -72,8 +72,8 @@ Map<String, dynamic> _$$AppRunStateImplToJson(_$AppRunStateImpl instance) =>
 _$ImportedSteamAppInstImpl _$$ImportedSteamAppInstImplFromJson(
         Map<String, dynamic> json) =>
     _$ImportedSteamAppInstImpl(
-      instID: json['instID'] as int,
-      appID: json['appID'] as int,
+      instID: (json['instID'] as num).toInt(),
+      appID: (json['appID'] as num).toInt(),
       steamAppID: json['steamAppID'] as String,
     );
 
@@ -112,7 +112,7 @@ Map<String, dynamic> _$$LocalAppInstFolderImplToJson(
 _$LocalAppInstIndependentImpl _$$LocalAppInstIndependentImplFromJson(
         Map<String, dynamic> json) =>
     _$LocalAppInstIndependentImpl(
-      appInstID: json['appInstID'] as int,
+      appInstID: (json['appInstID'] as num).toInt(),
       path: json['path'] as String,
     );
 

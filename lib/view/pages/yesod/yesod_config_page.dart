@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
@@ -86,8 +87,15 @@ class YesodConfigPage extends StatelessWidget {
                                 : item.feed.title),
                             Text(
                                 '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
+                            if (item.config.latestPullStatus == FeedConfigPullStatus.FEED_CONFIG_PULL_STATUS_SUCCESS)
                             Text(
                                 '上次更新：${DurationHelper.recentString(item.config.latestPullTime.toDateTime())}')
+                            else if (item.config.latestPullStatus == FeedConfigPullStatus.FEED_CONFIG_PULL_STATUS_FAILED)
+                            Text(
+                                '更新失败：${item.config.latestPullMessage}')
+                            else
+                            Text(
+                                '更新中...'),
                           ],
                         ),
                         const Expanded(child: SizedBox()),

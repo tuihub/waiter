@@ -90,6 +90,15 @@ RouteBase get $appRoute => GoRouteData.$route(
               ],
             ),
             StatefulShellBranchData.$branch(
+              navigatorKey: NotificationRoute.$navigatorKey,
+              routes: [
+                GoRouteData.$route(
+                  path: 'module/Notification',
+                  factory: $NotificationRootRouteExtension._fromState,
+                ),
+              ],
+            ),
+            StatefulShellBranchData.$branch(
               navigatorKey: SettingsRoute.$navigatorKey,
               routes: [
                 GoRouteData.$route(
@@ -386,6 +395,24 @@ extension $ChesedRootRouteExtension on ChesedRootRoute {
 
   String get location => GoRouteData.$location(
         '/module/Chesed',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $NotificationRootRouteExtension on NotificationRootRoute {
+  static NotificationRootRoute _fromState(GoRouterState state) =>
+      const NotificationRootRoute();
+
+  String get location => GoRouteData.$location(
+        '/module/Notification',
       );
 
   void go(BuildContext context) => context.go(location);

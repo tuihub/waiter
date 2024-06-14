@@ -23,6 +23,7 @@ import 'view/pages/gebura/gebura_nav.dart';
 import 'view/pages/gebura/gebura_store.dart';
 import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
+import 'view/pages/notification_page.dart';
 import 'view/pages/settings/about_page.dart';
 import 'view/pages/settings/app/app_add_panel.dart';
 import 'view/pages/settings/app/app_edit_panel.dart';
@@ -61,12 +62,14 @@ enum ModuleName {
   yesod._(_yesod),
   gebura._(_gebura),
   chesed._(_chesed),
+  notification._(_notification),
   settings._(_settings);
 
   static const String _tiphereth = 'Tiphereth';
   static const String _yesod = 'Yesod';
   static const String _gebura = 'Gebura';
   static const String _chesed = 'Chesed';
+  static const String _notification = 'Notification';
   static const String _settings = 'Settings';
 
   const ModuleName._(this.name);
@@ -95,6 +98,8 @@ final GlobalKey<NavigatorState> _yesodNavigateKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _geburaNavigateKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _chesedNavigateKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _notificationNavigateKey =
     GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
@@ -131,6 +136,9 @@ final mainWindowKey = GlobalKey();
         ),
         TypedStatefulShellBranch<ChesedRoute>(
           routes: [TypedGoRoute<ChesedRootRoute>(path: 'module/Chesed')],
+        ),
+        TypedStatefulShellBranch<NotificationRoute>(
+          routes: [TypedGoRoute<NotificationRootRoute>(path: 'module/Notification')],
         ),
         TypedStatefulShellBranch<SettingsRoute>(
           routes: [
@@ -439,6 +447,25 @@ class ChesedRootRoute extends GoRouteData {
       ),
     );
   }
+}
+
+class NotificationRoute extends StatefulShellBranchData {
+  const NotificationRoute();
+
+  static final GlobalKey<NavigatorState> $navigatorKey = _notificationNavigateKey;
+}
+
+class NotificationRootRoute extends GoRouteData {
+  const NotificationRootRoute();
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
+      const NoTransitionPage(
+        child: FramePage(
+          selectedNav: ModuleName.notification,
+          leftPart: NotificationPage(),
+        ),
+      );
 }
 
 class SettingsRoute extends StatefulShellBranchData {

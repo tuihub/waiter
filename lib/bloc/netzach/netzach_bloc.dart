@@ -193,5 +193,26 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
         EventStatus.success,
       ));
     });
+
+    on<NetzachSystemNotificationLoadEvent>((event, emit) async {
+      emit(NetzachSystemNotificationLoadState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+          (client) => client.listSystemNotifications,
+          ListSystemNotificationsRequest(
+            paging: PagingRequest(
+              pageSize: Int64(100),
+              pageNum: Int64(event.page),
+            ),
+          ));
+      if (resp.status != ApiStatus.success) {
+        emit(NetzachSystemNotificationLoadState(state, EventStatus.failed, msg: resp.error));
+        return;
+      }
+
+      emit(NetzachSystemNotificationLoadState(
+        state.copyWith(systemNotifications: resp.getData().notifications),
+        EventStatus.success,
+      ));
+    });
   }
 }

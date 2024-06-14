@@ -7,11 +7,14 @@ class NetzachState {
   late int? notifyTargetEditIndex;
   late int? notifyFlowEditIndex;
 
+  late List<SystemNotification>? systemNotifications;
+
   NetzachState({
     this.notifyTargets,
     this.notifyTargetEditIndex,
     this.notifyFlows,
     this.notifyFlowEditIndex,
+    this.systemNotifications,
   });
 
   NetzachState copyWith({
@@ -19,6 +22,7 @@ class NetzachState {
     int? notifyTargetEditIndex,
     List<NotifyFlow>? notifyFlows,
     int? notifyFlowEditIndex,
+    List<SystemNotification>? systemNotifications,
   }) {
     return NetzachState(
       notifyTargets: notifyTargets ?? this.notifyTargets,
@@ -26,6 +30,7 @@ class NetzachState {
           notifyTargetEditIndex ?? this.notifyTargetEditIndex,
       notifyFlows: notifyFlows ?? this.notifyFlows,
       notifyFlowEditIndex: notifyFlowEditIndex ?? this.notifyFlowEditIndex,
+      systemNotifications: systemNotifications ?? this.systemNotifications,
     );
   }
 
@@ -34,6 +39,7 @@ class NetzachState {
     notifyTargetEditIndex = other.notifyTargetEditIndex;
     notifyFlows = other.notifyFlows;
     notifyFlowEditIndex = other.notifyFlowEditIndex;
+    systemNotifications = other.systemNotifications;
   }
 }
 
@@ -99,6 +105,18 @@ class NetzachFlowAddState extends NetzachState with EventStatusMixin {
 
 class NetzachFlowEditState extends NetzachState with EventStatusMixin {
   NetzachFlowEditState(NetzachState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final String? msg;
+  @override
+  final EventStatus statusCode;
+}
+
+class NetzachSystemNotificationLoadState extends NetzachState with EventStatusMixin {
+  NetzachSystemNotificationLoadState(NetzachState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

@@ -529,6 +529,7 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $KVTableTable kVTable = $KVTableTable(this);
   late final $FeedConfigTableTable feedConfigTable =
       $FeedConfigTableTable(this);
@@ -538,4 +539,265 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [kVTable, feedConfigTable];
+}
+
+typedef $$KVTableTableInsertCompanionBuilder = KVTableCompanion Function({
+  required String bucket,
+  required String key,
+  required String value,
+  Value<int> rowid,
+});
+typedef $$KVTableTableUpdateCompanionBuilder = KVTableCompanion Function({
+  Value<String> bucket,
+  Value<String> key,
+  Value<String> value,
+  Value<int> rowid,
+});
+
+class $$KVTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $KVTableTable,
+    KVTableData,
+    $$KVTableTableFilterComposer,
+    $$KVTableTableOrderingComposer,
+    $$KVTableTableProcessedTableManager,
+    $$KVTableTableInsertCompanionBuilder,
+    $$KVTableTableUpdateCompanionBuilder> {
+  $$KVTableTableTableManager(_$AppDatabase db, $KVTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$KVTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$KVTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$KVTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> bucket = const Value.absent(),
+            Value<String> key = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              KVTableCompanion(
+            bucket: bucket,
+            key: key,
+            value: value,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String bucket,
+            required String key,
+            required String value,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              KVTableCompanion.insert(
+            bucket: bucket,
+            key: key,
+            value: value,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$KVTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $KVTableTable,
+    KVTableData,
+    $$KVTableTableFilterComposer,
+    $$KVTableTableOrderingComposer,
+    $$KVTableTableProcessedTableManager,
+    $$KVTableTableInsertCompanionBuilder,
+    $$KVTableTableUpdateCompanionBuilder> {
+  $$KVTableTableProcessedTableManager(super.$state);
+}
+
+class $$KVTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $KVTableTable> {
+  $$KVTableTableFilterComposer(super.$state);
+  ColumnFilters<String> get bucket => $state.composableBuilder(
+      column: $state.table.bucket,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get key => $state.composableBuilder(
+      column: $state.table.key,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get value => $state.composableBuilder(
+      column: $state.table.value,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$KVTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $KVTableTable> {
+  $$KVTableTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get bucket => $state.composableBuilder(
+      column: $state.table.bucket,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get key => $state.composableBuilder(
+      column: $state.table.key,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get value => $state.composableBuilder(
+      column: $state.table.value,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$FeedConfigTableTableInsertCompanionBuilder = FeedConfigTableCompanion
+    Function({
+  required String internalId,
+  required String name,
+  required String feedUrl,
+  required String category,
+  required String jsonData,
+  Value<int> rowid,
+});
+typedef $$FeedConfigTableTableUpdateCompanionBuilder = FeedConfigTableCompanion
+    Function({
+  Value<String> internalId,
+  Value<String> name,
+  Value<String> feedUrl,
+  Value<String> category,
+  Value<String> jsonData,
+  Value<int> rowid,
+});
+
+class $$FeedConfigTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $FeedConfigTableTable,
+    FeedConfigTableData,
+    $$FeedConfigTableTableFilterComposer,
+    $$FeedConfigTableTableOrderingComposer,
+    $$FeedConfigTableTableProcessedTableManager,
+    $$FeedConfigTableTableInsertCompanionBuilder,
+    $$FeedConfigTableTableUpdateCompanionBuilder> {
+  $$FeedConfigTableTableTableManager(
+      _$AppDatabase db, $FeedConfigTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$FeedConfigTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$FeedConfigTableTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$FeedConfigTableTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> internalId = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> feedUrl = const Value.absent(),
+            Value<String> category = const Value.absent(),
+            Value<String> jsonData = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FeedConfigTableCompanion(
+            internalId: internalId,
+            name: name,
+            feedUrl: feedUrl,
+            category: category,
+            jsonData: jsonData,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String internalId,
+            required String name,
+            required String feedUrl,
+            required String category,
+            required String jsonData,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FeedConfigTableCompanion.insert(
+            internalId: internalId,
+            name: name,
+            feedUrl: feedUrl,
+            category: category,
+            jsonData: jsonData,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$FeedConfigTableTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $FeedConfigTableTable,
+    FeedConfigTableData,
+    $$FeedConfigTableTableFilterComposer,
+    $$FeedConfigTableTableOrderingComposer,
+    $$FeedConfigTableTableProcessedTableManager,
+    $$FeedConfigTableTableInsertCompanionBuilder,
+    $$FeedConfigTableTableUpdateCompanionBuilder> {
+  $$FeedConfigTableTableProcessedTableManager(super.$state);
+}
+
+class $$FeedConfigTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $FeedConfigTableTable> {
+  $$FeedConfigTableTableFilterComposer(super.$state);
+  ColumnFilters<String> get internalId => $state.composableBuilder(
+      column: $state.table.internalId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get feedUrl => $state.composableBuilder(
+      column: $state.table.feedUrl,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get category => $state.composableBuilder(
+      column: $state.table.category,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get jsonData => $state.composableBuilder(
+      column: $state.table.jsonData,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$FeedConfigTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $FeedConfigTableTable> {
+  $$FeedConfigTableTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get internalId => $state.composableBuilder(
+      column: $state.table.internalId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get feedUrl => $state.composableBuilder(
+      column: $state.table.feedUrl,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get category => $state.composableBuilder(
+      column: $state.table.category,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get jsonData => $state.composableBuilder(
+      column: $state.table.jsonData,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+class _$AppDatabaseManager {
+  final _$AppDatabase _db;
+  _$AppDatabaseManager(this._db);
+  $$KVTableTableTableManager get kVTable =>
+      $$KVTableTableTableManager(_db, _db.kVTable);
+  $$FeedConfigTableTableTableManager get feedConfigTable =>
+      $$FeedConfigTableTableTableManager(_db, _db.feedConfigTable);
 }

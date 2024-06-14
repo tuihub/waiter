@@ -192,6 +192,14 @@ class _Nav extends StatelessWidget {
       ],
       trailing: [
         IconMenuItem(
+          icon: Icons.notifications,
+          selected: ModuleName.notification == selectedNav,
+          onPressed: () {
+            ServerSelectOverlay.of(context)?.hide();
+            const NotificationRootRoute().go(context);
+          },
+        ),
+        IconMenuItem(
           icon: Icons.settings,
           selected: ModuleName.settings == selectedNav,
           onPressed: () {

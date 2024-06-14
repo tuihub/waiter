@@ -9,12 +9,12 @@ part of 'common_model.dart';
 _$ServerConfigImpl _$$ServerConfigImplFromJson(Map<String, dynamic> json) =>
     _$ServerConfigImpl(
       json['host'] as String,
-      json['port'] as int,
+      (json['port'] as num).toInt(),
       json['tls'] as bool,
       serverName: json['serverName'] as String?,
       username: json['username'] as String?,
       refreshToken: json['refreshToken'] as String?,
-      deviceId: json['deviceId'] as int?,
+      deviceId: (json['deviceId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$ServerConfigImplToJson(_$ServerConfigImpl instance) =>
@@ -33,7 +33,7 @@ _$ClientCommonDataImpl _$$ClientCommonDataImplFromJson(
     _$ClientCommonDataImpl(
       lastServerId: json['lastServerId'] as String?,
       themeName: json['themeName'] as String?,
-      themeMode: json['themeMode'] as int?,
+      themeMode: (json['themeMode'] as num?)?.toInt(),
       servers: (json['servers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, ServerConfig.fromJson(e as Map<String, dynamic>)),
       ),

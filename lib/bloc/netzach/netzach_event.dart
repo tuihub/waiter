@@ -44,3 +44,9 @@ final class NetzachFlowEditEvent extends NetzachEvent {
 
   NetzachFlowEditEvent(this.flow);
 }
+
+final class NetzachSystemNotificationLoadEvent extends NetzachEvent {
+  final int page;
+
+  NetzachSystemNotificationLoadEvent(this.page);
+}
