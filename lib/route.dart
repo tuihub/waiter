@@ -315,6 +315,7 @@ class YesodConfigRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
       YesodConfigActions.edit: YesodConfigEditPanel(
+        key: ValueKey(id),
         index: id,
       ),
       YesodConfigActions.add: const YesodConfigAddPanel(),
