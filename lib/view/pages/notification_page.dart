@@ -5,7 +5,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pbenum.dart';
 
 import '../../bloc/netzach/netzach_bloc.dart';
 import '../helper/duration_format.dart';
-import '../helper/spacing.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -13,90 +12,74 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var firstBuild = true;
-    return BlocBuilder<NetzachBloc, NetzachState>(
-        builder: (context, state) {
-          if (firstBuild) {
-            firstBuild = false;
-            context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
-          }
-          final listData = state.systemNotifications ?? [];
-          return Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Stack(children: [
-                if (state is NetzachSystemNotificationLoadState && state.processing)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                if (state is NetzachSystemNotificationLoadState && state.failed)
-                  Center(
-                    child: Text('加载失败: ${state.msg}'),
-                  )
-                else if (listData.isEmpty)
-                  const Center(
-                    child: Text('暂无通知'),
-                  )
-                else
-                  ListView.builder(
-                    itemCount: listData.length,
-                    itemBuilder: (context, index) {
-                      final item = listData.elementAt(index);
+    return BlocBuilder<NetzachBloc, NetzachState>(builder: (context, state) {
+      if (firstBuild) {
+        firstBuild = false;
+        context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
+      }
+      final listData = state.systemNotifications ?? [];
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Stack(children: [
+            if (state is NetzachSystemNotificationLoadState && state.processing)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (state is NetzachSystemNotificationLoadState && state.failed)
+              Center(
+                child: Text('加载失败: ${state.msg}'),
+              )
+            else if (listData.isEmpty)
+              const Center(
+                child: Text('暂无通知'),
+              )
+            else
+              ListView.builder(
+                itemCount: listData.length,
+                itemBuilder: (context, index) {
+                  final item = listData.elementAt(index);
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Card(
-                          margin: EdgeInsets.zero,
-                          shadowColor:
-                          _systemNotificationLevelColor(item.level),
-                          child: InkWell(
-                            borderRadius: SpacingHelper.defaultBorderRadius,
-                            onTap: null,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 64,
-                                  height: 64,
-                                  child: _systemNotificationLevelIcon(
-                                      item.level),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item.id.id.toHexString() + ' · ' + DurationHelper.recentString(
-                                          item.createTime.toDateTime()),
-                                      style: TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontSize: 10,
-                                          color: Theme.of(context).disabledColor),
-                                      maxLines: 2,
-                                    ),
-                                    Text(item.title),
-                                    if (item.message.isNotEmpty)
-                                    Text(item.message),
-                                  ],
-                                ),
-                                const Expanded(child: SizedBox()),
-                              ]),
-                            ),
-                          ),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shadowColor: _systemNotificationLevelColor(item.level),
+                      child: ExpansionTile(
+                        leading: _systemNotificationLevelIcon(item.level),
+                        title: Text(item.title),
+                        subtitle: Text(
+                          '${item.id.id.toHexString()} · ${DurationHelper.recentString(item.createTime.toDateTime())}',
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 10,
+                              color: Theme.of(context).disabledColor),
+                          maxLines: 2,
                         ),
-                      );
-                    },
-                  ),
-              ]),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
-              },
-              child: const Icon(Icons.refresh),
-            ),
-          );
-        });
+                        expandedAlignment: Alignment.centerLeft,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(item.message),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ]),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context
+                .read<NetzachBloc>()
+                .add(NetzachSystemNotificationLoadEvent(1));
+          },
+          child: const Icon(Icons.refresh),
+        ),
+      );
+    });
   }
 }
 

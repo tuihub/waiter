@@ -155,9 +155,11 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       onConfirm: (values) {
                         final List<NotifyFlowSourceModel> newSources = [];
                         for (final value in values) {
-                          if (sources.map((e) => e.feedConfigId).contains(value)) {
-                            newSources.add(
-                                sources.firstWhere((e) => e.feedConfigId == value));
+                          if (sources
+                              .map((e) => e.feedConfigId)
+                              .contains(value)) {
+                            newSources.add(sources
+                                .firstWhere((e) => e.feedConfigId == value));
                           } else {
                             newSources.add(NotifyFlowSourceModel(
                               feedConfigId: value,

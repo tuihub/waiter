@@ -115,8 +115,10 @@ class NetzachFlowEditState extends NetzachState with EventStatusMixin {
   final EventStatus statusCode;
 }
 
-class NetzachSystemNotificationLoadState extends NetzachState with EventStatusMixin {
-  NetzachSystemNotificationLoadState(NetzachState state, this.statusCode, {this.msg})
+class NetzachSystemNotificationLoadState extends NetzachState
+    with EventStatusMixin {
+  NetzachSystemNotificationLoadState(NetzachState state, this.statusCode,
+      {this.msg})
       : super() {
     _from(state);
   }

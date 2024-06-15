@@ -138,7 +138,9 @@ final mainWindowKey = GlobalKey();
           routes: [TypedGoRoute<ChesedRootRoute>(path: 'module/Chesed')],
         ),
         TypedStatefulShellBranch<NotificationRoute>(
-          routes: [TypedGoRoute<NotificationRootRoute>(path: 'module/Notification')],
+          routes: [
+            TypedGoRoute<NotificationRootRoute>(path: 'module/Notification')
+          ],
         ),
         TypedStatefulShellBranch<SettingsRoute>(
           routes: [
@@ -452,7 +454,8 @@ class ChesedRootRoute extends GoRouteData {
 class NotificationRoute extends StatefulShellBranchData {
   const NotificationRoute();
 
-  static final GlobalKey<NavigatorState> $navigatorKey = _notificationNavigateKey;
+  static final GlobalKey<NavigatorState> $navigatorKey =
+      _notificationNavigateKey;
 }
 
 class NotificationRootRoute extends GoRouteData {

@@ -205,7 +205,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ));
       if (resp.status != ApiStatus.success) {
-        emit(NetzachSystemNotificationLoadState(state, EventStatus.failed, msg: resp.error));
+        emit(NetzachSystemNotificationLoadState(state, EventStatus.failed,
+            msg: resp.error));
         return;
       }
 

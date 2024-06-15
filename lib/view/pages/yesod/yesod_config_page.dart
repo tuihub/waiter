@@ -87,15 +87,17 @@ class YesodConfigPage extends StatelessWidget {
                                 : item.feed.title),
                             Text(
                                 '${S.current.FEED_CONFIG_STATUS}: ${feedConfigStatusString(item.config.status)}'),
-                            if (item.config.latestPullStatus == FeedConfigPullStatus.FEED_CONFIG_PULL_STATUS_SUCCESS)
-                            Text(
-                                '上次更新：${DurationHelper.recentString(item.config.latestPullTime.toDateTime())}')
-                            else if (item.config.latestPullStatus == FeedConfigPullStatus.FEED_CONFIG_PULL_STATUS_FAILED)
-                            Text(
-                                '更新失败：${item.config.latestPullMessage}')
+                            if (item.config.latestPullStatus ==
+                                FeedConfigPullStatus
+                                    .FEED_CONFIG_PULL_STATUS_SUCCESS)
+                              Text(
+                                  '上次更新：${DurationHelper.recentString(item.config.latestPullTime.toDateTime())}')
+                            else if (item.config.latestPullStatus ==
+                                FeedConfigPullStatus
+                                    .FEED_CONFIG_PULL_STATUS_FAILED)
+                              Text('更新失败：${item.config.latestPullMessage}')
                             else
-                            Text(
-                                '更新中...'),
+                              const Text('更新中...'),
                           ],
                         ),
                         const Expanded(child: SizedBox()),
