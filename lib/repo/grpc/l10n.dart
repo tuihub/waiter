@@ -122,3 +122,31 @@ String porterConnectionStatusString(PorterConnectionStatus status) {
   }
   return '';
 }
+
+String systemNotificationLevelString(SystemNotificationLevel level) {
+  switch (level) {
+    case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED:
+      return S.current.SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED;
+    case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_ERROR:
+      return S.current.SYSTEM_NOTIFICATION_LEVEL_ERROR;
+    case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_WARNING:
+      return S.current.SYSTEM_NOTIFICATION_LEVEL_WARNING;
+    case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_INFO:
+      return S.current.SYSTEM_NOTIFICATION_LEVEL_INFO;
+    case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_ONGOING:
+      return S.current.SYSTEM_NOTIFICATION_LEVEL_ONGOING;
+  }
+  return '';
+}
+
+String systemNotificationTypeString(SystemNotificationType type) {
+  switch (type) {
+    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED:
+      return S.current.SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED;
+    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_SYSTEM:
+      return S.current.SYSTEM_NOTIFICATION_TYPE_SYSTEM;
+    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_USER:
+      return S.current.SYSTEM_NOTIFICATION_TYPE_USER;
+  }
+  return '';
+}

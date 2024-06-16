@@ -50,3 +50,9 @@ final class NetzachSystemNotificationLoadEvent extends NetzachEvent {
 
   NetzachSystemNotificationLoadEvent(this.page);
 }
+
+final class NetzachSystemNotificationFilterSetEvent extends NetzachEvent {
+  final SystemNotificationFilter filter;
+
+  NetzachSystemNotificationFilterSetEvent(this.filter);
+}

@@ -1349,6 +1349,86 @@ class S {
       args: [],
     );
   }
+
+  /// `未知`
+  String get SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `错误`
+  String get SYSTEM_NOTIFICATION_LEVEL_ERROR {
+    return Intl.message(
+      '错误',
+      name: 'SYSTEM_NOTIFICATION_LEVEL_ERROR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `警告`
+  String get SYSTEM_NOTIFICATION_LEVEL_WARNING {
+    return Intl.message(
+      '警告',
+      name: 'SYSTEM_NOTIFICATION_LEVEL_WARNING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `信息`
+  String get SYSTEM_NOTIFICATION_LEVEL_INFO {
+    return Intl.message(
+      '信息',
+      name: 'SYSTEM_NOTIFICATION_LEVEL_INFO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `进行中`
+  String get SYSTEM_NOTIFICATION_LEVEL_ONGOING {
+    return Intl.message(
+      '进行中',
+      name: 'SYSTEM_NOTIFICATION_LEVEL_ONGOING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `系统`
+  String get SYSTEM_NOTIFICATION_TYPE_SYSTEM {
+    return Intl.message(
+      '系统',
+      name: 'SYSTEM_NOTIFICATION_TYPE_SYSTEM',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `用户`
+  String get SYSTEM_NOTIFICATION_TYPE_USER {
+    return Intl.message(
+      '用户',
+      name: 'SYSTEM_NOTIFICATION_TYPE_USER',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

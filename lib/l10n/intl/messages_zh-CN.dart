@@ -94,6 +94,22 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("连接断开"),
         "PORTER_CONNECTION_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
+        "SYSTEM_NOTIFICATION_LEVEL_ERROR":
+            MessageLookupByLibrary.simpleMessage("错误"),
+        "SYSTEM_NOTIFICATION_LEVEL_INFO":
+            MessageLookupByLibrary.simpleMessage("信息"),
+        "SYSTEM_NOTIFICATION_LEVEL_ONGOING":
+            MessageLookupByLibrary.simpleMessage("进行中"),
+        "SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
+        "SYSTEM_NOTIFICATION_LEVEL_WARNING":
+            MessageLookupByLibrary.simpleMessage("警告"),
+        "SYSTEM_NOTIFICATION_TYPE_SYSTEM":
+            MessageLookupByLibrary.simpleMessage("系统"),
+        "SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
+        "SYSTEM_NOTIFICATION_TYPE_USER":
+            MessageLookupByLibrary.simpleMessage("用户"),
         "USER_STATUS": MessageLookupByLibrary.simpleMessage("状态"),
         "USER_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("正常"),
         "USER_STATUS_BLOCKED": MessageLookupByLibrary.simpleMessage("禁用"),

@@ -203,6 +203,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
               pageSize: Int64(100),
               pageNum: Int64(event.page),
             ),
+            typeFilter: state.systemNotificationFilter?.typeFilter,
+            levelFilter: state.systemNotificationFilter?.levelFilter,
           ));
       if (resp.status != ApiStatus.success) {
         emit(NetzachSystemNotificationLoadState(state, EventStatus.failed,
@@ -214,6 +216,11 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
         state.copyWith(systemNotifications: resp.getData().notifications),
         EventStatus.success,
       ));
+    });
+
+    on<NetzachSystemNotificationFilterSetEvent>((event, emit) async {
+      emit(state.copyWith(systemNotificationFilter: event.filter));
+      add(NetzachSystemNotificationLoadEvent(1));
     });
   }
 }
