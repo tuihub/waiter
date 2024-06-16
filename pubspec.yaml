@@ -87,6 +87,7 @@ dependencies:
   local_hero: ^0.3.0
   auto_size_text: ^3.0.0
   flip_card: ^0.7.0
+  flutter_multi_select_items: ^0.4.3
 
   # rust bridge
   ffi: ^2.0.1
