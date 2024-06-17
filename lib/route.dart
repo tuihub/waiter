@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local_hero/local_hero.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
@@ -338,6 +339,13 @@ class GeburaRoute extends StatefulShellBranchData {
   const GeburaRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _geburaNavigateKey;
+
+  static Widget rootWidget({required Widget child}) {
+    return LocalHeroScope(
+      curve: Curves.easeInOut,
+      child: child,
+    );
+  }
 }
 
 class GeburaRootRoute extends GoRouteData {
@@ -360,13 +368,15 @@ class GeburaStoreRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.gebura,
-        leftPart: GeburaNav(
-          function: GeburaFunctions.store,
+    return NoTransitionPage(
+      child: GeburaRoute.rootWidget(
+        child: const FramePage(
+          selectedNav: ModuleName.gebura,
+          leftPart: GeburaNav(
+            function: GeburaFunctions.store,
+          ),
+          middlePart: GeburaStorePage(),
         ),
-        middlePart: GeburaStorePage(),
       ),
     );
   }
@@ -377,13 +387,15 @@ class GeburaLibraryRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.gebura,
-        leftPart: GeburaNav(
-          function: GeburaFunctions.library,
+    return NoTransitionPage(
+      child: GeburaRoute.rootWidget(
+        child: const FramePage(
+          selectedNav: ModuleName.gebura,
+          leftPart: GeburaNav(
+            function: GeburaFunctions.library,
+          ),
+          middlePart: GeburaLibraryOverview(),
         ),
-        middlePart: GeburaLibraryOverview(),
       ),
     );
   }
@@ -394,13 +406,15 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.gebura,
-        leftPart: GeburaNav(
-          function: GeburaFunctions.librarySettings,
+    return NoTransitionPage(
+      child: GeburaRoute.rootWidget(
+        child: const FramePage(
+          selectedNav: ModuleName.gebura,
+          leftPart: GeburaNav(
+            function: GeburaFunctions.librarySettings,
+          ),
+          middlePart: GeburaLibrarySettings(),
         ),
-        middlePart: GeburaLibrarySettings(),
       ),
     );
   }
@@ -420,13 +434,15 @@ class GeburaLibraryDetailRoute extends GoRouteData {
       GeburaLibraryDetailActions.assignApp: const GeburaAssignAppPanel(),
     };
     return NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.gebura,
-        leftPart: const GeburaNav(
-          function: GeburaFunctions.library,
+      child: GeburaRoute.rootWidget(
+        child: FramePage(
+          selectedNav: ModuleName.gebura,
+          leftPart: const GeburaNav(
+            function: GeburaFunctions.library,
+          ),
+          middlePart: GeburaLibraryDetailPage(id: id ?? 0),
+          rightPart: actions[action],
         ),
-        middlePart: GeburaLibraryDetailPage(id: id ?? 0),
-        rightPart: actions[action],
       ),
     );
   }
