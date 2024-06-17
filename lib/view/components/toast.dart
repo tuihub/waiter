@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/l10n.dart';
-import '../layout/bootstrap_container.dart';
+import '../layout/bootstrap_breakpoints.dart';
 
 class Toast {
   const Toast({
     required this.title,
     required this.message,
     this.action,
-    this.showCloseIcon = false,
   });
 
   final String title;
   final String message;
   final SnackBarAction? action;
-  final bool showCloseIcon;
 
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
       BuildContext context) {
+    final left = calculateColumnWidth(
+      xxs: 0,
+      sm: 6,
+      md: 8,
+      xl: 10,
+      containerWidth: MediaQuery.of(context).size.width,
+    );
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         elevation: 0,
+        margin: EdgeInsets.only(left: left),
         behavior: SnackBarBehavior.floating,
+        hitTestBehavior: HitTestBehavior.deferToChild,
         backgroundColor: Colors.transparent,
         content: _content(context),
       ),
@@ -43,65 +49,47 @@ class Toast {
             child: action!,
           ),
         ),
-      if (showCloseIcon)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: TextButtonTheme(
-            data: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-              ),
-            ),
-            child: TextButton(
-              onPressed: () => ScaffoldMessenger.of(context)
-                  .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss),
-              child: Text(S.of(context).close),
-            ),
-          ),
-        ),
     ];
 
-    return BootstrapContainer(
-      alignment: Alignment.centerRight,
-      children: [
-        const BootstrapColumn(xxs: 0, sm: 6, md: 8, child: SizedBox()),
-        Expanded(
-          child: BootstrapColumn(
-            xxs: 12,
-            sm: 6,
-            md: 4,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceTint,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  if (title.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                if (title.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  Text(message),
-                  if (maybeActionAndIcon.isNotEmpty)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [...maybeActionAndIcon],
-                    ),
-                ],
-              ),
+                  ),
+                Text(message),
+                if (maybeActionAndIcon.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [...maybeActionAndIcon],
+                  ),
+              ],
             ),
           ),
-        ),
-      ],
+          IconButton(
+            icon: const Icon(Icons.close),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () => ScaffoldMessenger.of(context)
+                .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss),
+          ),
+        ],
+      ),
     );
   }
 }
