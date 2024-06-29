@@ -21,6 +21,7 @@
   "applySuccess": "更改已应用",
   "id": "ID",
   "hide": "隐藏",
+  "add": "添加",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",
@@ -77,6 +78,14 @@
   "importSteamApplicationFinished": "导入Steam应用程序完成，成功 {success} 个，失败 {failed} 个。",
   "noAppInLibrary": "库中没有应用",
   "addApplication": "添加应用",
+
+  "yesod": "Yesod",
+  "feedConfigManage": "订阅管理",
+  "feedConfigAdd": "添加订阅",
+  "feedConfigEdit": "编辑订阅",
+  "feedActionSetManage": "规则集管理",
+  "feedActionSetAdd": "添加规则集",
+  "feedActionSetEdit": "编辑规则集",
 
   "settings": "设置",
   "currentDevice": "当前设备",

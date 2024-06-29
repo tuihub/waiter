@@ -5,6 +5,7 @@ import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
@@ -42,7 +43,7 @@ class YesodConfigEditPanel extends StatelessWidget {
         var hideItems = config.hideItems;
 
         return RightPanelForm(
-          title: const Text('订阅详情'),
+          title: Text(S.of(context).feedConfigEdit),
           formFields: [
             TextFormField(
               initialValue: config.id.id.toString(),

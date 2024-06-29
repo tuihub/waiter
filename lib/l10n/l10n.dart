@@ -260,6 +260,16 @@ class S {
     );
   }
 
+  /// `添加`
+  String get add {
+    return Intl.message(
+      '添加',
+      name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(
@@ -775,6 +785,76 @@ class S {
     return Intl.message(
       '添加应用',
       name: 'addApplication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yesod`
+  String get yesod {
+    return Intl.message(
+      'Yesod',
+      name: 'yesod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `订阅管理`
+  String get feedConfigManage {
+    return Intl.message(
+      '订阅管理',
+      name: 'feedConfigManage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加订阅`
+  String get feedConfigAdd {
+    return Intl.message(
+      '添加订阅',
+      name: 'feedConfigAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `编辑订阅`
+  String get feedConfigEdit {
+    return Intl.message(
+      '编辑订阅',
+      name: 'feedConfigEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `规则集管理`
+  String get feedActionSetManage {
+    return Intl.message(
+      '规则集管理',
+      name: 'feedActionSetManage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加规则集`
+  String get feedActionSetAdd {
+    return Intl.message(
+      '添加规则集',
+      name: 'feedActionSetAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `编辑规则集`
+  String get feedActionSetEdit {
+    return Intl.message(
+      '编辑规则集',
+      name: 'feedActionSetEdit',
       desc: '',
       args: [],
     );

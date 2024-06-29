@@ -6,6 +6,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
@@ -48,7 +49,7 @@ class YesodConfigAddPanel extends StatelessWidget {
       builder: (context, state) {
         return RightPanelForm(
           formKey: formKey,
-          title: const Text('添加订阅'),
+          title: Text(S.of(context).feedConfigAdd),
           formFields: [
             if (feedPreview != null && feedPreview!.link != null)
               YesodPreviewCard(

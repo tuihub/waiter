@@ -119,6 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "USER_TYPE_NORMAL": MessageLookupByLibrary.simpleMessage("普通"),
         "USER_TYPE_SENTINEL": MessageLookupByLibrary.simpleMessage("扫描器"),
         "USER_TYPE_UNSPECIFIED": MessageLookupByLibrary.simpleMessage("未知"),
+        "add": MessageLookupByLibrary.simpleMessage("添加"),
         "addApplication": MessageLookupByLibrary.simpleMessage("添加应用"),
         "address": MessageLookupByLibrary.simpleMessage("地址"),
         "applicationExitAbnormally":
@@ -156,6 +157,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "durationWeeks": m5,
         "durationYears": m6,
         "exit": MessageLookupByLibrary.simpleMessage("退出"),
+        "feedActionSetAdd": MessageLookupByLibrary.simpleMessage("添加规则集"),
+        "feedActionSetEdit": MessageLookupByLibrary.simpleMessage("编辑规则集"),
+        "feedActionSetManage": MessageLookupByLibrary.simpleMessage("规则集管理"),
+        "feedConfigAdd": MessageLookupByLibrary.simpleMessage("添加订阅"),
+        "feedConfigEdit": MessageLookupByLibrary.simpleMessage("编辑订阅"),
+        "feedConfigManage": MessageLookupByLibrary.simpleMessage("订阅管理"),
         "gebura": MessageLookupByLibrary.simpleMessage("Gebura"),
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),
         "hide": MessageLookupByLibrary.simpleMessage("隐藏"),
@@ -218,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Web版本功能有限，仅供评估使用。"),
         "welcome": MessageLookupByLibrary.simpleMessage("欢迎"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("欢迎回来"),
-        "welcomeHeader": MessageLookupByLibrary.simpleMessage("🎉欢迎！")
+        "welcomeHeader": MessageLookupByLibrary.simpleMessage("🎉欢迎！"),
+        "yesod": MessageLookupByLibrary.simpleMessage("Yesod")
       };
 }
