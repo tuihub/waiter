@@ -12,14 +12,14 @@ class NotifyFlowSourceModel {
 
   static NotifyFlowSourceModel fromProto(NotifyFlowSource proto) {
     return NotifyFlowSourceModel(
-      feedConfigId: proto.feedConfigId,
+      feedConfigId: proto.sourceId,
       filter: NotifyFilterModel.fromProto(proto.filter),
     );
   }
 
   NotifyFlowSource toProto() {
     return NotifyFlowSource(
-      feedConfigId: feedConfigId,
+      sourceId: feedConfigId,
       filter: filter.toProto(),
     );
   }
@@ -79,4 +79,14 @@ class NotifyFilterModel {
       includeKeywords: includeKeywords + (extraIncludeKeywords ?? []),
     );
   }
+}
+
+class SystemNotificationFilter {
+  SystemNotificationFilter({
+    this.levelFilter = const [],
+    this.typeFilter = const [],
+  });
+
+  List<SystemNotificationLevel> levelFilter;
+  List<SystemNotificationType> typeFilter;
 }

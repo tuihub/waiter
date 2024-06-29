@@ -5,6 +5,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../model/netzach_model.dart';
 import '../../repo/grpc/api_helper.dart';
 
 part 'netzach_event.dart';

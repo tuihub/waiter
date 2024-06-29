@@ -23,12 +23,12 @@ class NotifyTargetAddPanel extends StatelessWidget {
             .read<MainBloc>()
             .state
             .serverFeatureSummary
-            ?.supportedNotifyDestinations ??
+            ?.notifyDestinations ??
         [];
     var name = '';
     var description = '';
     var destination =
-        notifyDestinations.isNotEmpty ? notifyDestinations.first : '';
+        notifyDestinations.isNotEmpty ? notifyDestinations.first : null;
     var enabled = true;
     var token = '';
 
@@ -82,12 +82,12 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 for (final dest in notifyDestinations)
                   DropdownMenuItem(
                     value: dest,
-                    child: Text(dest),
+                    child: Text(dest.id),
                   ),
               ],
-              onChanged: (newValue) => destination = newValue!,
+              onChanged: (newValue) => destination = newValue,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null) {
                   return '请选择类型';
                 }
                 return null;
@@ -125,7 +125,7 @@ class NotifyTargetAddPanel extends StatelessWidget {
             context.read<NetzachBloc>().add(NetzachTargetAddEvent(NotifyTarget(
                   name: name,
                   description: description,
-                  destination: destination,
+                  destination: destination?.id,
                   status: enabled
                       ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                       : NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND,

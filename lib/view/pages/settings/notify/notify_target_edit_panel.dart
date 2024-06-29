@@ -33,7 +33,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 .read<MainBloc>()
                 .state
                 .serverFeatureSummary
-                ?.supportedNotifyDestinations ??
+                ?.notifyDestinations ??
             [];
 
         final target =
@@ -101,13 +101,13 @@ class NotifyTargetEditPanel extends StatelessWidget {
               items: [
                 for (final dest in notifyDestinations)
                   DropdownMenuItem(
-                    value: dest,
-                    child: Text(dest),
+                    value: dest.id,
+                    child: Text(dest.id),
                   ),
               ],
               onChanged: (newValue) => destination = newValue!,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null) {
                   return '请选择类型';
                 }
                 return null;

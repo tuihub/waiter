@@ -25,12 +25,14 @@ class MyAccountsCard extends StatelessWidget {
                 .read<MainBloc>()
                 .state
                 .serverFeatureSummary
-                ?.supportedAccountPlatforms ??
+                ?.accountPlatforms ??
             [];
-        final unsupportedWellKnownAccountPlatforms = wellKnownAccountPlatforms
-            .where((element) => !supportedAccountPlatforms.contains(element));
-        final accountPlatforms = supportedAccountPlatforms
-            .followedBy(unsupportedWellKnownAccountPlatforms);
+        final unsupportedWellKnownAccountPlatforms =
+            wellKnownAccountPlatforms.where((element) =>
+                !supportedAccountPlatforms.any((e) => e.id == element));
+        final accountPlatforms = supportedAccountPlatforms.followedBy(
+            unsupportedWellKnownAccountPlatforms
+                .map((e) => FeatureFlag(id: e)));
         final accounts = state.accounts ?? [];
         final accountMap =
             Map.fromEntries(accounts.map((e) => MapEntry(e.platform, e)));
@@ -48,8 +50,8 @@ class MyAccountsCard extends StatelessWidget {
                     tabs: [
                       for (final platform in accountPlatforms)
                         Tab(
-                          icon: _wellKnownAccountPlatformIcon(platform),
-                          text: accountPlatformString(platform),
+                          icon: _wellKnownAccountPlatformIcon(platform.id),
+                          text: accountPlatformString(platform.id),
                         ),
                     ],
                   ),
@@ -68,10 +70,10 @@ class MyAccountsCard extends StatelessWidget {
                   children: [
                     for (final platform in accountPlatforms)
                       _AccountCard(
-                        platform: platform,
+                        platform: platform.id,
                         serverSupported:
                             supportedAccountPlatforms.contains(platform),
-                        account: accountMap[platform],
+                        account: accountMap[platform.id],
                       ),
                   ],
                 ),

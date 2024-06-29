@@ -6,6 +6,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 
 import '../../bloc/netzach/netzach_bloc.dart';
+import '../../model/netzach_model.dart';
 import '../../repo/grpc/l10n.dart';
 import '../helper/duration_format.dart';
 import '../helper/spacing.dart';
@@ -211,7 +212,7 @@ class NotificationPage extends StatelessWidget {
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(8),
-                                    child: Text(item.message),
+                                    child: Text(item.content),
                                   )
                                 ],
                               ),

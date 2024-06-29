@@ -24,13 +24,9 @@ class YesodConfigAddPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final feedSources = context
-            .read<MainBloc>()
-            .state
-            .serverFeatureSummary
-            ?.supportedFeedSources ??
-        [];
-    var source = feedSources.isNotEmpty ? feedSources.first : '';
+    final feedSources =
+        context.read<MainBloc>().state.serverFeatureSummary?.feedSources ?? [];
+    var source = feedSources.isNotEmpty ? feedSources.first : null;
     var url = '';
     var name = '';
     var category = '';
@@ -82,12 +78,12 @@ class YesodConfigAddPanel extends StatelessWidget {
                 for (final s in feedSources)
                   DropdownMenuItem(
                     value: s,
-                    child: Text(s),
+                    child: Text(s.id),
                   ),
               ],
-              onChanged: (newValue) => source = newValue!,
+              onChanged: (newValue) => source = newValue,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null) {
                   return '请选择订阅源类型';
                 }
                 return null;
@@ -182,7 +178,7 @@ class YesodConfigAddPanel extends StatelessWidget {
             context.read<YesodBloc>().add(YesodConfigAddEvent(FeedConfig(
                   name: name,
                   feedUrl: url,
-                  source: source,
+                  source: source?.id,
                   status: enabled
                       ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
                       : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,

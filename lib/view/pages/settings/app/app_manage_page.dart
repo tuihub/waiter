@@ -32,12 +32,9 @@ class _AppManagePageState extends State<AppManagePage> {
   @override
   Widget build(BuildContext context) {
     dataSource.context = context;
-    final appSources = context
-            .read<MainBloc>()
-            .state
-            .serverFeatureSummary
-            ?.supportedAppInfoSources ??
-        [];
+    final appSources =
+        context.read<MainBloc>().state.serverFeatureSummary?.appInfoSources ??
+            [];
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -55,10 +52,10 @@ class _AppManagePageState extends State<AppManagePage> {
                   buttonIcon: const Icon(Icons.filter_alt_outlined),
                   items: [
                     for (final source in appSources)
-                      MultiSelectItem(source, appSourceString(source)),
+                      MultiSelectItem(source, appSourceString(source.id)),
                   ],
                   onConfirm: (values) {
-                    dataSource.sourceFilter = values;
+                    dataSource.sourceFilter = values.map((e) => e.id).toList();
                     dataSource.refreshDatasource();
                     paginatorController.goToFirstPage();
                   },

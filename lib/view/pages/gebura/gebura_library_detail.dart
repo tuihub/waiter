@@ -10,6 +10,7 @@ import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../bloc/main_bloc.dart';
@@ -607,12 +608,9 @@ class _GeburaLibraryDetailChangeAppInfoDialogState
 
   @override
   Widget build(BuildContext context) {
-    final sources = context
-            .read<MainBloc>()
-            .state
-            .serverFeatureSummary
-            ?.supportedAppInfoSources ??
-        [];
+    final sources =
+        context.read<MainBloc>().state.serverFeatureSummary?.appInfoSources ??
+            [];
     return AlertDialog(
       title: const Text('设置应用信息'),
       content: SingleChildScrollView(
@@ -629,11 +627,12 @@ class _GeburaLibraryDetailChangeAppInfoDialogState
                 ),
                 items: [
                   for (final s in sources)
-                    DropdownMenuItem(value: s, child: Text(appSourceString(s)))
+                    DropdownMenuItem(
+                        value: s, child: Text(appSourceString(s.id)))
                 ],
-                onChanged: (String? value) {
+                onChanged: (FeatureFlag? value) {
                   setState(() {
-                    source = value;
+                    source = value?.id;
                   });
                 }),
             const SizedBox(
