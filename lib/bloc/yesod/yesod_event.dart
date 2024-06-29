@@ -7,12 +7,6 @@ final class YesodInitEvent extends YesodEvent {}
 
 final class YesodConfigLoadEvent extends YesodEvent {}
 
-final class YesodConfigPreviewEvent extends YesodEvent {
-  final String url;
-
-  YesodConfigPreviewEvent(this.url);
-}
-
 final class YesodConfigAddEvent extends YesodEvent {
   final FeedConfig config;
 

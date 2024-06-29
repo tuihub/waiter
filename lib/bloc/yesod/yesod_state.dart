@@ -6,25 +6,19 @@ class YesodState {
   late List<FeedItemDigest>? feedItemDigests;
   late List<String>? feedCategories;
 
-  // Data for UI
-  late RssPostItem? feedPreview;
-
   YesodState({
     this.feedConfigs,
-    this.feedPreview,
     this.feedItemDigests,
     this.feedCategories,
   });
 
   YesodState copyWith({
     List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
-    RssPostItem? feedPreview,
     List<FeedItemDigest>? feedItemDigests,
     List<String>? feedCategories,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
-      feedPreview: feedPreview ?? this.feedPreview,
       feedItemDigests: feedItemDigests ?? this.feedItemDigests,
       feedCategories: feedCategories ?? this.feedCategories,
     );
@@ -32,7 +26,6 @@ class YesodState {
 
   void _from(YesodState other) {
     feedConfigs = other.feedConfigs;
-    feedPreview = other.feedPreview;
     feedItemDigests = other.feedItemDigests;
     feedCategories = other.feedCategories;
   }

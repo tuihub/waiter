@@ -7,13 +7,11 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
-import '../../../model/yesod_model.dart';
 import '../../components/toast.dart';
 import '../../form/form_field.dart';
 import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
-import 'yesod_preview_card.dart';
 
 class YesodConfigAddPanel extends StatelessWidget {
   const YesodConfigAddPanel({super.key});
@@ -34,7 +32,6 @@ class YesodConfigAddPanel extends StatelessWidget {
     var refreshInterval = 60;
     var enabled = true;
     var hideItems = false;
-    RssPostItem? feedPreview;
 
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
@@ -42,26 +39,12 @@ class YesodConfigAddPanel extends StatelessWidget {
           const Toast(title: '', message: '添加成功').show(context);
           close(context);
         }
-        if (state is YesodConfigPreviewState && state.success) {
-          feedPreview = state.feedPreview;
-        }
       },
       builder: (context, state) {
         return RightPanelForm(
           formKey: formKey,
           title: Text(S.of(context).feedConfigAdd),
           formFields: [
-            if (feedPreview != null && feedPreview!.link != null)
-              YesodPreviewCard(
-                iconUrl: feedPreview!.subscription.iconUrl,
-                name: feedPreview!.subscription.title ?? '',
-                images:
-                    feedPreview!.image != null ? [feedPreview!.image!] : null,
-                description: feedPreview!.description,
-                title: feedPreview!.title ?? '',
-                callback: () {},
-                listType: FeedItemListType.card,
-              ),
             Text(state is YesodConfigPreviewState && state.failed
                 ? state.msg ?? ''
                 : ''),
@@ -162,19 +145,6 @@ class YesodConfigAddPanel extends StatelessWidget {
           ],
           errorMsg:
               state is YesodConfigAddState && state.failed ? state.msg : null,
-          extraActions: [
-            ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  formKey.currentState!.save();
-                  context.read<YesodBloc>().add(YesodConfigPreviewEvent(url));
-                }
-              },
-              child: state is YesodConfigAddState && state.processing
-                  ? const CircularProgressIndicator()
-                  : const Text('加载预览'),
-            ),
-          ],
           onSubmit: () {
             context.read<YesodBloc>().add(YesodConfigAddEvent(FeedConfig(
                   name: name,

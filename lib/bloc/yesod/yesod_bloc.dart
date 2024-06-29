@@ -6,8 +6,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
-import '../../l10n/l10n.dart';
-import '../../model/yesod_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/yesod.dart';
 
@@ -83,22 +81,6 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       emit(YesodConfigLoadState(
         state.copyWith(feedConfigs: configs),
         failCount == 0 ? EventStatus.success : EventStatus.success,
-      ));
-    }, transformer: droppable());
-
-    on<YesodConfigPreviewEvent>((event, emit) async {
-      emit(YesodConfigPreviewState(
-        state.copyWith(feedPreview: null),
-        EventStatus.processing,
-      ));
-      emit(YesodConfigPreviewState(
-        state.copyWith(
-          feedPreview: RssPostItem(
-              subscription: RssSubscription(
-                  title: '', link: '', iconUrl: '', description: '')),
-        ),
-        EventStatus.failed,
-        msg: S.current.parseFailed,
       ));
     }, transformer: droppable());
 
