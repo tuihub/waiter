@@ -88,6 +88,10 @@ dependencies:
   auto_size_text: ^3.0.0
   flip_card: ^0.7.0
   flutter_multi_select_items: ^0.4.3
+  flutter_jsonschema_builder:
+    git:
+      url: https://github.com/tuihub/flutter_jsonschema_builder.git
+      ref: main
 
   # rust bridge
   ffi: ^2.0.1
