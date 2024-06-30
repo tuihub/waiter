@@ -11,8 +11,8 @@ import '../../helper/duration_format.dart';
 import '../../layout/card_list_page.dart';
 import '../frame_page.dart';
 
-class YesodConfigPage extends StatelessWidget {
-  const YesodConfigPage({super.key});
+class YesodFeedManagePage extends StatelessWidget {
+  const YesodFeedManagePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +25,14 @@ class YesodConfigPage extends StatelessWidget {
       final listData = state.feedConfigs ?? [];
       return ListManagePage(
         title: S.of(context).feedConfigManage,
-        processing: state is YesodConfigLoadState && state.processing,
-        msg: state is YesodConfigLoadState ? state.msg : '',
+        processing: state is YesodFeedConfigLoadState && state.processing,
+        msg: state is YesodFeedConfigLoadState ? state.msg : '',
         onRefresh: () {
-          context.read<YesodBloc>().add(YesodConfigLoadEvent());
+          context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
         },
         onAdd: () {
-          const YesodConfigRoute(action: YesodConfigActions.add).go(context);
+          const YesodFeedManageRoute(action: YesodFeedManageActions.add)
+              .go(context);
           FramePage.of(context)?.openDrawer();
         },
         children: [
@@ -46,7 +47,7 @@ class YesodConfigPage extends StatelessWidget {
                   : null,
               trailing: const Icon(Icons.edit),
               onTap: () {
-                YesodConfigRoute(action: YesodConfigActions.edit, id: i)
+                YesodFeedManageRoute(action: YesodFeedManageActions.edit, id: i)
                     .go(context);
                 FramePage.of(context)?.openDrawer();
               },

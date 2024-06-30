@@ -49,9 +49,10 @@ import 'view/pages/settings/user/user_edit_panel.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/web_landing_page.dart';
-import 'view/pages/yesod/yesod_config_add_panel.dart';
-import 'view/pages/yesod/yesod_config_edit_panel.dart';
-import 'view/pages/yesod/yesod_config_page.dart';
+import 'view/pages/yesod/yesod_action_manage_page.dart';
+import 'view/pages/yesod/yesod_feed_manage_add_panel.dart';
+import 'view/pages/yesod/yesod_feed_manage_edit_panel.dart';
+import 'view/pages/yesod/yesod_feed_manage_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 import 'view/pages/yesod/yesod_recent_setting_panel.dart';
@@ -84,7 +85,8 @@ enum ModuleName {
 class YesodFunctions {
   static const String recent = 'recent';
   static const String timeline = 'timeline';
-  static const String config = 'config';
+  static const String feedManage = 'feedManage';
+  static const String actionManage = 'actionManage';
 }
 
 class GeburaFunctions {
@@ -121,7 +123,9 @@ final mainWindowKey = GlobalKey();
           routes: [
             TypedGoRoute<YesodRootRoute>(path: 'module/Yesod'),
             TypedGoRoute<YesodRecentRoute>(path: 'module/Yesod/recent'),
-            TypedGoRoute<YesodConfigRoute>(path: 'module/Yesod/config'),
+            TypedGoRoute<YesodFeedManageRoute>(path: 'module/Yesod/feedManage'),
+            TypedGoRoute<YesodActionManageRoute>(
+                path: 'module/Yesod/actionManage'),
           ],
         ),
         TypedStatefulShellBranch<GeburaRoute>(
@@ -304,30 +308,61 @@ class YesodRecentRoute extends GoRouteData {
   }
 }
 
-enum YesodConfigActions { edit, add }
+enum YesodFeedManageActions { edit, add }
 
-class YesodConfigRoute extends GoRouteData {
-  const YesodConfigRoute({this.action, this.id});
+class YesodFeedManageRoute extends GoRouteData {
+  const YesodFeedManageRoute({this.action, this.id});
 
-  final YesodConfigActions? action;
+  final YesodFeedManageActions? action;
   final int? id;
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
-      YesodConfigActions.edit: YesodConfigEditPanel(
+      YesodFeedManageActions.edit: YesodFeedManageEditPanel(
         key: ValueKey(id),
         index: id,
       ),
-      YesodConfigActions.add: const YesodConfigAddPanel(),
+      YesodFeedManageActions.add: const YesodFeedManageAddPanel(),
     };
     return NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.yesod,
         leftPart: const YesodNav(
-          function: YesodFunctions.config,
+          function: YesodFunctions.feedManage,
         ),
-        middlePart: const YesodConfigPage(),
+        middlePart: const YesodFeedManagePage(),
+        rightPart: actions[action] ?? Container(),
+        gestureRight: true,
+      ),
+    );
+  }
+}
+
+enum YesodActionManageActions { edit, add }
+
+class YesodActionManageRoute extends GoRouteData {
+  const YesodActionManageRoute({this.action, this.id});
+
+  final YesodActionManageActions? action;
+  final int? id;
+
+  @override
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final actions = {
+      YesodActionManageActions.edit: YesodActionManageEditPanel(
+        key: ValueKey(id),
+        index: id,
+      ),
+      YesodActionManageActions.add: const YesodActionManageAddPanel(),
+    };
+    return NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.yesod,
+        leftPart: const YesodNav(
+          function: YesodFunctions.actionManage,
+        ),
+        middlePart: const YesodActionManagePage(),
         rightPart: actions[action] ?? Container(),
         gestureRight: true,
       ),

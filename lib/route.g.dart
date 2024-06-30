@@ -50,8 +50,12 @@ RouteBase get $appRoute => GoRouteData.$route(
                   factory: $YesodRecentRouteExtension._fromState,
                 ),
                 GoRouteData.$route(
-                  path: 'module/Yesod/config',
-                  factory: $YesodConfigRouteExtension._fromState,
+                  path: 'module/Yesod/feedManage',
+                  factory: $YesodFeedManageRouteExtension._fromState,
+                ),
+                GoRouteData.$route(
+                  path: 'module/Yesod/actionManage',
+                  factory: $YesodActionManageRouteExtension._fromState,
                 ),
               ],
             ),
@@ -257,17 +261,19 @@ const _$YesodRecentActionsEnumMap = {
   YesodRecentActions.setting: 'setting',
 };
 
-extension $YesodConfigRouteExtension on YesodConfigRoute {
-  static YesodConfigRoute _fromState(GoRouterState state) => YesodConfigRoute(
+extension $YesodFeedManageRouteExtension on YesodFeedManageRoute {
+  static YesodFeedManageRoute _fromState(GoRouterState state) =>
+      YesodFeedManageRoute(
         action: _$convertMapValue('action', state.uri.queryParameters,
-            _$YesodConfigActionsEnumMap._$fromName),
+            _$YesodFeedManageActionsEnumMap._$fromName),
         id: _$convertMapValue('id', state.uri.queryParameters, int.parse),
       );
 
   String get location => GoRouteData.$location(
-        '/module/Yesod/config',
+        '/module/Yesod/feedManage',
         queryParams: {
-          if (action != null) 'action': _$YesodConfigActionsEnumMap[action!],
+          if (action != null)
+            'action': _$YesodFeedManageActionsEnumMap[action!],
           if (id != null) 'id': id!.toString(),
         },
       );
@@ -282,9 +288,41 @@ extension $YesodConfigRouteExtension on YesodConfigRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-const _$YesodConfigActionsEnumMap = {
-  YesodConfigActions.edit: 'edit',
-  YesodConfigActions.add: 'add',
+const _$YesodFeedManageActionsEnumMap = {
+  YesodFeedManageActions.edit: 'edit',
+  YesodFeedManageActions.add: 'add',
+};
+
+extension $YesodActionManageRouteExtension on YesodActionManageRoute {
+  static YesodActionManageRoute _fromState(GoRouterState state) =>
+      YesodActionManageRoute(
+        action: _$convertMapValue('action', state.uri.queryParameters,
+            _$YesodActionManageActionsEnumMap._$fromName),
+        id: _$convertMapValue('id', state.uri.queryParameters, int.parse),
+      );
+
+  String get location => GoRouteData.$location(
+        '/module/Yesod/actionManage',
+        queryParams: {
+          if (action != null)
+            'action': _$YesodActionManageActionsEnumMap[action!],
+          if (id != null) 'id': id!.toString(),
+        },
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+const _$YesodActionManageActionsEnumMap = {
+  YesodActionManageActions.edit: 'edit',
+  YesodActionManageActions.add: 'add',
 };
 
 extension $GeburaRootRouteExtension on GeburaRootRoute {

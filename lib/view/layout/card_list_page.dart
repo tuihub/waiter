@@ -78,6 +78,14 @@ class ListManagePageState extends State<ListManagePage> {
             Center(
               child: Text(widget.msg!),
             )
+          else if (widget.children.isEmpty)
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: widget.onAdd,
+                icon: const Icon(Icons.add),
+                label: Text(S.of(context).add),
+              ),
+            )
           else
             ListView.builder(
               itemCount: widget.children.length,

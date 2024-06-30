@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
 
@@ -45,14 +46,25 @@ class YesodNav extends StatelessWidget {
         ),
         ListTile(
           leading: const Icon(
+            Icons.auto_awesome,
+          ),
+          onTap: () {
+            const YesodActionManageRoute().go(context);
+            OverlappingPanels.of(context)?.reveal(RevealSide.main);
+          },
+          title: Text(S.of(context).feedActionSetManage),
+          selected: function == YesodFunctions.actionManage,
+        ),
+        ListTile(
+          leading: const Icon(
             Icons.rss_feed,
           ),
           onTap: () {
-            const YesodConfigRoute().go(context);
+            const YesodFeedManageRoute().go(context);
             OverlappingPanels.of(context)?.reveal(RevealSide.main);
           },
-          title: const Text('Feed Config'),
-          selected: function == 'config',
+          title: Text(S.of(context).feedConfigManage),
+          selected: function == YesodFunctions.feedManage,
         ),
       ],
     );

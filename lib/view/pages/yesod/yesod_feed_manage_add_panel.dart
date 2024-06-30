@@ -13,8 +13,8 @@ import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
 
-class YesodConfigAddPanel extends StatelessWidget {
-  const YesodConfigAddPanel({super.key});
+class YesodFeedManageAddPanel extends StatelessWidget {
+  const YesodFeedManageAddPanel({super.key});
 
   void close(BuildContext context) {
     FramePage.of(context)?.closeDrawer();
@@ -35,7 +35,7 @@ class YesodConfigAddPanel extends StatelessWidget {
 
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
-        if (state is YesodConfigAddState && state.success) {
+        if (state is YesodFeedConfigAddState && state.success) {
           const Toast(title: '', message: '添加成功').show(context);
           close(context);
         }
@@ -45,12 +45,6 @@ class YesodConfigAddPanel extends StatelessWidget {
           formKey: formKey,
           title: Text(S.of(context).feedConfigAdd),
           formFields: [
-            Text(state is YesodConfigPreviewState && state.failed
-                ? state.msg ?? ''
-                : ''),
-            const SizedBox(
-              height: 8,
-            ),
             DropdownButtonFormField(
               decoration: const InputDecoration(
                 icon: Icon(Icons.place),
@@ -143,10 +137,11 @@ class YesodConfigAddPanel extends StatelessWidget {
               initialValue: hideItems,
             ),
           ],
-          errorMsg:
-              state is YesodConfigAddState && state.failed ? state.msg : null,
+          errorMsg: state is YesodFeedConfigAddState && state.failed
+              ? state.msg
+              : null,
           onSubmit: () {
-            context.read<YesodBloc>().add(YesodConfigAddEvent(FeedConfig(
+            context.read<YesodBloc>().add(YesodFeedConfigAddEvent(FeedConfig(
                   name: name,
                   feedUrl: url,
                   source: source?.id,
@@ -160,7 +155,7 @@ class YesodConfigAddPanel extends StatelessWidget {
                   hideItems: hideItems,
                 )));
           },
-          submitting: state is YesodConfigAddState && state.processing,
+          submitting: state is YesodFeedConfigAddState && state.processing,
           close: () => close(context),
         );
       },

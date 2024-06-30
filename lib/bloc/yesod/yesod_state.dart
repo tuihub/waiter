@@ -3,22 +3,26 @@ part of 'yesod_bloc.dart';
 class YesodState {
   // Data from server
   late List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs;
+  late List<FeedActionSet>? feedActionSets;
   late List<FeedItemDigest>? feedItemDigests;
   late List<String>? feedCategories;
 
   YesodState({
     this.feedConfigs,
+    this.feedActionSets,
     this.feedItemDigests,
     this.feedCategories,
   });
 
   YesodState copyWith({
     List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
+    List<FeedActionSet>? feedActionSets,
     List<FeedItemDigest>? feedItemDigests,
     List<String>? feedCategories,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
+      feedActionSets: feedActionSets ?? this.feedActionSets,
       feedItemDigests: feedItemDigests ?? this.feedItemDigests,
       feedCategories: feedCategories ?? this.feedCategories,
     );
@@ -26,13 +30,14 @@ class YesodState {
 
   void _from(YesodState other) {
     feedConfigs = other.feedConfigs;
+    feedActionSets = other.feedActionSets;
     feedItemDigests = other.feedItemDigests;
     feedCategories = other.feedCategories;
   }
 }
 
-class YesodConfigLoadState extends YesodState with EventStatusMixin {
-  YesodConfigLoadState(YesodState state, this.statusCode, {this.msg})
+class YesodFeedConfigLoadState extends YesodState with EventStatusMixin {
+  YesodFeedConfigLoadState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
@@ -43,8 +48,8 @@ class YesodConfigLoadState extends YesodState with EventStatusMixin {
   final EventStatus statusCode;
 }
 
-class YesodConfigPreviewState extends YesodState with EventStatusMixin {
-  YesodConfigPreviewState(YesodState state, this.statusCode, {this.msg})
+class YesodFeedConfigAddState extends YesodState with EventStatusMixin {
+  YesodFeedConfigAddState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
@@ -55,8 +60,9 @@ class YesodConfigPreviewState extends YesodState with EventStatusMixin {
   final EventStatus statusCode;
 }
 
-class YesodConfigAddState extends YesodState with EventStatusMixin {
-  YesodConfigAddState(YesodState state, this.statusCode, {this.msg}) : super() {
+class YesodFeedConfigEditState extends YesodState with EventStatusMixin {
+  YesodFeedConfigEditState(YesodState state, this.statusCode, {this.msg})
+      : super() {
     _from(state);
   }
 
@@ -66,8 +72,32 @@ class YesodConfigAddState extends YesodState with EventStatusMixin {
   final EventStatus statusCode;
 }
 
-class YesodConfigEditState extends YesodState with EventStatusMixin {
-  YesodConfigEditState(YesodState state, this.statusCode, {this.msg})
+class YesodFeedActionSetLoadState extends YesodState with EventStatusMixin {
+  YesodFeedActionSetLoadState(YesodState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final String? msg;
+  @override
+  final EventStatus statusCode;
+}
+
+class YesodFeedActionSetAddState extends YesodState with EventStatusMixin {
+  YesodFeedActionSetAddState(YesodState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final String? msg;
+  @override
+  final EventStatus statusCode;
+}
+
+class YesodFeedActionSetEditState extends YesodState with EventStatusMixin {
+  YesodFeedActionSetEditState(YesodState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }

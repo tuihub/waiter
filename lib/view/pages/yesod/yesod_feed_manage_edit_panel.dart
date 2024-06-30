@@ -12,8 +12,8 @@ import '../../form/input_formatters.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
 
-class YesodConfigEditPanel extends StatelessWidget {
-  const YesodConfigEditPanel({super.key, required this.index});
+class YesodFeedManageEditPanel extends StatelessWidget {
+  const YesodFeedManageEditPanel({super.key, required this.index});
 
   final int? index;
 
@@ -25,7 +25,7 @@ class YesodConfigEditPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
-        if (state is YesodConfigEditState && state.success) {
+        if (state is YesodFeedConfigEditState && state.success) {
           const Toast(title: '', message: '已应用更改').show(context);
           close(context);
         }
@@ -125,10 +125,11 @@ class YesodConfigEditPanel extends StatelessWidget {
               title: const Text('隐藏内容'),
             ),
           ],
-          errorMsg:
-              state is YesodConfigEditState && state.failed ? state.msg : null,
+          errorMsg: state is YesodFeedConfigEditState && state.failed
+              ? state.msg
+              : null,
           onSubmit: () {
-            context.read<YesodBloc>().add(YesodConfigEditEvent(
+            context.read<YesodBloc>().add(YesodFeedConfigEditEvent(
                   FeedConfig(
                     id: config.id,
                     name: name,
@@ -146,7 +147,7 @@ class YesodConfigEditPanel extends StatelessWidget {
                   ),
                 ));
           },
-          submitting: state is YesodConfigEditState && state.processing,
+          submitting: state is YesodFeedConfigEditState && state.processing,
           close: () => close(context),
         );
       },

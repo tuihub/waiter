@@ -19,7 +19,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
   YesodBloc(this._api, this.repo) : super(YesodState()) {
     on<YesodInitEvent>((event, emit) async {
       if (state.feedConfigs == null) {
-        add(YesodConfigLoadEvent());
+        add(YesodFeedConfigLoadEvent());
+      }
+      if (state.feedActionSets == null) {
+        add(YesodFeedActionSetLoadEvent());
       }
       if (state.feedItemDigests == null) {
         add(YesodFeedItemDigestsLoadEvent(1));
@@ -29,10 +32,10 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
     }, transformer: restartable());
 
-    on<YesodConfigLoadEvent>((event, emit) async {
+    on<YesodFeedConfigLoadEvent>((event, emit) async {
       final List<ListFeedConfigsResponse_FeedWithConfig> configs =
           await repo.getFeedConfigs();
-      emit(YesodConfigLoadState(
+      emit(YesodFeedConfigLoadState(
           state.copyWith(
             feedConfigs: configs,
           ),
@@ -48,7 +51,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(YesodConfigLoadState(
+        emit(YesodFeedConfigLoadState(
             state.copyWith(
               feedConfigs: configs,
             ),
@@ -78,14 +81,14 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         }
       }
 
-      emit(YesodConfigLoadState(
+      emit(YesodFeedConfigLoadState(
         state.copyWith(feedConfigs: configs),
         failCount == 0 ? EventStatus.success : EventStatus.success,
       ));
     }, transformer: droppable());
 
-    on<YesodConfigAddEvent>((event, emit) async {
-      emit(YesodConfigAddState(
+    on<YesodFeedConfigAddEvent>((event, emit) async {
+      emit(YesodFeedConfigAddState(
         state,
         EventStatus.processing,
       ));
@@ -96,7 +99,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(YesodConfigAddState(
+        emit(YesodFeedConfigAddState(
           state,
           EventStatus.failed,
           msg: resp.error,
@@ -111,14 +114,14 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       ];
       configs.addAll(state.feedConfigs ?? []);
       await repo.setFeedConfigs(configs);
-      emit(YesodConfigAddState(
+      emit(YesodFeedConfigAddState(
         state.copyWith(feedConfigs: configs),
         EventStatus.success,
       ));
     }, transformer: droppable());
 
-    on<YesodConfigEditEvent>((event, emit) async {
-      emit(YesodConfigEditState(
+    on<YesodFeedConfigEditEvent>((event, emit) async {
+      emit(YesodFeedConfigEditState(
         state,
         EventStatus.processing,
       ));
@@ -129,7 +132,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ),
       );
       if (resp.status != ApiStatus.success) {
-        emit(YesodConfigEditState(
+        emit(YesodFeedConfigEditState(
           state,
           EventStatus.failed,
           msg: resp.error,
@@ -138,9 +141,114 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
       final configs = state.feedConfigs ?? [];
       await repo.setFeedConfigs(configs);
-      add(YesodConfigLoadEvent());
-      emit(YesodConfigEditState(
+      add(YesodFeedConfigLoadEvent());
+      emit(YesodFeedConfigEditState(
         state.copyWith(feedConfigs: configs),
+        EventStatus.success,
+      ));
+    }, transformer: droppable());
+
+    on<YesodFeedActionSetLoadEvent>((event, emit) async {
+      emit(YesodFeedActionSetLoadState(
+        state,
+        EventStatus.processing,
+      ));
+      final resp = await _api.doRequest(
+        (client) => client.listFeedActionSets,
+        ListFeedActionSetsRequest(
+          paging: PagingRequest(
+            pageSize: Int64(1),
+            pageNum: Int64(1),
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(YesodFeedActionSetLoadState(
+          state,
+          EventStatus.failed,
+          msg: resp.error,
+        ));
+        return;
+      }
+
+      final totalSize = resp.getData().paging.totalSize.toInt();
+      const pageSize = 100;
+      var failCount = 0;
+
+      final List<FeedActionSet> sets = [];
+      for (var pageNum = 1; (pageNum - 1) * pageSize < totalSize; pageNum++) {
+        final resp = await _api.doRequest(
+          (client) => client.listFeedActionSets,
+          ListFeedActionSetsRequest(
+            paging: PagingRequest(
+              pageSize: Int64(pageSize),
+              pageNum: Int64(pageNum),
+            ),
+          ),
+        );
+        if (resp.status == ApiStatus.success) {
+          sets.addAll(resp.getData().actionSets);
+        } else {
+          failCount++;
+        }
+      }
+      emit(YesodFeedActionSetLoadState(
+        state.copyWith(feedActionSets: sets),
+        failCount == 0 ? EventStatus.success : EventStatus.success,
+      ));
+    }, transformer: droppable());
+
+    on<YesodFeedActionSetAddEvent>((event, emit) async {
+      emit(YesodFeedActionSetAddState(
+        state,
+        EventStatus.processing,
+      ));
+      final resp = await _api.doRequest(
+        (client) => client.createFeedActionSet,
+        CreateFeedActionSetRequest(
+          actionSet: event.set,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(YesodFeedActionSetAddState(
+          state,
+          EventStatus.failed,
+          msg: resp.error,
+        ));
+        return;
+      }
+      final sets = [
+        event.set,
+      ];
+      sets.addAll(state.feedActionSets ?? []);
+      emit(YesodFeedActionSetAddState(
+        state.copyWith(feedActionSets: sets),
+        EventStatus.success,
+      ));
+    }, transformer: droppable());
+
+    on<YesodFeedActionSetEditEvent>((event, emit) async {
+      emit(YesodFeedActionSetEditState(
+        state,
+        EventStatus.processing,
+      ));
+      final resp = await _api.doRequest(
+        (client) => client.updateFeedActionSet,
+        UpdateFeedActionSetRequest(
+          actionSet: event.set,
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(YesodFeedActionSetEditState(
+          state,
+          EventStatus.failed,
+          msg: resp.error,
+        ));
+        return;
+      }
+      final sets = state.feedActionSets ?? [];
+      emit(YesodFeedActionSetEditState(
+        state.copyWith(feedActionSets: sets),
         EventStatus.success,
       ));
     }, transformer: droppable());

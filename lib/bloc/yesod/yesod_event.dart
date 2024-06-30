@@ -5,18 +5,32 @@ sealed class YesodEvent {}
 
 final class YesodInitEvent extends YesodEvent {}
 
-final class YesodConfigLoadEvent extends YesodEvent {}
+final class YesodFeedConfigLoadEvent extends YesodEvent {}
 
-final class YesodConfigAddEvent extends YesodEvent {
+final class YesodFeedConfigAddEvent extends YesodEvent {
   final FeedConfig config;
 
-  YesodConfigAddEvent(this.config);
+  YesodFeedConfigAddEvent(this.config);
 }
 
-final class YesodConfigEditEvent extends YesodEvent {
+final class YesodFeedConfigEditEvent extends YesodEvent {
   final FeedConfig config;
 
-  YesodConfigEditEvent(this.config);
+  YesodFeedConfigEditEvent(this.config);
+}
+
+final class YesodFeedActionSetLoadEvent extends YesodEvent {}
+
+final class YesodFeedActionSetAddEvent extends YesodEvent {
+  final FeedActionSet set;
+
+  YesodFeedActionSetAddEvent(this.set);
+}
+
+final class YesodFeedActionSetEditEvent extends YesodEvent {
+  final FeedActionSet set;
+
+  YesodFeedActionSetEditEvent(this.set);
 }
 
 final class YesodFeedItemDigestsLoadEvent extends YesodEvent {
