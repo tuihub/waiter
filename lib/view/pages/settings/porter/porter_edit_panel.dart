@@ -45,9 +45,6 @@ class PorterEditPanel extends StatelessWidget {
                 labelText: 'ID',
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: porter.name,
               readOnly: true,
@@ -55,9 +52,6 @@ class PorterEditPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 labelText: '名称',
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             TextFormField(
               initialValue: porter.version,
@@ -67,9 +61,6 @@ class PorterEditPanel extends StatelessWidget {
                 label: Text('版本'),
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: porter.globalName,
               readOnly: true,
@@ -78,9 +69,6 @@ class PorterEditPanel extends StatelessWidget {
                 labelText: '全局名称',
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: porter.featureSummary,
               readOnly: true,
@@ -88,9 +76,6 @@ class PorterEditPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 label: Text('支持功能'),
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             SwitchFormField(
               initialValue: enabled,

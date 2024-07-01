@@ -50,8 +50,6 @@ import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/web_landing_page.dart';
 import 'view/pages/yesod/yesod_action_manage_page.dart';
-import 'view/pages/yesod/yesod_feed_manage_add_panel.dart';
-import 'view/pages/yesod/yesod_feed_manage_edit_panel.dart';
 import 'view/pages/yesod/yesod_feed_manage_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';

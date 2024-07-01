@@ -54,9 +54,6 @@ class _UserAddPanelState extends State<UserAddPanel> {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             onSaved: (newValue) => password = newValue!,
             obscureText: passwordSecure,
@@ -89,9 +86,6 @@ class _UserAddPanelState extends State<UserAddPanel> {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           DropdownButtonFormField(
             decoration: const InputDecoration(
               icon: Icon(Icons.security),
@@ -118,9 +112,6 @@ class _UserAddPanelState extends State<UserAddPanel> {
                 userType = select ?? UserType.USER_TYPE_NORMAL;
               });
             },
-          ),
-          const SizedBox(
-            height: 16,
           ),
           DropdownButtonFormField(
             decoration: const InputDecoration(

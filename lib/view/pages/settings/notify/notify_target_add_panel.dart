@@ -57,9 +57,6 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               onChanged: (newValue) => description = newValue,
               decoration: const InputDecoration(
@@ -67,9 +64,6 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 labelText: '备注',
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             DropdownButtonFormField(
               decoration: InputDecoration(
@@ -93,9 +87,6 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               onChanged: (newValue) => token = newValue,
               decoration: const InputDecoration(
@@ -109,9 +100,6 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 }
                 return null;
               },
-            ),
-            const SizedBox(
-              height: 16,
             ),
             SwitchFormField(
               onSaved: (newValue) => enabled = newValue ?? false,

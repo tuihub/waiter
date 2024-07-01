@@ -45,18 +45,12 @@ class AppAddPanel extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             onSaved: (newValue) => shortDescription = newValue!,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: '描述',
             ),
-          ),
-          const SizedBox(
-            height: 16,
           ),
           TextFormField(
             onSaved: (newValue) => iconImageUrl = newValue!,
@@ -66,9 +60,6 @@ class AppAddPanel extends StatelessWidget {
             ),
             maxLines: null,
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             onSaved: (newValue) => backgroundImageUrl = newValue!,
             decoration: const InputDecoration(
@@ -76,9 +67,6 @@ class AppAddPanel extends StatelessWidget {
               labelText: '背景图片链接',
             ),
             maxLines: null,
-          ),
-          const SizedBox(
-            height: 16,
           ),
           TextFormField(
             onSaved: (newValue) => coverImageUrl = newValue!,

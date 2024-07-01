@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../l10n/l10n.dart';
+import '../components/toast.dart';
 
 class RightPanelForm extends StatefulWidget {
   const RightPanelForm({
@@ -14,6 +16,7 @@ class RightPanelForm extends StatefulWidget {
     this.onSubmit,
     this.submitting,
     required this.close,
+    this.spacing = 8,
   });
 
   final Widget? title;
@@ -24,6 +27,17 @@ class RightPanelForm extends StatefulWidget {
   final void Function()? onSubmit;
   final bool? submitting;
   final void Function() close;
+  final double spacing;
+
+  static List<Widget> spacingWrapper(
+          double height, Iterable<Widget> children) =>
+      children
+          .expand((item) sync* {
+            yield SizedBox(height: height);
+            yield item;
+          })
+          .skip(1)
+          .toList();
 
   @override
   State<StatefulWidget> createState() => _RightPanelFormState();
@@ -61,7 +75,10 @@ class _RightPanelFormState extends State<RightPanelForm> {
               key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: widget.formFields,
+                children: RightPanelForm.spacingWrapper(
+                  widget.spacing,
+                  widget.formFields,
+                ),
               ),
             ),
           ),
@@ -115,6 +132,69 @@ class _RightPanelFormState extends State<RightPanelForm> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class TextFormErrorMessage extends StatelessWidget {
+  const TextFormErrorMessage({
+    super.key,
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.error, color: Colors.red),
+        title: Text(
+          message,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TextReadOnlyFormField extends StatelessWidget {
+  const TextReadOnlyFormField({
+    super.key,
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      initialValue: value,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: IconButton(
+            icon: const Icon(Icons.lock_outline),
+            onPressed: () {
+              const Toast(title: '', message: '该项目无法修改').show(context);
+            }),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.copy),
+          onPressed: () async {
+            await Clipboard.setData(ClipboardData(text: value)).then((value) {
+              const Toast(title: '', message: '已复制').show(context);
+            });
+          },
         ),
       ),
     );

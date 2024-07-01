@@ -58,9 +58,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 labelText: 'ID',
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: name,
               onSaved: (newValue) => name = newValue!,
@@ -76,9 +73,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: description,
               onSaved: (newValue) => description = newValue!,
@@ -87,9 +81,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 label: Text('备注'),
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             DropdownButtonFormField(
               decoration: InputDecoration(
@@ -113,9 +104,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               onSaved: (newValue) => token = newValue!,
               decoration: const InputDecoration(
@@ -123,9 +111,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 label: Text('Token'),
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             SwitchFormField(
               initialValue: enabled,

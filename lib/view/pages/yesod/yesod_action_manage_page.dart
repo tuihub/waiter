@@ -90,7 +90,6 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
     final features =
         context.read<MainBloc>().state.serverFeatureSummary?.feedItemActions ??
             [];
@@ -104,9 +103,10 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
       },
       builder: (context, state) {
         return RightPanelForm(
-          formKey: formKey,
           title: Text(S.of(context).feedActionSetAdd),
           formFields: [
+            if (features.isEmpty)
+              const TextFormErrorMessage(message: '当前服务器无可用规则'),
             TextFormField(
               onChanged: (newValue) => name = newValue,
               decoration: const InputDecoration(
@@ -114,18 +114,12 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
                 label: Text('名称'),
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
             TextFormField(
               onChanged: (newValue) => description = newValue,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 label: Text('描述'),
               ),
-            ),
-            const SizedBox(
-              height: 8,
             ),
             ExpansionTile(
               title: Center(
@@ -233,16 +227,9 @@ class _YesodActionManageEditPanelState
         return RightPanelForm(
           title: Text(S.of(context).feedActionSetEdit),
           formFields: [
-            TextFormField(
-              initialValue: id.id.toString(),
-              readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'ID',
-              ),
-            ),
-            const SizedBox(
-              height: 8,
+            TextReadOnlyFormField(
+              label: S.of(context).id,
+              value: id.id.toString(),
             ),
             TextFormField(
               initialValue: name,
@@ -252,9 +239,6 @@ class _YesodActionManageEditPanelState
                 labelText: '名称',
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
             TextFormField(
               initialValue: description,
               onSaved: (newValue) => description = newValue!,
@@ -262,9 +246,6 @@ class _YesodActionManageEditPanelState
                 border: OutlineInputBorder(),
                 labelText: '描述',
               ),
-            ),
-            const SizedBox(
-              height: 8,
             ),
             ExpansionTile(
               title: Center(
@@ -406,19 +387,20 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (i > 0)
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              final temp = actions[i - 1];
-                              actions[i - 1] = actions[i];
-                              actions[i] = temp;
-                            });
-                            _tabController.animateTo(i - 1);
-                          },
-                          icon: const Icon(Icons.keyboard_arrow_left),
-                          label: const Text('前移'),
-                        ),
+                      ElevatedButton.icon(
+                        onPressed: i > 0
+                            ? () {
+                                setState(() {
+                                  final temp = actions[i - 1];
+                                  actions[i - 1] = actions[i];
+                                  actions[i] = temp;
+                                });
+                                _tabController.animateTo(i - 1);
+                              }
+                            : null,
+                        icon: const Icon(Icons.keyboard_arrow_left),
+                        label: const Text('前移'),
+                      ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: ElevatedButton.icon(
@@ -433,30 +415,34 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                           label: const Text('删除'),
                         ),
                       ),
-                      if (i < actions.length - 1)
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              final temp = actions[i + 1];
-                              actions[i + 1] = actions[i];
-                              actions[i] = temp;
-                            });
-                            _tabController.animateTo(i + 1);
-                          },
-                          icon: const Icon(Icons.keyboard_arrow_right),
-                          label: const Text('后移'),
-                        ),
+                      ElevatedButton.icon(
+                        onPressed: i < actions.length - 1
+                            ? () {
+                                setState(() {
+                                  final temp = actions[i + 1];
+                                  actions[i + 1] = actions[i];
+                                  actions[i] = temp;
+                                });
+                                _tabController.animateTo(i + 1);
+                              }
+                            : null,
+                        icon: const Icon(Icons.keyboard_arrow_right),
+                        label: const Text('后移'),
+                      ),
                     ],
                   ),
                 ),
-                _YesodActionConfigureItem(
-                  features: widget.features,
-                  action: actions[i],
-                  onSave: (action) {
-                    setState(() {
-                      actions[i] = action;
-                    });
-                  },
+                Expanded(
+                  child: _YesodActionConfigureItem(
+                    key: Key(actions[i].toString()),
+                    features: widget.features,
+                    action: actions[i],
+                    onSave: (action) {
+                      setState(() {
+                        actions[i] = action;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
@@ -479,6 +465,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
 
 class _YesodActionConfigureItem extends StatefulWidget {
   const _YesodActionConfigureItem({
+    super.key,
     required this.features,
     required this.action,
     required this.onSave,
@@ -515,8 +502,6 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('action: ${action.id}');
-    debugPrint('features: ${widget.features.length}');
     return DynMouseScroll(builder: (context, controller, physics) {
       return SingleChildScrollView(
           controller: controller,
@@ -557,6 +542,9 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
                         key: Key(selectedFeatureIndex.toString()),
                         jsonSchema: widget
                             .features[selectedFeatureIndex].configJsonSchema,
+                        jsonFormSchemaUiConfig: const JsonFormSchemaUiConfig(
+                          debugMode: true,
+                        ),
                         onFormDataSaved: (data) {
                           setState(() {
                             action.configJson = jsonEncode(data);

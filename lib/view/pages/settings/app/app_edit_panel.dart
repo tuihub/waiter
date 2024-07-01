@@ -55,9 +55,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
           Text('ID: ${widget.app.id.id.toHexString()}'),
           Text('Source: ${appSourceString(widget.app.source)}'),
           Text('SourceUrl: ${widget.app.sourceUrl}'),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: widget.app.id.id.toString(),
             readOnly: true,
@@ -65,9 +62,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
               border: OutlineInputBorder(),
               labelText: 'ID',
             ),
-          ),
-          const SizedBox(
-            height: 16,
           ),
           TextFormField(
             initialValue: name,
@@ -84,9 +78,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: shortDescription,
             readOnly: readOnly,
@@ -96,9 +87,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
               labelText: '描述',
             ),
             maxLines: null,
-          ),
-          const SizedBox(
-            height: 16,
           ),
           TextFormField(
             initialValue: iconImageUrl,
@@ -110,9 +98,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
             ),
             maxLines: null,
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: backgroundImageUrl,
             readOnly: readOnly,
@@ -122,9 +107,6 @@ class _AppEditPanelState extends State<AppEditPanel> {
               labelText: '背景图片链接',
             ),
             maxLines: null,
-          ),
-          const SizedBox(
-            height: 16,
           ),
           TextFormField(
             initialValue: coverImageUrl,

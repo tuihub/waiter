@@ -50,9 +50,6 @@ class _UserEditPanelState extends State<UserEditPanel> {
         title: const Text('用户详情'),
         formFields: [
           Text('ID: ${widget.user.id.id.toHexString()}'),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: username,
             onSaved: (newValue) => username = newValue!,
@@ -68,9 +65,6 @@ class _UserEditPanelState extends State<UserEditPanel> {
               // to-do check username
               return null;
             },
-          ),
-          const SizedBox(
-            height: 16,
           ),
           DropdownButtonFormField(
             decoration: const InputDecoration(
@@ -99,9 +93,6 @@ class _UserEditPanelState extends State<UserEditPanel> {
               });
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           DropdownButtonFormField(
             decoration: const InputDecoration(
               icon: Icon(Icons.settings),
@@ -124,9 +115,6 @@ class _UserEditPanelState extends State<UserEditPanel> {
                 userStatus = select ?? UserStatus.USER_STATUS_ACTIVE;
               });
             },
-          ),
-          const SizedBox(
-            height: 16,
           ),
           ExpansionTile(
             title: const Text('修改密码'),

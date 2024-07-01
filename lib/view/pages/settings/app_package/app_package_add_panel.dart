@@ -42,9 +42,6 @@ class AppPackageAddPanel extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             onSaved: (newValue) => description = newValue!,
             decoration: const InputDecoration(

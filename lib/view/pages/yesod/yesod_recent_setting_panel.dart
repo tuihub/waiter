@@ -58,9 +58,6 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                   alignment: Alignment.centerLeft,
                   child: Text('显示风格'),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
                 AnimatedToggleSwitch<FeedItemListType>.size(
                   current: listType,
                   values: FeedItemListType.values,
@@ -84,24 +81,15 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                     });
                   },
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
                 SpacingHelper.defaultDivider,
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text('筛选'),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
                 SwitchFormField(
                   onSaved: (newValue) => hideRead = newValue ?? false,
                   title: const Text('隐藏已读'),
                   initialValue: hideRead,
-                ),
-                const SizedBox(
-                  height: 8,
                 ),
                 MultiSelectDialogField(
                   title: const Text('按订阅筛选'),
@@ -123,9 +111,6 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                   decoration: BoxDecoration(
                     borderRadius: SpacingHelper.defaultBorderRadius,
                   ),
-                ),
-                const SizedBox(
-                  height: 8,
                 ),
                 MultiSelectDialogField(
                   title: const Text('按分类筛选'),

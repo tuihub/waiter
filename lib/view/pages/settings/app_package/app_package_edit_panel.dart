@@ -46,9 +46,6 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
         title: const Text('应用包详情'),
         formFields: [
           Text('ID: ${widget.appPackage.id.id.toHexString()}'),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: name,
             onSaved: (newValue) => name = newValue!,
@@ -63,9 +60,6 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
               return null;
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
           TextFormField(
             initialValue: description,
             onSaved: (newValue) => description = newValue!,
@@ -74,9 +68,6 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
               labelText: '描述',
             ),
             maxLines: null,
-          ),
-          const SizedBox(
-            height: 16,
           ),
           ElevatedButton(
             onPressed: () {

@@ -42,18 +42,12 @@ class SessionEditPanel extends StatelessWidget {
                 labelText: S.of(context).id,
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue: '${session.deviceInfo.deviceName} ',
               readOnly: true,
               decoration: InputDecoration(
                 labelText: S.of(context).deviceName,
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             TextFormField(
               initialValue: '${session.deviceInfo.systemVersion} ',
@@ -62,9 +56,6 @@ class SessionEditPanel extends StatelessWidget {
                 label: Text(S.of(context).operatingSystem),
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
             TextFormField(
               initialValue:
                   '${session.deviceInfo.clientName} ${session.deviceInfo.clientVersion}',
@@ -72,9 +63,6 @@ class SessionEditPanel extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: S.of(context).client,
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             TextFormField(
               initialValue: session.createTime
