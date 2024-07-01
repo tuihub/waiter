@@ -222,6 +222,7 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                   ),
                   category: category,
                   hideItems: hideItems,
+                  actionSets: actions.map((e) => e!).toList(),
                 )));
           },
           submitting: state is YesodFeedConfigAddState && state.processing,
@@ -243,6 +244,8 @@ class YesodFeedManageEditPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final feedSources =
+        context.read<MainBloc>().state.serverFeatureSummary?.feedSources ?? [];
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodFeedConfigEditState && state.success) {
@@ -251,6 +254,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final actionSets = state.feedActionSets ?? [];
         final config = index != null && state.feedConfigs != null
             ? state.feedConfigs![index!].config
             : FeedConfig();
@@ -261,10 +265,13 @@ class YesodFeedManageEditPanel extends StatelessWidget {
         var pullInterval = config.pullInterval.seconds.toInt() ~/ 60;
         var category = config.category;
         var hideItems = config.hideItems;
+        List<InternalID?> actions = config.actionSets;
 
         return RightPanelForm(
           title: Text(S.of(context).feedConfigEdit),
           formFields: [
+            if (feedSources.isEmpty || !feedSources.any((e) => e.id == config.source))
+              const TextFormErrorMessage(message: '服务器未启用当前订阅源'),
             TextReadOnlyFormField(
               label: S.of(context).id,
               value: config.id.id.toString(),
@@ -312,6 +319,20 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 labelText: '分组',
               ),
             ),
+            MultiSelectBottomSheetField<InternalID?>(
+              title: const Text('规则集'),
+              buttonText: const Text('自动化规则'),
+              initialValue: actions,
+              items:
+              actionSets.map((e) => MultiSelectItem(e.id, e.name)).toList(),
+              listType: MultiSelectListType.LIST,
+              onConfirm: (values) {
+                actions = values;
+              },
+              decoration: BoxDecoration(
+                borderRadius: SpacingHelper.defaultBorderRadius,
+              ),
+            ),
             SwitchFormField(
               initialValue: feedEnabled,
               onSaved: (newValue) => feedEnabled = newValue!,
@@ -342,6 +363,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                     category: category,
                     latestPullTime: config.latestPullTime,
                     hideItems: hideItems,
+                    actionSets: actions.map((e) => e!).toList(),
                   ),
                 ));
           },
