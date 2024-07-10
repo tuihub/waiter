@@ -270,7 +270,8 @@ class YesodFeedManageEditPanel extends StatelessWidget {
         return RightPanelForm(
           title: Text(S.of(context).feedConfigEdit),
           formFields: [
-            if (feedSources.isEmpty || !feedSources.any((e) => e.id == config.source))
+            if (feedSources.isEmpty ||
+                !feedSources.any((e) => e.id == config.source))
               const TextFormErrorMessage(message: '服务器未启用当前订阅源'),
             TextReadOnlyFormField(
               label: S.of(context).id,
@@ -324,7 +325,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
               buttonText: const Text('自动化规则'),
               initialValue: actions,
               items:
-              actionSets.map((e) => MultiSelectItem(e.id, e.name)).toList(),
+                  actionSets.map((e) => MultiSelectItem(e.id, e.name)).toList(),
               listType: MultiSelectListType.LIST,
               onConfirm: (values) {
                 actions = values;

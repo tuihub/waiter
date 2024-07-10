@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
-import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
@@ -499,65 +498,62 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
   late bool allowChangeId;
   late FeatureRequest action;
   late int selectedFeatureIndex;
+  final JsonFormController _formController = JsonFormController();
+  int key = 0;
 
   @override
   Widget build(BuildContext context) {
-    return DynMouseScroll(builder: (context, controller, physics) {
-      return SingleChildScrollView(
-          controller: controller,
-          physics: physics,
-          child: BootstrapContainer(
-            children: [
-              BootstrapColumn(
-                xxs: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Column(
-                    children: [
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '规则名称',
-                        ),
-                        value: action.id,
-                        onChanged: allowChangeId
-                            ? (newValue) {
-                                setState(() {
-                                  action.id = newValue!;
-                                  selectedFeatureIndex = widget.features
-                                      .indexWhere(
-                                          (element) => element.id == newValue);
-                                });
-                              }
-                            : null,
-                        items: [
-                          for (final feature in widget.features)
-                            DropdownMenuItem(
-                              value: feature.id,
-                              child: Text(feature.name),
-                            ),
-                        ],
-                      ),
-                      JsonForm(
-                        key: Key(selectedFeatureIndex.toString()),
-                        jsonSchema: widget
-                            .features[selectedFeatureIndex].configJsonSchema,
-                        jsonFormSchemaUiConfig: const JsonFormSchemaUiConfig(
-                          debugMode: true,
-                        ),
-                        onFormDataSaved: (data) {
+    return BootstrapContainer(
+      children: [
+        BootstrapColumn(
+          xxs: 12,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              children: [
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '规则名称',
+                  ),
+                  value: action.id,
+                  onChanged: allowChangeId
+                      ? (newValue) {
                           setState(() {
-                            action.configJson = jsonEncode(data);
+                            action.id = newValue!;
+                            selectedFeatureIndex = widget.features.indexWhere(
+                                (element) => element.id == newValue);
                           });
-                          widget.onSave(action);
-                        },
+                        }
+                      : null,
+                  items: [
+                    for (final feature in widget.features)
+                      DropdownMenuItem(
+                        value: feature.id,
+                        child: Text(feature.name),
                       ),
-                    ],
+                  ],
+                ),
+                Expanded(
+                  child: JsonForm(
+                    controller: _formController,
+                    key: Key((key++).toString()),
+                    jsonSchema:
+                        widget.features[selectedFeatureIndex].configJsonSchema,
+                    jsonData: action.configJson,
+                    onFormDataSaved: (data) {
+                      setState(() {
+                        action.configJson = jsonEncode(data);
+                      });
+                      widget.onSave(action);
+                    },
                   ),
                 ),
-              ),
-            ],
-          ));
-    });
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
