@@ -125,6 +125,14 @@ class KVTableData extends DataClass implements Insertable<KVTableData> {
         key: key ?? this.key,
         value: value ?? this.value,
       );
+  KVTableData copyWithCompanion(KVTableCompanion data) {
+    return KVTableData(
+      bucket: data.bucket.present ? data.bucket.value : this.bucket,
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('KVTableData(')
@@ -401,6 +409,17 @@ class FeedConfigTableData extends DataClass
         category: category ?? this.category,
         jsonData: jsonData ?? this.jsonData,
       );
+  FeedConfigTableData copyWithCompanion(FeedConfigTableCompanion data) {
+    return FeedConfigTableData(
+      internalId:
+          data.internalId.present ? data.internalId.value : this.internalId,
+      name: data.name.present ? data.name.value : this.name,
+      feedUrl: data.feedUrl.present ? data.feedUrl.value : this.feedUrl,
+      category: data.category.present ? data.category.value : this.category,
+      jsonData: data.jsonData.present ? data.jsonData.value : this.jsonData,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('FeedConfigTableData(')
@@ -529,7 +548,7 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $KVTableTable kVTable = $KVTableTable(this);
   late final $FeedConfigTableTable feedConfigTable =
       $FeedConfigTableTable(this);
@@ -541,7 +560,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       [kVTable, feedConfigTable];
 }
 
-typedef $$KVTableTableInsertCompanionBuilder = KVTableCompanion Function({
+typedef $$KVTableTableCreateCompanionBuilder = KVTableCompanion Function({
   required String bucket,
   required String key,
   required String value,
@@ -560,8 +579,7 @@ class $$KVTableTableTableManager extends RootTableManager<
     KVTableData,
     $$KVTableTableFilterComposer,
     $$KVTableTableOrderingComposer,
-    $$KVTableTableProcessedTableManager,
-    $$KVTableTableInsertCompanionBuilder,
+    $$KVTableTableCreateCompanionBuilder,
     $$KVTableTableUpdateCompanionBuilder> {
   $$KVTableTableTableManager(_$AppDatabase db, $KVTableTable table)
       : super(TableManagerState(
@@ -571,8 +589,7 @@ class $$KVTableTableTableManager extends RootTableManager<
               $$KVTableTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$KVTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) => $$KVTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> bucket = const Value.absent(),
             Value<String> key = const Value.absent(),
             Value<String> value = const Value.absent(),
@@ -584,7 +601,7 @@ class $$KVTableTableTableManager extends RootTableManager<
             value: value,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String bucket,
             required String key,
             required String value,
@@ -597,18 +614,6 @@ class $$KVTableTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$KVTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $KVTableTable,
-    KVTableData,
-    $$KVTableTableFilterComposer,
-    $$KVTableTableOrderingComposer,
-    $$KVTableTableProcessedTableManager,
-    $$KVTableTableInsertCompanionBuilder,
-    $$KVTableTableUpdateCompanionBuilder> {
-  $$KVTableTableProcessedTableManager(super.$state);
 }
 
 class $$KVTableTableFilterComposer
@@ -649,7 +654,7 @@ class $$KVTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$FeedConfigTableTableInsertCompanionBuilder = FeedConfigTableCompanion
+typedef $$FeedConfigTableTableCreateCompanionBuilder = FeedConfigTableCompanion
     Function({
   required String internalId,
   required String name,
@@ -674,8 +679,7 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
     FeedConfigTableData,
     $$FeedConfigTableTableFilterComposer,
     $$FeedConfigTableTableOrderingComposer,
-    $$FeedConfigTableTableProcessedTableManager,
-    $$FeedConfigTableTableInsertCompanionBuilder,
+    $$FeedConfigTableTableCreateCompanionBuilder,
     $$FeedConfigTableTableUpdateCompanionBuilder> {
   $$FeedConfigTableTableTableManager(
       _$AppDatabase db, $FeedConfigTableTable table)
@@ -686,9 +690,7 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
               $$FeedConfigTableTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$FeedConfigTableTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$FeedConfigTableTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> internalId = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String> feedUrl = const Value.absent(),
@@ -704,7 +706,7 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
             jsonData: jsonData,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String internalId,
             required String name,
             required String feedUrl,
@@ -721,18 +723,6 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$FeedConfigTableTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $FeedConfigTableTable,
-    FeedConfigTableData,
-    $$FeedConfigTableTableFilterComposer,
-    $$FeedConfigTableTableOrderingComposer,
-    $$FeedConfigTableTableProcessedTableManager,
-    $$FeedConfigTableTableInsertCompanionBuilder,
-    $$FeedConfigTableTableUpdateCompanionBuilder> {
-  $$FeedConfigTableTableProcessedTableManager(super.$state);
 }
 
 class $$FeedConfigTableTableFilterComposer
@@ -793,9 +783,9 @@ class $$FeedConfigTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class _$AppDatabaseManager {
+class $AppDatabaseManager {
   final _$AppDatabase _db;
-  _$AppDatabaseManager(this._db);
+  $AppDatabaseManager(this._db);
   $$KVTableTableTableManager get kVTable =>
       $$KVTableTableTableManager(_db, _db.kVTable);
   $$FeedConfigTableTableTableManager get feedConfigTable =>
