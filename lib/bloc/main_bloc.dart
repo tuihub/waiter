@@ -55,6 +55,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   ClientSettingBloc get clientSettingBloc => _clientSettingBloc;
   PackageInfo get packageInfo => _packageInfo;
   ClientDeviceInfo get deviceInfo => _deviceInfo;
+  String? get basePath => _basePath;
 
   TipherethBloc? get tipherethBloc => _tipherethBloc;
   GeburaBloc? get geburaBloc => _geburaBloc;

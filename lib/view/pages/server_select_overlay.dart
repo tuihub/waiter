@@ -287,18 +287,18 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                               xxs: 11,
                               md: 8,
                               lg: 6,
-                              child: DynMouseScroll(
-                                  builder: (context, controller, physics) {
-                                return SingleChildScrollView(
-                                  controller: controller,
-                                  physics: physics,
-                                  child: _preloginSettings
-                                      ? const ClientSettingPage()
-                                      : _selected != null
-                                          ? ServerDetail(config: _selected!)
-                                          : const NewServer(),
-                                );
-                              }),
+                              child: _preloginSettings
+                                  ? const ClientSettingPage()
+                                  : DynMouseScroll(
+                                      builder: (context, controller, physics) {
+                                      return SingleChildScrollView(
+                                        controller: controller,
+                                        physics: physics,
+                                        child: _selected != null
+                                            ? ServerDetail(config: _selected!)
+                                            : const NewServer(),
+                                      );
+                                    }),
                             ),
                           ],
                         ),

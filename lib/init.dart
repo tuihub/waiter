@@ -9,7 +9,8 @@ Future<MyApp> init() async {
   if (PlatformHelper.isWeb()) {
     dataPath = null;
   } else if (PlatformHelper.isWindowsApp() && !kDebugMode) {
-    dataPath = path.join(path.dirname(Platform.resolvedExecutable), 'data');
+    dataPath =
+        path.join(path.dirname(Platform.resolvedExecutable), 'data', 'run');
   } else {
     dataPath = (await getApplicationSupportDirectory()).path;
   }

@@ -18,60 +18,56 @@ class _CacheSettingState extends State<CacheSetting> {
       return Card(
         margin: EdgeInsets.zero,
         child: Container(
-          height: kToolbarHeight,
-          margin: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  S.of(context).cache,
-                ),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: ListTile(
+            title: Text(S.of(context).cache),
+            subtitle: Text(
+              FileSize.getSize(_cacheSize),
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
               ),
-              Text(
-                FileSize.getSize(_cacheSize),
-                style: TextStyle(
-                  color: Theme.of(context).disabledColor,
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              TextButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _cacheSize = context.read<MainBloc>().cacheSize();
-                  });
-                },
-                icon: const Icon(Icons.cached),
-                label: Text(S.of(context).refresh),
-              ),
-              TextButton.icon(
-                onPressed: () async {
-                  setState(() {
-                    _clearing = true;
-                  });
-                  await context.read<MainBloc>().clearCache().then((_) {
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
                     setState(() {
                       _cacheSize = context.read<MainBloc>().cacheSize();
                     });
-                  });
-                  setState(() {
-                    _clearing = false;
-                  });
-                },
-                icon: _clearing
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                          ),
-                        ))
-                    : const Icon(Icons.delete),
-                label: Text(S.of(context).clearCache),
-              )
-            ],
+                  },
+                  icon: const Icon(Icons.cached),
+                  label: Text(S.of(context).refresh),
+                ),
+                TextButton.icon(
+                  onPressed: () async {
+                    setState(() {
+                      _clearing = true;
+                    });
+                    await context.read<MainBloc>().clearCache().then((_) {
+                      setState(() {
+                        _cacheSize = context.read<MainBloc>().cacheSize();
+                      });
+                    });
+                    setState(() {
+                      _clearing = false;
+                    });
+                  },
+                  icon: _clearing
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4,
+                            ),
+                          ))
+                      : const Icon(Icons.delete),
+                  label: Text(S.of(context).clearCache),
+                )
+              ],
+            ),
           ),
         ),
       );

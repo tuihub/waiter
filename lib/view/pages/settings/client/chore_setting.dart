@@ -5,12 +5,13 @@ class ChoreSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final basePath = context.read<MainBloc>().basePath;
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
       return Card(
         margin: EdgeInsets.zero,
         child: Container(
-          margin: const EdgeInsets.all(8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: ExpansionTile(
             title: const Text('杂项'),
             children: [
@@ -25,7 +26,18 @@ class ChoreSetting extends StatelessWidget {
                           .add(ChangeUseSystemProxyEvent(value));
                     },
                   ),
-                )
+                ),
+              if (basePath != null && PlatformHelper.isWindowsApp())
+                ListTile(
+                  title: const Text('数据目录'),
+                  subtitle: Text(basePath),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.open_in_new),
+                    onPressed: () {
+                      unawaited(OpenFile.open(basePath));
+                    },
+                  ),
+                ),
             ],
           ),
         ),
