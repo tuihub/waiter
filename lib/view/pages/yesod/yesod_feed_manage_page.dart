@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
@@ -15,6 +18,7 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
+import '../../../common/opml/opml.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
@@ -46,6 +50,23 @@ class YesodFeedManagePage extends StatelessWidget {
               .go(context);
           FramePage.of(context)?.openDrawer();
         },
+        popupMenuItems: [
+          PopupMenuItem(
+            value: 'export_opml',
+            onTap: () {
+              unawaited(showDialog<void>(
+                context: context,
+                builder: (_) {
+                  return BlocProvider.value(
+                    value: context.read<YesodBloc>(),
+                    child: const _ExportOPMLDialog(),
+                  );
+                },
+              ));
+            },
+            child: const Text('导出OPML'),
+          ),
+        ],
         children: [
           for (var i = 0; i < listData.length; i++)
             ListTile(
@@ -409,6 +430,93 @@ class YesodFeedManageEditPanel extends StatelessWidget {
           close: () => close(context),
         );
       },
+    );
+  }
+}
+
+class _ExportOPMLDialog extends StatefulWidget {
+  const _ExportOPMLDialog();
+
+  @override
+  _ExportOPMLDialogState createState() => _ExportOPMLDialogState();
+}
+
+class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(genOPML(context.read<YesodBloc>().state.feedConfigs ?? []));
+  }
+
+  OPML? _opml;
+
+  Future<void> genOPML(
+      List<ListFeedConfigsResponse_FeedWithConfig> feedConfigs) async {
+    final items = <OPMLItem>[];
+    for (final e in feedConfigs) {
+      if (e.config.source.id != 'rss' || e.config.source.configJson.isEmpty) {
+        continue;
+      }
+      try {
+        final config = jsonDecode(e.config.source.configJson);
+        items.add(OPMLItem(
+          title: e.config.name,
+          xmlUrl: config['url'] as String? ?? '',
+        ));
+      } catch (e) {
+        continue;
+      }
+      setState(() {
+        _opml = OPML(title: 'TuiHub export', items: items);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('导出OPML'),
+      content: SizedBox(
+        width: 600,
+        child: _opml == null
+            ? const Center(child: CircularProgressIndicator())
+            : Text('导出${_opml!.items.length}个订阅'),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _opml != null
+              ? () async {
+                  final data = _opml!.toOPMLString();
+                  await Clipboard.setData(ClipboardData(text: data));
+                  const Toast(title: '', message: '已复制到剪贴板').show(context);
+                  Navigator.of(context).pop();
+                }
+              : null,
+          child: const Text('复制到剪贴板'),
+        ),
+        TextButton(
+          onPressed: _opml != null
+              ? () async {
+                  final data = _opml!.toOPMLString();
+                  final file = await FilePicker.platform.saveFile(
+                    fileName: 'tuihub_export.opml',
+                    bytes: utf8.encode(data),
+                  );
+                  if (file != null) {
+                    Toast(title: '', message: '已保存到 $file').show(context);
+                    Navigator.of(context).pop();
+                  }
+                }
+              : null,
+          child: const Text('保存到文件'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('关闭'),
+        ),
+      ],
     );
   }
 }

@@ -14,6 +14,7 @@ class ListManagePage extends StatefulWidget {
     this.onAdd,
     this.onBack,
     this.floatingActionButton,
+    this.popupMenuItems,
   });
 
   final String title;
@@ -24,6 +25,7 @@ class ListManagePage extends StatefulWidget {
   final void Function()? onAdd;
   final void Function()? onBack;
   final FloatingActionButton? floatingActionButton;
+  final List<PopupMenuEntry<String>>? popupMenuItems;
 
   @override
   State<ListManagePage> createState() => ListManagePageState();
@@ -53,6 +55,7 @@ class ListManagePageState extends State<ListManagePage> {
                   onTap: widget.onAdd,
                   child: Text(S.of(context).add),
                 ),
+                if (widget.popupMenuItems != null) ...widget.popupMenuItems!,
                 PopupMenuItem(
                   value: 'refresh',
                   onTap: widget.onRefresh,
