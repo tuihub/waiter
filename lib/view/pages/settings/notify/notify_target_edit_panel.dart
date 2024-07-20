@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
-import '../../../../l10n/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
 import '../../../specialized/right_panel_form.dart';
@@ -44,8 +44,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
         var description = target.description;
         var enabled =
             target.status == NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE;
-        var destination = target.destination;
-        var token = target.token;
+        final destination = target.destination;
 
         return RightPanelForm(
           title: const Text('Token详情'),
@@ -82,36 +81,6 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 label: Text('备注'),
               ),
             ),
-            DropdownButtonFormField(
-              decoration: InputDecoration(
-                icon: const Icon(Icons.place),
-                border: const OutlineInputBorder(),
-                labelText: S.of(context).NOTIFY_TARGET_TYPE,
-              ),
-              value: destination,
-              items: [
-                for (final dest in notifyDestinations)
-                  DropdownMenuItem(
-                    value: dest.id,
-                    child: Text(dest.id),
-                  ),
-              ],
-              onChanged: (newValue) => destination = newValue!,
-              validator: (value) {
-                if (value == null) {
-                  return '请选择类型';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              onSaved: (newValue) => token = newValue!,
-              decoration: const InputDecoration(
-                icon: Icon(Icons.key),
-                border: OutlineInputBorder(),
-                label: Text('Token'),
-              ),
-            ),
             SwitchFormField(
               initialValue: enabled,
               onSaved: (newValue) => enabled = newValue!,
@@ -127,11 +96,12 @@ class NotifyTargetEditPanel extends StatelessWidget {
                     id: target.id,
                     name: name,
                     description: description,
-                    destination: destination,
+                    destination: FeatureRequest(
+                      id: destination.id,
+                    ),
                     status: enabled
                         ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                         : NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND,
-                    token: token,
                   ),
                 ));
           },

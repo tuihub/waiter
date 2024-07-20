@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as $duration;
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/yesod/yesod_bloc.dart';
@@ -102,13 +106,15 @@ class YesodFeedManageAddPanel extends StatelessWidget {
     final feedSources =
         context.read<MainBloc>().state.serverFeatureSummary?.feedSources ?? [];
     var source = feedSources.isNotEmpty ? feedSources.first : null;
-    var url = '';
+    var config = '';
     var name = '';
     var category = '';
     var refreshInterval = 60;
     var enabled = true;
     var hideItems = false;
     var actions = <InternalID?>[];
+    final jsonFormController = JsonFormController();
+    var buildCounter = 0;
 
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
@@ -145,19 +151,35 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                 return null;
               },
             ),
-            TextFormField(
-              onChanged: (newValue) => url = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('订阅地址'),
+            if (source != null)
+              JsonForm(
+                key: ValueKey(buildCounter++),
+                controller: jsonFormController,
+                jsonSchema: feedSources
+                    .firstWhere((e) => e.id == source!.id)
+                    .configJsonSchema,
+                jsonData: config,
+                onFormDataSaved: (data) {
+                  config = jsonEncode(data);
+                },
+                jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
+                  expandGenesis: true,
+                  headerTitleBuilder: (_, __) => Container(),
+                  submitButtonBuilder: (_) => Container(),
+                ),
               ),
-            ),
             TextFormField(
               onChanged: (newValue) => name = newValue,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 label: Text('名称'),
               ),
+              validator: (value) {
+                if (value?.isEmpty ?? false) {
+                  return S.of(context).requiredField;
+                }
+                return null;
+              },
             ),
             TextFormField(
               onChanged: (newValue) => refreshInterval = int.parse(newValue),
@@ -210,20 +232,25 @@ class YesodFeedManageAddPanel extends StatelessWidget {
               ? state.msg
               : null,
           onSubmit: () {
-            context.read<YesodBloc>().add(YesodFeedConfigAddEvent(FeedConfig(
-                  name: name,
-                  feedUrl: url,
-                  source: source?.id,
-                  status: enabled
-                      ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
-                      : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
-                  pullInterval: $duration.Duration(
-                    seconds: $fixnum.Int64(refreshInterval * 60),
-                  ),
-                  category: category,
-                  hideItems: hideItems,
-                  actionSets: actions.map((e) => e!).toList(),
-                )));
+            if (jsonFormController.submit()) {
+              context.read<YesodBloc>().add(YesodFeedConfigAddEvent(FeedConfig(
+                    name: name,
+                    description: '',
+                    source: FeatureRequest(
+                      id: source!.id,
+                      configJson: config,
+                    ),
+                    status: enabled
+                        ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
+                        : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
+                    pullInterval: $duration.Duration(
+                      seconds: $fixnum.Int64(refreshInterval * 60),
+                    ),
+                    category: category,
+                    hideItems: hideItems,
+                    actionSets: actions.map((e) => e!).toList(),
+                  )));
+            }
           },
           submitting: state is YesodFeedConfigAddState && state.processing,
           close: () => close(context),
@@ -259,19 +286,20 @@ class YesodFeedManageEditPanel extends StatelessWidget {
             ? state.feedConfigs![index!].config
             : FeedConfig();
         var name = config.name;
-        var feedUrl = config.feedUrl;
+        var configJson = config.source.configJson;
         var feedEnabled =
             config.status == FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE;
         var pullInterval = config.pullInterval.seconds.toInt() ~/ 60;
         var category = config.category;
         var hideItems = config.hideItems;
         List<InternalID?> actions = config.actionSets;
+        final jsonFormController = JsonFormController();
 
         return RightPanelForm(
           title: Text(S.of(context).feedConfigEdit),
           formFields: [
             if (feedSources.isEmpty ||
-                !feedSources.any((e) => e.id == config.source))
+                !feedSources.any((e) => e.id == config.source.id))
               const TextFormErrorMessage(message: '服务器未启用当前订阅源'),
             TextReadOnlyFormField(
               label: S.of(context).id,
@@ -279,14 +307,21 @@ class YesodFeedManageEditPanel extends StatelessWidget {
             ),
             TextReadOnlyFormField(
               label: '订阅源类型',
-              value: config.source,
+              value: config.source.id,
             ),
-            TextFormField(
-              initialValue: feedUrl,
-              onSaved: (newValue) => feedUrl = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('订阅地址'),
+            JsonForm(
+              controller: jsonFormController,
+              jsonSchema: feedSources
+                  .firstWhere((e) => e.id == config.source.id)
+                  .configJsonSchema,
+              jsonData: configJson,
+              onFormDataSaved: (data) {
+                configJson = jsonEncode(data);
+              },
+              jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
+                expandGenesis: true,
+                headerTitleBuilder: (_, __) => Container(),
+                submitButtonBuilder: (_) => Container(),
               ),
             ),
             TextFormField(
@@ -296,6 +331,12 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 border: OutlineInputBorder(),
                 labelText: '名称',
               ),
+              validator: (value) {
+                if (value?.isEmpty ?? false) {
+                  return S.of(context).requiredField;
+                }
+                return null;
+              },
             ),
             TextFormField(
               initialValue: pullInterval.toString(),
@@ -349,24 +390,25 @@ class YesodFeedManageEditPanel extends StatelessWidget {
               ? state.msg
               : null,
           onSubmit: () {
-            context.read<YesodBloc>().add(YesodFeedConfigEditEvent(
-                  FeedConfig(
-                    id: config.id,
-                    name: name,
-                    feedUrl: feedUrl,
-                    source: config.source,
-                    status: feedEnabled
-                        ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
-                        : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
-                    pullInterval: $duration.Duration(
-                      seconds: $fixnum.Int64(pullInterval * 60),
+            if (jsonFormController.submit()) {
+              context.read<YesodBloc>().add(YesodFeedConfigEditEvent(
+                    FeedConfig(
+                      id: config.id,
+                      name: name,
+                      source: config.source,
+                      status: feedEnabled
+                          ? FeedConfigStatus.FEED_CONFIG_STATUS_ACTIVE
+                          : FeedConfigStatus.FEED_CONFIG_STATUS_SUSPEND,
+                      pullInterval: $duration.Duration(
+                        seconds: $fixnum.Int64(pullInterval * 60),
+                      ),
+                      category: category,
+                      latestPullTime: config.latestPullTime,
+                      hideItems: hideItems,
+                      actionSets: actions.map((e) => e!).toList(),
                     ),
-                    category: category,
-                    latestPullTime: config.latestPullTime,
-                    hideItems: hideItems,
-                    actionSets: actions.map((e) => e!).toList(),
-                  ),
-                ));
+                  ));
+            }
           },
           submitting: state is YesodFeedConfigEditState && state.processing,
           close: () => close(context),

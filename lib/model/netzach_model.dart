@@ -28,18 +28,15 @@ class NotifyFlowSourceModel {
 class NotifyFlowTargetModel {
   NotifyFlowTargetModel({
     required this.targetId,
-    required this.channelId,
     required this.filter,
   });
 
   InternalID targetId;
-  String channelId;
   NotifyFilterModel filter;
 
   static NotifyFlowTargetModel fromProto(NotifyFlowTarget proto) {
     return NotifyFlowTargetModel(
       targetId: proto.targetId,
-      channelId: proto.channelId,
       filter: NotifyFilterModel.fromProto(proto.filter),
     );
   }
@@ -47,7 +44,6 @@ class NotifyFlowTargetModel {
   NotifyFlowTarget toProto() {
     return NotifyFlowTarget(
       targetId: targetId,
-      channelId: channelId,
       filter: filter.toProto(),
     );
   }

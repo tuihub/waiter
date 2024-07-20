@@ -37,13 +37,13 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m7(success, failed) =>
       "导入Steam应用程序完成，成功 ${success} 个，失败 ${failed} 个。";
 
-  static String m11(reason) => "加载失败${reason}";
+  static String m8(reason) => "加载失败${reason}";
 
-  static String m8(server) => "登录到 ${server}";
+  static String m9(server) => "登录到 ${server}";
 
-  static String m9(reason) => "登录失败，${reason}";
+  static String m10(reason) => "登录失败，${reason}";
 
-  static String m10(number) => "发现 ${number} 个新应用";
+  static String m11(number) => "发现 ${number} 个新应用";
 
   static String m12(server) => "注册到 ${server}";
 
@@ -173,14 +173,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "lastLogin": MessageLookupByLibrary.simpleMessage("上次登录"),
         "launcherError": MessageLookupByLibrary.simpleMessage("启动器错误"),
         "library": MessageLookupByLibrary.simpleMessage("库"),
-        "loadFailed": m11,
-        "loggingInTo": m8,
+        "loadFailed": m8,
+        "loggingInTo": m9,
         "login": MessageLookupByLibrary.simpleMessage("登录"),
         "loginExpired": MessageLookupByLibrary.simpleMessage("登录已过期"),
-        "loginFailed": m9,
+        "loginFailed": m10,
         "logoutDevice": MessageLookupByLibrary.simpleMessage("注销设备"),
         "minimizeToTray": MessageLookupByLibrary.simpleMessage("最小化到托盘"),
-        "newApplicationFound": m10,
+        "newApplicationFound": m11,
         "noAppInLibrary": MessageLookupByLibrary.simpleMessage("库中没有应用"),
         "operatingSystem": MessageLookupByLibrary.simpleMessage("操作系统"),
         "parseFailed": MessageLookupByLibrary.simpleMessage("解析失败"),
@@ -201,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "registerInTo": m12,
         "registerSuccess": MessageLookupByLibrary.simpleMessage("注册成功"),
         "repeatPassword": MessageLookupByLibrary.simpleMessage("再次输入密码"),
+        "requiredField": MessageLookupByLibrary.simpleMessage("必填"),
         "retry": MessageLookupByLibrary.simpleMessage("重试"),
         "scanningLocalFiles": MessageLookupByLibrary.simpleMessage("正在扫描本地文件"),
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),

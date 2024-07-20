@@ -37,11 +37,15 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m7(success, failed) =>
       "Import steam application finished, ${success} success, ${failed} failed";
 
-  static String m8(server) => "Logging in to ${server}";
+  static String m8(reason) => "Load failed, ${reason}";
 
-  static String m9(reason) => "Login failed, ${reason}";
+  static String m9(server) => "Logging in to ${server}";
 
-  static String m10(number) => "${number} new applications found";
+  static String m10(reason) => "Login failed, ${reason}";
+
+  static String m11(number) => "${number} new applications found";
+
+  static String m12(server) => "Register to ${server}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -84,6 +88,33 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Telegram"),
         "NOTIFY_TARGET_TYPE_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "PORTER_CONNECTION_STATUS_ACTIVATION_FAILED":
+            MessageLookupByLibrary.simpleMessage("Activation failed"),
+        "PORTER_CONNECTION_STATUS_ACTIVE":
+            MessageLookupByLibrary.simpleMessage("Working"),
+        "PORTER_CONNECTION_STATUS_CONNECTED":
+            MessageLookupByLibrary.simpleMessage(
+                "Connected but not yet enabled"),
+        "PORTER_CONNECTION_STATUS_DISCONNECTED":
+            MessageLookupByLibrary.simpleMessage("Disconnected"),
+        "PORTER_CONNECTION_STATUS_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "SYSTEM_NOTIFICATION_LEVEL_ERROR":
+            MessageLookupByLibrary.simpleMessage("Error"),
+        "SYSTEM_NOTIFICATION_LEVEL_INFO":
+            MessageLookupByLibrary.simpleMessage("Info"),
+        "SYSTEM_NOTIFICATION_LEVEL_ONGOING":
+            MessageLookupByLibrary.simpleMessage("On going"),
+        "SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "SYSTEM_NOTIFICATION_LEVEL_WARNING":
+            MessageLookupByLibrary.simpleMessage("Warning"),
+        "SYSTEM_NOTIFICATION_TYPE_SYSTEM":
+            MessageLookupByLibrary.simpleMessage("System"),
+        "SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "SYSTEM_NOTIFICATION_TYPE_USER":
+            MessageLookupByLibrary.simpleMessage("User"),
         "USER_STATUS": MessageLookupByLibrary.simpleMessage("Status"),
         "USER_STATUS_ACTIVE": MessageLookupByLibrary.simpleMessage("Active"),
         "USER_STATUS_BLOCKED": MessageLookupByLibrary.simpleMessage("Blocked"),
@@ -95,14 +126,44 @@ class MessageLookup extends MessageLookupByLibrary {
         "USER_TYPE_SENTINEL": MessageLookupByLibrary.simpleMessage("Sentinel"),
         "USER_TYPE_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("Unspecified"),
+        "add": MessageLookupByLibrary.simpleMessage("Add"),
+        "addApplication":
+            MessageLookupByLibrary.simpleMessage("Add application"),
         "address": MessageLookupByLibrary.simpleMessage("Address"),
         "applicationExitAbnormally":
             MessageLookupByLibrary.simpleMessage("Application exit abnormally"),
+        "applySuccess": MessageLookupByLibrary.simpleMessage("Change applied"),
         "areYouSureToClose":
             MessageLookupByLibrary.simpleMessage("Are you sure to close?"),
+        "backward": MessageLookupByLibrary.simpleMessage("Backward"),
+        "cache": MessageLookupByLibrary.simpleMessage("cache"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "captcha": MessageLookupByLibrary.simpleMessage("Verification code"),
+        "captchaRequired":
+            MessageLookupByLibrary.simpleMessage("Verification code required"),
+        "changeServer":
+            MessageLookupByLibrary.simpleMessage("Switching server"),
+        "check": MessageLookupByLibrary.simpleMessage("Check"),
         "chesed": MessageLookupByLibrary.simpleMessage("Chesed"),
+        "clearCache": MessageLookupByLibrary.simpleMessage("Clear"),
         "clickLoginToStart":
             MessageLookupByLibrary.simpleMessage("CLICK LOGIN TO START"),
+        "client": MessageLookupByLibrary.simpleMessage("client"),
+        "clientSetting": MessageLookupByLibrary.simpleMessage("Client setting"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "connectInClient":
+            MessageLookupByLibrary.simpleMessage("Log in using a client"),
+        "continueInCurrentServer":
+            MessageLookupByLibrary.simpleMessage("Continue in current server"),
+        "continueInWebVersion": MessageLookupByLibrary.simpleMessage(
+            "Continue to use the web version"),
+        "currentDevice": MessageLookupByLibrary.simpleMessage("Current device"),
+        "currentTheme": MessageLookupByLibrary.simpleMessage("Current theme"),
+        "deviceDetail": MessageLookupByLibrary.simpleMessage("Device Details"),
+        "deviceName": MessageLookupByLibrary.simpleMessage("Device Name"),
+        "downloadClient":
+            MessageLookupByLibrary.simpleMessage("Download client"),
         "durationDays": m0,
         "durationHours": m1,
         "durationJustNow": MessageLookupByLibrary.simpleMessage("Just now"),
@@ -111,32 +172,80 @@ class MessageLookup extends MessageLookupByLibrary {
         "durationSeconds": m4,
         "durationWeeks": m5,
         "durationYears": m6,
+        "exit": MessageLookupByLibrary.simpleMessage("Exit"),
+        "feedActionSetAdd":
+            MessageLookupByLibrary.simpleMessage("Add rule set"),
+        "feedActionSetEdit":
+            MessageLookupByLibrary.simpleMessage("Edit rule set"),
+        "feedActionSetManage":
+            MessageLookupByLibrary.simpleMessage("Manage rule set"),
+        "feedConfigAdd":
+            MessageLookupByLibrary.simpleMessage("Add subscription"),
+        "feedConfigEdit":
+            MessageLookupByLibrary.simpleMessage("Edit subscription"),
+        "feedConfigManage":
+            MessageLookupByLibrary.simpleMessage("Manage subscription"),
         "gebura": MessageLookupByLibrary.simpleMessage("Gebura"),
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),
+        "hide": MessageLookupByLibrary.simpleMessage("Hide"),
+        "id": MessageLookupByLibrary.simpleMessage("ID"),
         "importSteamApplicationFinished": m7,
         "importingSteamApplications": MessageLookupByLibrary.simpleMessage(
             "Importing steam applications"),
+        "lastLogin": MessageLookupByLibrary.simpleMessage("Last Login"),
         "launcherError": MessageLookupByLibrary.simpleMessage("Launcher error"),
-        "loggingInTo": m8,
+        "library": MessageLookupByLibrary.simpleMessage("Library"),
+        "loadFailed": m8,
+        "loggingInTo": m9,
         "login": MessageLookupByLibrary.simpleMessage("Login"),
-        "loginFailed": m9,
-        "newApplicationFound": m10,
+        "loginExpired":
+            MessageLookupByLibrary.simpleMessage("Login has expired"),
+        "loginFailed": m10,
+        "logoutDevice": MessageLookupByLibrary.simpleMessage("Logout device"),
+        "minimizeToTray":
+            MessageLookupByLibrary.simpleMessage("Minimize to tray"),
+        "newApplicationFound": m11,
+        "noAppInLibrary": MessageLookupByLibrary.simpleMessage(
+            "No application in the library"),
+        "operatingSystem":
+            MessageLookupByLibrary.simpleMessage("Operating system"),
         "parseFailed": MessageLookupByLibrary.simpleMessage("Parse failed"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "passwordInconsistent":
+            MessageLookupByLibrary.simpleMessage("Password inconsistency"),
         "pleaseDontReRunApplication": MessageLookupByLibrary.simpleMessage(
             "Please don\'t re-run application"),
         "pleaseInputServerAddress":
             MessageLookupByLibrary.simpleMessage("Please input server address"),
         "pleaseInputServerPort":
             MessageLookupByLibrary.simpleMessage("Please input server port"),
-        "pleaseSetupApplicationPath": MessageLookupByLibrary.simpleMessage(
-            "Please setup application path"),
+        "pleaseSetupApplicationPath":
+            MessageLookupByLibrary.simpleMessage("Please set application path"),
         "port": MessageLookupByLibrary.simpleMessage("Port"),
+        "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+        "refreshCaptcha":
+            MessageLookupByLibrary.simpleMessage("Refresh verification code"),
+        "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "registerInTo": m12,
+        "registerSuccess":
+            MessageLookupByLibrary.simpleMessage("Registered successfully"),
+        "repeatPassword":
+            MessageLookupByLibrary.simpleMessage("Reenter password"),
+        "retry": MessageLookupByLibrary.simpleMessage("Retry"),
         "scanningLocalFiles":
             MessageLookupByLibrary.simpleMessage("Scanning local files"),
         "serverSetup": MessageLookupByLibrary.simpleMessage("Server setup"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "showServerConfig":
+            MessageLookupByLibrary.simpleMessage("Viewing Server Information"),
+        "store": MessageLookupByLibrary.simpleMessage("Store"),
+        "submit": MessageLookupByLibrary.simpleMessage("Submit"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "title": MessageLookupByLibrary.simpleMessage("TuiHub"),
         "tls": MessageLookupByLibrary.simpleMessage("TLS"),
+        "unknownApp": MessageLookupByLibrary.simpleMessage("Unknown app"),
+        "unknownClient": MessageLookupByLibrary.simpleMessage("Unknown client"),
+        "unknownDevice": MessageLookupByLibrary.simpleMessage("Unknown device"),
         "unknownErrorOccurred":
             MessageLookupByLibrary.simpleMessage("Unknown error occurred"),
         "updateImageUserCanceledCapture":
@@ -150,6 +259,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Web version has limited functionality, for evaluation use only"),
         "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
         "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back"),
-        "welcomeHeader": MessageLookupByLibrary.simpleMessage("🎉Welcome!")
+        "welcomeHeader": MessageLookupByLibrary.simpleMessage("🎉Welcome!"),
+        "yesod": MessageLookupByLibrary.simpleMessage("Yesod")
       };
 }

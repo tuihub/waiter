@@ -99,10 +99,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                     for (final ListFeedConfigsResponse_FeedWithConfig config
                         in state.feedConfigs ?? [])
                       MultiSelectItem(
-                          config.config.id.id.toString(),
-                          config.feed.title.isNotEmpty
-                              ? config.feed.title
-                              : config.config.feedUrl),
+                          config.config.id.id.toString(), config.feed.title),
                   ],
                   initialValue: feedIDFilter,
                   onConfirm: (values) {

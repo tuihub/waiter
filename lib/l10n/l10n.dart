@@ -270,6 +270,16 @@ class S {
     );
   }
 
+  /// `必填`
+  String get requiredField {
+    return Intl.message(
+      '必填',
+      name: 'requiredField',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

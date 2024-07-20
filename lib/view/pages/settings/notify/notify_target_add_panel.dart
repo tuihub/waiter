@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
@@ -113,11 +114,12 @@ class NotifyTargetAddPanel extends StatelessWidget {
             context.read<NetzachBloc>().add(NetzachTargetAddEvent(NotifyTarget(
                   name: name,
                   description: description,
-                  destination: destination?.id,
+                  destination: FeatureRequest(
+                    id: destination?.id,
+                  ),
                   status: enabled
                       ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                       : NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND,
-                  token: token,
                 )));
           },
           submitting: state is NetzachTargetAddState && state.processing,

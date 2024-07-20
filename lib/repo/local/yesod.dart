@@ -83,7 +83,6 @@ class YesodRepo {
           .map((e) => FeedConfigTableData(
                 internalId: e.config.id.toString(),
                 name: e.config.name,
-                feedUrl: e.config.feedUrl,
                 category: e.config.category,
                 jsonData: e.writeToJson(),
               ))

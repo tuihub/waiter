@@ -22,6 +22,7 @@
   "id": "ID",
   "hide": "隐藏",
   "add": "添加",
+  "requiredField": "必填",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",

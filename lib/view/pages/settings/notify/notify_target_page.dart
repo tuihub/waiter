@@ -105,8 +105,6 @@ class NotifyTargetPage extends StatelessWidget {
                                           ),
                                           Text(item.name),
                                           Text(
-                                              '类型: ${notifyTargetDestinationString(item.destination)}'),
-                                          Text(
                                               '状态: ${notifyTargetStatusString(item.status)}'),
                                           Text(item.description),
                                         ],

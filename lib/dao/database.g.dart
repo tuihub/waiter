@@ -247,12 +247,6 @@ class $FeedConfigTableTable extends FeedConfigTable
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _feedUrlMeta =
-      const VerificationMeta('feedUrl');
-  @override
-  late final GeneratedColumn<String> feedUrl = GeneratedColumn<String>(
-      'feed_url', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _categoryMeta =
       const VerificationMeta('category');
   @override
@@ -266,8 +260,7 @@ class $FeedConfigTableTable extends FeedConfigTable
       'json_data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [internalId, name, feedUrl, category, jsonData];
+  List<GeneratedColumn> get $columns => [internalId, name, category, jsonData];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -292,12 +285,6 @@ class $FeedConfigTableTable extends FeedConfigTable
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
-    }
-    if (data.containsKey('feed_url')) {
-      context.handle(_feedUrlMeta,
-          feedUrl.isAcceptableOrUnknown(data['feed_url']!, _feedUrlMeta));
-    } else if (isInserting) {
-      context.missing(_feedUrlMeta);
     }
     if (data.containsKey('category')) {
       context.handle(_categoryMeta,
@@ -324,8 +311,6 @@ class $FeedConfigTableTable extends FeedConfigTable
           .read(DriftSqlType.string, data['${effectivePrefix}internal_id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      feedUrl: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}feed_url'])!,
       category: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
       jsonData: attachedDatabase.typeMapping
@@ -343,13 +328,11 @@ class FeedConfigTableData extends DataClass
     implements Insertable<FeedConfigTableData> {
   final String internalId;
   final String name;
-  final String feedUrl;
   final String category;
   final String jsonData;
   const FeedConfigTableData(
       {required this.internalId,
       required this.name,
-      required this.feedUrl,
       required this.category,
       required this.jsonData});
   @override
@@ -357,7 +340,6 @@ class FeedConfigTableData extends DataClass
     final map = <String, Expression>{};
     map['internal_id'] = Variable<String>(internalId);
     map['name'] = Variable<String>(name);
-    map['feed_url'] = Variable<String>(feedUrl);
     map['category'] = Variable<String>(category);
     map['json_data'] = Variable<String>(jsonData);
     return map;
@@ -367,7 +349,6 @@ class FeedConfigTableData extends DataClass
     return FeedConfigTableCompanion(
       internalId: Value(internalId),
       name: Value(name),
-      feedUrl: Value(feedUrl),
       category: Value(category),
       jsonData: Value(jsonData),
     );
@@ -379,7 +360,6 @@ class FeedConfigTableData extends DataClass
     return FeedConfigTableData(
       internalId: serializer.fromJson<String>(json['internalId']),
       name: serializer.fromJson<String>(json['name']),
-      feedUrl: serializer.fromJson<String>(json['feedUrl']),
       category: serializer.fromJson<String>(json['category']),
       jsonData: serializer.fromJson<String>(json['jsonData']),
     );
@@ -390,7 +370,6 @@ class FeedConfigTableData extends DataClass
     return <String, dynamic>{
       'internalId': serializer.toJson<String>(internalId),
       'name': serializer.toJson<String>(name),
-      'feedUrl': serializer.toJson<String>(feedUrl),
       'category': serializer.toJson<String>(category),
       'jsonData': serializer.toJson<String>(jsonData),
     };
@@ -399,13 +378,11 @@ class FeedConfigTableData extends DataClass
   FeedConfigTableData copyWith(
           {String? internalId,
           String? name,
-          String? feedUrl,
           String? category,
           String? jsonData}) =>
       FeedConfigTableData(
         internalId: internalId ?? this.internalId,
         name: name ?? this.name,
-        feedUrl: feedUrl ?? this.feedUrl,
         category: category ?? this.category,
         jsonData: jsonData ?? this.jsonData,
       );
@@ -414,7 +391,6 @@ class FeedConfigTableData extends DataClass
       internalId:
           data.internalId.present ? data.internalId.value : this.internalId,
       name: data.name.present ? data.name.value : this.name,
-      feedUrl: data.feedUrl.present ? data.feedUrl.value : this.feedUrl,
       category: data.category.present ? data.category.value : this.category,
       jsonData: data.jsonData.present ? data.jsonData.value : this.jsonData,
     );
@@ -425,7 +401,6 @@ class FeedConfigTableData extends DataClass
     return (StringBuffer('FeedConfigTableData(')
           ..write('internalId: $internalId, ')
           ..write('name: $name, ')
-          ..write('feedUrl: $feedUrl, ')
           ..write('category: $category, ')
           ..write('jsonData: $jsonData')
           ..write(')'))
@@ -433,15 +408,13 @@ class FeedConfigTableData extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(internalId, name, feedUrl, category, jsonData);
+  int get hashCode => Object.hash(internalId, name, category, jsonData);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FeedConfigTableData &&
           other.internalId == this.internalId &&
           other.name == this.name &&
-          other.feedUrl == this.feedUrl &&
           other.category == this.category &&
           other.jsonData == this.jsonData);
 }
@@ -449,14 +422,12 @@ class FeedConfigTableData extends DataClass
 class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
   final Value<String> internalId;
   final Value<String> name;
-  final Value<String> feedUrl;
   final Value<String> category;
   final Value<String> jsonData;
   final Value<int> rowid;
   const FeedConfigTableCompanion({
     this.internalId = const Value.absent(),
     this.name = const Value.absent(),
-    this.feedUrl = const Value.absent(),
     this.category = const Value.absent(),
     this.jsonData = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -464,19 +435,16 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
   FeedConfigTableCompanion.insert({
     required String internalId,
     required String name,
-    required String feedUrl,
     required String category,
     required String jsonData,
     this.rowid = const Value.absent(),
   })  : internalId = Value(internalId),
         name = Value(name),
-        feedUrl = Value(feedUrl),
         category = Value(category),
         jsonData = Value(jsonData);
   static Insertable<FeedConfigTableData> custom({
     Expression<String>? internalId,
     Expression<String>? name,
-    Expression<String>? feedUrl,
     Expression<String>? category,
     Expression<String>? jsonData,
     Expression<int>? rowid,
@@ -484,7 +452,6 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
     return RawValuesInsertable({
       if (internalId != null) 'internal_id': internalId,
       if (name != null) 'name': name,
-      if (feedUrl != null) 'feed_url': feedUrl,
       if (category != null) 'category': category,
       if (jsonData != null) 'json_data': jsonData,
       if (rowid != null) 'rowid': rowid,
@@ -494,14 +461,12 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
   FeedConfigTableCompanion copyWith(
       {Value<String>? internalId,
       Value<String>? name,
-      Value<String>? feedUrl,
       Value<String>? category,
       Value<String>? jsonData,
       Value<int>? rowid}) {
     return FeedConfigTableCompanion(
       internalId: internalId ?? this.internalId,
       name: name ?? this.name,
-      feedUrl: feedUrl ?? this.feedUrl,
       category: category ?? this.category,
       jsonData: jsonData ?? this.jsonData,
       rowid: rowid ?? this.rowid,
@@ -516,9 +481,6 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
-    }
-    if (feedUrl.present) {
-      map['feed_url'] = Variable<String>(feedUrl.value);
     }
     if (category.present) {
       map['category'] = Variable<String>(category.value);
@@ -537,7 +499,6 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
     return (StringBuffer('FeedConfigTableCompanion(')
           ..write('internalId: $internalId, ')
           ..write('name: $name, ')
-          ..write('feedUrl: $feedUrl, ')
           ..write('category: $category, ')
           ..write('jsonData: $jsonData, ')
           ..write('rowid: $rowid')
@@ -658,7 +619,6 @@ typedef $$FeedConfigTableTableCreateCompanionBuilder = FeedConfigTableCompanion
     Function({
   required String internalId,
   required String name,
-  required String feedUrl,
   required String category,
   required String jsonData,
   Value<int> rowid,
@@ -667,7 +627,6 @@ typedef $$FeedConfigTableTableUpdateCompanionBuilder = FeedConfigTableCompanion
     Function({
   Value<String> internalId,
   Value<String> name,
-  Value<String> feedUrl,
   Value<String> category,
   Value<String> jsonData,
   Value<int> rowid,
@@ -693,7 +652,6 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> internalId = const Value.absent(),
             Value<String> name = const Value.absent(),
-            Value<String> feedUrl = const Value.absent(),
             Value<String> category = const Value.absent(),
             Value<String> jsonData = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -701,7 +659,6 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
               FeedConfigTableCompanion(
             internalId: internalId,
             name: name,
-            feedUrl: feedUrl,
             category: category,
             jsonData: jsonData,
             rowid: rowid,
@@ -709,7 +666,6 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             required String internalId,
             required String name,
-            required String feedUrl,
             required String category,
             required String jsonData,
             Value<int> rowid = const Value.absent(),
@@ -717,7 +673,6 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
               FeedConfigTableCompanion.insert(
             internalId: internalId,
             name: name,
-            feedUrl: feedUrl,
             category: category,
             jsonData: jsonData,
             rowid: rowid,
@@ -735,11 +690,6 @@ class $$FeedConfigTableTableFilterComposer
 
   ColumnFilters<String> get name => $state.composableBuilder(
       column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get feedUrl => $state.composableBuilder(
-      column: $state.table.feedUrl,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -764,11 +714,6 @@ class $$FeedConfigTableTableOrderingComposer
 
   ColumnOrderings<String> get name => $state.composableBuilder(
       column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get feedUrl => $state.composableBuilder(
-      column: $state.table.feedUrl,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

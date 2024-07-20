@@ -8,7 +8,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import '../../../../bloc/netzach/netzach_bloc.dart';
 import '../../../../bloc/yesod/yesod_bloc.dart';
 import '../../../../model/netzach_model.dart';
-import '../../../../repo/grpc/l10n.dart';
 import '../../../components/chips_input.dart';
 import '../../../components/toast.dart';
 import '../../../form/form_field.dart';
@@ -128,10 +127,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                             in notifySources)
                           if (config.config.id.id != 0)
                             MultiSelectItem(
-                                config.config.id,
-                                config.feed.title.isNotEmpty
-                                    ? config.feed.title
-                                    : config.config.feedUrl),
+                                config.config.id, config.feed.title),
                       ],
                       initialValue: sources.map((e) => e.feedConfigId).toList(),
                       onConfirm: (values) {
@@ -299,8 +295,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       items: [
                         for (final NotifyTarget config in notifyTargets)
                           if (config.id.id != 0)
-                            MultiSelectItem(config.id,
-                                '${config.name} (${notifyTargetDestinationString(config.destination)})'),
+                            MultiSelectItem(config.id, config.name),
                       ],
                       initialValue: targets.map((e) => e.targetId).toList(),
                       onConfirm: (values) {
@@ -312,7 +307,6 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                           } else {
                             newTargets.add(NotifyFlowTargetModel(
                               targetId: value,
-                              channelId: '',
                               filter: NotifyFilterModel(
                                 excludeKeywords: [],
                                 includeKeywords: [],
@@ -339,22 +333,9 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                         SpacingHelper.defaultDivider,
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                              '${notifyTargets.firstWhere((e) => e.id == targets[i].targetId).name} (${notifyTargetDestinationString(notifyTargets.firstWhere((e) => e.id == targets[i].targetId).destination)})'),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        TextFormField(
-                          onChanged: (newValue) {
-                            setState(() {
-                              targets[i].channelId = newValue;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: '频道',
-                          ),
+                          child: Text(notifyTargets
+                              .firstWhere((e) => e.id == targets[i].targetId)
+                              .name),
                         ),
                         const SizedBox(
                           height: 8,

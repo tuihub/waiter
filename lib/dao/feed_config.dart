@@ -8,7 +8,6 @@ part 'feed_config.g.dart';
 class FeedConfigTable extends Table {
   TextColumn get internalId => text()();
   TextColumn get name => text()();
-  TextColumn get feedUrl => text()();
   TextColumn get category => text()();
 
   TextColumn get jsonData => text()();
