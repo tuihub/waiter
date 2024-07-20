@@ -17,13 +17,8 @@ class SessionManagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<TipherethBloc, TipherethState>(
         builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
-      }
       final listData = state.sessions ?? [];
       final deviceInfo = context.read<MainBloc>().state.deviceInfo ??
           const ClientDeviceInfo('', '');

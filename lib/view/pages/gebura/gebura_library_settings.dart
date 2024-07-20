@@ -19,12 +19,8 @@ class GeburaLibrarySettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool firstBuild = true;
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-        }
         final localLibraryState = state.localLibraryState ?? '';
         final localSteamScanResult = state.localSteamScanResult;
         final localSteamApps = state.localSteamAppInsts ?? [];

@@ -23,12 +23,7 @@ class YesodActionManagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<YesodBloc>().add(YesodInitEvent());
-      }
       final listData = state.feedActionSets ?? [];
       return ListManagePage(
         title: S.of(context).feedActionSetManage,
@@ -189,6 +184,19 @@ class YesodActionManageEditPanel extends StatefulWidget {
 
 class _YesodActionManageEditPanelState
     extends State<YesodActionManageEditPanel> {
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<YesodBloc>().state;
+    final actionSet = widget.index != null && state.feedActionSets != null
+        ? state.feedActionSets![widget.index!]
+        : FeedActionSet();
+    id = actionSet.id;
+    name = actionSet.name;
+    description = actionSet.description;
+    actions = actionSet.actions;
+  }
+
   void close(BuildContext context) {
     FramePage.of(context)?.closeDrawer();
   }
@@ -200,7 +208,6 @@ class _YesodActionManageEditPanelState
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     final features =
         context.read<MainBloc>().state.serverFeatureSummary?.feedItemActions ??
             [];
@@ -212,17 +219,6 @@ class _YesodActionManageEditPanelState
         }
       },
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-          final actionSet = widget.index != null && state.feedActionSets != null
-              ? state.feedActionSets![widget.index!]
-              : FeedActionSet();
-          id = actionSet.id;
-          name = actionSet.name;
-          description = actionSet.description;
-          actions = actionSet.actions;
-        }
-
         return RightPanelForm(
           title: Text(S.of(context).feedActionSetEdit),
           formFields: [

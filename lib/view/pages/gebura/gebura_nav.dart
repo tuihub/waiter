@@ -17,7 +17,6 @@ class GeburaNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     final searchController = TextEditingController();
     return BlocBuilder<GeburaBloc, GeburaState>(
       buildWhen: (previous, current) {
@@ -25,13 +24,6 @@ class GeburaNav extends StatelessWidget {
             previous.selectedLibraryItem != current.selectedLibraryItem;
       },
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-          if (state.libraryItems == null) {
-            context.read<GeburaBloc>().add(GeburaInitEvent());
-          }
-        }
-
         return Column(
           children: [
             ListTile(

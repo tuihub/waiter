@@ -10,8 +10,12 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
+import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
+import 'bloc/netzach/netzach_bloc.dart';
+import 'bloc/tiphereth/tiphereth_bloc.dart';
+import 'bloc/yesod/yesod_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
@@ -256,6 +260,7 @@ class TipherethRootRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
     return const NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.tiphereth,
@@ -386,6 +391,7 @@ class GeburaRootRoute extends GoRouteData {
 
   @override
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    context.read<GeburaBloc>().add(GeburaInitEvent());
     if (context.read<GeburaBloc>().state.selectedLibraryItem != null) {
       return GeburaLibraryDetailRoute(
               id: context.read<GeburaBloc>().state.selectedLibraryItem)
@@ -492,6 +498,7 @@ class ChesedRootRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
     return const NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.chesed,
@@ -512,13 +519,15 @@ class NotificationRootRoute extends GoRouteData {
   const NotificationRootRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
-      const NoTransitionPage(
-        child: FramePage(
-          selectedNav: ModuleName.notification,
-          leftPart: NotificationPage(),
-        ),
-      );
+  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
+    return const NoTransitionPage(
+      child: FramePage(
+        selectedNav: ModuleName.notification,
+        leftPart: NotificationPage(),
+      ),
+    );
+  }
 }
 
 class SettingsRoute extends StatefulShellBranchData {
@@ -606,6 +615,17 @@ class SettingsFunctionRoute extends GoRouteData {
         appPackage: $extra is App ? $extra! as App : App(),
       ),
     };
+    switch (function) {
+      case SettingsFunctions.notifyTarget:
+      case SettingsFunctions.notifyFlow:
+        context.read<NetzachBloc>().add(NetzachInitEvent());
+        context.read<YesodBloc>().add(YesodInitEvent());
+      case SettingsFunctions.session:
+        context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
+      case SettingsFunctions.porter:
+        context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
+      default:
+    }
     return NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.settings,

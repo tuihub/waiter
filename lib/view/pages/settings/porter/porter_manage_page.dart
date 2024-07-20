@@ -14,13 +14,8 @@ class PorterManagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<TipherethBloc, TipherethState>(
         builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
-      }
       final listData = state.porters ?? [];
       return Scaffold(
         body: Padding(

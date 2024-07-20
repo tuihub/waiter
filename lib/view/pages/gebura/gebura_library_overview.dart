@@ -14,12 +14,8 @@ class GeburaLibraryOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool firstBuild = true;
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-        }
         final apps = state.libraryItems ?? [];
         final localLibraryState = state.localLibraryState ?? '';
         return Scaffold(

@@ -54,6 +54,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
             ? state.appLauncherSettings![item.id.id]
             : null;
         if (firstBuild) {
+          // TODO: refactor `firstBuild`
           firstBuild = false;
           if (state.appInfoMap == null ||
               state.appInfoMap![item.id.id] == null) {

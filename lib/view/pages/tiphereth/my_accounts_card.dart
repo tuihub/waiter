@@ -5,22 +5,11 @@ class MyAccountsCard extends StatelessWidget {
 
   static const int accountPlatformCount = 1;
 
-  void refresh(BuildContext context) {
-    context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
-  }
-
   @override
   Widget build(BuildContext context) {
-    bool firstBuild = true;
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-          if (state.accounts == null) {
-            refresh(context);
-          }
-        }
         final supportedAccountPlatforms = context
                 .read<MainBloc>()
                 .state
@@ -58,7 +47,9 @@ class MyAccountsCard extends StatelessWidget {
                   Expanded(child: Container()),
                   IconButton(
                     onPressed: () {
-                      refresh(context);
+                      context
+                          .read<TipherethBloc>()
+                          .add(TipherethGetAccountsEvent());
                     },
                     icon: const Icon(Icons.refresh),
                   ),

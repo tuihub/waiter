@@ -16,12 +16,7 @@ class NotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<NetzachBloc, NetzachState>(builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
-      }
       final listData = state.systemNotifications ?? [];
       final filter =
           state.systemNotificationFilter ?? SystemNotificationFilter();

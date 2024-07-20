@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../bloc/netzach/netzach_bloc.dart';
-import '../../../../bloc/yesod/yesod_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
 import '../../frame_page.dart';
@@ -12,13 +11,7 @@ class NotifyTargetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<NetzachBloc, NetzachState>(builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<NetzachBloc>().add(NetzachInitEvent());
-        context.read<YesodBloc>().add(YesodInitEvent());
-      }
       final listData = state.notifyTargets ?? [];
       final bgColor = Theme.of(context).colorScheme.surface;
       return Scaffold(

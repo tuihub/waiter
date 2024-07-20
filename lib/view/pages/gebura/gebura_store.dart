@@ -132,6 +132,9 @@ class StoreList extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8),
                   child: OpenContainer(
                     openBuilder: (_, closedContainer) {
+                      context
+                          .read<GeburaBloc>()
+                          .add(GeburaFetchBoundAppInfosEvent(app.id));
                       return BlocProvider.value(
                         value: context.read<GeburaBloc>(),
                         child: Container(

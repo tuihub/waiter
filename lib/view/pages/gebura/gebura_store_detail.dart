@@ -19,7 +19,6 @@ class GeburaStoreDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     String msg = '未选择应用';
     return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
       if (state is GeburaFetchBoundAppsState) {
@@ -29,10 +28,6 @@ class GeburaStoreDetail extends StatelessWidget {
       final apps =
           state.appInfoMap != null ? state.appInfoMap![appID.id] : null;
       final app = apps != null ? mixAppInfo(apps) : null;
-      if (firstBuild && apps == null) {
-        firstBuild = false;
-        context.read<GeburaBloc>().add(GeburaFetchBoundAppInfosEvent(appID));
-      }
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [

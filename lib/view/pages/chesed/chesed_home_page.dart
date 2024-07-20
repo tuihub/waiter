@@ -16,13 +16,8 @@ class ChesedHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
-    bool firstBuild = true;
     return BlocBuilder<ChesedBloc, ChesedState>(
       builder: (context, state) {
-        if (firstBuild) {
-          firstBuild = false;
-          context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
-        }
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

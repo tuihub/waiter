@@ -32,12 +32,7 @@ class YesodFeedManagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var firstBuild = true;
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
-      if (firstBuild) {
-        firstBuild = false;
-        context.read<YesodBloc>().add(YesodInitEvent());
-      }
       final listData = state.feedConfigs ?? [];
       return ListManagePage(
         title: S.of(context).feedConfigManage,
