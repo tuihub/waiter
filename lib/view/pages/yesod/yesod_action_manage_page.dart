@@ -543,6 +543,10 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
                       });
                       widget.onSave(action);
                     },
+                    jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
+                      expandGenesis: true,
+                      headerTitleBuilder: (_, __) => Container(),
+                    ),
                   ),
                 ),
               ],
