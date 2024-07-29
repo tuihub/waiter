@@ -53,3 +53,9 @@ final class YesodFeedItemReadEvent extends YesodEvent {
 
   YesodFeedItemReadEvent(this.id);
 }
+
+final class YesodFeedItemListConfigSetEvent extends YesodEvent {
+  final YesodFeedItemListConfig config;
+
+  YesodFeedItemListConfigSetEvent(this.config);
+}

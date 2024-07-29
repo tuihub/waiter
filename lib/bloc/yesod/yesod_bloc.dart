@@ -6,6 +6,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../model/yesod_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/yesod.dart';
 
@@ -14,9 +15,9 @@ part 'yesod_state.dart';
 
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
   final ApiHelper _api;
-  final YesodRepo repo;
+  final YesodRepo _repo;
 
-  YesodBloc(this._api, this.repo) : super(YesodState()) {
+  YesodBloc(this._api, this._repo) : super(YesodState()) {
     on<YesodInitEvent>((event, emit) async {
       if (state.feedConfigs == null) {
         add(YesodFeedConfigLoadEvent());
@@ -30,11 +31,15 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       if (state.feedCategories == null) {
         add(YesodFeedCategoriesLoadEvent());
       }
+      if (state.listConfig == null) {
+        final config = await _repo.getFeedItemListConfig();
+        emit(state.copyWith(listConfig: config));
+      }
     }, transformer: restartable());
 
     on<YesodFeedConfigLoadEvent>((event, emit) async {
       final List<ListFeedConfigsResponse_FeedWithConfig> configs =
-          await repo.getFeedConfigs();
+          await _repo.getFeedConfigs();
       emit(YesodFeedConfigLoadState(
           state.copyWith(
             feedConfigs: configs,
@@ -113,7 +118,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         )
       ];
       configs.addAll(state.feedConfigs ?? []);
-      await repo.setFeedConfigs(configs);
+      await _repo.setFeedConfigs(configs);
       emit(YesodFeedConfigAddState(
         state.copyWith(feedConfigs: configs),
         EventStatus.success,
@@ -140,7 +145,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       final configs = state.feedConfigs ?? [];
-      await repo.setFeedConfigs(configs);
+      await _repo.setFeedConfigs(configs);
       add(YesodFeedConfigLoadEvent());
       emit(YesodFeedConfigEditState(
         state.copyWith(feedConfigs: configs),
@@ -266,7 +271,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             : state,
         EventStatus.processing,
       ));
-      final listConfig = await repo.getFeedItemListConfig();
+      final listConfig = await _repo.getFeedItemListConfig();
       final resp = await _api.doRequest(
         (client) => client.listFeedItems,
         ListFeedItemsRequest(
@@ -304,7 +309,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         state,
         EventStatus.processing,
       ));
-      if (!repo.existFeedItem(event.id)) {
+      FeedItem? item;
+      if (!_repo.existFeedItem(event.id)) {
         final resp = await _api.doRequest(
           (client) => client.getFeedItem,
           GetFeedItemRequest(
@@ -319,14 +325,11 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           ));
           return;
         } else {
-          final item = resp.getData().item;
-          await repo.setFeedItem(event.id, item);
+          item = resp.getData().item;
+          await _repo.setFeedItem(event.id, item);
         }
       }
-      emit(YesodFeedItemLoadState(
-        state,
-        EventStatus.success,
-      ));
+      emit(YesodFeedItemLoadState(state, EventStatus.success, feedItem: item));
     }, transformer: droppable());
 
     on<YesodFeedCategoriesLoadEvent>((event, emit) async {
@@ -358,13 +361,26 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         ReadFeedItemRequest(id: event.id),
       );
     });
+
+    on<YesodFeedItemListConfigSetEvent>((event, emit) async {
+      await _repo.setFeedItemListConfig(event.config);
+      emit(state.copyWith(listConfig: event.config));
+    });
   }
 
   int cacheSize() {
-    return repo.cacheSize();
+    return _repo.cacheSize();
   }
 
   Future<void> clearCache() async {
-    await repo.clearCache();
+    await _repo.clearCache();
+  }
+
+  Future<FeedItem?> getFeedItem(InternalID id) async {
+    final item = await _repo.getFeedItem(id);
+    if (item == null) {
+      add(YesodFeedItemLoadEvent(id));
+    }
+    return item;
   }
 }

@@ -314,9 +314,6 @@ class YesodFeedManageEditPanel extends StatelessWidget {
         return RightPanelForm(
           title: Text(S.of(context).feedConfigEdit),
           formFields: [
-            if (feedSources.isEmpty ||
-                !feedSources.any((e) => e.id == config.source.id))
-              const TextFormErrorMessage(message: '服务器未启用当前订阅源'),
             TextReadOnlyFormField(
               label: S.of(context).id,
               value: config.id.id.toString(),
@@ -325,21 +322,25 @@ class YesodFeedManageEditPanel extends StatelessWidget {
               label: '订阅源类型',
               value: config.source.id,
             ),
-            JsonForm(
-              controller: jsonFormController,
-              jsonSchema: feedSources
-                  .firstWhere((e) => e.id == config.source.id)
-                  .configJsonSchema,
-              jsonData: configJson,
-              onFormDataSaved: (data) {
-                configJson = jsonEncode(data);
-              },
-              jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
-                expandGenesis: true,
-                headerTitleBuilder: (_, __) => Container(),
-                submitButtonBuilder: (_) => Container(),
+            if (feedSources.isEmpty ||
+                !feedSources.any((e) => e.id == config.source.id))
+              const TextFormErrorMessage(message: '服务器未启用当前订阅源')
+            else
+              JsonForm(
+                controller: jsonFormController,
+                jsonSchema: feedSources
+                    .firstWhere((e) => e.id == config.source.id)
+                    .configJsonSchema,
+                jsonData: configJson,
+                onFormDataSaved: (data) {
+                  configJson = jsonEncode(data);
+                },
+                jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
+                  expandGenesis: true,
+                  headerTitleBuilder: (_, __) => Container(),
+                  submitButtonBuilder: (_) => Container(),
+                ),
               ),
-            ),
             TextFormField(
               initialValue: name,
               onSaved: (newValue) => name = newValue!,

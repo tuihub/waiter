@@ -7,11 +7,15 @@ class YesodState {
   late List<FeedItemDigest>? feedItemDigests;
   late List<String>? feedCategories;
 
+  // Local
+  late YesodFeedItemListConfig? listConfig;
+
   YesodState({
     this.feedConfigs,
     this.feedActionSets,
     this.feedItemDigests,
     this.feedCategories,
+    this.listConfig,
   });
 
   YesodState copyWith({
@@ -19,12 +23,14 @@ class YesodState {
     List<FeedActionSet>? feedActionSets,
     List<FeedItemDigest>? feedItemDigests,
     List<String>? feedCategories,
+    YesodFeedItemListConfig? listConfig,
   }) {
     return YesodState(
       feedConfigs: feedConfigs ?? this.feedConfigs,
       feedActionSets: feedActionSets ?? this.feedActionSets,
       feedItemDigests: feedItemDigests ?? this.feedItemDigests,
       feedCategories: feedCategories ?? this.feedCategories,
+      listConfig: listConfig ?? this.listConfig,
     );
   }
 
@@ -33,6 +39,7 @@ class YesodState {
     feedActionSets = other.feedActionSets;
     feedItemDigests = other.feedItemDigests;
     feedCategories = other.feedCategories;
+    listConfig = other.listConfig;
   }
 }
 
@@ -124,10 +131,13 @@ class YesodFeedItemDigestLoadState extends YesodState with EventStatusMixin {
 }
 
 class YesodFeedItemLoadState extends YesodState with EventStatusMixin {
-  YesodFeedItemLoadState(YesodState state, this.statusCode, {this.msg})
+  YesodFeedItemLoadState(YesodState state, this.statusCode,
+      {this.feedItem, this.msg})
       : super() {
     _from(state);
   }
+
+  final FeedItem? feedItem;
 
   @override
   final String? msg;
