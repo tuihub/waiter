@@ -63,11 +63,10 @@ Future<MyApp> init() async {
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  final deviceInfo = await _genClientDeviceInfo();
   final clientSettingBloc = ClientSettingBloc(common);
   final deepLinkBloc = DeepLinkBloc(initialUri);
-  final mainBloc = MainBloc(api, common, clientSettingBloc, deepLinkBloc,
-      packageInfo, deviceInfo, dataPath);
+  final mainBloc = MainBloc(
+      api, common, clientSettingBloc, deepLinkBloc, packageInfo, dataPath);
 
   // router
   final router = getRouter(mainBloc, api);
@@ -114,26 +113,4 @@ Future<void> _initSystemTray() async {
           : appWindow.show();
     }
   });
-}
-
-Future<ClientDeviceInfo> _genClientDeviceInfo() async {
-  final deviceInfo = DeviceInfoPlugin();
-  if (PlatformHelper.isAndroidApp()) {
-    final androidInfo = await deviceInfo.androidInfo;
-    return ClientDeviceInfo(androidInfo.model, androidInfo.version.release);
-  } else if (PlatformHelper.isWindowsApp()) {
-    final windowsInfo = await deviceInfo.windowsInfo;
-    return ClientDeviceInfo(
-      windowsInfo.computerName,
-      '${windowsInfo.productName} ${windowsInfo.displayVersion}',
-    );
-  } else if (PlatformHelper.isWeb()) {
-    final webInfo = await deviceInfo.webBrowserInfo;
-    return ClientDeviceInfo(
-      webInfo.browserName.toString(),
-      webInfo.appVersion.toString(),
-    );
-  } else {
-    return const ClientDeviceInfo('unknown', 'unknown');
-  }
 }

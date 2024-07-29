@@ -1040,6 +1040,86 @@ class S {
     );
   }
 
+  /// `Chrome`
+  String get chrome {
+    return Intl.message(
+      'Chrome',
+      name: 'chrome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Firefox`
+  String get firefox {
+    return Intl.message(
+      'Firefox',
+      name: 'firefox',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Safari`
+  String get safari {
+    return Intl.message(
+      'Safari',
+      name: 'safari',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edge`
+  String get edge {
+    return Intl.message(
+      'Edge',
+      name: 'edge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Opera`
+  String get opera {
+    return Intl.message(
+      'Opera',
+      name: 'opera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `IE`
+  String get msie {
+    return Intl.message(
+      'IE',
+      name: 'msie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `三星`
+  String get samsung {
+    return Intl.message(
+      '三星',
+      name: 'samsung',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get unknown {
+    return Intl.message(
+      '未知',
+      name: 'unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `gRPC`
   String get grpc {
     return Intl.message(

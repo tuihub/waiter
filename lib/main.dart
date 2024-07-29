@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:chinese_font_library/chinese_font_library.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,6 @@ import 'common/bloc_observer.dart';
 import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
-import 'model/common_model.dart';
 import 'repo/grpc/api_helper.dart';
 import 'repo/grpc/client.dart';
 import 'repo/local/common.dart';
@@ -75,7 +73,9 @@ void main(List<String> args) async {
   if (PlatformHelper.isWindowsApp()) {
     doWhenWindowReady(() {
       const initialSize = Size(1024, 768);
-      appWindow.minSize = initialSize;
+      if (!kDebugMode) {
+        appWindow.minSize = initialSize;
+      }
       appWindow.size = initialSize;
       appWindow.alignment = Alignment.center;
       appWindow.show();

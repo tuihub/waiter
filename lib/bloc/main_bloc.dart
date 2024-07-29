@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final ClientSettingBloc _clientSettingBloc;
   final DeepLinkBloc _deepLinkBloc;
   final PackageInfo _packageInfo;
-  final ClientDeviceInfo _deviceInfo;
   final String? _basePath;
 
   TipherethBloc? _tipherethBloc;
@@ -54,7 +54,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   DeepLinkBloc get deepLinkBloc => _deepLinkBloc;
   ClientSettingBloc get clientSettingBloc => _clientSettingBloc;
   PackageInfo get packageInfo => _packageInfo;
-  ClientDeviceInfo get deviceInfo => _deviceInfo;
   String? get basePath => _basePath;
 
   TipherethBloc? get tipherethBloc => _tipherethBloc;
@@ -96,7 +95,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     this._clientSettingBloc,
     this._deepLinkBloc,
     this._packageInfo,
-    this._deviceInfo,
     this._basePath,
   ) : super(MainState()) {
     final repo = _repo.get();
@@ -152,7 +150,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
                 ),
                 serverFeatureSummary: info.featureSummary,
                 currentDeviceId: deviceID,
-                deviceInfo: _deviceInfo,
+                deviceInfo: await _genClientDeviceInfo(),
                 knownServers: servers.values.toList(),
               ),
               EventStatus.success,
@@ -226,6 +224,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         var config = state.nextServer!;
         final client = await clientFactory(
             config: config, useSystemProxy: repo.useSystemProxy);
+        final deviceInfo = await _genClientDeviceInfo();
         late InternalID deviceID;
         late String accessToken;
         late String refreshToken;
@@ -240,9 +239,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           final id = await client.registerDevice(
               RegisterDeviceRequest(
                 deviceInfo: DeviceInfo(
-                  deviceName: _deviceInfo.deviceName,
+                  deviceName: deviceInfo.deviceName,
                   systemType: PlatformHelper.getSystemType(),
-                  systemVersion: _deviceInfo.systemVersion,
+                  systemVersion: deviceInfo.systemVersion,
                   clientName: _packageInfo.appName,
                   clientSourceCodeAddress: clientSourceCodeUrl,
                   clientVersion: _packageInfo.version,
@@ -297,7 +296,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             ),
             serverFeatureSummary: info.featureSummary,
             currentDeviceId: deviceID,
-            deviceInfo: _deviceInfo,
+            deviceInfo: deviceInfo,
             knownServers: servers.values.toList(),
           ),
           EventStatus.success,
@@ -389,5 +388,48 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   Future<void> clearCache() async {
     await _yesodBloc?.clearCache();
+  }
+}
+
+Future<ClientDeviceInfo> _genClientDeviceInfo() async {
+  final deviceInfo = DeviceInfoPlugin();
+  if (PlatformHelper.isAndroidApp()) {
+    final androidInfo = await deviceInfo.androidInfo;
+    return ClientDeviceInfo(androidInfo.model, androidInfo.version.release);
+  } else if (PlatformHelper.isWindowsApp()) {
+    final windowsInfo = await deviceInfo.windowsInfo;
+    return ClientDeviceInfo(
+      windowsInfo.computerName,
+      '${windowsInfo.productName} ${windowsInfo.displayVersion}',
+    );
+  } else if (PlatformHelper.isWeb()) {
+    final webInfo = await deviceInfo.webBrowserInfo;
+    return ClientDeviceInfo(
+      _browserNameToString(webInfo.browserName),
+      webInfo.platform ?? S.current.unknown,
+    );
+  } else {
+    return ClientDeviceInfo(S.current.unknown, S.current.unknown);
+  }
+}
+
+String _browserNameToString(BrowserName browserName) {
+  switch (browserName) {
+    case BrowserName.chrome:
+      return S.current.chrome;
+    case BrowserName.edge:
+      return S.current.edge;
+    case BrowserName.firefox:
+      return S.current.firefox;
+    case BrowserName.safari:
+      return S.current.safari;
+    case BrowserName.samsungInternet:
+      return S.current.samsung;
+    case BrowserName.opera:
+      return S.current.opera;
+    case BrowserName.msie:
+      return S.current.msie;
+    case BrowserName.unknown:
+      return S.current.unknown;
   }
 }

@@ -106,6 +106,15 @@
   "refresh": "刷新",
   "clearCache": "清空",
 
+  "chrome": "Chrome",
+  "firefox": "Firefox",
+  "safari": "Safari",
+  "edge": "Edge",
+  "opera": "Opera",
+  "msie": "IE",
+  "samsung": "三星",
+  "unknown": "未知",
+
   "grpc": "gRPC",
   "USER_TYPE": "类型",
   "USER_TYPE_UNSPECIFIED": "未知",
