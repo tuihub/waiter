@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../common/platform.dart';
-import '../helper/spacing.dart';
 import '../layout/overlapping_panels.dart';
+import 'spacing.dart';
 
 class AppBarHelper {
   static RoundedRectangleBorder defaultShape = RoundedRectangleBorder(
@@ -10,7 +9,7 @@ class AppBarHelper {
   );
   static Widget? defaultMainLeading(BuildContext context,
       {void Function()? onPressed}) {
-    if (PlatformHelper.isAndroid() || onPressed != null) {
+    if (OverlappingPanels.of(context) != null || onPressed != null) {
       return IconButton(
         onPressed: onPressed ??
             () {

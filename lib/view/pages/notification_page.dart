@@ -8,8 +8,8 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 import '../../bloc/netzach/netzach_bloc.dart';
 import '../../model/netzach_model.dart';
 import '../../repo/grpc/l10n.dart';
+import '../helper/app_bar.dart';
 import '../helper/duration_format.dart';
-import '../helper/spacing.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -23,9 +23,7 @@ class NotificationPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text('通知'),
-          shape: RoundedRectangleBorder(
-            borderRadius: SpacingHelper.defaultBorderRadius,
-          ),
+          shape: AppBarHelper.defaultShape,
         ),
         body: Column(
           children: [
@@ -37,70 +35,72 @@ class NotificationPage extends StatelessWidget {
                     children: [
                       const Text('级别'),
                       const SizedBox(width: 8),
-                      MultiSelectContainer(
-                        prefix: MultiSelectPrefix(
-                          selectedPrefix: const Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 14,
+                      Expanded(
+                        child: MultiSelectContainer(
+                          prefix: MultiSelectPrefix(
+                            selectedPrefix: const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
                             ),
                           ),
-                        ),
-                        items: [
-                          MultiSelectCard(
-                            value: SystemNotificationLevel
-                                .SYSTEM_NOTIFICATION_LEVEL_ONGOING,
-                            label: systemNotificationLevelString(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_ONGOING),
-                            selected: filter.levelFilter.contains(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_ONGOING),
-                          ),
-                          MultiSelectCard(
-                            value: SystemNotificationLevel
-                                .SYSTEM_NOTIFICATION_LEVEL_ERROR,
-                            label: systemNotificationLevelString(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_ERROR),
-                            selected: filter.levelFilter.contains(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_ERROR),
-                          ),
-                          MultiSelectCard(
-                            value: SystemNotificationLevel
-                                .SYSTEM_NOTIFICATION_LEVEL_WARNING,
-                            label: systemNotificationLevelString(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_WARNING),
-                            selected: filter.levelFilter.contains(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_WARNING),
-                          ),
-                          MultiSelectCard(
-                            value: SystemNotificationLevel
-                                .SYSTEM_NOTIFICATION_LEVEL_INFO,
-                            label: systemNotificationLevelString(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_INFO),
-                            selected: filter.levelFilter.contains(
-                                SystemNotificationLevel
-                                    .SYSTEM_NOTIFICATION_LEVEL_INFO),
-                          ),
-                        ],
-                        onChange: (allSelectedItems, selectedItem) {
-                          context.read<NetzachBloc>().add(
-                                NetzachSystemNotificationFilterSetEvent(
-                                  SystemNotificationFilter(
-                                    levelFilter: allSelectedItems,
-                                    typeFilter: filter.typeFilter,
+                          items: [
+                            MultiSelectCard(
+                              value: SystemNotificationLevel
+                                  .SYSTEM_NOTIFICATION_LEVEL_ONGOING,
+                              label: systemNotificationLevelString(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_ONGOING),
+                              selected: filter.levelFilter.contains(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_ONGOING),
+                            ),
+                            MultiSelectCard(
+                              value: SystemNotificationLevel
+                                  .SYSTEM_NOTIFICATION_LEVEL_ERROR,
+                              label: systemNotificationLevelString(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_ERROR),
+                              selected: filter.levelFilter.contains(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_ERROR),
+                            ),
+                            MultiSelectCard(
+                              value: SystemNotificationLevel
+                                  .SYSTEM_NOTIFICATION_LEVEL_WARNING,
+                              label: systemNotificationLevelString(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_WARNING),
+                              selected: filter.levelFilter.contains(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_WARNING),
+                            ),
+                            MultiSelectCard(
+                              value: SystemNotificationLevel
+                                  .SYSTEM_NOTIFICATION_LEVEL_INFO,
+                              label: systemNotificationLevelString(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_INFO),
+                              selected: filter.levelFilter.contains(
+                                  SystemNotificationLevel
+                                      .SYSTEM_NOTIFICATION_LEVEL_INFO),
+                            ),
+                          ],
+                          onChange: (allSelectedItems, selectedItem) {
+                            context.read<NetzachBloc>().add(
+                                  NetzachSystemNotificationFilterSetEvent(
+                                    SystemNotificationFilter(
+                                      levelFilter: allSelectedItems,
+                                      typeFilter: filter.typeFilter,
+                                    ),
                                   ),
-                                ),
-                              );
-                        },
-                      )
+                                );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -111,49 +111,51 @@ class NotificationPage extends StatelessWidget {
                     children: [
                       const Text('类型'),
                       const SizedBox(width: 8),
-                      MultiSelectContainer(
-                        prefix: MultiSelectPrefix(
-                          selectedPrefix: const Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 14,
+                      Expanded(
+                        child: MultiSelectContainer(
+                          prefix: MultiSelectPrefix(
+                            selectedPrefix: const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 14,
+                              ),
                             ),
                           ),
-                        ),
-                        items: [
-                          MultiSelectCard(
-                            value: SystemNotificationType
-                                .SYSTEM_NOTIFICATION_TYPE_USER,
-                            label: systemNotificationTypeString(
-                                SystemNotificationType
-                                    .SYSTEM_NOTIFICATION_TYPE_USER),
-                            selected: filter.typeFilter.contains(
-                                SystemNotificationType
-                                    .SYSTEM_NOTIFICATION_TYPE_USER),
-                          ),
-                          MultiSelectCard(
-                            value: SystemNotificationType
-                                .SYSTEM_NOTIFICATION_TYPE_SYSTEM,
-                            label: systemNotificationTypeString(
-                                SystemNotificationType
-                                    .SYSTEM_NOTIFICATION_TYPE_SYSTEM),
-                            selected: filter.typeFilter.contains(
-                                SystemNotificationType
-                                    .SYSTEM_NOTIFICATION_TYPE_SYSTEM),
-                          ),
-                        ],
-                        onChange: (allSelectedItems, selectedItem) {
-                          context.read<NetzachBloc>().add(
-                                NetzachSystemNotificationFilterSetEvent(
-                                  SystemNotificationFilter(
-                                    levelFilter: filter.levelFilter,
-                                    typeFilter: allSelectedItems,
+                          items: [
+                            MultiSelectCard(
+                              value: SystemNotificationType
+                                  .SYSTEM_NOTIFICATION_TYPE_USER,
+                              label: systemNotificationTypeString(
+                                  SystemNotificationType
+                                      .SYSTEM_NOTIFICATION_TYPE_USER),
+                              selected: filter.typeFilter.contains(
+                                  SystemNotificationType
+                                      .SYSTEM_NOTIFICATION_TYPE_USER),
+                            ),
+                            MultiSelectCard(
+                              value: SystemNotificationType
+                                  .SYSTEM_NOTIFICATION_TYPE_SYSTEM,
+                              label: systemNotificationTypeString(
+                                  SystemNotificationType
+                                      .SYSTEM_NOTIFICATION_TYPE_SYSTEM),
+                              selected: filter.typeFilter.contains(
+                                  SystemNotificationType
+                                      .SYSTEM_NOTIFICATION_TYPE_SYSTEM),
+                            ),
+                          ],
+                          onChange: (allSelectedItems, selectedItem) {
+                            context.read<NetzachBloc>().add(
+                                  NetzachSystemNotificationFilterSetEvent(
+                                    SystemNotificationFilter(
+                                      levelFilter: filter.levelFilter,
+                                      typeFilter: allSelectedItems,
+                                    ),
                                   ),
-                                ),
-                              );
-                        },
+                                );
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -11,7 +11,7 @@ import '../../../../bloc/main_bloc.dart';
 import '../../../../common/platform.dart';
 import '../../../../consts.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../helper/spacing.dart';
+import '../../../helper/app_bar.dart';
 import '../../../specialized/theme_presentation.dart';
 
 part 'cache_setting.dart';
@@ -25,10 +25,9 @@ class ClientSettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: SpacingHelper.defaultBorderRadius,
-        ),
         title: Text(S.of(context).clientSetting),
+        shape: AppBarHelper.defaultShape,
+        leading: AppBarHelper.defaultMainLeading(context),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8),

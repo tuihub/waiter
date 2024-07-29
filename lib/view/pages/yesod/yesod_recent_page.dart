@@ -8,6 +8,7 @@ import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../common/bloc_event_status_mixin.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
+import '../../helper/app_bar.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_breakpoints.dart';
@@ -45,14 +46,10 @@ class YesodRecentPageState extends State<YesodRecentPage> {
       final items = state.feedItemDigests ?? [];
 
       return Scaffold(
-        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          shape: RoundedRectangleBorder(
-            borderRadius: SpacingHelper.defaultBorderRadius,
-          ),
           title: const Text('最近更新'),
-          backgroundColor:
-              Theme.of(context).colorScheme.surfaceContainerHighest,
+          shape: AppBarHelper.defaultShape,
+          leading: AppBarHelper.defaultMainLeading(context),
           actions: [
             IconButton(
               onPressed: () {

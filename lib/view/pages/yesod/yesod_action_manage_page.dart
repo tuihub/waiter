@@ -12,9 +12,9 @@ import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
+import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
-import '../../specialized/app_bar.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
 

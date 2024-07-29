@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../bloc/main_bloc.dart';
+import '../../helper/app_bar.dart';
 import '../../helper/spacing.dart';
 
 class AboutPage extends StatelessWidget {
@@ -23,10 +24,9 @@ class AboutPage extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
         title: const Text('关于'),
+        shape: AppBarHelper.defaultShape,
+        leading: AppBarHelper.defaultMainLeading(context),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
-import '../specialized/app_bar.dart';
+import '../helper/app_bar.dart';
 
 class ListManagePage extends StatefulWidget {
   const ListManagePage({
@@ -35,7 +35,6 @@ class ListManagePageState extends State<ListManagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       appBar: AppBar(
         shape: AppBarHelper.defaultShape,
         leading:
