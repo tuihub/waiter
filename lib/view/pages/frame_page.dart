@@ -95,7 +95,7 @@ class FramePageState extends State<FramePage> {
                       Material(
                         child: Container(
                           padding: const EdgeInsets.all(8),
-                          width: width - 64 - restWidth,
+                          width: width - 64 - 8 - restWidth,
                           child: widget.leftPart,
                         ),
                       ),

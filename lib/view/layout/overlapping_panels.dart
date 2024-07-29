@@ -1,11 +1,14 @@
 // https://github.com/blackmann/overlapping_panels
 
 import 'dart:core';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 const double minPixelsPerSecond = 240;
 const double minDragExtent = 24;
+const double maxMainMaskWidth = 240;
+const double maxMainMaskOpacity = 0.5;
 
 /// Display sections
 enum RevealSide { left, right, main }
@@ -228,7 +231,21 @@ class OverlappingPanelsState extends State<OverlappingPanels>
               },
               child: IgnorePointer(
                 ignoring: translate != 0,
-                child: widget.main,
+                child: Stack(
+                  children: [
+                    widget.main,
+                    if (translate != 0)
+                      Container(
+                        color: Theme.of(context)
+                            .scaffoldBackgroundColor
+                            .withOpacity(
+                              min(maxMainMaskWidth, translate.abs()) *
+                                  maxMainMaskOpacity /
+                                  maxMainMaskWidth,
+                            ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -42,10 +42,9 @@ class ListManagePageState extends State<ListManagePage> {
             AppBarHelper.defaultMainLeading(context, onPressed: widget.onBack),
         title: Text(widget.title),
         actions: [
-          OutlinedButton.icon(
+          IconButton(
             onPressed: widget.onAdd,
             icon: const Icon(Icons.add),
-            label: Text(S.of(context).add),
           ),
           PopupMenuButton(
             itemBuilder: (context) {
