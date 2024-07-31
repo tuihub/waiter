@@ -4,6 +4,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
+import '../helper/spacing.dart';
 
 class RightPanelForm extends StatefulWidget {
   const RightPanelForm({
@@ -28,16 +29,6 @@ class RightPanelForm extends StatefulWidget {
   final bool? submitting;
   final void Function() close;
   final double spacing;
-
-  static List<Widget> spacingWrapper(
-          double height, Iterable<Widget> children) =>
-      children
-          .expand((item) sync* {
-            yield SizedBox(height: height);
-            yield item;
-          })
-          .skip(1)
-          .toList();
 
   @override
   State<StatefulWidget> createState() => _RightPanelFormState();
@@ -75,9 +66,9 @@ class _RightPanelFormState extends State<RightPanelForm> {
               key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: RightPanelForm.spacingWrapper(
-                  widget.spacing,
-                  widget.formFields,
+                children: SpacingHelper.listSpacing(
+                  height: widget.spacing,
+                  children: widget.formFields,
                 ),
               ),
             ),

@@ -122,6 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "add": MessageLookupByLibrary.simpleMessage("添加"),
         "addApplication": MessageLookupByLibrary.simpleMessage("添加应用"),
         "address": MessageLookupByLibrary.simpleMessage("地址"),
+        "allArticles": MessageLookupByLibrary.simpleMessage("全部文章"),
         "applicationExitAbnormally":
             MessageLookupByLibrary.simpleMessage("应用程序异常退出"),
         "applySuccess": MessageLookupByLibrary.simpleMessage("更改已应用"),
@@ -165,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "feedConfigAdd": MessageLookupByLibrary.simpleMessage("添加订阅"),
         "feedConfigEdit": MessageLookupByLibrary.simpleMessage("编辑订阅"),
         "feedConfigManage": MessageLookupByLibrary.simpleMessage("订阅管理"),
+        "filteredArticles": MessageLookupByLibrary.simpleMessage("筛选文章"),
         "firefox": MessageLookupByLibrary.simpleMessage("Firefox"),
         "gebura": MessageLookupByLibrary.simpleMessage("Gebura"),
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),

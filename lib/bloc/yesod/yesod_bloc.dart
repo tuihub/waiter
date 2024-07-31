@@ -264,11 +264,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       final pageNum = refresh ? 1 : event.pageNum;
 
       emit(YesodFeedItemDigestLoadState(
-        refresh
-            ? state.copyWith(
-                feedItemDigests: [],
-              )
-            : state,
+        state,
         EventStatus.processing,
       ));
       final listConfig = await _repo.getFeedItemListConfig();
@@ -364,6 +360,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
 
     on<YesodFeedItemListConfigSetEvent>((event, emit) async {
       await _repo.setFeedItemListConfig(event.config);
+      add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
       emit(state.copyWith(listConfig: event.config));
     });
   }

@@ -1,18 +1,27 @@
+import 'dart:async';
+
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keframe/keframe.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../common/bloc_event_status_mixin.dart';
+import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
+import '../../form/form_field.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
@@ -25,17 +34,99 @@ class YesodRecentPage extends StatefulWidget {
 }
 
 class YesodRecentPageState extends State<YesodRecentPage> {
+  int lastPageNum = 0;
+  EventStatus lastStatus = EventStatus.processing;
+  int? maxPageNum;
+  ScrollController? controller;
+  bool isScrolledToTop = true;
+
+  String _title(BuildContext context, YesodState state) {
+    final length = state.listConfig?.feedIdFilter?.length ?? 0;
+    if (length == 0) {
+      return S.of(context).allArticles;
+    } else if (length == 1) {
+      return state.feedConfigs
+              ?.firstWhere((element) =>
+                  element.config.id.id.toString() ==
+                  state.listConfig?.feedIdFilter?.first)
+              .config
+              .name ??
+          S.of(context).allArticles;
+    } else if (length > 1) {
+      return S.of(context).filteredArticles;
+    } else {
+      return S.of(context).allArticles;
+    }
+  }
+
+  void _scrollToTop() {
+    unawaited(controller?.animateTo(0,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut));
+  }
+
+  Widget _listItem(
+    BuildContext context,
+    YesodState state,
+    FeedItemDigest item,
+  ) {
+    final theme = Theme.of(context);
+
+    return BootstrapContainer(
+      fill: BootstrapSteps.xs,
+      children: [
+        BootstrapColumn(
+          fill: BootstrapSteps.xs,
+          xxs: 12,
+          md: 9,
+          lg: 7,
+          builder: (context, filled) {
+            return OpenContainer(
+              tappable:
+                  false, // https://github.com/flutter/flutter/issues/74111
+              openBuilder: (_, __) {
+                return BlocProvider.value(
+                  value: context.read<YesodBloc>(),
+                  child: YesodDetailPage(
+                    itemId: item.itemId,
+                  ),
+                );
+              },
+              openColor: theme.colorScheme.primary,
+              closedShape: RoundedRectangleBorder(
+                borderRadius: filled
+                    ? BorderRadius.zero
+                    : SpacingHelper.defaultBorderRadius,
+              ),
+              closedElevation: 0,
+              closedColor: theme.cardColor,
+              closedBuilder: (context, openContainer) {
+                return YesodPreviewCard(
+                  name:
+                      '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                  title: item.title,
+                  callback: () {
+                    openContainer();
+                    context
+                        .read<YesodBloc>()
+                        .add(YesodFeedItemReadEvent(item.itemId));
+                  },
+                  iconUrl: item.feedAvatarUrl,
+                  images: item.imageUrls,
+                  description: item.shortDescription,
+                  listType: state.listConfig?.listType ?? FeedItemListType.card,
+                  cardBorderRadius: filled ? BorderRadius.zero : null,
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    var lastPageNum = 0;
-    var lastStatus = EventStatus.processing;
-    int? maxPageNum;
-
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
-      if (state.feedItemDigests == null) {
-        context.read<YesodBloc>().add(YesodInitEvent());
-      }
       if (state is YesodFeedItemDigestLoadState) {
         lastStatus = state.statusCode;
         if (state.currentPage != null) {
@@ -47,7 +138,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
 
       return Scaffold(
         appBar: AppBar(
-          title: const Text('最近更新'),
+          title: Text(_title(context, state)),
           shape: AppBarHelper.defaultShape,
           leading: AppBarHelper.defaultMainLeading(context),
           actions: [
@@ -63,6 +154,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
         ),
         body: DynMouseScroll(
           builder: (context, controller, physics) {
+            this.controller = controller;
             controller.addListener(() {
               if (controller.position.pixels ==
                   controller.position.maxScrollExtent) {
@@ -74,13 +166,20 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                 }
               }
             });
+            controller.addListener(() {
+              if (isScrolledToTop != (controller.position.pixels == 0)) {
+                setState(() {
+                  isScrolledToTop = controller.position.pixels == 0;
+                });
+              }
+            });
 
             return SizeCacheWidget(
               child: ListView.builder(
                 controller: controller,
                 physics: physics,
                 itemCount: items.length + 1,
-                cacheExtent: MediaQuery.sizeOf(context).height * 2,
+                cacheExtent: MediaQuery.sizeOf(context).height * 3,
                 itemBuilder: (context, index) {
                   if (index < items.length) {
                     if ((state.listConfig?.hideRead ?? false) &&
@@ -91,61 +190,10 @@ class YesodRecentPageState extends State<YesodRecentPage> {
 
                     return FrameSeparateWidget(
                       index: index,
-                      child: BootstrapContainer(
-                          fill: BootstrapSteps.xs,
-                          children: [
-                            BootstrapColumn(
-                                fill: BootstrapSteps.xs,
-                                xxs: 12,
-                                md: 9,
-                                lg: 7,
-                                builder: (context, filled) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: OpenContainer(
-                                      tappable:
-                                          false, // https://github.com/flutter/flutter/issues/74111
-                                      openBuilder: (_, __) {
-                                        return BlocProvider.value(
-                                          value: context.read<YesodBloc>(),
-                                          child: YesodDetailPage(
-                                            itemId: item.itemId,
-                                          ),
-                                        );
-                                      },
-                                      openColor: theme.colorScheme.primary,
-                                      closedShape: RoundedRectangleBorder(
-                                        borderRadius: filled
-                                            ? BorderRadius.zero
-                                            : SpacingHelper.defaultBorderRadius,
-                                      ),
-                                      closedElevation: 0,
-                                      closedColor: theme.cardColor,
-                                      closedBuilder: (context, openContainer) {
-                                        return YesodPreviewCard(
-                                          name:
-                                              '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
-                                          title: item.title,
-                                          callback: () {
-                                            openContainer();
-                                            context.read<YesodBloc>().add(
-                                                YesodFeedItemReadEvent(
-                                                    item.itemId));
-                                          },
-                                          iconUrl: item.feedAvatarUrl,
-                                          images: item.imageUrls,
-                                          description: item.shortDescription,
-                                          listType:
-                                              state.listConfig?.listType ??
-                                                  FeedItemListType.card,
-                                          cardBorderRadius:
-                                              filled ? BorderRadius.zero : null,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }),
-                          ]),
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: _listItem(context, state, item),
+                      ),
                     );
                   } else {
                     return Padding(
@@ -163,12 +211,151 @@ class YesodRecentPageState extends State<YesodRecentPage> {
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => context
-              .read<YesodBloc>()
-              .add(YesodFeedItemDigestsLoadEvent(1, refresh: true)),
-          child: const Icon(Icons.refresh),
+          key: Key(isScrolledToTop.toString()),
+          onPressed: isScrolledToTop
+              ? () {
+                  context
+                      .read<YesodBloc>()
+                      .add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
+                }
+              : _scrollToTop,
+          child: Icon(isScrolledToTop ? Icons.refresh : Icons.arrow_upward),
         ),
       );
     });
+  }
+}
+
+class YesodRecentSettingPanel extends StatefulWidget {
+  const YesodRecentSettingPanel({super.key});
+
+  @override
+  State<YesodRecentSettingPanel> createState() =>
+      YesodRecentSettingPanelState();
+}
+
+class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
+  bool initialized = false;
+  List<String> feedIDFilter = [];
+  List<String> categoryFilter = [];
+  bool hideRead = false;
+  FeedItemListType listType = FeedItemListType.card;
+
+  void close(BuildContext context) {
+    FramePage.of(context)?.closeDrawer();
+  }
+
+  void submit(BuildContext context) {
+    context.read<YesodBloc>().add(YesodFeedItemListConfigSetEvent(
+          YesodFeedItemListConfig(
+            feedIdFilter: feedIDFilter,
+            categoryFilter: categoryFilter,
+            hideRead: hideRead,
+            listType: listType,
+          ),
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<YesodBloc, YesodState>(
+      builder: (context, state) {
+        feedIDFilter = state.listConfig?.feedIdFilter?.toList() ?? [];
+        categoryFilter = state.listConfig?.categoryFilter?.toList() ?? [];
+        listType = state.listConfig?.listType ?? FeedItemListType.card;
+        hideRead = state.listConfig?.hideRead ?? false;
+        initialized = true;
+
+        return RightPanelForm(
+          title: const Text('设置'),
+          formFields: [
+            SpacingHelper.defaultDivider,
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('显示风格'),
+            ),
+            AnimatedToggleSwitch<FeedItemListType>.size(
+              current: listType,
+              values: FeedItemListType.values,
+              iconOpacity: 1.0,
+              selectedIconScale: 1.0,
+              indicatorSize: const Size.fromWidth(100),
+              iconAnimationType: AnimationType.onHover,
+              styleAnimationType: AnimationType.onHover,
+              spacing: 2.0,
+              customIconBuilder: (context, local, global) {
+                final text = const ['列表', '杂志', '卡片'][local.index];
+                return Center(
+                    child: Text(text,
+                        style: TextStyle(
+                            color: Color.lerp(Colors.black, Colors.white,
+                                local.animationValue))));
+              },
+              onChanged: (value) {
+                setState(() {
+                  listType = value;
+                  submit(context);
+                });
+              },
+            ),
+            SpacingHelper.defaultDivider,
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('筛选'),
+            ),
+            SwitchFormField(
+              onSaved: (newValue) {
+                setState(() {
+                  hideRead = newValue ?? false;
+                  submit(context);
+                });
+              },
+              title: const Text('隐藏已读'),
+              initialValue: hideRead,
+            ),
+            MultiSelectDialogField(
+              title: const Text('按订阅筛选'),
+              buttonText: const Text('订阅'),
+              buttonIcon: const Icon(Icons.filter_alt_outlined),
+              items: [
+                for (final ListFeedConfigsResponse_FeedWithConfig config
+                    in state.feedConfigs ?? [])
+                  MultiSelectItem(
+                      config.config.id.id.toString(), config.feed.title),
+              ],
+              initialValue: feedIDFilter,
+              onConfirm: (values) {
+                feedIDFilter = values;
+              },
+              decoration: BoxDecoration(
+                borderRadius: SpacingHelper.defaultBorderRadius,
+              ),
+            ),
+            MultiSelectDialogField(
+              title: const Text('按分类筛选'),
+              buttonText: const Text('分类'),
+              buttonIcon: const Icon(Icons.filter_alt_outlined),
+              items: [
+                for (final String category in state.feedCategories ?? [])
+                  MultiSelectItem(
+                      category, category.isNotEmpty ? category : '未分类'),
+              ],
+              initialValue: categoryFilter,
+              onConfirm: (values) {
+                categoryFilter = values;
+              },
+              decoration: BoxDecoration(
+                borderRadius: SpacingHelper.defaultBorderRadius,
+              ),
+            ),
+          ],
+          onSubmit: () {
+            submit(context);
+            close(context);
+          },
+          close: () => close(context),
+        );
+      },
+    );
   }
 }

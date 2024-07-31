@@ -87,6 +87,8 @@
   "feedActionSetManage": "规则集管理",
   "feedActionSetAdd": "添加规则集",
   "feedActionSetEdit": "编辑规则集",
+  "allArticles": "全部文章",
+  "filteredArticles": "筛选文章",
 
   "settings": "设置",
   "currentDevice": "当前设备",

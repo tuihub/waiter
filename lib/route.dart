@@ -57,7 +57,6 @@ import 'view/pages/yesod/yesod_action_manage_page.dart';
 import 'view/pages/yesod/yesod_feed_manage_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
-import 'view/pages/yesod/yesod_recent_setting_panel.dart';
 
 part 'route.g.dart';
 
@@ -297,6 +296,7 @@ class YesodRecentRoute extends GoRouteData {
     final actions = {
       YesodRecentActions.setting: const YesodRecentSettingPanel(),
     };
+    context.read<YesodBloc>().add(YesodInitEvent());
     return NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.yesod,

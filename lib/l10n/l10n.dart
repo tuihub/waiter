@@ -870,6 +870,26 @@ class S {
     );
   }
 
+  /// `全部文章`
+  String get allArticles {
+    return Intl.message(
+      '全部文章',
+      name: 'allArticles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `筛选文章`
+  String get filteredArticles {
+    return Intl.message(
+      '筛选文章',
+      name: 'filteredArticles',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `设置`
   String get settings {
     return Intl.message(
