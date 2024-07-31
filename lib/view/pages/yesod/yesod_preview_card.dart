@@ -36,8 +36,8 @@ class YesodPreviewCard extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       const maxTitleLines = 2;
       const maxDescriptionLines = 3;
-      const cardPaddingV = 16.0;
-      const cardPaddingH = 16.0;
+      const cardPaddingV = 12.0;
+      const cardPaddingH = 12.0;
       const imgPadding = 8;
       const iconSize = 18.0;
       final double leftImageSize =
@@ -88,12 +88,8 @@ class YesodPreviewCard extends StatelessWidget {
                   child: ClipRect(
                     child: Flex(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: listType == FeedItemListType.table
-                          ? CrossAxisAlignment.center
-                          : CrossAxisAlignment.start,
-                      direction: listType == FeedItemListType.table
-                          ? Axis.horizontal
-                          : Axis.vertical,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      direction: Axis.vertical,
                       children: [
                         SizedBox(
                           height: iconSize + 2,
@@ -132,7 +128,8 @@ class YesodPreviewCard extends StatelessWidget {
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        if (description != null)
+                        if (listType != FeedItemListType.table &&
+                            description != null)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4.0),
                             child: Text(

@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../consts.dart';
 import '../../route.dart';
+import '../helper/spacing.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/nav_rail.dart';
 import 'server_select_overlay.dart';
+
+const double restWidth = 36;
+const double gapWidth = 8;
+const double navWidth = 64;
+const double defaultLeftPartWidth = 256;
 
 class FramePage extends StatefulWidget {
   const FramePage({
@@ -51,8 +57,6 @@ class FramePageState extends State<FramePage> {
 
   @override
   Widget build(BuildContext context) {
-    const double restWidth = 40;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.biggest.width;
@@ -62,13 +66,13 @@ class FramePageState extends State<FramePage> {
                 children: [
                   _Nav(selectedNav: widget.selectedNav),
                   Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.only(right: gapWidth),
                     child: Material(
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         width: widget.leftPartWidth != null
-                            ? widget.leftPartWidth! - 64
-                            : 256,
+                            ? widget.leftPartWidth! - navWidth
+                            : defaultLeftPartWidth,
                         child: widget.leftPart,
                       ),
                     ),
@@ -95,7 +99,7 @@ class FramePageState extends State<FramePage> {
                       Material(
                         child: Container(
                           padding: const EdgeInsets.all(8),
-                          width: width - 64 - 8 - restWidth,
+                          width: width - navWidth - gapWidth - restWidth,
                           child: widget.leftPart,
                         ),
                       ),
@@ -105,7 +109,7 @@ class FramePageState extends State<FramePage> {
                     decoration: BoxDecoration(
                       color:
                           Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: SpacingHelper.defaultBorderRadius,
                     ),
                     child: widget.middlePart,
                   ),
@@ -113,7 +117,7 @@ class FramePageState extends State<FramePage> {
                       ? Align(
                           alignment: Alignment.centerRight,
                           child: SizedBox(
-                            width: width - 8 - restWidth,
+                            width: width - gapWidth - restWidth,
                             child: widget.rightPart,
                           ),
                         )
@@ -126,7 +130,7 @@ class FramePageState extends State<FramePage> {
                     children: [
                       _Nav(selectedNav: widget.selectedNav),
                       SizedBox(
-                        width: width - 64,
+                        width: width - navWidth,
                         child: widget.leftPart,
                       ),
                     ],
@@ -135,7 +139,7 @@ class FramePageState extends State<FramePage> {
                       ? Align(
                           alignment: Alignment.centerRight,
                           child: SizedBox(
-                            width: width - 8 - restWidth,
+                            width: width - gapWidth - restWidth,
                             child: widget.rightPart,
                           ),
                         )

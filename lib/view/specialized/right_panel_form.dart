@@ -4,6 +4,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
+import '../helper/app_bar.dart';
 import '../helper/spacing.dart';
 
 class RightPanelForm extends StatefulWidget {
@@ -51,10 +52,9 @@ class _RightPanelFormState extends State<RightPanelForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
         title: widget.title,
+        shape: AppBarHelper.defaultShape,
+        leading: AppBarHelper.defaultRightLeading(context),
       ),
       body: DynMouseScroll(builder: (context, controller, physics) {
         return SingleChildScrollView(

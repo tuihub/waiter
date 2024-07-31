@@ -102,7 +102,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
               closedBuilder: (context, openContainer) {
                 return YesodPreviewCard(
                   name:
-                      '${item.feedConfigName} ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
+                      '${item.feedConfigName} | ${DurationHelper.recentString(item.publishedParsedTime.toDateTime())}',
                   title: item.title,
                   callback: () {
                     openContainer();

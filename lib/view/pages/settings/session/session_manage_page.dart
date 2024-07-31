@@ -9,7 +9,6 @@ import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
-import '../../../helper/spacing.dart';
 import '../../frame_page.dart';
 
 class SessionManagePage extends StatelessWidget {
@@ -39,36 +38,32 @@ class SessionManagePage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 8),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 36, 8, 36),
-                  child: Row(
+                  child: Center(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              S.of(context).currentDevice,
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 10,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                              maxLines: 2,
-                            ),
-                            Text(
-                              deviceInfo.deviceName.isNotEmpty ||
-                                      deviceInfo.systemVersion.isNotEmpty
-                                  ? '${deviceInfo.deviceName} ${deviceInfo.systemVersion}'
-                                  : S.of(context).unknownDevice,
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                              maxLines: 2,
-                            ),
-                          ],
+                        Text(
+                          S.of(context).currentDevice,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 10,
+                              color: Theme.of(context).colorScheme.onPrimary),
+                          maxLines: 2,
                         ),
-                      ]),
+                        Text(
+                          deviceInfo.deviceName.isNotEmpty ||
+                                  deviceInfo.systemVersion.isNotEmpty
+                              ? '${deviceInfo.deviceName} ${deviceInfo.systemVersion}'
+                              : S.of(context).unknownDevice,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              color: Theme.of(context).colorScheme.onPrimary),
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               ListView.builder(
@@ -92,77 +87,52 @@ class SessionManagePage extends StatelessWidget {
                     return const SizedBox();
                   }
 
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: InkWell(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
-                      onTap: openEditPage,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(children: [
-                          SizedBox(
-                            width: 64,
-                            height: 64,
-                            child: _systemIcon(item.deviceInfo.systemType),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.id.id.toHexString(),
-                                style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 10,
-                                    color: Theme.of(context).disabledColor),
-                                maxLines: 2,
-                              ),
-                              Text(
-                                item.deviceInfo.deviceName.isNotEmpty ||
-                                        item.deviceInfo.systemVersion.isNotEmpty
-                                    ? '${item.deviceInfo.deviceName} ${item.deviceInfo.systemVersion}'
-                                    : S.of(context).unknownDevice,
-                              ),
-                              Text(
-                                item.deviceInfo.clientName.isNotEmpty ||
-                                        item.deviceInfo.clientVersion.isNotEmpty
-                                    ? '${item.deviceInfo.clientName} ${item.deviceInfo.clientVersion}'
-                                    : S.of(context).unknownClient,
-                              ),
-                              Text(
-                                '${DurationHelper.recentString(
-                                  item.createTime.toDateTime(toLocal: true),
-                                )}${item.expireTime.toDateTime(
-                                      toLocal: true,
-                                    ).isBefore(
-                                      DateTime.now(),
-                                    ) ? ' · ${S.of(context).loginExpired}' : ''}',
-                              ),
-                            ],
-                          ),
-                          const Expanded(child: SizedBox()),
-                          SizedBox(
-                            width: 64,
-                            height: 64,
-                            child: IconButton(
-                              onPressed: openEditPage,
-                              icon: const Icon(Icons.edit),
-                            ),
-                          ),
-                        ]),
-                      ),
+                  return ListTile(
+                    title: Text(
+                      item.id.id.toHexString(),
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: 10,
+                          color: Theme.of(context).disabledColor),
+                      maxLines: 2,
                     ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.deviceInfo.deviceName.isNotEmpty ||
+                                  item.deviceInfo.systemVersion.isNotEmpty
+                              ? '${item.deviceInfo.deviceName} ${item.deviceInfo.systemVersion}'
+                              : S.of(context).unknownDevice,
+                        ),
+                        Text(
+                          item.deviceInfo.clientName.isNotEmpty ||
+                                  item.deviceInfo.clientVersion.isNotEmpty
+                              ? '${item.deviceInfo.clientName} ${item.deviceInfo.clientVersion}'
+                              : S.of(context).unknownClient,
+                        ),
+                        Text(
+                          '${DurationHelper.recentString(
+                            item.createTime.toDateTime(toLocal: true),
+                          )}${item.expireTime.toDateTime(
+                                toLocal: true,
+                              ).isBefore(
+                                DateTime.now(),
+                              ) ? ' · ${S.of(context).loginExpired}' : ''}',
+                        ),
+                      ],
+                    ),
+                    leading: _systemIcon(item.deviceInfo.systemType),
+                    trailing: IconButton(
+                      onPressed: openEditPage,
+                      icon: const Icon(Icons.edit),
+                    ),
+                    onTap: openEditPage,
                   );
                 },
               ),
             ]),
         ]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
-          },
-          child: const Icon(Icons.refresh),
-        ),
       );
     });
   }
