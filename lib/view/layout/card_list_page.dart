@@ -41,18 +41,20 @@ class ListManagePageState extends State<ListManagePage> {
             AppBarHelper.defaultMainLeading(context, onPressed: widget.onBack),
         title: Text(widget.title),
         actions: [
-          IconButton(
-            onPressed: widget.onAdd,
-            icon: const Icon(Icons.add),
-          ),
+          if (widget.onAdd != null)
+            IconButton(
+              onPressed: widget.onAdd,
+              icon: const Icon(Icons.add),
+            ),
           PopupMenuButton(
             itemBuilder: (context) {
               return [
-                PopupMenuItem(
-                  value: 'add',
-                  onTap: widget.onAdd,
-                  child: Text(S.of(context).add),
-                ),
+                if (widget.onAdd != null)
+                  PopupMenuItem(
+                    value: 'add',
+                    onTap: widget.onAdd,
+                    child: Text(S.of(context).add),
+                  ),
                 if (widget.popupMenuItems != null) ...widget.popupMenuItems!,
                 PopupMenuItem(
                   value: 'refresh',
@@ -79,7 +81,7 @@ class ListManagePageState extends State<ListManagePage> {
             Center(
               child: Text(widget.msg!),
             )
-          else if (widget.children.isEmpty)
+          else if (widget.children.isEmpty && widget.onAdd != null)
             Center(
               child: ElevatedButton.icon(
                 onPressed: widget.onAdd,

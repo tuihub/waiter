@@ -43,8 +43,8 @@ import 'view/pages/settings/notify/notify_flow_page.dart';
 import 'view/pages/settings/notify/notify_target_add_panel.dart';
 import 'view/pages/settings/notify/notify_target_edit_panel.dart';
 import 'view/pages/settings/notify/notify_target_page.dart';
-import 'view/pages/settings/porter/porter_edit_panel.dart';
 import 'view/pages/settings/porter/porter_manage_page.dart';
+import 'view/pages/settings/porter_context_page.dart';
 import 'view/pages/settings/session/session_edit_panel.dart';
 import 'view/pages/settings/session/session_manage_page.dart';
 import 'view/pages/settings/settings_nav.dart';
@@ -550,6 +550,7 @@ enum SettingsFunctions {
   notifyTarget,
   notifyFlow,
   session,
+  porterContext,
   porter,
   user,
   app,
@@ -563,6 +564,8 @@ enum SettingsActions {
   notifyFlowAdd,
   notifyFlowEdit,
   sessionEdit,
+  porterContextAdd,
+  porterContextEdit,
   porterEdit,
   userEdit,
   userAdd,
@@ -586,6 +589,7 @@ class SettingsFunctionRoute extends GoRouteData {
       SettingsFunctions.notifyTarget: const NotifyTargetPage(),
       SettingsFunctions.notifyFlow: const NotifyFlowPage(),
       SettingsFunctions.session: const SessionManagePage(),
+      SettingsFunctions.porterContext: const PorterContextManagePage(),
       SettingsFunctions.porter: const PorterManagePage(),
       SettingsFunctions.user: const UserManagePage(),
       SettingsFunctions.app: const AppManagePage(),
@@ -598,6 +602,17 @@ class SettingsFunctionRoute extends GoRouteData {
       SettingsActions.notifyFlowAdd: const NotifyFlowAddPanel(),
       SettingsActions.notifyFlowEdit: const NotifyFlowEditPanel(),
       SettingsActions.sessionEdit: const SessionEditPanel(),
+      SettingsActions.porterContextAdd: PorterContextAddPanel(
+        key: ValueKey($extra),
+        porterGroup:
+            $extra is PorterGroup ? $extra! as PorterGroup : PorterGroup(),
+      ),
+      SettingsActions.porterContextEdit: PorterContextEditPanel(
+        key: ValueKey($extra),
+        porterContext: $extra is PorterContext
+            ? $extra! as PorterContext
+            : PorterContext(),
+      ),
       SettingsActions.porterEdit: const PorterEditPanel(),
       SettingsActions.userAdd: const UserAddPanel(),
       SettingsActions.userEdit: UserEditPanel(
@@ -624,6 +639,8 @@ class SettingsFunctionRoute extends GoRouteData {
         context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
       case SettingsFunctions.porter:
         context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
+      case SettingsFunctions.porterContext:
+        context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent());
       default:
     }
     return NoTransitionPage(

@@ -1060,6 +1060,36 @@ class S {
     );
   }
 
+  /// `插件管理`
+  String get pluginManage {
+    return Intl.message(
+      '插件管理',
+      name: 'pluginManage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{working}/{enabled} ({total}) 个正在工作`
+  String pluginWorkingProportion(Object working, Object enabled, Object total) {
+    return Intl.message(
+      '$working/$enabled ($total) 个正在工作',
+      name: 'pluginWorkingProportion',
+      desc: '',
+      args: [working, enabled, total],
+    );
+  }
+
+  /// `插件环境管理`
+  String get pluginContextManage {
+    return Intl.message(
+      '插件环境管理',
+      name: 'pluginContextManage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Chrome`
   String get chrome {
     return Intl.message(
@@ -1535,6 +1565,56 @@ class S {
     return Intl.message(
       '启用失败',
       name: 'PORTER_CONNECTION_STATUS_ACTIVATION_FAILED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未知`
+  String get PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED {
+    return Intl.message(
+      '未知',
+      name: 'PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `排队中`
+  String get PORTER_CONTEXT_HANDLE_STATUS_QUEUEING {
+    return Intl.message(
+      '排队中',
+      name: 'PORTER_CONTEXT_HANDLE_STATUS_QUEUEING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `降级`
+  String get PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED {
+    return Intl.message(
+      '降级',
+      name: 'PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `工作中`
+  String get PORTER_CONTEXT_HANDLE_STATUS_ACTIVE {
+    return Intl.message(
+      '工作中',
+      name: 'PORTER_CONTEXT_HANDLE_STATUS_ACTIVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已停用`
+  String get PORTER_CONTEXT_HANDLE_STATUS_BLOCKED {
+    return Intl.message(
+      '已停用',
+      name: 'PORTER_CONTEXT_HANDLE_STATUS_BLOCKED',
       desc: '',
       args: [],
     );

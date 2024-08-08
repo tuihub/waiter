@@ -3,6 +3,8 @@ part of 'tiphereth_bloc.dart';
 class TipherethState {
   late List<Account>? accounts;
   late List<Porter>? porters;
+  late List<PorterGroup>? porterGroups;
+  late List<PorterContext>? porterContexts;
   late List<UserSession>? sessions;
 
   late int? selectedPorterEditIndex;
@@ -11,6 +13,8 @@ class TipherethState {
   TipherethState({
     this.accounts,
     this.porters,
+    this.porterGroups,
+    this.porterContexts,
     this.sessions,
     this.selectedPorterEditIndex,
     this.selectedSessionEditIndex,
@@ -19,6 +23,8 @@ class TipherethState {
   TipherethState copyWith({
     List<Account>? accounts,
     List<Porter>? porters,
+    List<PorterGroup>? porterGroups,
+    List<PorterContext>? porterContexts,
     List<UserSession>? sessions,
     int? selectedPorterEditIndex,
     int? selectedSessionDeleteIndex,
@@ -26,6 +32,8 @@ class TipherethState {
     return TipherethState(
       accounts: accounts ?? this.accounts,
       porters: porters ?? this.porters,
+      porterGroups: porterGroups ?? this.porterGroups,
+      porterContexts: porterContexts ?? this.porterContexts,
       sessions: sessions ?? this.sessions,
       selectedPorterEditIndex:
           selectedPorterEditIndex ?? this.selectedPorterEditIndex,
@@ -37,6 +45,8 @@ class TipherethState {
   void _from(TipherethState other) {
     accounts = other.accounts;
     porters = other.porters;
+    porterGroups = other.porterGroups;
+    porterContexts = other.porterContexts;
     sessions = other.sessions;
     selectedPorterEditIndex = other.selectedPorterEditIndex;
     selectedSessionEditIndex = other.selectedSessionEditIndex;
@@ -117,6 +127,48 @@ class TipherethLoadPortersState extends TipherethState with EventStatusMixin {
 
 class TipherethEditPorterState extends TipherethState with EventStatusMixin {
   TipherethEditPorterState(TipherethState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethAddPorterContextState extends TipherethState
+    with EventStatusMixin {
+  TipherethAddPorterContextState(TipherethState state, this.statusCode,
+      {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethEditPorterContextState extends TipherethState
+    with EventStatusMixin {
+  TipherethEditPorterContextState(TipherethState state, this.statusCode,
+      {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class TipherethLoadPorterContextsState extends TipherethState
+    with EventStatusMixin {
+  TipherethLoadPorterContextsState(TipherethState state, this.statusCode,
+      {this.msg})
       : super() {
     _from(state);
   }

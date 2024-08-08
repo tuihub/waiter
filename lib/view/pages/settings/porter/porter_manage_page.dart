@@ -4,110 +4,210 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../../l10n/l10n.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
-import '../../../helper/spacing.dart';
+import '../../../components/toast.dart';
+import '../../../form/form_field.dart';
+import '../../../layout/card_list_page.dart';
+import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
 
 class PorterManagePage extends StatelessWidget {
   const PorterManagePage({super.key});
 
+  Widget buildPorterGroup(BuildContext context, List<Porter> porters) {
+    final activeCount = porters
+        .where((e) =>
+            e.connectionStatus ==
+            PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVE)
+        .length;
+    final enabledCount =
+        porters.where((e) => e.status == UserStatus.USER_STATUS_ACTIVE).length;
+    void openEditPanel(int index) {
+      context
+          .read<TipherethBloc>()
+          .add(TipherethSetPorterEditIndexEvent(index));
+      const SettingsFunctionRoute(SettingsFunctions.porter,
+              action: SettingsActions.porterEdit)
+          .go(context);
+      FramePage.of(context)?.openDrawer();
+    }
+
+    return ExpansionTile(
+      title: Text(porters.firstOrNull?.binarySummary.name ?? ''),
+      subtitle: Text(S
+          .of(context)
+          .pluginWorkingProportion(activeCount, enabledCount, porters.length)),
+      initiallyExpanded: true,
+      children: [
+        for (final porter in porters)
+          ListTile(
+            title: Text(porter.binarySummary.name),
+            subtitle: Row(
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                        _porterConnectionStatusColor(porter.connectionStatus),
+                  ),
+                  margin: const EdgeInsets.only(right: 8),
+                ),
+                Text(porterConnectionStatusString(porter.connectionStatus)),
+              ],
+            ),
+            leading: _porterConnectionStatusIcon(porter.connectionStatus),
+            onTap: () {
+              openEditPanel(porter.id.id.toInt());
+            },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Switch(
+                  value: porter.status == UserStatus.USER_STATUS_ACTIVE,
+                  onChanged: (_) {
+                    openEditPanel(porter.id.id.toInt());
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    openEditPanel(porter.id.id.toInt());
+                  },
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TipherethBloc, TipherethState>(
-        builder: (context, state) {
-      final listData = state.porters ?? [];
-      return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Stack(children: [
-            if (state is TipherethLoadPortersState && state.processing)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-            if (state is TipherethLoadPortersState && state.failed)
-              Center(
-                child: Text('加载失败: ${state.msg}'),
-              )
-            else
-              ListView.builder(
-                itemCount: listData.length,
-                itemBuilder: (context, index) {
-                  final item = listData.elementAt(index);
-
-                  void openEditPage() {
-                    context
-                        .read<TipherethBloc>()
-                        .add(TipherethSetPorterEditIndexEvent(index));
-                    const SettingsFunctionRoute(SettingsFunctions.porter,
-                            action: SettingsActions.porterEdit)
-                        .go(context);
-                    FramePage.of(context)?.openDrawer();
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Card(
-                      margin: EdgeInsets.zero,
-                      shadowColor:
-                          _porterConnectionStatusColor(item.connectionStatus),
-                      child: InkWell(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
-                        onTap: openEditPage,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: Row(children: [
-                            SizedBox(
-                              width: 64,
-                              height: 64,
-                              child: _porterConnectionStatusIcon(
-                                  item.connectionStatus),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.id.id.toHexString(),
-                                  style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 10,
-                                      color: Theme.of(context).disabledColor),
-                                  maxLines: 2,
-                                ),
-                                Text(item.name),
-                                Text(item.version),
-                                Text(porterConnectionStatusString(
-                                    item.connectionStatus)),
-                              ],
-                            ),
-                            const Expanded(child: SizedBox()),
-                            SizedBox(
-                              width: 64,
-                              height: 64,
-                              child: IconButton(
-                                onPressed: openEditPage,
-                                icon: const Icon(Icons.edit),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-          ]),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
+      builder: (context, state) {
+        final porters = state.porters ?? [];
+        final porterGroup = <String, List<Porter>>{};
+        for (final porter in porters) {
+          if (porterGroup.containsKey(porter.globalName)) {
+            porterGroup[porter.globalName]!.add(porter);
+          } else {
+            porterGroup[porter.globalName] = [porter];
+          }
+        }
+        return ListManagePage(
+          title: S.of(context).pluginManage,
+          processing: state is TipherethLoadPortersState && state.processing,
+          msg: state is TipherethLoadPortersState ? state.msg : '',
+          onRefresh: () {
             context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
           },
-          child: const Icon(Icons.refresh),
-        ),
-      );
-    });
+          children: [
+            for (final value in porterGroup.values)
+              buildPorterGroup(context, value),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class PorterEditPanel extends StatelessWidget {
+  const PorterEditPanel({super.key});
+
+  void close(BuildContext context) {
+    FramePage.of(context)?.closeDrawer();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<TipherethBloc, TipherethState>(
+      listener: (context, state) {
+        if (state is TipherethEditPorterState && state.success) {
+          const Toast(title: '', message: '已应用更改').show(context);
+          close(context);
+        }
+      },
+      buildWhen: (previous, current) =>
+          previous.selectedPorterEditIndex != current.selectedPorterEditIndex,
+      builder: (context, state) {
+        final porter =
+            state.porters != null && state.selectedPorterEditIndex != null
+                ? state.porters!.firstWhere(
+                    (e) => e.id.id == state.selectedPorterEditIndex,
+                    orElse: Porter.new)
+                : Porter();
+
+        var enabled = porter.status == UserStatus.USER_STATUS_ACTIVE;
+
+        return RightPanelForm(
+          title: const Text('插件详情'),
+          formFields: [
+            TextFormField(
+              initialValue: porter.id.id.toString(),
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'ID',
+              ),
+            ),
+            TextFormField(
+              initialValue: porter.binarySummary.name,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '名称',
+              ),
+            ),
+            TextFormField(
+              initialValue: porter.binarySummary.version,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                label: Text('版本'),
+              ),
+            ),
+            TextFormField(
+              initialValue: porter.globalName,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '全局名称',
+              ),
+            ),
+            TextFormField(
+              initialValue: porter.featureSummary,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                label: Text('支持功能'),
+              ),
+            ),
+            SwitchFormField(
+              initialValue: enabled,
+              onSaved: (newValue) => enabled = newValue!,
+              title: const Text('启用'),
+            ),
+          ],
+          errorMsg: state is TipherethEditPorterState && state.failed
+              ? state.msg
+              : null,
+          onSubmit: () {
+            context.read<TipherethBloc>().add(TipherethEditPorterEvent(
+                  porter.id,
+                  enabled
+                      ? UserStatus.USER_STATUS_ACTIVE
+                      : UserStatus.USER_STATUS_BLOCKED,
+                ));
+          },
+          submitting: state is TipherethEditPorterState && state.processing,
+          close: () => close(context),
+        );
+      },
+    );
   }
 }
 

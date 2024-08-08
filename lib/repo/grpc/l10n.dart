@@ -123,6 +123,22 @@ String porterConnectionStatusString(PorterConnectionStatus status) {
   return '';
 }
 
+String porterContextHandleStatusString(PorterContextHandleStatus status) {
+  switch (status) {
+    case PorterContextHandleStatus.PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED:
+      return S.current.PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED;
+    case PorterContextHandleStatus.PORTER_CONTEXT_HANDLE_STATUS_ACTIVE:
+      return S.current.PORTER_CONTEXT_HANDLE_STATUS_ACTIVE;
+    case PorterContextHandleStatus.PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED:
+      return S.current.PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED;
+    case PorterContextHandleStatus.PORTER_CONTEXT_HANDLE_STATUS_QUEUEING:
+      return S.current.PORTER_CONTEXT_HANDLE_STATUS_QUEUEING;
+    case PorterContextHandleStatus.PORTER_CONTEXT_HANDLE_STATUS_BLOCKED:
+      return S.current.PORTER_CONTEXT_HANDLE_STATUS_BLOCKED;
+  }
+  return '';
+}
+
 String systemNotificationLevelString(SystemNotificationLevel level) {
   switch (level) {
     case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_UNSPECIFIED:

@@ -45,6 +45,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(number) => "发现 ${number} 个新应用";
 
+  static String m13(working, enabled, total) =>
+      "${working}/${enabled} (${total}) 个正在工作";
+
   static String m12(server) => "注册到 ${server}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -93,6 +96,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "PORTER_CONNECTION_STATUS_DISCONNECTED":
             MessageLookupByLibrary.simpleMessage("连接断开"),
         "PORTER_CONNECTION_STATUS_UNSPECIFIED":
+            MessageLookupByLibrary.simpleMessage("未知"),
+        "PORTER_CONTEXT_HANDLE_STATUS_ACTIVE":
+            MessageLookupByLibrary.simpleMessage("工作中"),
+        "PORTER_CONTEXT_HANDLE_STATUS_BLOCKED":
+            MessageLookupByLibrary.simpleMessage("已停用"),
+        "PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED":
+            MessageLookupByLibrary.simpleMessage("降级"),
+        "PORTER_CONTEXT_HANDLE_STATUS_QUEUEING":
+            MessageLookupByLibrary.simpleMessage("排队中"),
+        "PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
         "SYSTEM_NOTIFICATION_LEVEL_ERROR":
             MessageLookupByLibrary.simpleMessage("错误"),
@@ -201,6 +214,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请输入服务器端口"),
         "pleaseSetupApplicationPath":
             MessageLookupByLibrary.simpleMessage("请设置应用程序路径"),
+        "pluginContextManage": MessageLookupByLibrary.simpleMessage("插件环境管理"),
+        "pluginManage": MessageLookupByLibrary.simpleMessage("插件管理"),
+        "pluginWorkingProportion": m13,
         "port": MessageLookupByLibrary.simpleMessage("端口"),
         "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
         "refreshCaptcha": MessageLookupByLibrary.simpleMessage("刷新验证码"),

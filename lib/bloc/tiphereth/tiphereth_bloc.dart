@@ -147,6 +147,77 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           msg: resp.error));
     }, transformer: droppable());
 
+    on<TipherethAddPorterContextEvent>((event, emit) async {
+      emit(TipherethAddPorterContextState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.createPorterContext,
+        CreatePorterContextRequest(context: event.porterContext),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethAddPorterContextState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethLoadPorterContextsEvent());
+      emit(TipherethAddPorterContextState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethEditPorterContextEvent>((event, emit) async {
+      emit(TipherethEditPorterContextState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.updatePorterContext,
+        UpdatePorterContextRequest(context: event.porterContext),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethEditPorterContextState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      add(TipherethLoadPorterContextsEvent());
+      emit(TipherethEditPorterContextState(state, EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
+    on<TipherethLoadPorterContextsEvent>((event, emit) async {
+      emit(TipherethLoadPorterContextsState(state, EventStatus.processing));
+      final resp = await _api.doRequest(
+        (client) => client.listPorterContexts,
+        ListPorterContextsRequest(
+          paging: PagingRequest(
+            pageSize: Int64(1000),
+            pageNum: Int64(1),
+          ),
+        ),
+      );
+      if (resp.status != ApiStatus.success) {
+        emit(TipherethLoadPorterContextsState(state, EventStatus.failed,
+            msg: resp.error));
+        return;
+      }
+      final resp2 = await _api.doRequest(
+        (client) => client.listPorterGroups,
+        ListPorterGroupsRequest(
+          paging: PagingRequest(
+            pageSize: Int64(1000),
+            pageNum: Int64(1),
+          ),
+        ),
+      );
+      if (resp2.status != ApiStatus.success) {
+        emit(TipherethLoadPorterContextsState(state, EventStatus.failed,
+            msg: resp2.error));
+        return;
+      }
+      emit(TipherethLoadPorterContextsState(
+          state.copyWith(
+            porterContexts: resp.getData().contexts,
+            porterGroups: resp2.getData().porterGroups,
+          ),
+          EventStatus.success,
+          msg: resp.error));
+    }, transformer: droppable());
+
     on<TipherethLoadSessionsEvent>((event, emit) async {
       emit(TipherethLoadSessionsState(state, EventStatus.processing));
       final resp = await _api.doRequest(

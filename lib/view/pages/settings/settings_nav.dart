@@ -4,6 +4,7 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
+import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
 
@@ -48,6 +49,17 @@ class SettingsNav extends StatelessWidget {
                           title: const Text('登录设备管理'),
                           selected: function == SettingsFunctions.session,
                         ),
+                        ListTile(
+                          onTap: () {
+                            const SettingsFunctionRoute(
+                                    SettingsFunctions.porterContext)
+                                .go(context);
+                            OverlappingPanels.of(context)
+                                ?.reveal(RevealSide.main);
+                          },
+                          title: Text(S.of(context).pluginContextManage),
+                          selected: function == SettingsFunctions.porterContext,
+                        ),
                         ExpansionTile(
                           title: const Text(
                             '通知设置',
@@ -88,7 +100,7 @@ class SettingsNav extends StatelessWidget {
                             childrenPadding: const EdgeInsets.only(left: 12),
                             children: [
                               ListTile(
-                                title: const Text('插件管理'),
+                                title: Text(S.of(context).pluginManage),
                                 onTap: () {
                                   const SettingsFunctionRoute(
                                           SettingsFunctions.porter)
