@@ -840,6 +840,16 @@ class S {
     );
   }
 
+  /// `自动化`
+  String get automation {
+    return Intl.message(
+      '自动化',
+      name: 'automation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `规则集管理`
   String get feedActionSetManage {
     return Intl.message(
@@ -885,6 +895,66 @@ class S {
     return Intl.message(
       '筛选文章',
       name: 'filteredArticles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推送管理`
+  String get notifyFlowManage {
+    return Intl.message(
+      '推送管理',
+      name: 'notifyFlowManage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加推送`
+  String get notifyFlowAdd {
+    return Intl.message(
+      '添加推送',
+      name: 'notifyFlowAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `编辑推送`
+  String get notifyFlowEdit {
+    return Intl.message(
+      '编辑推送',
+      name: 'notifyFlowEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `推送目标管理`
+  String get notifyTargetManage {
+    return Intl.message(
+      '推送目标管理',
+      name: 'notifyTargetManage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `添加推送目标`
+  String get notifyTargetAdd {
+    return Intl.message(
+      '添加推送目标',
+      name: 'notifyTargetAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `编辑推送目标`
+  String get notifyTargetEdit {
+    return Intl.message(
+      '编辑推送目标',
+      name: 'notifyTargetEdit',
       desc: '',
       args: [],
     );
@@ -1570,6 +1640,16 @@ class S {
     );
   }
 
+  /// `降级`
+  String get PORTER_CONNECTION_STATUS_DOWNGRADED {
+    return Intl.message(
+      '降级',
+      name: 'PORTER_CONNECTION_STATUS_DOWNGRADED',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `未知`
   String get PORTER_CONTEXT_HANDLE_STATUS_UNSPECIFIED {
     return Intl.message(
@@ -1610,10 +1690,10 @@ class S {
     );
   }
 
-  /// `已停用`
+  /// `未安排`
   String get PORTER_CONTEXT_HANDLE_STATUS_BLOCKED {
     return Intl.message(
-      '已停用',
+      '未安排',
       name: 'PORTER_CONTEXT_HANDLE_STATUS_BLOCKED',
       desc: '',
       args: [],

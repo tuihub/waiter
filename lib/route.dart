@@ -37,12 +37,6 @@ import 'view/pages/settings/app_package/app_package_add_panel.dart';
 import 'view/pages/settings/app_package/app_package_edit_panel.dart';
 import 'view/pages/settings/app_package/app_package_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
-import 'view/pages/settings/notify/notify_flow_add_panel.dart';
-import 'view/pages/settings/notify/notify_flow_edit_panel.dart';
-import 'view/pages/settings/notify/notify_flow_page.dart';
-import 'view/pages/settings/notify/notify_target_add_panel.dart';
-import 'view/pages/settings/notify/notify_target_edit_panel.dart';
-import 'view/pages/settings/notify/notify_target_page.dart';
 import 'view/pages/settings/porter/porter_manage_page.dart';
 import 'view/pages/settings/porter_context_page.dart';
 import 'view/pages/settings/session/session_edit_panel.dart';
@@ -53,8 +47,10 @@ import 'view/pages/settings/user/user_edit_panel.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
 import 'view/pages/tiphereth/tiphereth_frame_page.dart';
 import 'view/pages/web_landing_page.dart';
-import 'view/pages/yesod/yesod_action_manage_page.dart';
-import 'view/pages/yesod/yesod_feed_manage_page.dart';
+import 'view/pages/yesod/manage_notify_flow_page.dart';
+import 'view/pages/yesod/manage_notify_target_page.dart';
+import 'view/pages/yesod/manage_yesod_action_page.dart';
+import 'view/pages/yesod/manage_yesod_feed_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
 
@@ -83,17 +79,55 @@ enum ModuleName {
   String toString() => name;
 }
 
-class YesodFunctions {
-  static const String recent = 'recent';
-  static const String timeline = 'timeline';
-  static const String feedManage = 'feedManage';
-  static const String actionManage = 'actionManage';
+enum YesodFunctions {
+  recent,
+  timeline,
+  feedManage,
+  actionManage,
+  notifyTargetManage,
+  notifyFlowManage,
 }
 
-class GeburaFunctions {
-  static const String store = 'store';
-  static const String library = 'library';
-  static const String librarySettings = 'librarySettings';
+enum YesodActions {
+  recentSettings,
+  feedEdit,
+  feedAdd,
+  actionEdit,
+  actionAdd,
+  notifyTargetEdit,
+  notifyTargetAdd,
+  notifyFlowEdit,
+  notifyFlowAdd,
+}
+
+enum GeburaFunctions {
+  store,
+  library,
+  librarySettings,
+}
+
+enum SettingsFunctions {
+  client,
+  session,
+  porterContext,
+  porter,
+  user,
+  app,
+  appPackage,
+  about
+}
+
+enum SettingsActions {
+  sessionEdit,
+  porterContextAdd,
+  porterContextEdit,
+  porterEdit,
+  userEdit,
+  userAdd,
+  appEdit,
+  appAdd,
+  appPackageEdit,
+  appPackageAdd
 }
 
 final GlobalKey<NavigatorState> _tipherethNavigateKey =
@@ -123,10 +157,7 @@ final mainWindowKey = GlobalKey();
         TypedStatefulShellBranch<YesodRoute>(
           routes: [
             TypedGoRoute<YesodRootRoute>(path: 'module/Yesod'),
-            TypedGoRoute<YesodRecentRoute>(path: 'module/Yesod/recent'),
-            TypedGoRoute<YesodFeedManageRoute>(path: 'module/Yesod/feedManage'),
-            TypedGoRoute<YesodActionManageRoute>(
-                path: 'module/Yesod/actionManage'),
+            TypedGoRoute<YesodFunctionRoute>(path: 'module/Yesod/:function'),
           ],
         ),
         TypedStatefulShellBranch<GeburaRoute>(
@@ -280,94 +311,75 @@ class YesodRootRoute extends GoRouteData {
 
   @override
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
-    return const YesodRecentRoute().location;
+    return const YesodFunctionRoute(YesodFunctions.recent).location;
   }
 }
 
-enum YesodRecentActions { setting }
+class YesodFunctionRoute extends GoRouteData {
+  const YesodFunctionRoute(this.function, {this.action, this.$extra});
 
-class YesodRecentRoute extends GoRouteData {
-  const YesodRecentRoute({this.action});
-
-  final YesodRecentActions? action;
+  final YesodFunctions function;
+  final YesodActions? action;
+  final dynamic $extra;
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    final actions = {
-      YesodRecentActions.setting: const YesodRecentSettingPanel(),
+    final yesodPages = {
+      YesodFunctions.recent: const YesodRecentPage(),
+      YesodFunctions.timeline: Container(),
+      YesodFunctions.feedManage: const YesodFeedManagePage(),
+      YesodFunctions.actionManage: const YesodActionManagePage(),
+      YesodFunctions.notifyTargetManage: const NotifyTargetPage(),
+      YesodFunctions.notifyFlowManage: const NotifyFlowPage(),
     };
-    context.read<YesodBloc>().add(YesodInitEvent());
+    final yesodActions = {
+      YesodActions.recentSettings: const YesodRecentSettingPanel(),
+      YesodActions.feedEdit: YesodFeedManageEditPanel(
+        key: ValueKey($extra),
+        index: $extra is int ? $extra! as int : 0,
+      ),
+      YesodActions.feedAdd: const YesodFeedManageAddPanel(),
+      YesodActions.actionEdit: YesodActionManageEditPanel(
+        key: ValueKey($extra),
+        index: $extra is int ? $extra! as int : 0,
+      ),
+      YesodActions.actionAdd: const YesodActionManageAddPanel(),
+      YesodActions.notifyTargetEdit: NotifyTargetEditPanel(
+        key: ValueKey($extra),
+        index: $extra is int ? $extra! as int : 0,
+      ),
+      YesodActions.notifyTargetAdd: const NotifyTargetAddPanel(),
+      YesodActions.notifyFlowEdit: const NotifyFlowEditPanel(),
+      YesodActions.notifyFlowAdd: const NotifyFlowAddPanel(),
+    };
+    if (action == null) {
+      switch (function) {
+        case YesodFunctions.recent:
+        case YesodFunctions.timeline:
+          context.read<YesodBloc>().add(YesodInitEvent());
+        case YesodFunctions.feedManage:
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
+        case YesodFunctions.actionManage:
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<YesodBloc>().add(YesodFeedActionSetLoadEvent());
+        case YesodFunctions.notifyTargetManage:
+        case YesodFunctions.notifyFlowManage:
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<NetzachBloc>().add(NetzachInitEvent());
+          context.read<YesodBloc>().add(YesodInitEvent());
+        default:
+      }
+    }
     return NoTransitionPage(
       child: FramePage(
         selectedNav: ModuleName.yesod,
-        leftPart: const YesodNav(
-          function: YesodFunctions.recent,
+        leftPart: YesodNav(
+          function: function,
         ),
-        middlePart: const YesodRecentPage(),
-        rightPart: actions[action] ?? Container(),
+        middlePart: yesodPages[function] ?? Container(),
+        rightPart: yesodActions[action] ?? Container(),
         gestureRight: false,
-      ),
-    );
-  }
-}
-
-enum YesodFeedManageActions { edit, add }
-
-class YesodFeedManageRoute extends GoRouteData {
-  const YesodFeedManageRoute({this.action, this.id});
-
-  final YesodFeedManageActions? action;
-  final int? id;
-
-  @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    final actions = {
-      YesodFeedManageActions.edit: YesodFeedManageEditPanel(
-        key: ValueKey(id),
-        index: id,
-      ),
-      YesodFeedManageActions.add: const YesodFeedManageAddPanel(),
-    };
-    return NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.yesod,
-        leftPart: const YesodNav(
-          function: YesodFunctions.feedManage,
-        ),
-        middlePart: const YesodFeedManagePage(),
-        rightPart: actions[action] ?? Container(),
-        gestureRight: true,
-      ),
-    );
-  }
-}
-
-enum YesodActionManageActions { edit, add }
-
-class YesodActionManageRoute extends GoRouteData {
-  const YesodActionManageRoute({this.action, this.id});
-
-  final YesodActionManageActions? action;
-  final int? id;
-
-  @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    final actions = {
-      YesodActionManageActions.edit: YesodActionManageEditPanel(
-        key: ValueKey(id),
-        index: id,
-      ),
-      YesodActionManageActions.add: const YesodActionManageAddPanel(),
-    };
-    return NoTransitionPage(
-      child: FramePage(
-        selectedNav: ModuleName.yesod,
-        leftPart: const YesodNav(
-          function: YesodFunctions.actionManage,
-        ),
-        middlePart: const YesodActionManagePage(),
-        rightPart: actions[action] ?? Container(),
-        gestureRight: true,
       ),
     );
   }
@@ -545,36 +557,6 @@ class SettingsRootRoute extends GoRouteData {
   }
 }
 
-enum SettingsFunctions {
-  client,
-  notifyTarget,
-  notifyFlow,
-  session,
-  porterContext,
-  porter,
-  user,
-  app,
-  appPackage,
-  about
-}
-
-enum SettingsActions {
-  notifyTargetAdd,
-  notifyTargetEdit,
-  notifyFlowAdd,
-  notifyFlowEdit,
-  sessionEdit,
-  porterContextAdd,
-  porterContextEdit,
-  porterEdit,
-  userEdit,
-  userAdd,
-  appEdit,
-  appAdd,
-  appPackageEdit,
-  appPackageAdd
-}
-
 class SettingsFunctionRoute extends GoRouteData {
   const SettingsFunctionRoute(this.function, {this.action, this.$extra});
 
@@ -586,8 +568,6 @@ class SettingsFunctionRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     final settingsPages = {
       SettingsFunctions.client: const ClientSettingPage(),
-      SettingsFunctions.notifyTarget: const NotifyTargetPage(),
-      SettingsFunctions.notifyFlow: const NotifyFlowPage(),
       SettingsFunctions.session: const SessionManagePage(),
       SettingsFunctions.porterContext: const PorterContextManagePage(),
       SettingsFunctions.porter: const PorterManagePage(),
@@ -597,10 +577,6 @@ class SettingsFunctionRoute extends GoRouteData {
       SettingsFunctions.about: const AboutPage(),
     };
     final settingsActions = {
-      SettingsActions.notifyTargetAdd: const NotifyTargetAddPanel(),
-      SettingsActions.notifyTargetEdit: const NotifyTargetEditPanel(),
-      SettingsActions.notifyFlowAdd: const NotifyFlowAddPanel(),
-      SettingsActions.notifyFlowEdit: const NotifyFlowEditPanel(),
       SettingsActions.sessionEdit: const SessionEditPanel(),
       SettingsActions.porterContextAdd: PorterContextAddPanel(
         key: ValueKey($extra),
@@ -630,18 +606,16 @@ class SettingsFunctionRoute extends GoRouteData {
         appPackage: $extra is App ? $extra! as App : App(),
       ),
     };
-    switch (function) {
-      case SettingsFunctions.notifyTarget:
-      case SettingsFunctions.notifyFlow:
-        context.read<NetzachBloc>().add(NetzachInitEvent());
-        context.read<YesodBloc>().add(YesodInitEvent());
-      case SettingsFunctions.session:
-        context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
-      case SettingsFunctions.porter:
-        context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
-      case SettingsFunctions.porterContext:
-        context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent());
-      default:
+    if (action == null) {
+      switch (function) {
+        case SettingsFunctions.session:
+          context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
+        case SettingsFunctions.porter:
+          context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
+        case SettingsFunctions.porterContext:
+          context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent());
+        default:
+      }
     }
     return NoTransitionPage(
       child: FramePage(

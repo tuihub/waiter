@@ -10,6 +10,7 @@ class MainState {
   late ClientDeviceInfo? deviceInfo;
   late List<ServerConfig>? knownServers;
   late Map<String, ServerInstanceSummary>? knownServerInstanceSummary;
+  late DateTime? lastRefreshServerInfo;
 
   MainState({
     this.currentServer,
@@ -21,6 +22,7 @@ class MainState {
     this.deviceInfo,
     this.knownServers,
     this.knownServerInstanceSummary,
+    this.lastRefreshServerInfo,
   });
 
   MainState copyWith({
@@ -34,6 +36,7 @@ class MainState {
     ClientDeviceInfo? deviceInfo,
     List<ServerConfig>? knownServers,
     Map<String, ServerInstanceSummary>? knownServerInstanceSummary,
+    DateTime? lastRefreshServerInfo,
   }) {
     return MainState(
       currentServer: currentServer ?? this.currentServer,
@@ -46,6 +49,8 @@ class MainState {
       knownServers: knownServers ?? this.knownServers,
       knownServerInstanceSummary:
           knownServerInstanceSummary ?? this.knownServerInstanceSummary,
+      lastRefreshServerInfo:
+          lastRefreshServerInfo ?? this.lastRefreshServerInfo,
     );
   }
 
@@ -59,6 +64,7 @@ class MainState {
     deviceInfo = other.deviceInfo;
     knownServers = other.knownServers;
     knownServerInstanceSummary = other.knownServerInstanceSummary;
+    lastRefreshServerInfo = other.lastRefreshServerInfo;
   }
 }
 

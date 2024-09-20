@@ -29,8 +29,12 @@ mixin _$LocalAppInstLauncherSetting {
   String get realPath => throw _privateConstructorUsedError;
   int get sleepTime => throw _privateConstructorUsedError;
 
+  /// Serializes this LocalAppInstLauncherSetting to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LocalAppInstLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LocalAppInstLauncherSettingCopyWith<LocalAppInstLauncherSetting>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -64,6 +68,8 @@ class _$LocalAppInstLauncherSettingCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LocalAppInstLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -137,6 +143,8 @@ class __$$LocalAppInstLauncherSettingImplCopyWithImpl<$Res>
       $Res Function(_$LocalAppInstLauncherSettingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LocalAppInstLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -238,12 +246,14 @@ class _$LocalAppInstLauncherSettingImpl
                 other.sleepTime == sleepTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, appInstID, installPath, path,
       advancedTracing, processName, realPath, sleepTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LocalAppInstLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LocalAppInstLauncherSettingImplCopyWith<_$LocalAppInstLauncherSettingImpl>
@@ -286,8 +296,11 @@ abstract class _LocalAppInstLauncherSetting
   String get realPath;
   @override
   int get sleepTime;
+
+  /// Create a copy of LocalAppInstLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LocalAppInstLauncherSettingImplCopyWith<_$LocalAppInstLauncherSettingImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -302,8 +315,12 @@ mixin _$AppLauncherSetting {
   int? get localAppInstID => throw _privateConstructorUsedError;
   String? get steamAppID => throw _privateConstructorUsedError;
 
+  /// Serializes this AppLauncherSetting to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AppLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppLauncherSettingCopyWith<AppLauncherSetting> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -327,6 +344,8 @@ class _$AppLauncherSettingCopyWithImpl<$Res, $Val extends AppLauncherSetting>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -370,6 +389,8 @@ class __$$AppLauncherSettingImplCopyWithImpl<$Res>
       $Res Function(_$AppLauncherSettingImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -427,12 +448,14 @@ class _$AppLauncherSettingImpl implements _AppLauncherSetting {
                 other.steamAppID == steamAppID));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, type, localAppInstID, steamAppID);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppLauncherSettingImplCopyWith<_$AppLauncherSettingImpl> get copyWith =>
@@ -462,8 +485,11 @@ abstract class _AppLauncherSetting implements AppLauncherSetting {
   int? get localAppInstID;
   @override
   String? get steamAppID;
+
+  /// Create a copy of AppLauncherSetting
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppLauncherSettingImplCopyWith<_$AppLauncherSettingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -478,8 +504,12 @@ mixin _$AppRunState {
   DateTime? get startTime => throw _privateConstructorUsedError;
   DateTime? get endTime => throw _privateConstructorUsedError;
 
+  /// Serializes this AppRunState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AppRunState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppRunStateCopyWith<AppRunState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -503,6 +533,8 @@ class _$AppRunStateCopyWithImpl<$Res, $Val extends AppRunState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppRunState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -546,6 +578,8 @@ class __$$AppRunStateImplCopyWithImpl<$Res>
       _$AppRunStateImpl _value, $Res Function(_$AppRunStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppRunState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -602,11 +636,13 @@ class _$AppRunStateImpl implements _AppRunState {
             (identical(other.endTime, endTime) || other.endTime == endTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, running, startTime, endTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppRunState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppRunStateImplCopyWith<_$AppRunStateImpl> get copyWith =>
@@ -635,8 +671,11 @@ abstract class _AppRunState implements AppRunState {
   DateTime? get startTime;
   @override
   DateTime? get endTime;
+
+  /// Create a copy of AppRunState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppRunStateImplCopyWith<_$AppRunStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -651,8 +690,12 @@ mixin _$ImportedSteamAppInst {
   int get appID => throw _privateConstructorUsedError;
   String get steamAppID => throw _privateConstructorUsedError;
 
+  /// Serializes this ImportedSteamAppInst to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ImportedSteamAppInst
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ImportedSteamAppInstCopyWith<ImportedSteamAppInst> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -677,6 +720,8 @@ class _$ImportedSteamAppInstCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ImportedSteamAppInst
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -720,6 +765,8 @@ class __$$ImportedSteamAppInstImplCopyWithImpl<$Res>
       $Res Function(_$ImportedSteamAppInstImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ImportedSteamAppInst
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -776,11 +823,13 @@ class _$ImportedSteamAppInstImpl implements _ImportedSteamAppInst {
                 other.steamAppID == steamAppID));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, instID, appID, steamAppID);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ImportedSteamAppInst
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ImportedSteamAppInstImplCopyWith<_$ImportedSteamAppInstImpl>
@@ -811,8 +860,11 @@ abstract class _ImportedSteamAppInst implements ImportedSteamAppInst {
   int get appID;
   @override
   String get steamAppID;
+
+  /// Create a copy of ImportedSteamAppInst
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ImportedSteamAppInstImplCopyWith<_$ImportedSteamAppInstImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -825,8 +877,12 @@ LibrarySettings _$LibrarySettingsFromJson(Map<String, dynamic> json) {
 mixin _$LibrarySettings {
   String? get query => throw _privateConstructorUsedError;
 
+  /// Serializes this LibrarySettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LibrarySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LibrarySettingsCopyWith<LibrarySettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -850,6 +906,8 @@ class _$LibrarySettingsCopyWithImpl<$Res, $Val extends LibrarySettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LibrarySettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -883,6 +941,8 @@ class __$$LibrarySettingsImplCopyWithImpl<$Res>
       _$LibrarySettingsImpl _value, $Res Function(_$LibrarySettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LibrarySettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -921,11 +981,13 @@ class _$LibrarySettingsImpl implements _LibrarySettings {
             (identical(other.query, query) || other.query == query));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, query);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LibrarySettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LibrarySettingsImplCopyWith<_$LibrarySettingsImpl> get copyWith =>
@@ -949,8 +1011,11 @@ abstract class _LibrarySettings implements LibrarySettings {
 
   @override
   String? get query;
+
+  /// Create a copy of LibrarySettings
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LibrarySettingsImplCopyWith<_$LibrarySettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -963,8 +1028,12 @@ LocalAppInstFolder _$LocalAppInstFolderFromJson(Map<String, dynamic> json) {
 mixin _$LocalAppInstFolder {
   String get path => throw _privateConstructorUsedError;
 
+  /// Serializes this LocalAppInstFolder to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LocalAppInstFolder
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LocalAppInstFolderCopyWith<LocalAppInstFolder> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -988,6 +1057,8 @@ class _$LocalAppInstFolderCopyWithImpl<$Res, $Val extends LocalAppInstFolder>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LocalAppInstFolder
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1021,6 +1092,8 @@ class __$$LocalAppInstFolderImplCopyWithImpl<$Res>
       $Res Function(_$LocalAppInstFolderImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LocalAppInstFolder
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1059,11 +1132,13 @@ class _$LocalAppInstFolderImpl implements _LocalAppInstFolder {
             (identical(other.path, path) || other.path == path));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, path);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LocalAppInstFolder
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LocalAppInstFolderImplCopyWith<_$LocalAppInstFolderImpl> get copyWith =>
@@ -1087,8 +1162,11 @@ abstract class _LocalAppInstFolder implements LocalAppInstFolder {
 
   @override
   String get path;
+
+  /// Create a copy of LocalAppInstFolder
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LocalAppInstFolderImplCopyWith<_$LocalAppInstFolderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1103,8 +1181,12 @@ mixin _$LocalAppInstIndependent {
   int get appInstID => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
 
+  /// Serializes this LocalAppInstIndependent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LocalAppInstIndependent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LocalAppInstIndependentCopyWith<LocalAppInstIndependent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1129,6 +1211,8 @@ class _$LocalAppInstIndependentCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LocalAppInstIndependent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1170,6 +1254,8 @@ class __$$LocalAppInstIndependentImplCopyWithImpl<$Res>
       $Res Function(_$LocalAppInstIndependentImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LocalAppInstIndependent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1218,11 +1304,13 @@ class _$LocalAppInstIndependentImpl implements _LocalAppInstIndependent {
             (identical(other.path, path) || other.path == path));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, appInstID, path);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LocalAppInstIndependent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LocalAppInstIndependentImplCopyWith<_$LocalAppInstIndependentImpl>
@@ -1249,8 +1337,11 @@ abstract class _LocalAppInstIndependent implements LocalAppInstIndependent {
   int get appInstID;
   @override
   String get path;
+
+  /// Create a copy of LocalAppInstIndependent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LocalAppInstIndependentImplCopyWith<_$LocalAppInstIndependentImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

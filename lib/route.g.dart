@@ -46,16 +46,8 @@ RouteBase get $appRoute => GoRouteData.$route(
                   factory: $YesodRootRouteExtension._fromState,
                 ),
                 GoRouteData.$route(
-                  path: 'module/Yesod/recent',
-                  factory: $YesodRecentRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Yesod/feedManage',
-                  factory: $YesodFeedManageRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Yesod/actionManage',
-                  factory: $YesodActionManageRouteExtension._fromState,
+                  path: 'module/Yesod/:function',
+                  factory: $YesodFunctionRouteExtension._fromState,
                 ),
               ],
             ),
@@ -234,95 +226,53 @@ extension $YesodRootRouteExtension on YesodRootRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $YesodRecentRouteExtension on YesodRecentRoute {
-  static YesodRecentRoute _fromState(GoRouterState state) => YesodRecentRoute(
+extension $YesodFunctionRouteExtension on YesodFunctionRoute {
+  static YesodFunctionRoute _fromState(GoRouterState state) =>
+      YesodFunctionRoute(
+        _$YesodFunctionsEnumMap._$fromName(state.pathParameters['function']!),
         action: _$convertMapValue('action', state.uri.queryParameters,
-            _$YesodRecentActionsEnumMap._$fromName),
+            _$YesodActionsEnumMap._$fromName),
+        $extra: state.extra as dynamic,
       );
 
   String get location => GoRouteData.$location(
-        '/module/Yesod/recent',
+        '/module/Yesod/${Uri.encodeComponent(_$YesodFunctionsEnumMap[function]!)}',
         queryParams: {
-          if (action != null) 'action': _$YesodRecentActionsEnumMap[action!],
+          if (action != null) 'action': _$YesodActionsEnumMap[action!],
         },
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
-const _$YesodRecentActionsEnumMap = {
-  YesodRecentActions.setting: 'setting',
+const _$YesodFunctionsEnumMap = {
+  YesodFunctions.recent: 'recent',
+  YesodFunctions.timeline: 'timeline',
+  YesodFunctions.feedManage: 'feed-manage',
+  YesodFunctions.actionManage: 'action-manage',
+  YesodFunctions.notifyTargetManage: 'notify-target-manage',
+  YesodFunctions.notifyFlowManage: 'notify-flow-manage',
 };
 
-extension $YesodFeedManageRouteExtension on YesodFeedManageRoute {
-  static YesodFeedManageRoute _fromState(GoRouterState state) =>
-      YesodFeedManageRoute(
-        action: _$convertMapValue('action', state.uri.queryParameters,
-            _$YesodFeedManageActionsEnumMap._$fromName),
-        id: _$convertMapValue('id', state.uri.queryParameters, int.parse),
-      );
-
-  String get location => GoRouteData.$location(
-        '/module/Yesod/feedManage',
-        queryParams: {
-          if (action != null)
-            'action': _$YesodFeedManageActionsEnumMap[action!],
-          if (id != null) 'id': id!.toString(),
-        },
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-const _$YesodFeedManageActionsEnumMap = {
-  YesodFeedManageActions.edit: 'edit',
-  YesodFeedManageActions.add: 'add',
-};
-
-extension $YesodActionManageRouteExtension on YesodActionManageRoute {
-  static YesodActionManageRoute _fromState(GoRouterState state) =>
-      YesodActionManageRoute(
-        action: _$convertMapValue('action', state.uri.queryParameters,
-            _$YesodActionManageActionsEnumMap._$fromName),
-        id: _$convertMapValue('id', state.uri.queryParameters, int.parse),
-      );
-
-  String get location => GoRouteData.$location(
-        '/module/Yesod/actionManage',
-        queryParams: {
-          if (action != null)
-            'action': _$YesodActionManageActionsEnumMap[action!],
-          if (id != null) 'id': id!.toString(),
-        },
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-const _$YesodActionManageActionsEnumMap = {
-  YesodActionManageActions.edit: 'edit',
-  YesodActionManageActions.add: 'add',
+const _$YesodActionsEnumMap = {
+  YesodActions.recentSettings: 'recent-settings',
+  YesodActions.feedEdit: 'feed-edit',
+  YesodActions.feedAdd: 'feed-add',
+  YesodActions.actionEdit: 'action-edit',
+  YesodActions.actionAdd: 'action-add',
+  YesodActions.notifyTargetEdit: 'notify-target-edit',
+  YesodActions.notifyTargetAdd: 'notify-target-add',
+  YesodActions.notifyFlowEdit: 'notify-flow-edit',
+  YesodActions.notifyFlowAdd: 'notify-flow-add',
 };
 
 extension $GeburaRootRouteExtension on GeburaRootRoute {
@@ -512,8 +462,6 @@ extension $SettingsFunctionRouteExtension on SettingsFunctionRoute {
 
 const _$SettingsFunctionsEnumMap = {
   SettingsFunctions.client: 'client',
-  SettingsFunctions.notifyTarget: 'notify-target',
-  SettingsFunctions.notifyFlow: 'notify-flow',
   SettingsFunctions.session: 'session',
   SettingsFunctions.porterContext: 'porter-context',
   SettingsFunctions.porter: 'porter',
@@ -524,10 +472,6 @@ const _$SettingsFunctionsEnumMap = {
 };
 
 const _$SettingsActionsEnumMap = {
-  SettingsActions.notifyTargetAdd: 'notify-target-add',
-  SettingsActions.notifyTargetEdit: 'notify-target-edit',
-  SettingsActions.notifyFlowAdd: 'notify-flow-add',
-  SettingsActions.notifyFlowEdit: 'notify-flow-edit',
   SettingsActions.sessionEdit: 'session-edit',
   SettingsActions.porterContextAdd: 'porter-context-add',
   SettingsActions.porterContextEdit: 'porter-context-edit',

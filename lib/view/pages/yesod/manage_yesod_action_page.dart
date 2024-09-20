@@ -33,7 +33,8 @@ class YesodActionManagePage extends StatelessWidget {
           context.read<YesodBloc>().add(YesodFeedActionSetLoadEvent());
         },
         onAdd: () {
-          const YesodActionManageRoute(action: YesodActionManageActions.add)
+          const YesodFunctionRoute(YesodFunctions.actionManage,
+                  action: YesodActions.actionAdd)
               .go(context);
           FramePage.of(context)?.openDrawer();
         },
@@ -42,8 +43,8 @@ class YesodActionManagePage extends StatelessWidget {
             ListTile(
               trailing: const Icon(Icons.edit),
               onTap: () {
-                YesodActionManageRoute(
-                        action: YesodActionManageActions.edit, id: i)
+                YesodFunctionRoute(YesodFunctions.actionManage,
+                        action: YesodActions.actionEdit, $extra: i)
                     .go(context);
                 FramePage.of(context)?.openDrawer();
               },

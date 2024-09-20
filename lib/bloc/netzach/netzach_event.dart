@@ -13,12 +13,6 @@ final class NetzachTargetAddEvent extends NetzachEvent {
   NetzachTargetAddEvent(this.target);
 }
 
-final class NetzachSetTargetEditIndexEvent extends NetzachEvent {
-  final int index;
-
-  NetzachSetTargetEditIndexEvent(this.index);
-}
-
 final class NetzachTargetEditEvent extends NetzachEvent {
   final NotifyTarget target;
 

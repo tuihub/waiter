@@ -119,6 +119,8 @@ String porterConnectionStatusString(PorterConnectionStatus status) {
       return S.current.PORTER_CONNECTION_STATUS_ACTIVE;
     case PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED:
       return S.current.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_DOWNGRADED:
+      return S.current.PORTER_CONNECTION_STATUS_DOWNGRADED;
   }
   return '';
 }

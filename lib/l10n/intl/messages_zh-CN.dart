@@ -95,12 +95,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("已连接未启用"),
         "PORTER_CONNECTION_STATUS_DISCONNECTED":
             MessageLookupByLibrary.simpleMessage("连接断开"),
+        "PORTER_CONNECTION_STATUS_DOWNGRADED":
+            MessageLookupByLibrary.simpleMessage("降级"),
         "PORTER_CONNECTION_STATUS_UNSPECIFIED":
             MessageLookupByLibrary.simpleMessage("未知"),
         "PORTER_CONTEXT_HANDLE_STATUS_ACTIVE":
             MessageLookupByLibrary.simpleMessage("工作中"),
         "PORTER_CONTEXT_HANDLE_STATUS_BLOCKED":
-            MessageLookupByLibrary.simpleMessage("已停用"),
+            MessageLookupByLibrary.simpleMessage("未安排"),
         "PORTER_CONTEXT_HANDLE_STATUS_DOWNGRADED":
             MessageLookupByLibrary.simpleMessage("降级"),
         "PORTER_CONTEXT_HANDLE_STATUS_QUEUEING":
@@ -140,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("应用程序异常退出"),
         "applySuccess": MessageLookupByLibrary.simpleMessage("更改已应用"),
         "areYouSureToClose": MessageLookupByLibrary.simpleMessage("你确定要关闭吗？"),
+        "automation": MessageLookupByLibrary.simpleMessage("自动化"),
         "backward": MessageLookupByLibrary.simpleMessage("返回"),
         "cache": MessageLookupByLibrary.simpleMessage("缓存"),
         "cancel": MessageLookupByLibrary.simpleMessage("取消"),
@@ -201,6 +204,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "msie": MessageLookupByLibrary.simpleMessage("IE"),
         "newApplicationFound": m11,
         "noAppInLibrary": MessageLookupByLibrary.simpleMessage("库中没有应用"),
+        "notifyFlowAdd": MessageLookupByLibrary.simpleMessage("添加推送"),
+        "notifyFlowEdit": MessageLookupByLibrary.simpleMessage("编辑推送"),
+        "notifyFlowManage": MessageLookupByLibrary.simpleMessage("推送管理"),
+        "notifyTargetAdd": MessageLookupByLibrary.simpleMessage("添加推送目标"),
+        "notifyTargetEdit": MessageLookupByLibrary.simpleMessage("编辑推送目标"),
+        "notifyTargetManage": MessageLookupByLibrary.simpleMessage("推送目标管理"),
         "opera": MessageLookupByLibrary.simpleMessage("Opera"),
         "operatingSystem": MessageLookupByLibrary.simpleMessage("操作系统"),
         "parseFailed": MessageLookupByLibrary.simpleMessage("解析失败"),

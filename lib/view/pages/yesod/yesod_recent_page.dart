@@ -144,7 +144,8 @@ class YesodRecentPageState extends State<YesodRecentPage> {
           actions: [
             IconButton(
               onPressed: () {
-                const YesodRecentRoute(action: YesodRecentActions.setting)
+                const YesodFunctionRoute(YesodFunctions.recent,
+                        action: YesodActions.recentSettings)
                     .go(context);
                 FramePage.of(context)?.openDrawer();
               },

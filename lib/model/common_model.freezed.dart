@@ -28,8 +28,12 @@ mixin _$ServerConfig {
   String? get refreshToken => throw _privateConstructorUsedError;
   int? get deviceId => throw _privateConstructorUsedError;
 
+  /// Serializes this ServerConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ServerConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ServerConfigCopyWith<ServerConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,6 +64,8 @@ class _$ServerConfigCopyWithImpl<$Res, $Val extends ServerConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ServerConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,6 +136,8 @@ class __$$ServerConfigImplCopyWithImpl<$Res>
       _$ServerConfigImpl _value, $Res Function(_$ServerConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ServerConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -222,12 +230,14 @@ class _$ServerConfigImpl extends _ServerConfig {
                 other.deviceId == deviceId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, host, port, tls, serverName,
       username, refreshToken, deviceId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ServerConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ServerConfigImplCopyWith<_$ServerConfigImpl> get copyWith =>
@@ -266,8 +276,11 @@ abstract class _ServerConfig extends ServerConfig {
   String? get refreshToken;
   @override
   int? get deviceId;
+
+  /// Create a copy of ServerConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ServerConfigImplCopyWith<_$ServerConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -284,8 +297,12 @@ mixin _$ClientCommonData {
   Map<String, ServerConfig>? get servers => throw _privateConstructorUsedError;
   bool? get useSystemProxy => throw _privateConstructorUsedError;
 
+  /// Serializes this ClientCommonData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ClientCommonData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ClientCommonDataCopyWith<ClientCommonData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -314,6 +331,8 @@ class _$ClientCommonDataCopyWithImpl<$Res, $Val extends ClientCommonData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ClientCommonData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -372,6 +391,8 @@ class __$$ClientCommonDataImplCopyWithImpl<$Res>
       $Res Function(_$ClientCommonDataImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ClientCommonData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -460,12 +481,14 @@ class _$ClientCommonDataImpl implements _ClientCommonData {
                 other.useSystemProxy == useSystemProxy));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, lastServerId, themeName,
       themeMode, const DeepCollectionEquality().hash(_servers), useSystemProxy);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ClientCommonData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ClientCommonDataImplCopyWith<_$ClientCommonDataImpl> get copyWith =>
@@ -501,8 +524,11 @@ abstract class _ClientCommonData implements ClientCommonData {
   Map<String, ServerConfig>? get servers;
   @override
   bool? get useSystemProxy;
+
+  /// Create a copy of ClientCommonData
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ClientCommonDataImplCopyWith<_$ClientCommonDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -516,8 +542,12 @@ mixin _$ClientDeviceInfo {
   String get deviceName => throw _privateConstructorUsedError;
   String get systemVersion => throw _privateConstructorUsedError;
 
+  /// Serializes this ClientDeviceInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ClientDeviceInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ClientDeviceInfoCopyWith<ClientDeviceInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -541,6 +571,8 @@ class _$ClientDeviceInfoCopyWithImpl<$Res, $Val extends ClientDeviceInfo>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ClientDeviceInfo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -579,6 +611,8 @@ class __$$ClientDeviceInfoImplCopyWithImpl<$Res>
       $Res Function(_$ClientDeviceInfoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ClientDeviceInfo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -627,11 +661,13 @@ class _$ClientDeviceInfoImpl implements _ClientDeviceInfo {
                 other.systemVersion == systemVersion));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, deviceName, systemVersion);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ClientDeviceInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ClientDeviceInfoImplCopyWith<_$ClientDeviceInfoImpl> get copyWith =>
@@ -658,8 +694,11 @@ abstract class _ClientDeviceInfo implements ClientDeviceInfo {
   String get deviceName;
   @override
   String get systemVersion;
+
+  /// Create a copy of ClientDeviceInfo
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ClientDeviceInfoImplCopyWith<_$ClientDeviceInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

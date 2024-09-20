@@ -85,10 +85,6 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
       ));
     });
 
-    on<NetzachSetTargetEditIndexEvent>((event, emit) async {
-      emit(state.copyWith(notifyTargetEditIndex: event.index));
-    });
-
     on<NetzachTargetEditEvent>((event, emit) async {
       emit(NetzachTargetEditState(state, EventStatus.processing));
       final resp = await _api.doRequest(
@@ -102,10 +98,9 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
         return;
       }
 
-      final targets = state.notifyTargets ?? [];
-      targets[state.notifyTargetEditIndex!] = event.target;
+      add(NetzachTargetLoadEvent());
       emit(NetzachTargetEditState(
-        state.copyWith(notifyTargets: targets),
+        state,
         EventStatus.success,
       ));
     });

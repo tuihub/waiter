@@ -4,7 +4,6 @@ class NetzachState {
   late List<NotifyTarget>? notifyTargets;
   late List<NotifyFlow>? notifyFlows;
 
-  late int? notifyTargetEditIndex;
   late int? notifyFlowEditIndex;
 
   late List<SystemNotification>? systemNotifications;
@@ -12,7 +11,6 @@ class NetzachState {
 
   NetzachState({
     this.notifyTargets,
-    this.notifyTargetEditIndex,
     this.notifyFlows,
     this.notifyFlowEditIndex,
     this.systemNotifications,
@@ -21,7 +19,6 @@ class NetzachState {
 
   NetzachState copyWith({
     List<NotifyTarget>? notifyTargets,
-    int? notifyTargetEditIndex,
     List<NotifyFlow>? notifyFlows,
     int? notifyFlowEditIndex,
     List<SystemNotification>? systemNotifications,
@@ -29,8 +26,6 @@ class NetzachState {
   }) {
     return NetzachState(
       notifyTargets: notifyTargets ?? this.notifyTargets,
-      notifyTargetEditIndex:
-          notifyTargetEditIndex ?? this.notifyTargetEditIndex,
       notifyFlows: notifyFlows ?? this.notifyFlows,
       notifyFlowEditIndex: notifyFlowEditIndex ?? this.notifyFlowEditIndex,
       systemNotifications: systemNotifications ?? this.systemNotifications,
@@ -41,7 +36,6 @@ class NetzachState {
 
   void _from(NetzachState other) {
     notifyTargets = other.notifyTargets;
-    notifyTargetEditIndex = other.notifyTargetEditIndex;
     notifyFlows = other.notifyFlows;
     notifyFlowEditIndex = other.notifyFlowEditIndex;
     systemNotifications = other.systemNotifications;

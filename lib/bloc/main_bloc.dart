@@ -321,6 +321,32 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     }, transformer: droppable());
 
+    on<MainRefreshServerInfoEvent>((event, emit) async {
+      if (state.currentServer == null) {
+        return;
+      }
+      if (state.lastRefreshServerInfo != null &&
+          DateTime.now().difference(state.lastRefreshServerInfo!) <
+              const Duration(minutes: 1)) {
+        return;
+      }
+      final resp = await _api.doRequest((client) => client.getServerInformation,
+          GetServerInformationRequest());
+      if (resp.status == ApiStatus.success) {
+        final info = resp.getData();
+        emit(state.copyWith(
+          serverInfo: ServerInformation(
+            sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
+            buildVersion: info.serverBinarySummary.buildVersion,
+            buildDate: info.serverBinarySummary.buildDate,
+            protocolVersion: info.protocolSummary.version,
+          ),
+          serverFeatureSummary: info.featureSummary,
+          lastRefreshServerInfo: DateTime.now(),
+        ));
+      }
+    }, transformer: droppable());
+
     on<MainLogoutEvent>((event, emit) async {
       _pruneChild();
       emit(MainState());

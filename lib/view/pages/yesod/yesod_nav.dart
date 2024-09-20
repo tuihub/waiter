@@ -1,18 +1,20 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
+import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 
 class YesodNav extends StatelessWidget {
   const YesodNav({super.key, required this.function});
 
-  final String function;
+  final YesodFunctions function;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class YesodNav extends StatelessWidget {
                       feedIdFilter: [],
                     ),
                   ));
-              const YesodRecentRoute().go(context);
+              const YesodFunctionRoute(YesodFunctions.recent).go(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.main);
             },
             title: Text(S.of(context).allArticles),
@@ -51,23 +53,55 @@ class YesodNav extends StatelessWidget {
           Expanded(
             child: _YesodFeedList(function: function),
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.auto_awesome,
-            ),
-            onTap: () {
-              const YesodActionManageRoute().go(context);
-              OverlappingPanels.of(context)?.reveal(RevealSide.main);
-            },
-            title: Text(S.of(context).feedActionSetManage),
-            selected: function == YesodFunctions.actionManage,
-          ),
+          ExpansionTile(
+              leading: const Icon(Icons.auto_awesome),
+              title: Text(S.of(context).automation),
+              children: [
+                ListTile(
+                  leading: const Icon(
+                    Icons.filter_list,
+                  ),
+                  onTap: () {
+                    const YesodFunctionRoute(YesodFunctions.actionManage)
+                        .go(context);
+                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                  },
+                  title: Text(S.of(context).feedActionSetManage),
+                  selected: function == YesodFunctions.actionManage,
+                ),
+                SpacingHelper.defaultDivider,
+                ListTile(
+                  leading: const Icon(
+                    Icons.featured_play_list,
+                  ),
+                  onTap: () {
+                    const YesodFunctionRoute(YesodFunctions.notifyTargetManage)
+                        .go(context);
+                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                  },
+                  title: Text(S.of(context).notifyTargetManage),
+                  selected: function == YesodFunctions.notifyTargetManage,
+                ),
+                ListTile(
+                  leading: const Icon(
+                    FontAwesomeIcons.codeFork,
+                  ),
+                  onTap: () {
+                    const YesodFunctionRoute(YesodFunctions.notifyFlowManage)
+                        .go(context);
+                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                  },
+                  title: Text(S.of(context).notifyFlowManage),
+                  selected: function == YesodFunctions.notifyFlowManage,
+                ),
+                SpacingHelper.defaultDivider,
+              ]),
           ListTile(
             leading: const Icon(
               Icons.rss_feed,
             ),
             onTap: () {
-              const YesodFeedManageRoute().go(context);
+              const YesodFunctionRoute(YesodFunctions.feedManage).go(context);
               OverlappingPanels.of(context)?.reveal(RevealSide.main);
             },
             title: Text(S.of(context).feedConfigManage),
@@ -82,7 +116,7 @@ class YesodNav extends StatelessWidget {
 class _YesodFeedList extends StatelessWidget {
   const _YesodFeedList({required this.function});
 
-  final String function;
+  final YesodFunctions function;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +154,7 @@ class _YesodFeedList extends StatelessWidget {
                             feedIdFilter: [feedConfig.feed.id.id.toString()],
                           ),
                         ));
-                    const YesodRecentRoute().go(context);
+                    const YesodFunctionRoute(YesodFunctions.recent).go(context);
                     OverlappingPanels.of(context)?.reveal(RevealSide.main);
                   },
                   title: Text(feedConfig.config.name.isNotEmpty

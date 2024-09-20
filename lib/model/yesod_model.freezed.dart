@@ -29,8 +29,12 @@ mixin _$YesodFeedItemListConfig {
   bool? get hideRead => throw _privateConstructorUsedError;
   FeedItemListType? get listType => throw _privateConstructorUsedError;
 
+  /// Serializes this YesodFeedItemListConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of YesodFeedItemListConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $YesodFeedItemListConfigCopyWith<YesodFeedItemListConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -61,6 +65,8 @@ class _$YesodFeedItemListConfigCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of YesodFeedItemListConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,6 +134,8 @@ class __$$YesodFeedItemListConfigImplCopyWithImpl<$Res>
       $Res Function(_$YesodFeedItemListConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of YesodFeedItemListConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -218,7 +226,7 @@ class _$YesodFeedItemListConfigImpl implements _YesodFeedItemListConfig {
                 other.listType == listType));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -229,7 +237,9 @@ class _$YesodFeedItemListConfigImpl implements _YesodFeedItemListConfig {
       hideRead,
       listType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YesodFeedItemListConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$YesodFeedItemListConfigImplCopyWith<_$YesodFeedItemListConfigImpl>
@@ -268,8 +278,11 @@ abstract class _YesodFeedItemListConfig implements YesodFeedItemListConfig {
   bool? get hideRead;
   @override
   FeedItemListType? get listType;
+
+  /// Create a copy of YesodFeedItemListConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$YesodFeedItemListConfigImplCopyWith<_$YesodFeedItemListConfigImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

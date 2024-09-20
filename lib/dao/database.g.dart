@@ -534,49 +534,6 @@ typedef $$KVTableTableUpdateCompanionBuilder = KVTableCompanion Function({
   Value<int> rowid,
 });
 
-class $$KVTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $KVTableTable,
-    KVTableData,
-    $$KVTableTableFilterComposer,
-    $$KVTableTableOrderingComposer,
-    $$KVTableTableCreateCompanionBuilder,
-    $$KVTableTableUpdateCompanionBuilder> {
-  $$KVTableTableTableManager(_$AppDatabase db, $KVTableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$KVTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$KVTableTableOrderingComposer(ComposerState(db, table)),
-          updateCompanionCallback: ({
-            Value<String> bucket = const Value.absent(),
-            Value<String> key = const Value.absent(),
-            Value<String> value = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              KVTableCompanion(
-            bucket: bucket,
-            key: key,
-            value: value,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String bucket,
-            required String key,
-            required String value,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              KVTableCompanion.insert(
-            bucket: bucket,
-            key: key,
-            value: value,
-            rowid: rowid,
-          ),
-        ));
-}
-
 class $$KVTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $KVTableTable> {
   $$KVTableTableFilterComposer(super.$state);
@@ -615,6 +572,67 @@ class $$KVTableTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+class $$KVTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $KVTableTable,
+    KVTableData,
+    $$KVTableTableFilterComposer,
+    $$KVTableTableOrderingComposer,
+    $$KVTableTableCreateCompanionBuilder,
+    $$KVTableTableUpdateCompanionBuilder,
+    (KVTableData, BaseReferences<_$AppDatabase, $KVTableTable, KVTableData>),
+    KVTableData,
+    PrefetchHooks Function()> {
+  $$KVTableTableTableManager(_$AppDatabase db, $KVTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$KVTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$KVTableTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> bucket = const Value.absent(),
+            Value<String> key = const Value.absent(),
+            Value<String> value = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              KVTableCompanion(
+            bucket: bucket,
+            key: key,
+            value: value,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String bucket,
+            required String key,
+            required String value,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              KVTableCompanion.insert(
+            bucket: bucket,
+            key: key,
+            value: value,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$KVTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $KVTableTable,
+    KVTableData,
+    $$KVTableTableFilterComposer,
+    $$KVTableTableOrderingComposer,
+    $$KVTableTableCreateCompanionBuilder,
+    $$KVTableTableUpdateCompanionBuilder,
+    (KVTableData, BaseReferences<_$AppDatabase, $KVTableTable, KVTableData>),
+    KVTableData,
+    PrefetchHooks Function()>;
 typedef $$FeedConfigTableTableCreateCompanionBuilder = FeedConfigTableCompanion
     Function({
   required String internalId,
@@ -631,54 +649,6 @@ typedef $$FeedConfigTableTableUpdateCompanionBuilder = FeedConfigTableCompanion
   Value<String> jsonData,
   Value<int> rowid,
 });
-
-class $$FeedConfigTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $FeedConfigTableTable,
-    FeedConfigTableData,
-    $$FeedConfigTableTableFilterComposer,
-    $$FeedConfigTableTableOrderingComposer,
-    $$FeedConfigTableTableCreateCompanionBuilder,
-    $$FeedConfigTableTableUpdateCompanionBuilder> {
-  $$FeedConfigTableTableTableManager(
-      _$AppDatabase db, $FeedConfigTableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$FeedConfigTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$FeedConfigTableTableOrderingComposer(ComposerState(db, table)),
-          updateCompanionCallback: ({
-            Value<String> internalId = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> category = const Value.absent(),
-            Value<String> jsonData = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              FeedConfigTableCompanion(
-            internalId: internalId,
-            name: name,
-            category: category,
-            jsonData: jsonData,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String internalId,
-            required String name,
-            required String category,
-            required String jsonData,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              FeedConfigTableCompanion.insert(
-            internalId: internalId,
-            name: name,
-            category: category,
-            jsonData: jsonData,
-            rowid: rowid,
-          ),
-        ));
-}
 
 class $$FeedConfigTableTableFilterComposer
     extends FilterComposer<_$AppDatabase, $FeedConfigTableTable> {
@@ -727,6 +697,79 @@ class $$FeedConfigTableTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
+
+class $$FeedConfigTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $FeedConfigTableTable,
+    FeedConfigTableData,
+    $$FeedConfigTableTableFilterComposer,
+    $$FeedConfigTableTableOrderingComposer,
+    $$FeedConfigTableTableCreateCompanionBuilder,
+    $$FeedConfigTableTableUpdateCompanionBuilder,
+    (
+      FeedConfigTableData,
+      BaseReferences<_$AppDatabase, $FeedConfigTableTable, FeedConfigTableData>
+    ),
+    FeedConfigTableData,
+    PrefetchHooks Function()> {
+  $$FeedConfigTableTableTableManager(
+      _$AppDatabase db, $FeedConfigTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$FeedConfigTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$FeedConfigTableTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> internalId = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> category = const Value.absent(),
+            Value<String> jsonData = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FeedConfigTableCompanion(
+            internalId: internalId,
+            name: name,
+            category: category,
+            jsonData: jsonData,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String internalId,
+            required String name,
+            required String category,
+            required String jsonData,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              FeedConfigTableCompanion.insert(
+            internalId: internalId,
+            name: name,
+            category: category,
+            jsonData: jsonData,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$FeedConfigTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $FeedConfigTableTable,
+    FeedConfigTableData,
+    $$FeedConfigTableTableFilterComposer,
+    $$FeedConfigTableTableOrderingComposer,
+    $$FeedConfigTableTableCreateCompanionBuilder,
+    $$FeedConfigTableTableUpdateCompanionBuilder,
+    (
+      FeedConfigTableData,
+      BaseReferences<_$AppDatabase, $FeedConfigTableTable, FeedConfigTableData>
+    ),
+    FeedConfigTableData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

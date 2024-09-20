@@ -40,11 +40,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     on<YesodFeedConfigLoadEvent>((event, emit) async {
       final List<ListFeedConfigsResponse_FeedWithConfig> configs =
           await _repo.getFeedConfigs();
-      emit(YesodFeedConfigLoadState(
-          state.copyWith(
-            feedConfigs: configs,
-          ),
-          EventStatus.processing));
+      emit(YesodFeedConfigLoadState(state, EventStatus.processing));
 
       final resp = await _api.doRequest(
         (client) => client.listFeedConfigs,

@@ -223,6 +223,8 @@ Color _porterConnectionStatusColor(PorterConnectionStatus status) {
       return Colors.blue;
     case PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED:
       return Colors.red;
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_DOWNGRADED:
+      return Colors.orange;
   }
   return Colors.grey;
 }
@@ -239,6 +241,8 @@ Widget _porterConnectionStatusIcon(PorterConnectionStatus status) {
       return Icon(const FaIcon(FontAwesomeIcons.plugCircleCheck).icon);
     case PorterConnectionStatus.PORTER_CONNECTION_STATUS_ACTIVATION_FAILED:
       return Icon(const FaIcon(FontAwesomeIcons.plugCircleExclamation).icon);
+    case PorterConnectionStatus.PORTER_CONNECTION_STATUS_DOWNGRADED:
+      return Icon(const FaIcon(FontAwesomeIcons.plugCircleMinus).icon);
   }
   return Icon(const FaIcon(FontAwesomeIcons.plug).icon);
 }

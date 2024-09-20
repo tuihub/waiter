@@ -60,38 +60,6 @@ class SettingsNav extends StatelessWidget {
                           title: Text(S.of(context).pluginContextManage),
                           selected: function == SettingsFunctions.porterContext,
                         ),
-                        ExpansionTile(
-                          title: const Text(
-                            '通知设置',
-                          ),
-                          childrenPadding: const EdgeInsets.only(left: 12),
-                          children: [
-                            ListTile(
-                              title: const Text('Token管理'),
-                              onTap: () {
-                                const SettingsFunctionRoute(
-                                        SettingsFunctions.notifyTarget)
-                                    .go(context);
-                                OverlappingPanels.of(context)
-                                    ?.reveal(RevealSide.main);
-                              },
-                              selected:
-                                  function == SettingsFunctions.notifyTarget,
-                            ),
-                            ListTile(
-                              title: const Text('规则管理'),
-                              onTap: () {
-                                const SettingsFunctionRoute(
-                                        SettingsFunctions.notifyFlow)
-                                    .go(context);
-                                OverlappingPanels.of(context)
-                                    ?.reveal(RevealSide.main);
-                              },
-                              selected:
-                                  function == SettingsFunctions.notifyFlow,
-                            ),
-                          ],
-                        ),
                         if (state.currentUser!.type == UserType.USER_TYPE_ADMIN)
                           ExpansionTile(
                             title: const Text(

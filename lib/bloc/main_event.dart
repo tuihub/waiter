@@ -24,6 +24,8 @@ class MainManualLoginEvent extends MainEvent {
   MainManualLoginEvent(this.username, this.password);
 }
 
+class MainRefreshServerInfoEvent extends MainEvent {}
+
 class MainLogoutEvent extends MainEvent {}
 
 class MainRegisterEvent extends MainEvent {

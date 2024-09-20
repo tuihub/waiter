@@ -13,7 +13,7 @@ import '../../layout/overlapping_panels.dart';
 class GeburaNav extends StatelessWidget {
   const GeburaNav({super.key, required this.function});
 
-  final String function;
+  final GeburaFunctions function;
 
   @override
   Widget build(BuildContext context) {
