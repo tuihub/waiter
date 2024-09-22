@@ -19,7 +19,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sentry_hive/sentry_hive.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:universal_io/io.dart';
-import 'package:win32_registry/win32_registry.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';
@@ -30,6 +29,7 @@ import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'common/bloc_observer.dart';
+import 'common/deeplink/deeplink.dart';
 import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
