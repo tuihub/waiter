@@ -258,6 +258,8 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       emit(TipherethEditSessionState(state, EventStatus.success,
           msg: resp.error));
     }, transformer: droppable());
+
+    add(TipherethLoadPorterContextsEvent());
   }
 
   Future<ListUsersResponse> listUsers(

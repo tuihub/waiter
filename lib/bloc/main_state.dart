@@ -5,7 +5,7 @@ class MainState {
   late ServerConfig? nextServer;
   late User? currentUser;
   late ServerInformation? serverInfo;
-  late ServerFeatureSummary? serverFeatureSummary;
+  late FeatureSummary? serverFeatureSummary;
   late InternalID? currentDeviceId;
   late ClientDeviceInfo? deviceInfo;
   late List<ServerConfig>? knownServers;
@@ -31,7 +31,7 @@ class MainState {
     String? accessToken,
     User? currentUser,
     ServerInformation? serverInfo,
-    ServerFeatureSummary? serverFeatureSummary,
+    FeatureSummary? serverFeatureSummary,
     InternalID? currentDeviceId,
     ClientDeviceInfo? deviceInfo,
     List<ServerConfig>? knownServers,

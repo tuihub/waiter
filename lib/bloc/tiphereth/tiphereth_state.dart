@@ -20,6 +20,31 @@ class TipherethState {
     this.selectedSessionEditIndex,
   });
 
+  PorterGroup? getNotifyDestinationProvider(String id) {
+    try {
+      return porterGroups?.firstWhere((element) =>
+          element.featureSummary.notifyDestinations.any((e) => e.id == id));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<PorterContext> getPorterContexts(String globalName, {String? region}) {
+    try {
+      return porterContexts?.where((element) {
+            if (region != null) {
+              return element.globalName == globalName &&
+                  element.region == region;
+            } else {
+              return element.globalName == globalName;
+            }
+          }).toList() ??
+          [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   TipherethState copyWith({
     List<Account>? accounts,
     List<Porter>? porters,

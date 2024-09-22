@@ -52,17 +52,16 @@ class NotifyFlowPage extends StatelessWidget {
                   Text(item.description),
                 ],
               ),
-              trailing: IconButton(
-                onPressed: () {
-                  context.read<NetzachBloc>().add(
-                      NetzachSetFlowEditIndexEvent(listData.indexOf(item)));
-                  const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
-                          action: YesodActions.notifyFlowEdit)
-                      .go(context);
-                  FramePage.of(context)?.openDrawer();
-                },
-                icon: const Icon(Icons.edit),
-              ),
+              onTap: () {
+                context
+                    .read<NetzachBloc>()
+                    .add(NetzachSetFlowEditIndexEvent(listData.indexOf(item)));
+                const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
+                        action: YesodActions.notifyFlowEdit)
+                    .go(context);
+                FramePage.of(context)?.openDrawer();
+              },
+              trailing: const Icon(Icons.edit),
             ),
         ],
       );

@@ -12,6 +12,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../common/bloc_event_status_mixin.dart';
 import '../common/platform.dart';

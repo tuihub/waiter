@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
@@ -8,6 +6,7 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/netzach/netzach_bloc.dart';
+import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
@@ -48,16 +47,14 @@ class NotifyTargetPage extends StatelessWidget {
                   Text('状态: ${notifyTargetStatusString(item.status)}'),
                 ],
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  YesodFunctionRoute(YesodFunctions.notifyTargetManage,
-                          action: YesodActions.notifyTargetEdit,
-                          $extra: listData.indexOf(item))
-                      .go(context);
-                  FramePage.of(context)?.openDrawer();
-                },
-              ),
+              onTap: () {
+                YesodFunctionRoute(YesodFunctions.notifyTargetManage,
+                        action: YesodActions.notifyTargetEdit,
+                        $extra: listData.indexOf(item))
+                    .go(context);
+                FramePage.of(context)?.openDrawer();
+              },
+              trailing: const Icon(Icons.edit),
             ),
         ],
       );
@@ -82,12 +79,9 @@ class NotifyTargetAddPanel extends StatelessWidget {
         [];
     var name = '';
     var description = '';
-    var destination =
-        notifyDestinations.isNotEmpty ? notifyDestinations.first : null;
+    FeatureRequest destination = FeatureRequest();
     var enabled = true;
-    var config = '';
     final jsonFormController = JsonFormController();
-    var buildCounter = 0;
 
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
@@ -120,46 +114,15 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 labelText: '备注',
               ),
             ),
-            if (notifyDestinations.isEmpty)
-              const TextFormErrorMessage(message: '当前服务器无可用目标'),
-            DropdownButtonFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '目标类型',
-              ),
-              value: destination,
-              items: [
-                for (final s in notifyDestinations)
-                  DropdownMenuItem(
-                    value: s,
-                    child: Text(s.id),
-                  ),
-              ],
-              onChanged: (newValue) => destination = newValue,
-              validator: (value) {
-                if (value == null) {
-                  return '请选择订阅源类型';
-                }
-                return null;
-              },
+            FeatureRequestFormField(
+              featureFlags: notifyDestinations,
+              jsonFormController: jsonFormController,
+              onChanged: (v) => destination = v,
+              getFeatureProvider: context
+                  .read<TipherethBloc>()
+                  .state
+                  .getNotifyDestinationProvider,
             ),
-            if (destination != null)
-              JsonForm(
-                key: ValueKey(buildCounter++),
-                controller: jsonFormController,
-                jsonSchema: notifyDestinations
-                    .firstWhere((e) => e.id == destination!.id)
-                    .configJsonSchema,
-                jsonData: config,
-                onFormDataSaved: (data) {
-                  config = jsonEncode(data);
-                },
-                jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
-                  expandGenesis: true,
-                  headerTitleBuilder: (_, __) => Container(),
-                  submitButtonBuilder: (_) => Container(),
-                ),
-              ),
             SwitchFormField(
               onSaved: (newValue) => enabled = newValue ?? false,
               title: const Text('启用'),
@@ -175,10 +138,7 @@ class NotifyTargetAddPanel extends StatelessWidget {
                   .add(NetzachTargetAddEvent(NotifyTarget(
                     name: name,
                     description: description,
-                    destination: FeatureRequest(
-                      id: destination!.id,
-                      configJson: config,
-                    ),
+                    destination: destination,
                     status: enabled
                         ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                         : NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND,
@@ -223,9 +183,10 @@ class NotifyTargetEditPanel extends StatelessWidget {
             : NotifyTarget();
         var name = target.name;
         var description = target.description;
+        var destination = target.destination;
         var enabled =
             target.status == NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE;
-        var configJson = target.destination.configJson;
+        final configJson = target.destination.configJson;
         final jsonFormController = JsonFormController();
 
         return RightPanelForm(
@@ -257,29 +218,17 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 label: Text('备注'),
               ),
             ),
-            TextReadOnlyFormField(
-              label: '目标类型',
-              value: target.destination.id,
+            FeatureRequestFormField(
+              featureFlags: notifyDestinations,
+              jsonFormController: jsonFormController,
+              onChanged: (v) => destination = v,
+              getFeatureProvider: context
+                  .read<TipherethBloc>()
+                  .state
+                  .getNotifyDestinationProvider,
+              initialValue: destination,
+              flagReadOnly: true,
             ),
-            if (notifyDestinations.isEmpty ||
-                !notifyDestinations.any((e) => e.id == target.destination.id))
-              const TextFormErrorMessage(message: '服务器未启用当前订阅源')
-            else
-              JsonForm(
-                controller: jsonFormController,
-                jsonSchema: notifyDestinations
-                    .firstWhere((e) => e.id == target.destination.id)
-                    .configJsonSchema,
-                jsonData: configJson,
-                onFormDataSaved: (data) {
-                  configJson = jsonEncode(data);
-                },
-                jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
-                  expandGenesis: true,
-                  headerTitleBuilder: (_, __) => Container(),
-                  submitButtonBuilder: (_) => Container(),
-                ),
-              ),
             SwitchFormField(
               initialValue: enabled,
               onSaved: (newValue) => enabled = newValue!,
@@ -296,7 +245,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
                       id: target.id,
                       name: name,
                       description: description,
-                      destination: target.destination,
+                      destination: destination,
                       status: enabled
                           ? NotifyTargetStatus.NOTIFY_TARGET_STATUS_ACTIVE
                           : NotifyTargetStatus.NOTIFY_TARGET_STATUS_SUSPEND,

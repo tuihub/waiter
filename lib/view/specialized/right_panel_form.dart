@@ -1,7 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
+import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
 import '../helper/app_bar.dart';
@@ -189,5 +197,206 @@ class TextReadOnlyFormField extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class FeatureRequestFormField extends StatefulWidget {
+  const FeatureRequestFormField({
+    super.key,
+    required this.featureFlags,
+    required this.jsonFormController,
+    required this.onChanged,
+    required this.getFeatureProvider,
+    this.initialValue,
+    this.flagReadOnly = false,
+    this.spacing = 8,
+  });
+
+  final List<FeatureFlag> featureFlags;
+  final JsonFormController jsonFormController;
+  final void Function(FeatureRequest) onChanged;
+  final PorterGroup? Function(String) getFeatureProvider;
+  final FeatureRequest? initialValue;
+  final bool flagReadOnly;
+  final double spacing;
+
+  @override
+  State<FeatureRequestFormField> createState() =>
+      _FeatureRequestFormFieldState();
+}
+
+class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
+  List<FeatureFlag> get featureFlags => widget.featureFlags;
+  JsonFormController get jsonFormController => widget.jsonFormController;
+  FeatureFlag? selectedFlag;
+  String config = '{}';
+  String? region;
+  InternalID? contextId;
+  PorterGroup? porterGroup;
+  int buildCounter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      selectedFlag = widget.initialValue != null
+          ? featureFlags.firstWhere(
+              (e) => e.id == widget.initialValue!.id,
+              orElse: () => featureFlags.first,
+            )
+          : featureFlags.first;
+      config = widget.initialValue?.configJson ?? config;
+      region = widget.initialValue?.region;
+      contextId = widget.initialValue?.contextId;
+      if (selectedFlag != null) {
+        porterGroup = widget.getFeatureProvider(selectedFlag!.id);
+      }
+    } catch (_) {}
+  }
+
+  void _onChanged() {
+    widget.onChanged(FeatureRequest(
+      id: selectedFlag?.id,
+      region: region,
+      configJson: config,
+      contextId: contextId,
+    ));
+    buildCounter++;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TipherethBloc, TipherethState>(
+        builder: (context, state) {
+      return Column(
+        children: SpacingHelper.listSpacing(
+          height: widget.spacing,
+          children: [
+            if (featureFlags.isEmpty)
+              const TextFormErrorMessage(message: '服务器无可用类型')
+            else if (!featureFlags.any((e) => e.requireContext))
+              TextFormErrorMessage(message: '服务器未启用${selectedFlag?.id ?? ''}'),
+            if (widget.flagReadOnly)
+              TextReadOnlyFormField(
+                label: '类型',
+                value: selectedFlag?.id ?? '',
+              )
+            else
+              DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '类型',
+                ),
+                value: selectedFlag,
+                items: [
+                  for (final s in featureFlags)
+                    DropdownMenuItem(
+                      value: s,
+                      child: Text(s.id),
+                    ),
+                ],
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedFlag = newValue;
+                    if (selectedFlag != null) {
+                      porterGroup = widget.getFeatureProvider(selectedFlag!.id);
+                    }
+                  });
+                  _onChanged();
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return '请选择类型';
+                  }
+                  return null;
+                },
+              ),
+            if ((porterGroup?.regions.isNotEmpty ?? false) &&
+                ((porterGroup?.regions.length ?? 0) > 1))
+              DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '区域',
+                ),
+                value: null,
+                items: [
+                  for (final s in porterGroup!.regions)
+                    DropdownMenuItem(
+                      value: s,
+                      child: Text(s),
+                    ),
+                ],
+                onChanged: (newValue) {
+                  setState(() {
+                    region = newValue;
+                  });
+                  _onChanged();
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return '请选择区域';
+                  }
+                  return null;
+                },
+              ),
+            if ((selectedFlag?.requireContext ?? false) &&
+                state
+                    .getPorterContexts(porterGroup?.globalName ?? '',
+                        region: region ?? '')
+                    .isEmpty)
+              const TextFormErrorMessage(message: '无可用执行环境，请前往插件环境管理页面添加'),
+            if (selectedFlag?.requireContext ?? false)
+              DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '执行环境',
+                ),
+                value: contextId,
+                items: [
+                  for (final s in state.getPorterContexts(
+                      porterGroup?.globalName ?? '',
+                      region: region ?? ''))
+                    DropdownMenuItem(
+                      value: s.id,
+                      enabled: s.status ==
+                          PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,
+                      child: Text(s.name),
+                    ),
+                ],
+                onChanged: (newValue) {
+                  setState(() {
+                    contextId = newValue;
+                  });
+                  _onChanged();
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return '请选择执行环境';
+                  }
+                  return null;
+                },
+              ),
+            if (selectedFlag != null)
+              JsonForm(
+                key: ValueKey(buildCounter++),
+                controller: jsonFormController,
+                jsonSchema: featureFlags
+                    .firstWhere((e) => e.id == selectedFlag!.id)
+                    .configJsonSchema,
+                jsonData: config,
+                onFormDataSaved: (data) {
+                  config = jsonEncode(data);
+                  _onChanged();
+                },
+                jsonFormSchemaUiConfig: JsonFormSchemaUiConfig(
+                  expandGenesis: true,
+                  headerTitleBuilder: (_, __) => Container(),
+                  submitButtonBuilder: (_) => Container(),
+                ),
+              ),
+          ],
+        ),
+      );
+    });
   }
 }

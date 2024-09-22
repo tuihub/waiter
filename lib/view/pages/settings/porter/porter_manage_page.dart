@@ -179,7 +179,7 @@ class PorterEditPanel extends StatelessWidget {
               ),
             ),
             TextFormField(
-              initialValue: porter.featureSummary,
+              initialValue: porter.featureSummary.toString(),
               readOnly: true,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
