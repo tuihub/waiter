@@ -18,9 +18,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sentry_hive/sentry_hive.dart';
 import 'package:system_tray/system_tray.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:uni_links_desktop/uni_links_desktop.dart';
 import 'package:universal_io/io.dart';
+import 'package:win32_registry/win32_registry.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/client_setting/client_setting_bloc.dart';

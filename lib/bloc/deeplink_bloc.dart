@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:uni_links/uni_links.dart';
 
 import '../common/platform.dart';
 import '../model/common_model.dart';
@@ -57,7 +57,7 @@ class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
         }
 
         process(initialUri);
-        _sub = uriLinkStream.listen(process);
+        _sub = AppLinks().uriLinkStream.listen(process);
         while (_sub != null) {
           await Future.delayed(const Duration(seconds: 1));
         }

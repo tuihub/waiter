@@ -50,13 +50,7 @@ Future<MyApp> init() async {
 
   // deep link
   if (PlatformHelper.isWindowsApp()) {
-    registerProtocol('tuihub');
-  }
-  Uri? initialUri;
-  try {
-    initialUri = await getInitialUri();
-  } on FormatException {
-    // TODO: warn user
+    await registerProtocol('tuihub');
   }
 
   // bloc
@@ -64,7 +58,7 @@ Future<MyApp> init() async {
     Bloc.observer = SimpleBlocObserver();
   }
   final clientSettingBloc = ClientSettingBloc(common);
-  final deepLinkBloc = DeepLinkBloc(initialUri);
+  final deepLinkBloc = DeepLinkBloc(null);
   final mainBloc = MainBloc(
       api, common, clientSettingBloc, deepLinkBloc, packageInfo, dataPath);
 
@@ -113,4 +107,25 @@ Future<void> _initSystemTray() async {
           : appWindow.show();
     }
   });
+}
+
+Future<void> registerProtocol(String scheme) async {
+  final String appPath = Platform.resolvedExecutable;
+
+  final String protocolRegKey = 'Software\\Classes\\$scheme';
+  const RegistryValue protocolRegValue = RegistryValue(
+    'URL Protocol',
+    RegistryValueType.string,
+    '',
+  );
+  const String protocolCmdRegKey = r'shell\open\command';
+  final RegistryValue protocolCmdRegValue = RegistryValue(
+    '',
+    RegistryValueType.string,
+    '"$appPath" "%1"',
+  );
+
+  final regKey = Registry.currentUser.createKey(protocolRegKey);
+  regKey.createValue(protocolRegValue);
+  regKey.createKey(protocolCmdRegKey).createValue(protocolCmdRegValue);
 }
