@@ -137,6 +137,65 @@ class _RightPanelFormState extends State<RightPanelForm> {
   }
 }
 
+class FormSectionDivider extends StatelessWidget {
+  const FormSectionDivider({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Divider(
+          height: 10,
+          indent: 10,
+          endIndent: 10,
+          thickness: 2,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).colorScheme.outline
+              : Theme.of(context).colorScheme.outlineVariant,
+        ),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+}
+
+class TextFormMessage extends StatelessWidget {
+  const TextFormMessage({
+    super.key,
+    required this.title,
+    this.message,
+  });
+
+  final String title;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text(
+        title,
+      ),
+      children: [
+        if (message != null)
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              message!,
+            ),
+          )
+      ],
+    );
+  }
+}
+
 class TextFormErrorMessage extends StatelessWidget {
   const TextFormErrorMessage({
     super.key,
@@ -242,7 +301,7 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
       selectedFlag = widget.initialValue != null
           ? featureFlags.firstWhere(
               (e) => e.id == widget.initialValue!.id,
-              orElse: () => featureFlags.first,
+              orElse: FeatureFlag.new,
             )
           : featureFlags.first;
       config = widget.initialValue?.configJson ?? config;
@@ -274,8 +333,9 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
           children: [
             if (featureFlags.isEmpty)
               const TextFormErrorMessage(message: '服务器无可用类型')
-            else if (!featureFlags.any((e) => e.requireContext))
-              TextFormErrorMessage(message: '服务器未启用${selectedFlag?.id ?? ''}'),
+            else if (!featureFlags.any((e) => e.id == selectedFlag?.id))
+              TextFormErrorMessage(
+                  message: '服务器未启用 ${widget.initialValue?.id ?? '功能'}'),
             if (widget.flagReadOnly)
               TextReadOnlyFormField(
                 label: '类型',
@@ -376,7 +436,8 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
                   return null;
                 },
               ),
-            if (selectedFlag != null)
+            if (selectedFlag != null &&
+                featureFlags.any((e) => e.id == selectedFlag!.id))
               JsonForm(
                 key: ValueKey(buildCounter++),
                 controller: jsonFormController,

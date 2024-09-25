@@ -178,18 +178,14 @@ class PorterEditPanel extends StatelessWidget {
                 labelText: '全局名称',
               ),
             ),
-            TextFormField(
-              initialValue: porter.featureSummary.toString(),
-              readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('支持功能'),
-              ),
-            ),
             SwitchFormField(
               initialValue: enabled,
               onSaved: (newValue) => enabled = newValue!,
               title: const Text('启用'),
+            ),
+            TextFormMessage(
+              title: '支持功能',
+              message: porter.featureSummary.toString(),
             ),
           ],
           errorMsg: state is TipherethEditPorterState && state.failed

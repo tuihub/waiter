@@ -162,6 +162,26 @@ class NotifyTargetEditPanel extends StatelessWidget {
     FramePage.of(context)?.closeDrawer();
   }
 
+  List<Widget> specSectionTuiHubRSS(NotifyTarget target, FeatureFlag flag) {
+    debugPrint('specSectionTuiHubRSS ${flag.id}');
+    if (flag.id != 'rss') {
+      return [];
+    }
+    var url = '未知';
+    if (flag.extra['URLPrefix'] != null) {
+      url = '${flag.extra['URLPrefix']}/${target.id.id}';
+    }
+    return [
+      const FormSectionDivider(
+        title: 'TuiHub RSS',
+      ),
+      TextReadOnlyFormField(
+        label: '订阅链接',
+        value: url,
+      )
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final notifyDestinations = context
@@ -234,6 +254,11 @@ class NotifyTargetEditPanel extends StatelessWidget {
               onSaved: (newValue) => enabled = newValue!,
               title: const Text('启用'),
             ),
+            ...specSectionTuiHubRSS(
+                target,
+                notifyDestinations.firstWhere(
+                    (element) => element.id == destination.id,
+                    orElse: FeatureFlag.new)),
           ],
           errorMsg: state is NetzachTargetEditState && state.failed
               ? state.msg
