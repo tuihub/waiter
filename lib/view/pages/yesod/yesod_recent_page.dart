@@ -45,13 +45,19 @@ class YesodRecentPageState extends State<YesodRecentPage> {
     if (length == 0) {
       return S.of(context).allArticles;
     } else if (length == 1) {
-      return state.feedConfigs
-              ?.firstWhere((element) =>
-                  element.config.id.id.toString() ==
-                  state.listConfig?.feedIdFilter?.first)
-              .config
-              .name ??
-          S.of(context).allArticles;
+      if (state.feedConfigs?.any((element) =>
+              element.config.id.id.toString() ==
+              state.listConfig?.feedIdFilter?.first) ??
+          false) {
+        return state.feedConfigs
+                ?.firstWhere((element) =>
+                    element.config.id.id.toString() ==
+                    state.listConfig?.feedIdFilter?.first)
+                .config
+                .name ??
+            S.of(context).filteredArticles;
+      }
+      return S.of(context).filteredArticles;
     } else if (length > 1) {
       return S.of(context).filteredArticles;
     } else {
@@ -218,6 +224,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                   context
                       .read<YesodBloc>()
                       .add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
+                  context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
                 }
               : _scrollToTop,
           child: Icon(isScrolledToTop ? Icons.refresh : Icons.arrow_upward),
@@ -286,11 +293,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
               spacing: 2.0,
               customIconBuilder: (context, local, global) {
                 final text = const ['列表', '杂志', '卡片'][local.index];
-                return Center(
-                    child: Text(text,
-                        style: TextStyle(
-                            color: Color.lerp(Colors.black, Colors.white,
-                                local.animationValue))));
+                return Center(child: Text(text));
               },
               onChanged: (value) {
                 setState(() {
@@ -318,12 +321,21 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
               title: const Text('按订阅筛选'),
               buttonText: const Text('订阅'),
               buttonIcon: const Icon(Icons.filter_alt_outlined),
+              searchable: true,
               items: [
                 for (final ListFeedConfigsResponse_FeedWithConfig config
                     in state.feedConfigs ?? [])
-                  MultiSelectItem(
-                      config.config.id.id.toString(), config.feed.title),
+                  MultiSelectItem(config.config.id.id.toString(),
+                      '${config.config.name} - ${config.feed.title}'),
               ],
+              itemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              selectedItemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               initialValue: feedIDFilter,
               onConfirm: (values) {
                 feedIDFilter = values;
@@ -336,11 +348,20 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
               title: const Text('按分类筛选'),
               buttonText: const Text('分类'),
               buttonIcon: const Icon(Icons.filter_alt_outlined),
+              searchable: true,
               items: [
                 for (final String category in state.feedCategories ?? [])
                   MultiSelectItem(
                       category, category.isNotEmpty ? category : '未分类'),
               ],
+              itemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              selectedItemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               initialValue: categoryFilter,
               onConfirm: (values) {
                 categoryFilter = values;

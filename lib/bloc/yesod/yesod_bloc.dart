@@ -109,7 +109,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
       final configs = [
         ListFeedConfigsResponse_FeedWithConfig(
-          config: event.config,
+          config: event.config..id = resp.getData().id,
           feed: null,
         )
       ];
@@ -222,6 +222,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         event.set,
       ];
       sets.addAll(state.feedActionSets ?? []);
+      add(YesodFeedActionSetLoadEvent());
       emit(YesodFeedActionSetAddState(
         state.copyWith(feedActionSets: sets),
         EventStatus.success,

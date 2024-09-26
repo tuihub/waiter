@@ -15,6 +15,7 @@ class Toast {
 
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
       BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
     final left = calculateColumnWidth(
       xxs: 0,
       sm: 6,
@@ -22,19 +23,19 @@ class Toast {
       xl: 10,
       containerWidth: MediaQuery.of(context).size.width,
     );
-    return ScaffoldMessenger.of(context).showSnackBar(
+    return messenger.showSnackBar(
       SnackBar(
         elevation: 0,
         margin: EdgeInsets.only(left: left),
         behavior: SnackBarBehavior.floating,
         hitTestBehavior: HitTestBehavior.deferToChild,
         backgroundColor: Colors.transparent,
-        content: _content(context),
+        content: _content(context, messenger),
       ),
     );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _content(BuildContext context, ScaffoldMessengerState messenger) {
     final List<Widget> maybeActionAndIcon = <Widget>[
       if (action != null)
         Padding(
@@ -85,8 +86,12 @@ class Toast {
           IconButton(
             icon: const Icon(Icons.close),
             color: Theme.of(context).colorScheme.onPrimary,
-            onPressed: () => ScaffoldMessenger.of(context)
-                .hideCurrentSnackBar(reason: SnackBarClosedReason.dismiss),
+            onPressed: () {
+              if (messenger.mounted) {
+                messenger.hideCurrentSnackBar(
+                    reason: SnackBarClosedReason.dismiss);
+              }
+            },
           ),
         ],
       ),

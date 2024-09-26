@@ -357,6 +357,7 @@ class YesodFunctionRoute extends GoRouteData {
         case YesodFunctions.recent:
         case YesodFunctions.timeline:
           context.read<YesodBloc>().add(YesodInitEvent());
+          context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
         case YesodFunctions.feedManage:
           context.read<MainBloc>().add(MainRefreshServerInfoEvent());
           context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());

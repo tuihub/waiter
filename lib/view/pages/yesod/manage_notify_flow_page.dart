@@ -181,6 +181,16 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                             MultiSelectItem(
                                 config.config.id, config.feed.title),
                       ],
+                      itemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      selectedItemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       initialValue: sources.map((e) => e.feedConfigId).toList(),
                       onConfirm: (values) {
                         final List<NotifyFlowSourceModel> newSources = [];
@@ -349,6 +359,16 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                           if (config.id.id != 0)
                             MultiSelectItem(config.id, config.name),
                       ],
+                      itemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      selectedItemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       initialValue: targets.map((e) => e.targetId).toList(),
                       onConfirm: (values) {
                         final List<NotifyFlowTargetModel> newTargets = [];
@@ -652,9 +672,19 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                         for (final ListFeedConfigsResponse_FeedWithConfig config
                             in notifySources)
                           if (config.config.id.id != 0)
-                            MultiSelectItem(
-                                config.config.id, config.feed.title),
+                            MultiSelectItem(config.config.id,
+                                '${config.config.name} - ${config.feed.title}'),
                       ],
+                      itemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      selectedItemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       initialValue: sources.map((e) => e.feedConfigId).toList(),
                       onConfirm: (values) {
                         final List<NotifyFlowSourceModel> newSources = [];
@@ -696,8 +726,8 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                           child: Text(notifySources
                               .firstWhere(
                                   (e) => e.config.id == sources[i].feedConfigId)
-                              .feed
-                              .title),
+                              .config
+                              .name),
                         ),
                         const SizedBox(
                           height: 8,
@@ -823,6 +853,16 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                           if (config.id.id != 0)
                             MultiSelectItem(config.id, config.name),
                       ],
+                      itemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      selectedItemsTextStyle: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium?.fontSize,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       initialValue: targets.map((e) => e.targetId).toList(),
                       onConfirm: (values) {
                         final List<NotifyFlowTargetModel> newTargets = [];

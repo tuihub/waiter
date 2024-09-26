@@ -53,49 +53,51 @@ class YesodNav extends StatelessWidget {
           Expanded(
             child: _YesodFeedList(function: function),
           ),
-          ExpansionTile(
-              leading: const Icon(Icons.auto_awesome),
-              title: Text(S.of(context).automation),
-              children: [
-                ListTile(
-                  leading: const Icon(
-                    Icons.filter_list,
+          Material(
+            child: ExpansionTile(
+                leading: const Icon(Icons.auto_awesome),
+                title: Text(S.of(context).automation),
+                children: [
+                  ListTile(
+                    leading: const Icon(
+                      Icons.featured_play_list,
+                    ),
+                    onTap: () {
+                      const YesodFunctionRoute(
+                              YesodFunctions.notifyTargetManage)
+                          .go(context);
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                    },
+                    title: Text(S.of(context).notifyTargetManage),
+                    selected: function == YesodFunctions.notifyTargetManage,
                   ),
-                  onTap: () {
-                    const YesodFunctionRoute(YesodFunctions.actionManage)
-                        .go(context);
-                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
-                  },
-                  title: Text(S.of(context).feedActionSetManage),
-                  selected: function == YesodFunctions.actionManage,
-                ),
-                SpacingHelper.defaultDivider,
-                ListTile(
-                  leading: const Icon(
-                    Icons.featured_play_list,
+                  ListTile(
+                    leading: const Icon(
+                      FontAwesomeIcons.codeFork,
+                    ),
+                    onTap: () {
+                      const YesodFunctionRoute(YesodFunctions.notifyFlowManage)
+                          .go(context);
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                    },
+                    title: Text(S.of(context).notifyFlowManage),
+                    selected: function == YesodFunctions.notifyFlowManage,
                   ),
-                  onTap: () {
-                    const YesodFunctionRoute(YesodFunctions.notifyTargetManage)
-                        .go(context);
-                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
-                  },
-                  title: Text(S.of(context).notifyTargetManage),
-                  selected: function == YesodFunctions.notifyTargetManage,
-                ),
-                ListTile(
-                  leading: const Icon(
-                    FontAwesomeIcons.codeFork,
+                  SpacingHelper.defaultDivider,
+                  ListTile(
+                    leading: const Icon(
+                      Icons.filter_list,
+                    ),
+                    onTap: () {
+                      const YesodFunctionRoute(YesodFunctions.actionManage)
+                          .go(context);
+                      OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                    },
+                    title: Text(S.of(context).feedActionSetManage),
+                    selected: function == YesodFunctions.actionManage,
                   ),
-                  onTap: () {
-                    const YesodFunctionRoute(YesodFunctions.notifyFlowManage)
-                        .go(context);
-                    OverlappingPanels.of(context)?.reveal(RevealSide.main);
-                  },
-                  title: Text(S.of(context).notifyFlowManage),
-                  selected: function == YesodFunctions.notifyFlowManage,
-                ),
-                SpacingHelper.defaultDivider,
-              ]),
+                ]),
+          ),
           ListTile(
             leading: const Icon(
               Icons.rss_feed,
@@ -131,13 +133,13 @@ class _YesodFeedList extends StatelessWidget {
               for (final feedConfig in feedConfigs)
                 ListTile(
                   leading: Container(
-                    decoration: feedConfig.feed.link.isEmpty
+                    decoration: feedConfig.feed.image.url.isEmpty
                         ? const BoxDecoration()
                         : BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             image: DecorationImage(
                               image: ExtendedNetworkImageProvider(
-                                feedConfig.feed.link,
+                                feedConfig.feed.image.url,
                               ),
                               fit: BoxFit.scaleDown,
                             ),
@@ -151,7 +153,7 @@ class _YesodFeedList extends StatelessWidget {
                         .add(YesodFeedItemListConfigSetEvent(
                           (state.listConfig ?? const YesodFeedItemListConfig())
                               .copyWith(
-                            feedIdFilter: [feedConfig.feed.id.id.toString()],
+                            feedIdFilter: [feedConfig.config.id.id.toString()],
                           ),
                         ));
                     const YesodFunctionRoute(YesodFunctions.recent).go(context);
@@ -161,8 +163,9 @@ class _YesodFeedList extends StatelessWidget {
                       ? feedConfig.config.name
                       : feedConfig.feed.title),
                   selected: function == YesodFunctions.recent &&
+                      feedConfig.config.id.id != 0 &&
                       state.listConfig?.feedIdFilter?.singleOrNull ==
-                          feedConfig.feed.id.id.toString(),
+                          feedConfig.config.id.id.toString(),
                 ),
             ],
           );
