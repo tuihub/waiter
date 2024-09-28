@@ -174,6 +174,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       title: const Text('订阅源'),
                       buttonText: const Text('订阅'),
                       buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      searchable: true,
                       items: [
                         for (final ListFeedConfigsResponse_FeedWithConfig config
                             in notifySources)
@@ -354,6 +355,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       title: const Text('选择推送目标'),
                       buttonText: const Text('选择推送目标'),
                       buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      searchable: true,
                       items: [
                         for (final NotifyTarget config in notifyTargets)
                           if (config.id.id != 0)
@@ -668,6 +670,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       title: const Text('订阅源'),
                       buttonText: const Text('订阅'),
                       buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      searchable: true,
                       items: [
                         for (final ListFeedConfigsResponse_FeedWithConfig config
                             in notifySources)
@@ -848,6 +851,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       title: const Text('选择推送目标'),
                       buttonText: const Text('选择推送目标'),
                       buttonIcon: const Icon(Icons.filter_alt_outlined),
+                      searchable: true,
                       items: [
                         for (final NotifyTarget config in notifyTargets)
                           if (config.id.id != 0)

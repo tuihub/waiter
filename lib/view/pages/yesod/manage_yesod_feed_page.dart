@@ -390,6 +390,14 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 for (final e in actionSets)
                   if (e.id.id != 0) MultiSelectItem(e.id, e.name),
               ],
+              itemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              selectedItemsTextStyle: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               listType: MultiSelectListType.LIST,
               onConfirm: (values) {
                 actions = values;

@@ -115,6 +115,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       ];
       configs.addAll(state.feedConfigs ?? []);
       await _repo.setFeedConfigs(configs);
+      add(YesodFeedConfigLoadEvent());
       emit(YesodFeedConfigAddState(
         state.copyWith(feedConfigs: configs),
         EventStatus.success,
@@ -249,6 +250,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       final sets = state.feedActionSets ?? [];
+      add(YesodFeedActionSetLoadEvent());
       emit(YesodFeedActionSetEditState(
         state.copyWith(feedActionSets: sets),
         EventStatus.success,

@@ -78,6 +78,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
         return;
       }
 
+      add(NetzachTargetLoadEvent());
       emit(NetzachTargetAddState(
         state.copyWith(
             notifyTargets: [event.target, ...state.notifyTargets ?? []]),
@@ -164,6 +165,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
         return;
       }
 
+      add(NetzachFlowLoadEvent());
       emit(NetzachFlowAddState(
         state.copyWith(notifyFlows: [event.flow, ...state.notifyFlows ?? []]),
         EventStatus.success,
@@ -184,6 +186,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
 
       final flows = state.notifyFlows ?? [];
       flows[state.notifyFlowEditIndex!] = event.flow;
+      add(NetzachFlowLoadEvent());
       emit(NetzachFlowEditState(
         state.copyWith(notifyFlows: flows),
         EventStatus.success,
