@@ -3,6 +3,8 @@ part of 'main_bloc.dart';
 @immutable
 sealed class MainEvent {}
 
+class MainEnterLocalModeEvent extends MainEvent {}
+
 class MainAutoLoginEvent extends MainEvent {
   final ServerConfig? config;
 

@@ -13,6 +13,7 @@ import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../consts.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
+import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
@@ -28,13 +29,14 @@ class TipherethFramePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Column(
+      body: Column(
         children: [
-          SizedBox(height: 72),
-          MyProfileCard(),
-          Expanded(
-            child: MyAccountsCard(),
-          ),
+          const SizedBox(height: 72),
+          const MyProfileCard(),
+          if (ConnectionHelper.isNotLocal(context))
+            const Expanded(
+              child: MyAccountsCard(),
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -68,10 +70,16 @@ class MyProfileCard extends StatelessWidget {
                       color: Theme.of(context).disabledColor,
                     ),
                   ),
-                  Text(state.currentUser?.username ?? '',
-                      style: const TextStyle(
-                        fontSize: 32,
-                      )),
+                  if (ConnectionHelper.isNotLocal(context))
+                    Text(state.currentUser?.username ?? '',
+                        style: const TextStyle(
+                          fontSize: 32,
+                        ))
+                  else
+                    const Text('本地模式',
+                        style: TextStyle(
+                          fontSize: 32,
+                        )),
                   if (state.currentUser != null)
                     Text(userTypeString(state.currentUser!.type))
                 ],

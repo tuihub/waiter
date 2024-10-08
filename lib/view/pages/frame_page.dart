@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../consts.dart';
 import '../../route.dart';
+import '../helper/connection.dart';
 import '../helper/spacing.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
@@ -172,6 +173,16 @@ class _Nav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final offlineAllowedModules = <ModuleName>{
+      ModuleName.tiphereth,
+      ModuleName.settings,
+    };
+    late Set<ModuleName> allowedModules;
+    if (ConnectionHelper.isLocal(context)) {
+      allowedModules = offlineAllowedModules;
+    } else {
+      allowedModules = moduleList.map((e) => e.name).toSet();
+    }
     return NavRail(
       leading: [
         IconMenuItem(
@@ -185,24 +196,26 @@ class _Nav extends StatelessWidget {
       ],
       body: [
         for (final module in moduleList)
-          IconMenuItem(
-            icon: module.icon,
-            selected: module.name == selectedNav,
-            onPressed: () {
-              ServerSelectOverlay.of(context)?.hide();
-              module.go(context);
-            },
-          ),
+          if (allowedModules.contains(module.name))
+            IconMenuItem(
+              icon: module.icon,
+              selected: module.name == selectedNav,
+              onPressed: () {
+                ServerSelectOverlay.of(context)?.hide();
+                module.go(context);
+              },
+            ),
       ],
       trailing: [
-        IconMenuItem(
-          icon: Icons.notifications,
-          selected: ModuleName.notification == selectedNav,
-          onPressed: () {
-            ServerSelectOverlay.of(context)?.hide();
-            const NotificationRootRoute().go(context);
-          },
-        ),
+        if (allowedModules.contains(ModuleName.notification))
+          IconMenuItem(
+            icon: Icons.notifications,
+            selected: ModuleName.notification == selectedNav,
+            onPressed: () {
+              ServerSelectOverlay.of(context)?.hide();
+              const NotificationRootRoute().go(context);
+            },
+          ),
         IconMenuItem(
           icon: Icons.settings,
           selected: ModuleName.settings == selectedNav,

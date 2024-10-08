@@ -6,6 +6,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../helper/app_bar.dart';
+import '../../helper/connection.dart';
 import '../../helper/spacing.dart';
 
 class AboutPage extends StatelessWidget {
@@ -84,21 +85,22 @@ class AboutPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            ExpansionTile(
-              title: const Text(
-                'Current Server Information',
-              ),
-              children: [
-                if (serverInfo != null)
-                  Text(
-                    'Project  ${serverInfo.sourceCodeAddress}\n'
-                    'Version     ${serverInfo.buildVersion}\n'
-                    'Build Date  ${serverInfo.buildDate}',
-                    style: textStyle,
-                    textAlign: TextAlign.justify,
-                  ),
-              ],
-            )
+            if (ConnectionHelper.isNotLocal(context))
+              ExpansionTile(
+                title: const Text(
+                  'Current Server Information',
+                ),
+                children: [
+                  if (serverInfo != null)
+                    Text(
+                      'Project  ${serverInfo.sourceCodeAddress}\n'
+                      'Version     ${serverInfo.buildVersion}\n'
+                      'Build Date  ${serverInfo.buildDate}',
+                      style: textStyle,
+                      textAlign: TextAlign.justify,
+                    ),
+                ],
+              )
           ],
         ),
       ),

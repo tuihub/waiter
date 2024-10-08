@@ -165,7 +165,7 @@ class _AccountCard extends StatelessWidget {
                             ),
                           ));
                         },
-                        child: Text('详情'),
+                        child: const Text('详情'),
                       ),
                     ],
                   ),

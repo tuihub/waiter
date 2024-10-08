@@ -14,6 +14,7 @@ import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../form/form_field.dart';
+import '../helper/connection.dart';
 import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
@@ -133,6 +134,10 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
               const TipherethRootRoute().go(context);
               minimize();
             }
+            if (state is MainEnterLocalModeState && state.success) {
+              const TipherethRootRoute().go(context);
+              minimize();
+            }
             if (state is MainNewServerSetState) {
               setState(() {
                 _current = null;
@@ -207,21 +212,33 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                       NavRail(
                         leading: [
                           if (_current != null)
-                            AvatarMenuItem(
-                              name: _current!.host,
-                              image: state
-                                      .knownServerInstanceSummary?[
-                                          _current?.id ?? '']
-                                      ?.logoUrl ??
-                                  '',
-                              selected: _current?.id == _selected?.id,
-                              onPressed: () {
-                                setState(() {
-                                  _preloginSettings = false;
-                                  _selected = _current;
-                                });
-                              },
-                            ),
+                            if (ConnectionHelper.isLocal(context))
+                              IconMenuItem(
+                                icon: Icons.signal_wifi_connected_no_internet_4,
+                                selected: false,
+                                onPressed: () {
+                                  setState(() {
+                                    _preloginSettings = false;
+                                    _selected = _current;
+                                  });
+                                },
+                              )
+                            else
+                              AvatarMenuItem(
+                                name: _current!.host,
+                                image: state
+                                        .knownServerInstanceSummary?[
+                                            _current?.id ?? '']
+                                        ?.logoUrl ??
+                                    '',
+                                selected: _current?.id == _selected?.id,
+                                onPressed: () {
+                                  setState(() {
+                                    _preloginSettings = false;
+                                    _selected = _current;
+                                  });
+                                },
+                              ),
                         ],
                         body: [
                           for (final ServerConfig server
@@ -244,18 +261,27 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                         ],
                         trailing: [
                           if (_minimized)
-                            AvatarMenuItem(
-                              name: _current?.host ?? '',
-                              image: state
-                                      .knownServerInstanceSummary?[
-                                          _current?.id ?? '']
-                                      ?.logoUrl ??
-                                  '',
-                              selected: false,
-                              onPressed: () {
-                                ServerSelectOverlay.of(context)?.fullscreen();
-                              },
-                            )
+                            if (ConnectionHelper.isLocal(context))
+                              IconMenuItem(
+                                icon: Icons.signal_wifi_connected_no_internet_4,
+                                selected: false,
+                                onPressed: () {
+                                  ServerSelectOverlay.of(context)?.fullscreen();
+                                },
+                              )
+                            else
+                              AvatarMenuItem(
+                                name: _current?.host ?? '',
+                                image: state
+                                        .knownServerInstanceSummary?[
+                                            _current?.id ?? '']
+                                        ?.logoUrl ??
+                                    '',
+                                selected: false,
+                                onPressed: () {
+                                  ServerSelectOverlay.of(context)?.fullscreen();
+                                },
+                              )
                           else
                             IconMenuItem(
                               icon: Icons.add,
@@ -265,6 +291,39 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                                   _preloginSettings = false;
                                   _selected = null;
                                 });
+                              },
+                            ),
+                          if (ConnectionHelper.isNotLocal(context))
+                            IconMenuItem(
+                              icon: Icons.signal_wifi_connected_no_internet_4,
+                              selected: false,
+                              onPressed: () {
+                                unawaited(showDialog<void>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('进入本地模式'),
+                                      content: const Text('是否进入本地模式？'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            context
+                                                .read<MainBloc>()
+                                                .add(MainEnterLocalModeEvent());
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('是'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('否'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ));
                               },
                             ),
                           if (_current == null)

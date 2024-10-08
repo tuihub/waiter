@@ -33,7 +33,7 @@ The translation of this project is managed by [Crowdin](https://crowdin.com/proj
   - [ ] Feed
     - [x] `Yesod` Feed item list filter. by feed & by category
     - [ ] `Yesod` Use bilibili as feed source (WIP)
-    - [ ] `Yesod` Generate feed and let server serving rss protocol (WIP)
+    - [x] `Yesod` Generate feed and let server serving rss protocol (WIP)
     - [x] `Netzach` Push generated feed to Telegram
   - [ ] Image
     - [ ] `Chesed` Basic image upload and manage (UploadImage, UpdateImage, ListImages, GetImage, DownloadImage)

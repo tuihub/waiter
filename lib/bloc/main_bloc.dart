@@ -100,6 +100,42 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   ) : super(MainState()) {
     final repo = _repo.get();
 
+    on<MainEnterLocalModeEvent>((event, emit) async {
+      _pruneChild();
+      final client = await clientFactory(
+        config: const ServerConfig('localhost', 10000, false),
+      );
+      final servers = repo.servers ?? {};
+      _api.init(client, '', '');
+      await _repo.set(repo.copyWith(lastServerId: '', servers: servers));
+      final newState = MainAutoLoginState(
+        state.copyWith(
+          currentServer: ServerConfig.empty(),
+          nextServer: ServerConfig.empty(),
+          accessToken: '',
+          currentUser: User(),
+          serverInfo: ServerInformation(
+            sourceCodeAddress: '',
+            buildVersion: '',
+            buildDate: '',
+            protocolVersion: '',
+          ),
+          serverFeatureSummary: FeatureSummary(),
+          currentDeviceId: InternalID(),
+          deviceInfo: await _genClientDeviceInfo(),
+          knownServers: servers.values.toList(),
+        ),
+        EventStatus.success,
+      );
+      await Sentry.configureScope((scope) => scope.setUser(SentryUser()));
+      await _initChild(newState);
+      emit(newState);
+      emit(MainEnterLocalModeState(
+        newState,
+        EventStatus.success,
+      ));
+    });
+
     on<MainAutoLoginEvent>((event, emit) async {
       emit(MainAutoLoginState(state, EventStatus.processing));
       debugPrint(repo.servers.toString());
@@ -156,7 +192,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               ),
               EventStatus.success,
             );
-            Sentry.configureScope(
+            await Sentry.configureScope(
               (scope) => scope.setUser(SentryUser(
                   id: user.user.id.id.toString(),
                   username: user.user.username,
@@ -302,7 +338,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           ),
           EventStatus.success,
         );
-        Sentry.configureScope(
+        await Sentry.configureScope(
           (scope) => scope.setUser(SentryUser(
               id: user.user.id.id.toString(),
               username: user.user.username,

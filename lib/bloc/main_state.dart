@@ -68,6 +68,18 @@ class MainState {
   }
 }
 
+class MainEnterLocalModeState extends MainState with EventStatusMixin {
+  MainEnterLocalModeState(MainState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
 class MainAutoLoginState extends MainState with EventStatusMixin {
   MainAutoLoginState(MainState state, this.statusCode, {this.msg}) : super() {
     _from(state);
