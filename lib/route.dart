@@ -18,6 +18,7 @@ import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
+import 'view/helper/spacing.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_assign_app_panel.dart';
@@ -195,9 +196,17 @@ class AppRoute extends GoRouteData {
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(
-      child: Center(
-        child: CircularProgressIndicator(),
+    return NoTransitionPage(
+      child: MainWindow(
+        child: Column(
+          children: SpacingHelper.listSpacing(height: 8, children: [
+            Text('Wrong route: ${state.matchedLocation}'),
+            ElevatedButton(
+              onPressed: () => const InitRoute().go(context),
+              child: const Text('Back to initial page'),
+            ),
+          ]),
+        ),
       ),
     );
   }

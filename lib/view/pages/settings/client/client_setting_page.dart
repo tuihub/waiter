@@ -27,6 +27,7 @@ class ClientSettingPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(S.of(context).clientSetting),
         shape: AppBarHelper.defaultShape,
+        automaticallyImplyLeading: false,
         leading: AppBarHelper.defaultMainLeading(context),
       ),
       body: Padding(

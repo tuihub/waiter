@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'bloc/deeplink_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -51,17 +54,21 @@ class _AppRetainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const channel = MethodChannel('com.tuihub.waiter/app_retain');
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) return;
+        final stack =
+            GoRouter.of(context).routerDelegate.currentConfiguration.matches;
         if (PlatformHelper.isAndroidApp()) {
-          if (Navigator.of(context).canPop()) {
-            return true;
+          if (GoRouter.of(context).canPop() &&
+              stack.elementAtOrNull(stack.length - 2)?.matchedLocation != '/') {
+            GoRouter.of(context).pop();
           } else {
-            await channel.invokeMethod('sendToBackground');
-            return false;
+            unawaited(channel.invokeMethod('sendToBackground'));
           }
         } else {
-          return true;
+          GoRouter.of(context).pop();
         }
       },
       child: child,
