@@ -72,7 +72,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             state.currentUser!.id.id.toHexString(),
           )
         : '';
-    final geburaRepo = await GeburaRepo.init(repoPath);
+    final geburaRepo = await GeburaRepo.init(_basePath, repoPath);
     final yesodRepo = await YesodRepo.init(repoPath);
 
     _tipherethBloc = TipherethBloc(_api);

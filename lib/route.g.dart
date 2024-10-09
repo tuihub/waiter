@@ -71,7 +71,7 @@ RouteBase get $appRoute => GoRouteData.$route(
                   factory: $GeburaLibrarySettingsRouteExtension._fromState,
                 ),
                 GoRouteData.$route(
-                  path: 'module/Gebura/library/:id',
+                  path: 'module/Gebura/library/:uuid',
                   factory: $GeburaLibraryDetailRouteExtension._fromState,
                 ),
               ],
@@ -350,13 +350,13 @@ extension $GeburaLibrarySettingsRouteExtension on GeburaLibrarySettingsRoute {
 extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
   static GeburaLibraryDetailRoute _fromState(GoRouterState state) =>
       GeburaLibraryDetailRoute(
-        id: int.parse(state.pathParameters['id']!),
+        state.pathParameters['uuid']!,
         action: _$convertMapValue('action', state.uri.queryParameters,
             _$GeburaLibraryDetailActionsEnumMap._$fromName),
       );
 
   String get location => GoRouteData.$location(
-        '/module/Gebura/library/${Uri.encodeComponent(id!.toString())}',
+        '/module/Gebura/library/${Uri.encodeComponent(uuid)}',
         queryParams: {
           if (action != null)
             'action': _$GeburaLibraryDetailActionsEnumMap[action!],

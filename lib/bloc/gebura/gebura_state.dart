@@ -1,22 +1,24 @@
 part of 'gebura_bloc.dart';
 
 class GeburaState {
+  // server data
   late Map<Int64, List<AppInfo>>? appInfoMap;
   late List<AppInfoMixed>? purchasedAppInfos;
   late List<App>? ownedApps;
-  late List<AppInfoMixed>? libraryItems;
-  late LibrarySettings? librarySettings;
-  late int? selectedLibraryItem;
   late List<AppInst>? ownedAppInsts;
-
-  late Map<Int64, AppLauncherSetting>? appLauncherSettings;
-  late Map<InternalID, AppRunState>? runState;
   late Map<InternalID, Duration>? appInstRunTimes;
 
-  late String? localLibraryState;
+  // ui data
+  late List<LibraryListItem>? libraryListItems;
+  late Map<String, LocalAppInstRunRecord>? runningInsts;
   late SteamScanResult? localSteamScanResult;
-  late List<InstalledSteamApps>? localSteamAppInsts;
-  late List<ImportedSteamAppInst>? importedSteamAppInsts;
+  late String? localLibraryStateMessage;
+
+  // local data
+  late LibrarySettings? librarySettings;
+  late Map<String, LocalTrackedApp>? localTrackedApps;
+  late Map<String, LocalTrackedAppInst>? localTrackedAppInsts;
+  late Map<String, InstalledSteamApps>? localInstalledSteamAppInsts;
   late List<String>? localSteamLibraryFolders;
 
   Map<App, List<AppInst>> getAppInsts(Int64 id) {
@@ -73,55 +75,53 @@ class GeburaState {
     this.appInfoMap,
     this.purchasedAppInfos,
     this.ownedApps,
-    this.libraryItems,
-    this.librarySettings,
-    this.selectedLibraryItem,
     this.ownedAppInsts,
-    this.appLauncherSettings,
-    this.runState,
-    this.localLibraryState,
-    this.localSteamScanResult,
-    this.localSteamAppInsts,
-    this.importedSteamAppInsts,
-    this.localSteamLibraryFolders,
     this.appInstRunTimes,
+    this.libraryListItems,
+    this.runningInsts,
+    this.localSteamScanResult,
+    this.localLibraryStateMessage,
+    this.librarySettings,
+    this.localTrackedApps,
+    this.localTrackedAppInsts,
+    this.localInstalledSteamAppInsts,
+    this.localSteamLibraryFolders,
   });
 
   GeburaState copyWith({
     Map<Int64, List<AppInfo>>? appInfoMap,
     List<AppInfoMixed>? purchasedAppInfos,
     List<App>? ownedApps,
-    List<AppInfoMixed>? libraryItems,
-    LibrarySettings? librarySettings,
-    int? selectedLibraryItem,
     List<AppInst>? ownedAppInsts,
-    Map<Int64, AppLauncherSetting>? appLauncherSettings,
-    Map<InternalID, AppRunState>? runState,
-    String? localLibraryState,
-    SteamScanResult? localSteamScanResult,
-    List<InstalledSteamApps>? localSteamAppInsts,
-    List<ImportedSteamAppInst>? importedSteamAppInsts,
-    List<String>? localSteamLibraryFolders,
     Map<InternalID, Duration>? appInstRunTimes,
+    List<LibraryListItem>? libraryListItems,
+    Map<String, LocalAppInstRunRecord>? runningInsts,
+    SteamScanResult? localSteamScanResult,
+    String? localLibraryStateMessage,
+    LibrarySettings? librarySettings,
+    Map<String, LocalTrackedApp>? localTrackedApps,
+    Map<String, LocalTrackedAppInst>? localTrackedAppInsts,
+    Map<String, InstalledSteamApps>? localInstalledSteamAppInsts,
+    List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
       appInfoMap: appInfoMap ?? this.appInfoMap,
       purchasedAppInfos: purchasedAppInfos ?? this.purchasedAppInfos,
       ownedApps: ownedApps ?? this.ownedApps,
-      libraryItems: libraryItems ?? this.libraryItems,
-      librarySettings: librarySettings ?? this.librarySettings,
-      selectedLibraryItem: selectedLibraryItem ?? this.selectedLibraryItem,
       ownedAppInsts: ownedAppInsts ?? this.ownedAppInsts,
-      appLauncherSettings: appLauncherSettings ?? this.appLauncherSettings,
-      runState: runState ?? this.runState,
-      localLibraryState: localLibraryState ?? this.localLibraryState,
+      appInstRunTimes: appInstRunTimes ?? this.appInstRunTimes,
+      libraryListItems: libraryListItems ?? this.libraryListItems,
+      runningInsts: runningInsts ?? this.runningInsts,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
-      localSteamAppInsts: localSteamAppInsts ?? this.localSteamAppInsts,
-      importedSteamAppInsts:
-          importedSteamAppInsts ?? this.importedSteamAppInsts,
+      localLibraryStateMessage:
+          localLibraryStateMessage ?? this.localLibraryStateMessage,
+      librarySettings: librarySettings ?? this.librarySettings,
+      localTrackedApps: localTrackedApps ?? this.localTrackedApps,
+      localTrackedAppInsts: localTrackedAppInsts ?? this.localTrackedAppInsts,
+      localInstalledSteamAppInsts:
+          localInstalledSteamAppInsts ?? this.localInstalledSteamAppInsts,
       localSteamLibraryFolders:
           localSteamLibraryFolders ?? this.localSteamLibraryFolders,
-      appInstRunTimes: appInstRunTimes ?? this.appInstRunTimes,
     );
   }
 
@@ -129,18 +129,19 @@ class GeburaState {
     appInfoMap = other.appInfoMap;
     purchasedAppInfos = other.purchasedAppInfos;
     ownedApps = other.ownedApps;
-    libraryItems = other.libraryItems;
-    librarySettings = other.librarySettings;
-    selectedLibraryItem = other.selectedLibraryItem;
     ownedAppInsts = other.ownedAppInsts;
-    appLauncherSettings = other.appLauncherSettings;
-    runState = other.runState;
-    localLibraryState = other.localLibraryState;
-    localSteamScanResult = other.localSteamScanResult;
-    localSteamAppInsts = other.localSteamAppInsts;
-    importedSteamAppInsts = other.importedSteamAppInsts;
-    localSteamLibraryFolders = other.localSteamLibraryFolders;
     appInstRunTimes = other.appInstRunTimes;
+
+    libraryListItems = other.libraryListItems;
+    runningInsts = other.runningInsts;
+    localSteamScanResult = other.localSteamScanResult;
+    localLibraryStateMessage = other.localLibraryStateMessage;
+
+    librarySettings = other.librarySettings;
+    localTrackedApps = other.localTrackedApps;
+    localTrackedAppInsts = other.localTrackedAppInsts;
+    localInstalledSteamAppInsts = other.localInstalledSteamAppInsts;
+    localSteamLibraryFolders = other.localSteamLibraryFolders;
   }
 }
 
@@ -183,9 +184,9 @@ class GeburaPurchaseState extends GeburaState with EventStatusMixin {
   final String? msg;
 }
 
-class GeburaSetAppLauncherSettingState extends GeburaState
+class GeburaSaveLocalAppInstLaunchSettingState extends GeburaState
     with EventStatusMixin {
-  GeburaSetAppLauncherSettingState(GeburaState state, this.statusCode,
+  GeburaSaveLocalAppInstLaunchSettingState(GeburaState state, this.statusCode,
       {this.msg})
       : super() {
     _from(state);
@@ -255,13 +256,26 @@ class GeburaAssignAppPackageState extends GeburaState with EventStatusMixin {
   final String? msg;
 }
 
-class GeburaRunAppState extends GeburaState with EventStatusMixin {
-  GeburaRunAppState(GeburaState state, this.appID, this.statusCode, {this.msg})
+class GeburaLaunchLocalAppInstState extends GeburaState with EventStatusMixin {
+  GeburaLaunchLocalAppInstState(GeburaState state, this.uuid, this.statusCode,
+      {this.msg})
       : super() {
     _from(state);
   }
 
-  final InternalID appID;
+  final String uuid;
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaTrackSteamAppsState extends GeburaState with EventStatusMixin {
+  GeburaTrackSteamAppsState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
 
   @override
   final EventStatus? statusCode;
@@ -346,6 +360,20 @@ class GeburaSearchNewAppInfoState extends GeburaState with EventStatusMixin {
 
 class GeburaReportAppRunTimeState extends GeburaState with EventStatusMixin {
   GeburaReportAppRunTimeState(GeburaState state, this.statusCode, {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaSaveLastLaunchAppInstState extends GeburaState
+    with EventStatusMixin {
+  GeburaSaveLastLaunchAppInstState(GeburaState state, this.statusCode,
+      {this.msg})
       : super() {
     _from(state);
   }

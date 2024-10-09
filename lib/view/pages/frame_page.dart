@@ -175,6 +175,7 @@ class _Nav extends StatelessWidget {
   Widget build(BuildContext context) {
     final offlineAllowedModules = <ModuleName>{
       ModuleName.tiphereth,
+      ModuleName.gebura,
       ModuleName.settings,
     };
     late Set<ModuleName> allowedModules;

@@ -169,7 +169,7 @@ final mainWindowKey = GlobalKey();
             TypedGoRoute<GeburaLibrarySettingsRoute>(
                 path: 'module/Gebura/librarySettings'),
             TypedGoRoute<GeburaLibraryDetailRoute>(
-                path: 'module/Gebura/library/:id'),
+                path: 'module/Gebura/library/:uuid'),
           ],
         ),
         TypedStatefulShellBranch<ChesedRoute>(
@@ -414,13 +414,7 @@ class GeburaRootRoute extends GoRouteData {
   @override
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
     context.read<GeburaBloc>().add(GeburaInitEvent());
-    if (context.read<GeburaBloc>().state.selectedLibraryItem != null) {
-      return GeburaLibraryDetailRoute(
-              id: context.read<GeburaBloc>().state.selectedLibraryItem)
-          .location;
-    } else {
-      return const GeburaLibraryRoute().location;
-    }
+    return const GeburaLibraryRoute().location;
   }
 }
 
@@ -484,10 +478,10 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
 enum GeburaLibraryDetailActions { assignApp }
 
 class GeburaLibraryDetailRoute extends GoRouteData {
-  const GeburaLibraryDetailRoute({this.action, this.id});
+  const GeburaLibraryDetailRoute(this.uuid, {this.action});
 
   final GeburaLibraryDetailActions? action;
-  final int? id;
+  final String uuid;
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
@@ -498,10 +492,11 @@ class GeburaLibraryDetailRoute extends GoRouteData {
       child: GeburaRoute.rootWidget(
         child: FramePage(
           selectedNav: ModuleName.gebura,
-          leftPart: const GeburaNav(
+          leftPart: GeburaNav(
             function: GeburaFunctions.library,
+            selectedItem: uuid ?? '',
           ),
-          middlePart: GeburaLibraryDetailPage(id: id ?? 0),
+          middlePart: GeburaLibraryDetailPage(uuid: uuid ?? ''),
           rightPart: actions[action],
         ),
       ),

@@ -2,26 +2,30 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
+import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 
 class GeburaNav extends StatelessWidget {
-  const GeburaNav({super.key, required this.function});
+  const GeburaNav({
+    super.key,
+    required this.function,
+    this.selectedItem,
+  });
 
   final GeburaFunctions function;
+  final String? selectedItem;
 
   @override
   Widget build(BuildContext context) {
     final searchController = TextEditingController();
     return BlocBuilder<GeburaBloc, GeburaState>(
       buildWhen: (previous, current) {
-        return previous.libraryItems != current.libraryItems ||
-            previous.selectedLibraryItem != current.selectedLibraryItem;
+        return previous.libraryListItems != current.libraryListItems;
       },
       builder: (context, state) {
         return Column(
@@ -32,9 +36,6 @@ class GeburaNav extends StatelessWidget {
               ),
               onTap: () {
                 const GeburaStoreRoute().go(context);
-                context
-                    .read<GeburaBloc>()
-                    .add(GeburaSetSelectedLibraryItemEvent(null));
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: Text(S.of(context).store),
@@ -46,14 +47,11 @@ class GeburaNav extends StatelessWidget {
               ),
               onTap: () {
                 const GeburaLibraryRoute().go(context);
-                context
-                    .read<GeburaBloc>()
-                    .add(GeburaSetSelectedLibraryItemEvent(null));
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
               },
               title: Text(S.of(context).library),
-              selected: function == GeburaFunctions.library &&
-                  state.selectedLibraryItem == null,
+              selected:
+                  function == GeburaFunctions.library && selectedItem == null,
             ),
             SpacingHelper.defaultDivider,
             Container(
@@ -62,16 +60,17 @@ class GeburaNav extends StatelessWidget {
                 controller: searchController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.filter_alt_outlined),
-                  suffixIcon: state.librarySettings?.query?.isNotEmpty ?? false
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            context.read<GeburaBloc>().add(
-                                GeburaApplyLibrarySettingsEvent(query: ''));
-                            searchController.clear();
-                          },
-                        )
-                      : null,
+                  suffixIcon:
+                      state.librarySettings?.filter?.query?.isNotEmpty ?? false
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                context.read<GeburaBloc>().add(
+                                    GeburaApplyLibraryFilterEvent(query: ''));
+                                searchController.clear();
+                              },
+                            )
+                          : null,
                   contentPadding: EdgeInsets.zero,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: SpacingHelper.defaultBorderRadius,
@@ -86,7 +85,7 @@ class GeburaNav extends StatelessWidget {
                 onChanged: (query) {
                   context
                       .read<GeburaBloc>()
-                      .add(GeburaApplyLibrarySettingsEvent(query: query));
+                      .add(GeburaApplyLibraryFilterEvent(query: query));
                 },
               ),
             ),
@@ -97,31 +96,27 @@ class GeburaNav extends StatelessWidget {
                       controller: controller,
                       physics: physics,
                       children: [
-                        if (state.libraryItems != null &&
-                            state.libraryItems!.isNotEmpty)
-                          for (final AppInfoMixed app
-                              in state.libraryItems ?? [])
+                        if (state.libraryListItems != null &&
+                            state.libraryListItems!.isNotEmpty)
+                          for (final LibraryListItem item
+                              in state.libraryListItems ?? [])
                             Material(
                                 child: ListTile(
                               // https://github.com/flutter/flutter/issues/86584
-                              selected: app.id.id.toInt() ==
-                                  state.selectedLibraryItem,
+                              selected: item.uuid == selectedItem,
                               onTap: () {
-                                GeburaLibraryDetailRoute(id: app.id.id.toInt())
-                                    .go(context);
-                                context.read<GeburaBloc>().add(
-                                    GeburaSetSelectedLibraryItemEvent(app.id));
+                                GeburaLibraryDetailRoute(item.uuid).go(context);
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
                               leading: Container(
-                                decoration: app.iconImageUrl.isEmpty
+                                decoration: item.iconImageUrl.isEmpty
                                     ? const BoxDecoration()
                                     : BoxDecoration(
                                         borderRadius: BorderRadius.circular(4),
                                         image: DecorationImage(
                                           image: ExtendedNetworkImageProvider(
-                                            app.iconImageUrl,
+                                            item.iconImageUrl,
                                           ),
                                           fit: BoxFit.scaleDown,
                                         ),
@@ -129,9 +124,8 @@ class GeburaNav extends StatelessWidget {
                                 height: 24,
                                 width: 24,
                               ),
-                              title: Text(app.name.isEmpty
-                                  ? app.id.id.toHexString()
-                                  : app.name),
+                              title: Text(
+                                  item.name.isEmpty ? item.uuid : item.name),
                             ))
                         else
                           (state is GeburaRefreshLibraryState)

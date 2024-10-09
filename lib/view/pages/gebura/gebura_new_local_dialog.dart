@@ -68,7 +68,7 @@ class _NewLocalAppInstDialogState extends State<NewLocalAppInstDialog> {
         return AlertDialog(
           title: Text(
             widget.app != null
-                ? widget.newAppWithSameInfo ?? false
+                ? widget.newAppWithSameInfo
                     ? '添加新版本'
                     : '添加新安装位置'
                 : '添加新应用',
@@ -83,7 +83,7 @@ class _NewLocalAppInstDialogState extends State<NewLocalAppInstDialog> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
                     widget.app != null
-                        ? widget.newAppWithSameInfo ?? false
+                        ? widget.newAppWithSameInfo
                             ? '为 ${widget.app!.name} 添加新版本'
                             : '为 ${widget.app!.name} 添加安装位置'
                         : '导入新应用并添加安装位置\n如果已经在其他设备导入过，此操作将产生重复应用',

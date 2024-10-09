@@ -2,10 +2,10 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_hero/local_hero.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
+import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/url.dart';
 
@@ -16,8 +16,8 @@ class GeburaLibraryOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        final apps = state.libraryItems ?? [];
-        final localLibraryState = state.localLibraryState ?? '';
+        final apps = state.libraryListItems ?? [];
+        final localLibraryState = state.localLibraryStateMessage ?? '';
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class _GeburaLibraryOverviewItem extends StatefulWidget {
   const _GeburaLibraryOverviewItem({required this.index, required this.item});
 
   final int index;
-  final AppInfoMixed item;
+  final LibraryListItem item;
 
   @override
   State<_GeburaLibraryOverviewItem> createState() =>
@@ -133,10 +133,7 @@ class _GeburaLibraryOverviewItemState
     return _HoverScaleEffect(
       child: GestureDetector(
         onTap: () {
-          context
-              .read<GeburaBloc>()
-              .add(GeburaSetSelectedLibraryItemEvent(widget.item.id));
-          GeburaLibraryDetailRoute(id: widget.item.id.id.toInt()).go(context);
+          GeburaLibraryDetailRoute(widget.item.uuid).go(context);
         },
         child: Stack(
           children: [
@@ -147,13 +144,18 @@ class _GeburaLibraryOverviewItemState
                   width: 1,
                 ),
               ),
-              child: Center(child: Text(noCoverImage ? name : '')),
+              padding: const EdgeInsets.all(8),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(noCoverImage ? name : ''),
+              ),
             ),
             Center(
               child: LocalHero(
-                tag: widget.item.id.id.toString(),
+                tag: widget.item.uuid,
                 child: noCoverImage
-                    ? Container()
+                    ? ExtendedImage.asset(
+                        'assets/images/gebura_library_cover_placeholder.png')
                     : ExtendedImage.network(
                         widget.item.coverImageUrl,
                         loadStateChanged: (ExtendedImageState state) {

@@ -53,11 +53,13 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
         }
       },
       builder: (context, state) {
-        final app =
-            state.selectedLibraryItem != null && state.libraryItems != null
-                ? state.libraryItems!.firstWhere((element) =>
-                    element.id.id.toInt() == state.selectedLibraryItem!)
-                : null;
+        // final app =
+        //     state.selectedLibraryItem != null && state.libraryItems != null
+        //         ? state.libraryItems!.firstWhere((element) =>
+        //             element.id.id.toInt() == state.selectedLibraryItem!)
+        //         : null;
+        // TODO: Implement this
+        final app = AppInfoMixed();
         return RightPanelForm(
           title: const Text('设置应用信息'),
           formFields: [
@@ -92,7 +94,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                         height: 8,
                       ),
                       TextFormField(
-                        initialValue: app?.name,
+                        initialValue: app.name,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           label: Text('名称'),
@@ -168,7 +170,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                       ),
                       ListTile(
                         title: const Text('受影响的应用'),
-                        subtitle: Text('${app?.name}'),
+                        subtitle: Text(app.name),
                       ),
                       ListTile(
                         title: const Text('新应用信息'),

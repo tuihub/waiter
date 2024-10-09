@@ -134,6 +134,7 @@ dependencies:
   pinyin: ^3.3.0
   native_flutter_proxy: ^0.1.15
   opml: ^0.4.0
+  uuid: ^3.0.7
 
   # others
   json_annotation: ^4.9.0
@@ -170,6 +171,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/
     - web/icons/Icon-512.png
     - windows/runner/resources/app_icon.ico
     - PrivacyPolicy.md

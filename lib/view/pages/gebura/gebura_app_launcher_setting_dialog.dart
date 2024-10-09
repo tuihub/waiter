@@ -1,8 +1,6 @@
 import 'package:file_picker/file_picker.dart' as file_picker;
-import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../model/gebura_model.dart';
@@ -12,11 +10,9 @@ import '../../form/input_formatters.dart';
 import '../../layout/bootstrap_container.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
-  const GeburaAppLauncherSettingDialog(this.appInstID, this.setting,
-      {super.key});
+  const GeburaAppLauncherSettingDialog(this.appInst, {super.key});
 
-  final int appInstID;
-  final LocalAppInstLauncherSetting? setting;
+  final LocalTrackedAppInst appInst;
 
   @override
   State<GeburaAppLauncherSettingDialog> createState() =>
@@ -25,14 +21,15 @@ class GeburaAppLauncherSettingDialog extends StatefulWidget {
 
 class GeburaAppLauncherSettingDialogState
     extends State<GeburaAppLauncherSettingDialog> {
-  LocalAppInstLauncherSetting? newSetting;
+  LocalCommonAppInstLaunchSetting? newSetting;
   final heroTag = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
-        if (state is GeburaSetAppLauncherSettingState && state.success) {
+        if (state is GeburaSaveLocalAppInstLaunchSettingState &&
+            state.success) {
           Navigator.of(context).pop();
         }
       },
@@ -48,8 +45,8 @@ class GeburaAppLauncherSettingDialogState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GeburaAppLauncherSettingForm(
-                      widget.appInstID,
-                      newSetting ?? widget.setting,
+                      widget.appInst.uuid,
+                      newSetting ?? widget.appInst.commonLaunchSetting,
                       onChanged: (setting) {
                         setState(() {
                           newSetting = setting;
@@ -64,8 +61,9 @@ class GeburaAppLauncherSettingDialogState
                           await Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) {
                               return GeburaAppLauncherSettingTestPage(
-                                widget.appInstID,
-                                newSetting ?? widget.setting,
+                                widget.appInst.copyWith(
+                                  commonLaunchSetting: newSetting,
+                                ),
                                 heroTag,
                               );
                             }),
@@ -84,8 +82,9 @@ class GeburaAppLauncherSettingDialogState
               onPressed: newSetting != null
                   ? () {
                       context.read<GeburaBloc>().add(
-                            GeburaSetLocalAppInstLauncherSettingEvent(
-                                newSetting!),
+                            GeburaSaveLocalAppInstLaunchSettingEvent(
+                                widget.appInst.uuid,
+                                commonSetting: newSetting),
                           );
                     }
                   : null,
@@ -105,12 +104,10 @@ class GeburaAppLauncherSettingDialogState
 }
 
 class GeburaAppLauncherSettingTestPage extends StatefulWidget {
-  const GeburaAppLauncherSettingTestPage(
-      this.appInstID, this.setting, this.heroTag,
+  const GeburaAppLauncherSettingTestPage(this.appInst, this.heroTag,
       {super.key});
 
-  final int appInstID;
-  final LocalAppInstLauncherSetting? setting;
+  final LocalTrackedAppInst appInst;
   final UniqueKey heroTag;
 
   @override
@@ -121,8 +118,7 @@ class GeburaAppLauncherSettingTestPage extends StatefulWidget {
 class _GeburaAppLauncherSettingTestPageState
     extends State<GeburaAppLauncherSettingTestPage> {
   int currentStep = 0;
-  LocalAppInstLauncherSetting? newSetting;
-  InternalID get appInstID => InternalID(id: Int64(widget.appInstID));
+  LocalCommonAppInstLaunchSetting? newSetting;
 
   @override
   Widget build(BuildContext context) {
@@ -142,8 +138,8 @@ class _GeburaAppLauncherSettingTestPageState
                   height: 16,
                 ),
                 GeburaAppLauncherSettingForm(
-                  widget.appInstID,
-                  widget.setting,
+                  widget.appInst.uuid,
+                  widget.appInst.commonLaunchSetting,
                   onChanged: (setting) {
                     newSetting = setting;
                   },
@@ -155,8 +151,9 @@ class _GeburaAppLauncherSettingTestPageState
                   onPressed: () async {
                     if (newSetting != null) {
                       context.read<GeburaBloc>().add(
-                            GeburaSetLocalAppInstLauncherSettingEvent(
-                                newSetting!),
+                            GeburaSaveLocalAppInstLaunchSettingEvent(
+                                widget.appInst.uuid,
+                                commonSetting: newSetting),
                           );
                     } else {
                       const Toast(title: '', message: '没有需要保存的更改')
@@ -172,7 +169,7 @@ class _GeburaAppLauncherSettingTestPageState
             xxs: 6,
             child: BlocConsumer<GeburaBloc, GeburaState>(
               listener: (context, state) {
-                if (state is GeburaSetAppLauncherSettingState &&
+                if (state is GeburaSaveLocalAppInstLaunchSettingState &&
                     state.success) {
                   const Toast(title: '', message: '保存成功').show(context);
                   setState(() {
@@ -181,16 +178,7 @@ class _GeburaAppLauncherSettingTestPageState
                 }
               },
               builder: (context, state) {
-                if (!(state.ownedAppInsts
-                        ?.any((inst) => inst.id == appInstID) ??
-                    false)) {
-                  return const Text('客户端数据异常');
-                }
-                final appID = state.ownedAppInsts!
-                    .firstWhere((inst) => inst.id == appInstID)
-                    .appId;
-                final runState =
-                    state.runState != null ? state.runState![appID] : null;
+                final runState = state.runningInsts?[widget.appInst.uuid];
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -221,8 +209,9 @@ class _GeburaAppLauncherSettingTestPageState
                                 onPressed: () async {
                                   if (newSetting != null) {
                                     context.read<GeburaBloc>().add(
-                                          GeburaSetLocalAppInstLauncherSettingEvent(
-                                              newSetting!),
+                                          GeburaSaveLocalAppInstLaunchSettingEvent(
+                                              widget.appInst.uuid,
+                                              commonSetting: newSetting),
                                         );
                                   } else {
                                     setState(() {
@@ -243,11 +232,12 @@ class _GeburaAppLauncherSettingTestPageState
                                   '点击启动按钮启动应用\n如果您的应用有启动器，请在您设置的等待时间内完成实际应用的启动'),
                               ElevatedButton(
                                 onPressed: () async {
-                                  final setting = widget.setting;
+                                  final setting =
+                                      widget.appInst.commonLaunchSetting;
                                   if (setting != null) {
-                                    context
-                                        .read<GeburaBloc>()
-                                        .add(GeburaRunLocalAppEvent(appInstID));
+                                    context.read<GeburaBloc>().add(
+                                        GeburaLaunchLocalAppEvent(
+                                            widget.appInst.appUUID));
                                     setState(() {
                                       currentStep = 2;
                                     });
@@ -263,14 +253,14 @@ class _GeburaAppLauncherSettingTestPageState
                           content: Column(
                             children: [
                               const Text('请使您的应用保持运行一段时间'),
-                              if (runState?.running ?? false)
+                              if (runState == null)
                                 const Text('运行状态正常')
                               else
                                 const Text(
                                   '运行状态异常，未捕获进程',
                                   style: TextStyle(color: Colors.red),
                                 ),
-                              if (runState?.running ?? false)
+                              if (runState == null)
                                 ElevatedButton(
                                   onPressed: () async {
                                     setState(() {
@@ -287,14 +277,14 @@ class _GeburaAppLauncherSettingTestPageState
                           content: Column(
                             children: [
                               const Text('请关闭您的应用'),
-                              if (runState?.running ?? false)
+                              if (runState == null)
                                 const Text(
                                   '等待应用关闭',
                                   style: TextStyle(color: Colors.red),
                                 )
                               else
                                 const Text('应用已关闭'),
-                              if (!(runState?.running ?? false))
+                              if (!(runState == null))
                                 ElevatedButton(
                                   onPressed: () async {
                                     setState(() {
@@ -335,12 +325,12 @@ class _GeburaAppLauncherSettingTestPageState
 }
 
 class GeburaAppLauncherSettingForm extends StatefulWidget {
-  const GeburaAppLauncherSettingForm(this.appInstID, this.setting,
+  const GeburaAppLauncherSettingForm(this.uuid, this.setting,
       {super.key, this.onChanged});
 
-  final int appInstID;
-  final LocalAppInstLauncherSetting? setting;
-  final void Function(LocalAppInstLauncherSetting)? onChanged;
+  final String uuid;
+  final LocalCommonAppInstLaunchSetting? setting;
+  final void Function(LocalCommonAppInstLaunchSetting)? onChanged;
 
   @override
   State<GeburaAppLauncherSettingForm> createState() =>
@@ -378,11 +368,10 @@ class _GeburaAppLauncherSettingFormState
     }
   }
 
-  LocalAppInstLauncherSetting? getSetting() {
+  LocalCommonAppInstLaunchSetting? getSetting() {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       return widget.setting?.copyWith(
-            appInstID: widget.appInstID,
             path: pathController.text,
             installPath: installPathController.text,
             advancedTracing: advancedTracing,
@@ -390,8 +379,7 @@ class _GeburaAppLauncherSettingFormState
             realPath: realPathController.text,
             sleepTime: sleepTime,
           ) ??
-          LocalAppInstLauncherSetting(
-            appInstID: widget.appInstID,
+          LocalCommonAppInstLaunchSetting(
             path: pathController.text,
             installPath: installPathController.text,
             advancedTracing: advancedTracing,

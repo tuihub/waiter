@@ -21,13 +21,25 @@ class GeburaLibrarySettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        final localLibraryState = state.localLibraryState ?? '';
+        final localLibraryState = state.localLibraryStateMessage ?? '';
         final localSteamScanResult = state.localSteamScanResult;
-        final localSteamApps = state.localSteamAppInsts ?? [];
-        final importedSteamApps = state.importedSteamAppInsts ?? [];
-        final unImportedSteamApps = localSteamApps
+        final localSteamApps = state.localInstalledSteamAppInsts ?? {};
+        final localTrackedSteamAppInsts = state.localTrackedAppInsts?.values
+                .where((e) => e.steamLaunchSetting != null)
+                .toList() ??
+            [];
+        final untrackedSteamApps = localSteamApps.values
             .where(
-                (l) => importedSteamApps.every((i) => l.appId != i.steamAppID))
+              (l) => localTrackedSteamAppInsts.every(
+                (i) =>
+                    i.steamLaunchSetting == null ||
+                    l.appId != i.steamLaunchSetting!.steamAppID,
+              ),
+            )
+            .toList();
+        final uninstalledSteamApps = localTrackedSteamAppInsts
+            .where(
+                (e) => localSteamApps[e.steamLaunchSetting!.steamAppID] == null)
             .toList();
         final libraryFolders = state.localSteamLibraryFolders ?? [];
         late String? localSteamStateMsg;
@@ -194,8 +206,8 @@ class GeburaLibrarySettings extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                            '发现${unImportedSteamApps.length}个Steam游戏（已导入${importedSteamApps.length}个）'),
-                        if (unImportedSteamApps.isNotEmpty)
+                            '发现${untrackedSteamApps.length}个Steam游戏（已导入${localTrackedSteamAppInsts.length}个${uninstalledSteamApps.isNotEmpty ? '，已卸载${uninstalledSteamApps.length}个' : ''}）'),
+                        if (untrackedSteamApps.isNotEmpty)
                           Container(
                             margin: const EdgeInsets.only(top: 16),
                             decoration: BoxDecoration(
@@ -208,7 +220,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                             constraints: const BoxConstraints(
                               maxHeight: 400,
                             ),
-                            child: _SteamGameList(apps: unImportedSteamApps),
+                            child: _SteamGameList(apps: untrackedSteamApps),
                           ),
                       ],
                     ),
@@ -310,7 +322,7 @@ class _SteamGameListState extends State<_SteamGameList> {
               onPressed: selectedIndex.contains(true)
                   ? () {
                       context.read<GeburaBloc>().add(
-                            GeburaImportSteamAppsEvent(
+                            GeburaTrackSteamAppsEvent(
                               widget.apps
                                   .where((element) => selectedIndex[
                                       widget.apps.indexOf(element)])
