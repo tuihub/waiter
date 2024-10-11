@@ -62,7 +62,7 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanSteamLibrary() async {
     if (!PlatformHelper.isWindowsApp()) {
       return (apps, SteamScanResult.unavailable);
     }
-    final steamInstallPath = await getSteamInstallPath();
+    final steamInstallPath = getSteamInstallPath();
     if (steamInstallPath == null) {
       return (apps, SteamScanResult.steamInstallationNotFound);
     }
@@ -88,7 +88,7 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanSteamLibrary() async {
     }
     for (var i = 0; i < apps.length; i += 1) {
       apps[i] = apps[i].copyWith(
-        iconFilePath: await getAppIconFilePath(apps[i].appId),
+        iconFilePath: getAppIconFilePath(apps[i].appId),
       );
     }
   } catch (e) {
@@ -106,7 +106,7 @@ Future<List<String>> getSteamLibraryFolders() async {
     if (!PlatformHelper.isWindowsApp()) {
       return folders;
     }
-    final steamInstallPath = await getSteamInstallPath();
+    final steamInstallPath = getSteamInstallPath();
     if (steamInstallPath == null) {
       return folders;
     }
@@ -188,8 +188,8 @@ InstalledSteamApps? _getAppInfo(String path) {
   return null;
 }
 
-Future<String?> getAppIconFilePath(String appId) async {
-  final path = await getSteamInstallPath();
+String? getAppIconFilePath(String appId) {
+  final path = getSteamInstallPath();
   if (path == null) {
     return null;
   }
@@ -199,14 +199,14 @@ Future<String?> getAppIconFilePath(String appId) async {
     'librarycache',
     '${appId}_icon.jpg',
   );
-  if (await io.File(filePath).exists()) {
+  if (io.File(filePath).existsSync()) {
     return filePath;
   }
   return null;
 }
 
-Future<String?> getAppCoverFilePath(String appId) async {
-  final path = await getSteamInstallPath();
+String? getAppCoverFilePath(String appId) {
+  final path = getSteamInstallPath();
   if (path == null) {
     return null;
   }
@@ -216,24 +216,33 @@ Future<String?> getAppCoverFilePath(String appId) async {
     'librarycache',
     '${appId}_library_600x900.jpg',
   );
-  if (await io.File(filePath).exists()) {
+  if (io.File(filePath).existsSync()) {
     return filePath;
   }
   return null;
 }
 
-Future<String?> getAppBackgroundFilePath(String appId) async {
-  final path = await getSteamInstallPath();
+String? getAppBackgroundFilePath(String appId) {
+  final path = getSteamInstallPath();
   if (path == null) {
     return null;
   }
-  final filePath = p.join(
+  var filePath = p.join(
+    path,
+    'appcache',
+    'librarycache',
+    '${appId}_library_hero.jpg',
+  );
+  if (io.File(filePath).existsSync()) {
+    return filePath;
+  }
+  filePath = p.join(
     path,
     'appcache',
     'librarycache',
     '${appId}_header.jpg',
   );
-  if (await io.File(filePath).exists()) {
+  if (io.File(filePath).existsSync()) {
     return filePath;
   }
   return null;

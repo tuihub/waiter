@@ -1,4 +1,3 @@
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_hero/local_hero.dart';
@@ -8,6 +7,7 @@ import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/url.dart';
+import 'gebura_common.dart';
 
 class GeburaLibraryOverview extends StatelessWidget {
   const GeburaLibraryOverview({super.key});
@@ -138,12 +138,12 @@ class _GeburaLibraryOverviewItemState
         child: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: noCoverImage ? Colors.grey : Colors.transparent,
-                  width: 1,
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: noCoverImage ? Colors.grey : Colors.transparent,
+              //     width: 1,
+              //   ),
+              // ),
               padding: const EdgeInsets.all(8),
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -153,23 +153,7 @@ class _GeburaLibraryOverviewItemState
             Center(
               child: LocalHero(
                 tag: widget.item.uuid,
-                child: noCoverImage
-                    ? ExtendedImage.asset(
-                        'assets/images/gebura_library_cover_placeholder.png')
-                    : ExtendedImage.network(
-                        widget.item.coverImageUrl,
-                        loadStateChanged: (ExtendedImageState state) {
-                          if (state.extendedImageLoadState ==
-                              LoadState.failed) {
-                            WidgetsBinding.instance
-                                .addPostFrameCallback((_) => setState(() {
-                                      noCoverImage = true;
-                                    }));
-                            return const SizedBox();
-                          }
-                          return null;
-                        },
-                      ),
+                child: GeburaAppCoverImage(item: widget.item),
               ),
             ),
           ],

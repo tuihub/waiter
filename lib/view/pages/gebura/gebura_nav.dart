@@ -1,4 +1,4 @@
-import 'package:extended_image/extended_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -9,6 +9,7 @@ import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
+import 'gebura_common.dart';
 
 class GeburaNav extends StatelessWidget {
   const GeburaNav({
@@ -109,23 +110,15 @@ class GeburaNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              leading: Container(
-                                decoration: item.iconImageUrl.isEmpty
-                                    ? const BoxDecoration()
-                                    : BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        image: DecorationImage(
-                                          image: ExtendedNetworkImageProvider(
-                                            item.iconImageUrl,
-                                          ),
-                                          fit: BoxFit.scaleDown,
-                                        ),
-                                      ),
-                                height: 24,
-                                width: 24,
+                              leading: GeburaAppIconImage(item: item),
+                              title: AutoSizeText(
+                                item.name.isEmpty ? item.uuid : item.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              title: Text(
-                                  item.name.isEmpty ? item.uuid : item.name),
+                              minVerticalPadding: 0,
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                             ))
                         else
                           (state is GeburaRefreshLibraryState)

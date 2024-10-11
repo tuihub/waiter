@@ -6,7 +6,7 @@ const _defaultSteamInstallPath = r'C:\Program Files (x86)\Steam';
 
 String? _steamInstallPathCache;
 
-Future<String?> getSteamInstallPath() async {
+String? getSteamInstallPath() {
   if (_steamInstallPathCache != null) {
     return _steamInstallPathCache;
   }
@@ -16,14 +16,14 @@ Future<String?> getSteamInstallPath() async {
 
     final path = key.getValueAsString('InstallPath');
     key.close();
-    if (path != null && await io.Directory(path).exists()) {
+    if (path != null && io.Directory(path).existsSync()) {
       _steamInstallPathCache = path;
       return path;
     }
   } catch (e) {
     debugPrint(e.toString());
   }
-  if (await io.Directory(_defaultSteamInstallPath).exists()) {
+  if (io.Directory(_defaultSteamInstallPath).existsSync()) {
     return _defaultSteamInstallPath;
   }
   return null;

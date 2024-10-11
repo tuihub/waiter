@@ -230,6 +230,7 @@ class _MyAppWidget extends StatelessWidget {
 ThemeData _customizeTheme(Brightness brightness, ThemeData theme) {
   final t = theme.copyWith(
     listTileTheme: theme.listTileTheme.copyWith(
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       selectedColor: theme.colorScheme.onPrimary,
       selectedTileColor: theme.colorScheme.primary,
       shape: RoundedRectangleBorder(

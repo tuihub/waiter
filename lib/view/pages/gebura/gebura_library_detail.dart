@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +19,10 @@ import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../helper/spacing.dart';
-import '../../helper/url.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
+import 'gebura_common.dart';
 
 class GeburaLibraryDetailPage extends StatelessWidget {
   const GeburaLibraryDetailPage({super.key, required this.uuid});
@@ -103,19 +102,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: SpacingHelper.defaultBorderRadius,
-                            image: DecorationImage(
-                              image: ExtendedNetworkImageProvider(
-                                item.backgroundImageUrl,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          // margin: EdgeInsets.all(32),
-                          height: 400,
-                        ),
+                        GeburaAppBackgroundImage(item: item),
                         Positioned.fill(
                           child: Container(
                               padding: const EdgeInsets.only(top: 400 - 96),
@@ -136,7 +123,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                     alignment: Alignment.bottomLeft,
                                     children: [
                                       BootstrapColumn(
-                                        xxs: 10,
+                                        xxs: 9,
+                                        md: 10,
                                         child: Container(
                                           alignment: Alignment.bottomLeft,
                                           child: Padding(
@@ -145,7 +133,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                               item.name,
                                               style: backdropBlurTextStyle(
                                                   context),
-                                              maxLines: 2,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
@@ -159,30 +148,14 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           alignment: Alignment.bottomRight,
                           children: [
                             BootstrapColumn(
-                              xxs: 3,
+                              xxs: 4,
+                              md: 3,
                               child: Padding(
-                                padding: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                                 child: LocalHero(
                                   key: ValueKey(item.uuid),
                                   tag: item.uuid,
-                                  child:
-                                      UrlHelper.isValidUrl(item.coverImageUrl)
-                                          ? ExtendedImage.network(
-                                              item.coverImageUrl,
-                                              height: 200,
-                                              loadStateChanged:
-                                                  (ExtendedImageState state) {
-                                                if (state
-                                                        .extendedImageLoadState ==
-                                                    LoadState.failed) {
-                                                  return const SizedBox();
-                                                }
-                                                return null;
-                                              },
-                                            )
-                                          : ExtendedImage.asset(
-                                              'assets/images/gebura_library_cover_placeholder.png',
-                                            ),
+                                  child: GeburaAppCoverImage(item: item),
                                 ),
                               ),
                             )
@@ -295,7 +268,11 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
       leading: _activeRadio(context, inst, triggerActivation),
       title: const Text('由Steam管理'),
       subtitle: steamApp != null
-          ? AutoSizeText(steamApp!.installPath, maxLines: 1)
+          ? AutoSizeText(
+              steamApp!.installPath,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )
           : const Text('未找到Steam应用'),
       trailing: steamApp != null
           ? ElevatedButton.icon(
@@ -318,7 +295,11 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
       leading: _activeRadio(context, inst, triggerActivation),
       title: Text(inst.name ?? '未知应用'),
       subtitle: settings != null
-          ? AutoSizeText(settings.installPath, maxLines: 1)
+          ? AutoSizeText(
+              settings.installPath,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )
           : const Text('未找到应用'),
       trailing: ElevatedButton.icon(
         onPressed: () async {
