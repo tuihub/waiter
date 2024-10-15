@@ -206,29 +206,3 @@ Map<String, dynamic> _$$LocalAppInstRunRecordImplToJson(
       'startTime': instance.startTime?.toIso8601String(),
       'endTime': instance.endTime?.toIso8601String(),
     };
-
-_$LocalAppInstFolderImpl _$$LocalAppInstFolderImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LocalAppInstFolderImpl(
-      path: json['path'] as String,
-    );
-
-Map<String, dynamic> _$$LocalAppInstFolderImplToJson(
-        _$LocalAppInstFolderImpl instance) =>
-    <String, dynamic>{
-      'path': instance.path,
-    };
-
-_$LocalAppInstIndependentImpl _$$LocalAppInstIndependentImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LocalAppInstIndependentImpl(
-      appInstID: (json['appInstID'] as num).toInt(),
-      path: json['path'] as String,
-    );
-
-Map<String, dynamic> _$$LocalAppInstIndependentImplToJson(
-        _$LocalAppInstIndependentImpl instance) =>
-    <String, dynamic>{
-      'appInstID': instance.appInstID,
-      'path': instance.path,
-    };

@@ -3,8 +3,8 @@ import 'package:path/path.dart' as p;
 import 'package:universal_io/io.dart' as io;
 
 import '../platform.dart';
+import '_native.dart' if (dart.library.html) '_web.dart';
 import 'acf_parser.dart';
-import 'win32.dart' if (dart.library.html) 'non_win32.dart';
 
 const _excludeAppIds = <String>{
   '228980', // Steamworks Common Redistributables

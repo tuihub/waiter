@@ -135,6 +135,7 @@ dependencies:
   native_flutter_proxy: ^0.1.15
   opml: ^0.4.0
   uuid: ^3.0.7
+  glob: ^2.1.2
 
   # others
   json_annotation: ^4.9.0

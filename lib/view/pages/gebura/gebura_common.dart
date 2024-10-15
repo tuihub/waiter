@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_io/io.dart' as io;
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../../common/steam/local_library.dart';
+import '../../../common/steam/steam.dart';
 import '../../../model/gebura_model.dart';
 import '../../helper/spacing.dart';
 import '../../helper/url.dart';

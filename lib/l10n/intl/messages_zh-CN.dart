@@ -195,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "launcherError": MessageLookupByLibrary.simpleMessage("启动器错误"),
         "library": MessageLookupByLibrary.simpleMessage("库"),
         "loadFailed": m8,
+        "localLibraryManage": MessageLookupByLibrary.simpleMessage("本地库管理"),
         "loggingInTo": m9,
         "login": MessageLookupByLibrary.simpleMessage("登录"),
         "loginExpired": MessageLookupByLibrary.simpleMessage("登录已过期"),
@@ -241,6 +242,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "showServerConfig": MessageLookupByLibrary.simpleMessage("查看服务器信息"),
+        "steamScanResultFinished": MessageLookupByLibrary.simpleMessage("扫描完成"),
+        "steamScanResultLibraryEmpty":
+            MessageLookupByLibrary.simpleMessage("Steam游戏库为空"),
+        "steamScanResultLibraryNotFound":
+            MessageLookupByLibrary.simpleMessage("未发现Steam游戏库"),
+        "steamScanResultPlatformUnsupported":
+            MessageLookupByLibrary.simpleMessage("不支持当前平台"),
+        "steamScanResultSteamNotFound":
+            MessageLookupByLibrary.simpleMessage("未发现Steam客户端"),
+        "steamScanResultUnknownError":
+            MessageLookupByLibrary.simpleMessage("扫描时出现未知错误"),
         "store": MessageLookupByLibrary.simpleMessage("商店"),
         "submit": MessageLookupByLibrary.simpleMessage("提交"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),

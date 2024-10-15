@@ -1,4 +1,4 @@
-// web.dart
+// _web.dart
 import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 

@@ -1,4 +1,4 @@
-// native.dart
+// _native.dart
 import 'dart:io';
 
 import 'package:drift/drift.dart';

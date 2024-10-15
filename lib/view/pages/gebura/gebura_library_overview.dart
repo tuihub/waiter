@@ -62,15 +62,15 @@ class GeburaLibraryOverview extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              const GeburaLibrarySettingsRoute().go(context);
-            },
-            child: const Icon(Icons.settings),
-          ),
-          floatingActionButtonLocation: localLibraryState.isNotEmpty
-              ? FloatingActionButtonLocation.endContained
-              : FloatingActionButtonLocation.endFloat,
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     const GeburaLibrarySettingsRoute().go(context);
+          //   },
+          //   child: const Icon(Icons.settings),
+          // ),
+          // floatingActionButtonLocation: localLibraryState.isNotEmpty
+          //     ? FloatingActionButtonLocation.endContained
+          //     : FloatingActionButtonLocation.endFloat,
           bottomNavigationBar: ClipRRect(
             borderRadius: const BorderRadius.only(
               topRight: Radius.circular(16),
@@ -96,7 +96,7 @@ class GeburaLibraryOverview extends StatelessWidget {
                     },
                     child: Text(S.of(context).hide),
                   ),
-                  const SizedBox(width: 64),
+                  // const SizedBox(width: 64),
                 ],
               ),
             ),

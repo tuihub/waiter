@@ -32,9 +32,7 @@ class GeburaNav extends StatelessWidget {
         return Column(
           children: [
             ListTile(
-              leading: const Icon(
-                Icons.shopping_cart,
-              ),
+              leading: const Icon(Icons.shopping_cart),
               onTap: () {
                 const GeburaStoreRoute().go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -43,9 +41,7 @@ class GeburaNav extends StatelessWidget {
               selected: function == GeburaFunctions.store,
             ),
             ListTile(
-              leading: const Icon(
-                Icons.apps,
-              ),
+              leading: const Icon(Icons.apps),
               onTap: () {
                 const GeburaLibraryRoute().go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -137,7 +133,17 @@ class GeburaNav extends StatelessWidget {
                       ]);
                 },
               ),
-            )
+            ),
+            ListTile(
+              leading: const Icon(Icons.library_add_check),
+              onTap: () {
+                const GeburaLibrarySettingsRoute().go(context);
+                OverlappingPanels.of(context)?.reveal(RevealSide.main);
+              },
+              title: Text(S.of(context).localLibraryManage),
+              selected: function == GeburaFunctions.librarySettings &&
+                  selectedItem == null,
+            ),
           ],
         );
       },

@@ -3,32 +3,26 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:sentry_hive/sentry_hive.dart';
 
+import '../../common/app_scan/model.dart';
 import '../../model/gebura_model.dart';
 
 const _geburaTrackedAppsFile = 'gebura_tracked_apps';
 const _geburaTrackedAppInstsFile = 'gebura_tracked_app_insts';
-
-const _localAppInstFoldersFile = 'gebura_local_app_inst_folders';
-const _localAppInstIndependentsFile = 'gebura_local_app_inst_independents';
+const _geburaTrackedCommonAppFolder = 'gebura_tracked_common_app_folder';
 
 class GeburaRepo {
   late Box<String> _trackedApps;
   late Box<String> _trackedAppInsts;
+  late Box<String> _trackedCommonAppFolder;
 
-  late Box<String> _localAppInstFolders;
-  late Box<String> _localAppInstIndependents;
-
-  GeburaRepo._init(
-    Box<String> trackedApps,
-    Box<String> trackedAppInsts,
-    Box<String> localAppInstFolders,
-    Box<String> localAppInstIndependents,
-  ) {
+  GeburaRepo._init({
+    required Box<String> trackedApps,
+    required Box<String> trackedAppInsts,
+    required Box<String> trackedCommonAppFolder,
+  }) {
     _trackedApps = trackedApps;
     _trackedAppInsts = trackedAppInsts;
-
-    _localAppInstFolders = localAppInstFolders;
-    _localAppInstIndependents = localAppInstIndependents;
+    _trackedCommonAppFolder = trackedCommonAppFolder;
   }
 
   static Future<GeburaRepo> init(String? commonPath, String? serverPath) async {
@@ -37,17 +31,13 @@ class GeburaRepo {
     final trackedAppInsts = await SentryHive.openBox<String>(
         _geburaTrackedAppInstsFile,
         path: commonPath);
-    final localAppInstFolders = await SentryHive.openBox<String>(
-        _localAppInstFoldersFile,
-        path: serverPath);
-    final localAppInstIndependents = await SentryHive.openBox<String>(
-        _localAppInstIndependentsFile,
-        path: serverPath);
+    final trackedCommonAppFolder = await SentryHive.openBox<String>(
+        _geburaTrackedCommonAppFolder,
+        path: commonPath);
     return GeburaRepo._init(
-      trackedApps,
-      trackedAppInsts,
-      localAppInstFolders,
-      localAppInstIndependents,
+      trackedApps: trackedApps,
+      trackedAppInsts: trackedAppInsts,
+      trackedCommonAppFolder: trackedCommonAppFolder,
     );
   }
 
@@ -112,47 +102,35 @@ class GeburaRepo {
     await _trackedAppInsts.delete(uuid);
   }
 
-  Future<void> setLocalAppInstFolder(LocalAppInstFolder folder) async {
-    await _localAppInstFolders.put(folder.path, jsonEncode(folder.toJson()));
-    await _localAppInstFolders.flush();
+  Future<void> setTrackedCommonAppFolder(
+      CommonAppFolderScanSetting trackedCommonAppFolder) async {
+    await _trackedCommonAppFolder.put(trackedCommonAppFolder.basePath,
+        jsonEncode(trackedCommonAppFolder.toJson()));
+    await _trackedCommonAppFolder.flush();
   }
 
-  Future<void> removeLocalAppInstFolder(String path) async {
-    await _localAppInstFolders.delete(path);
+  CommonAppFolderScanSetting? getTrackedCommonAppFolder(String basePath) {
+    final trackedCommonAppFolder = _trackedCommonAppFolder.get(basePath);
+    if (trackedCommonAppFolder != null) {
+      return CommonAppFolderScanSetting.fromJson(
+          jsonDecode(trackedCommonAppFolder) as Map<String, dynamic>);
+    }
+    return null;
   }
 
-  List<LocalAppInstFolder> getLocalAppInstFolders() {
-    final folders = <LocalAppInstFolder>[];
-    for (final key in _localAppInstFolders.keys) {
-      final folder = _localAppInstFolders.get(key);
-      if (folder != null) {
-        folders.add(LocalAppInstFolder.fromJson(
-            jsonDecode(folder) as Map<String, dynamic>));
+  List<CommonAppFolderScanSetting> loadTrackedCommonAppFolders() {
+    final trackedCommonAppFolders = <CommonAppFolderScanSetting>[];
+    for (final key in _trackedCommonAppFolder.keys) {
+      final trackedCommonAppFolder = _trackedCommonAppFolder.get(key);
+      if (trackedCommonAppFolder != null) {
+        trackedCommonAppFolders.add(CommonAppFolderScanSetting.fromJson(
+            jsonDecode(trackedCommonAppFolder) as Map<String, dynamic>));
       }
     }
-    return folders;
+    return trackedCommonAppFolders;
   }
 
-  Future<void> setLocalAppInstIndependent(
-      LocalAppInstIndependent independent) async {
-    await _localAppInstIndependents.put(
-        independent.appInstID.toString(), jsonEncode(independent.toJson()));
-    await _localAppInstIndependents.flush();
-  }
-
-  Future<void> removeLocalAppInstIndependent(int appInstID) async {
-    await _localAppInstIndependents.delete(appInstID.toString());
-  }
-
-  List<LocalAppInstIndependent> getLocalAppInstIndependents() {
-    final independents = <LocalAppInstIndependent>[];
-    for (final key in _localAppInstIndependents.keys) {
-      final independent = _localAppInstIndependents.get(key);
-      if (independent != null) {
-        independents.add(LocalAppInstIndependent.fromJson(
-            jsonDecode(independent) as Map<String, dynamic>));
-      }
-    }
-    return independents;
+  Future<void> removeTrackedCommonAppFolder(String basePath) async {
+    await _trackedCommonAppFolder.delete(basePath);
   }
 }

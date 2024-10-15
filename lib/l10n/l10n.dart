@@ -690,6 +690,16 @@ class S {
     );
   }
 
+  /// `本地库管理`
+  String get localLibraryManage {
+    return Intl.message(
+      '本地库管理',
+      name: 'localLibraryManage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `未知应用`
   String get unknownApp {
     return Intl.message(
@@ -795,6 +805,66 @@ class S {
     return Intl.message(
       '添加应用',
       name: 'addApplication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `不支持当前平台`
+  String get steamScanResultPlatformUnsupported {
+    return Intl.message(
+      '不支持当前平台',
+      name: 'steamScanResultPlatformUnsupported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未发现Steam客户端`
+  String get steamScanResultSteamNotFound {
+    return Intl.message(
+      '未发现Steam客户端',
+      name: 'steamScanResultSteamNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未发现Steam游戏库`
+  String get steamScanResultLibraryNotFound {
+    return Intl.message(
+      '未发现Steam游戏库',
+      name: 'steamScanResultLibraryNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Steam游戏库为空`
+  String get steamScanResultLibraryEmpty {
+    return Intl.message(
+      'Steam游戏库为空',
+      name: 'steamScanResultLibraryEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `扫描时出现未知错误`
+  String get steamScanResultUnknownError {
+    return Intl.message(
+      '扫描时出现未知错误',
+      name: 'steamScanResultUnknownError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `扫描完成`
+  String get steamScanResultFinished {
+    return Intl.message(
+      '扫描完成',
+      name: 'steamScanResultFinished',
       desc: '',
       args: [],
     );

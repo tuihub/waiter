@@ -138,26 +138,3 @@ class LocalAppInstRunRecord with _$LocalAppInstRunRecord {
   factory LocalAppInstRunRecord.fromJson(Map<String, Object?> json) =>
       _$LocalAppInstRunRecordFromJson(json);
 }
-
-// TODO: review
-
-@freezed
-class LocalAppInstFolder with _$LocalAppInstFolder {
-  const factory LocalAppInstFolder({
-    required String path,
-  }) = _LocalAppInstFolder;
-
-  factory LocalAppInstFolder.fromJson(Map<String, Object?> json) =>
-      _$LocalAppInstFolderFromJson(json);
-}
-
-@freezed
-class LocalAppInstIndependent with _$LocalAppInstIndependent {
-  const factory LocalAppInstIndependent({
-    required int appInstID,
-    required String path,
-  }) = _LocalAppInstIndependent;
-
-  factory LocalAppInstIndependent.fromJson(Map<String, Object?> json) =>
-      _$LocalAppInstIndependentFromJson(json);
-}

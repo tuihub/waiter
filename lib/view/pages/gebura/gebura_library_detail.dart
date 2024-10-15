@@ -13,7 +13,7 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
-import '../../../common/steam/local_library.dart';
+import '../../../common/steam/steam.dart';
 import '../../../model/gebura_model.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
@@ -28,6 +28,29 @@ class GeburaLibraryDetailPage extends StatelessWidget {
   const GeburaLibraryDetailPage({super.key, required this.uuid});
 
   final String uuid;
+
+  Widget digestItem(BuildContext context, IconData icon, String title,
+      String? subtitle, VoidCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon),
+          const SizedBox(width: 16),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: Theme.of(context).textTheme.bodyMedium),
+              if (subtitle != null)
+                Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +193,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children:
+                            SpacingHelper.listSpacing(width: 24, children: [
                           if (PlatformHelper.isWindowsApp())
                             ElevatedButton.icon(
                               onPressed: (launchAppInstUUID == null)
@@ -187,23 +211,15 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               ),
                               label: const Text('启动'),
                             ),
-                          const SizedBox(
-                            width: 24,
-                          ),
+                          if (PlatformHelper.isWindowsApp())
+                            digestItem(
+                                context, Icons.cloud_off, '云同步', '已离线', null),
                           if (runTimeStr.isNotEmpty)
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('总运行时间',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall),
-                                Text(runTimeStr),
-                              ],
-                            ),
+                            digestItem(
+                                context, Icons.timer, '运行时间', runTimeStr, null),
                           const Expanded(child: SizedBox()),
                           _GeburaLibraryDetailAppSettings(item: item),
-                        ],
+                        ]),
                       ),
                     ),
                   ),

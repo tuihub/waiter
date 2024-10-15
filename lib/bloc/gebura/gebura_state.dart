@@ -307,17 +307,17 @@ class GeburaFetchBoundAppsState extends GeburaState with EventStatusMixin {
   final String? msg;
 }
 
-class GeburaImportNewAppInstState extends GeburaState with EventStatusMixin {
-  GeburaImportNewAppInstState(GeburaState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
-}
+// class GeburaImportNewAppInstState extends GeburaState with EventStatusMixin {
+//   GeburaImportNewAppInstState(GeburaState state, this.statusCode, {this.msg})
+//       : super() {
+//     _from(state);
+//   }
+//
+//   @override
+//   final EventStatus? statusCode;
+//   @override
+//   final String? msg;
+// }
 
 class GeburaRefreshAppInfoState extends GeburaState with EventStatusMixin {
   GeburaRefreshAppInfoState(GeburaState state, this.statusCode, {this.msg})
