@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 
+class SectionDividerFormField extends FormField<void> {
+  SectionDividerFormField({super.key, required Widget title})
+      : super(
+          builder: (FormFieldState<void> state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                title,
+                const Divider(),
+              ],
+            );
+          },
+        );
+}
+
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField(
       {super.key,

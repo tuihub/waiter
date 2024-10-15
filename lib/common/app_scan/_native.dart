@@ -6,119 +6,190 @@ import 'package:universal_io/io.dart';
 import '../platform.dart';
 import 'model.dart';
 
-CommonAppFolderScanResult scanCommonApps(CommonAppFolderScanSetting setting) {
+Future<CommonAppFolderScanResult> scanCommonApps(
+    CommonAppFolderScanSetting setting) async {
   if (!PlatformHelper.isWindowsApp()) {
     return const CommonAppFolderScanResult(
       installedApps: [],
       details: [],
+      code: CommonAppFolderScanResultCode.unavailable,
     );
   }
-  final entries = _walkEntry(setting, setting.basePath);
-  if (entries == null) {
-    return const CommonAppFolderScanResult(
+  try {
+    final entries = await _walkEntry(setting, setting.basePath);
+    if (entries == null) {
+      return const CommonAppFolderScanResult(
+        installedApps: [],
+        details: [],
+        code: CommonAppFolderScanResultCode.baseFolderNotFound,
+      );
+    }
+    final (installedApps, details) = _buildAppList(setting, entries);
+    return CommonAppFolderScanResult(
+      installedApps: installedApps,
+      details: details,
+      code: CommonAppFolderScanResultCode.success,
+    );
+  } catch (e) {
+    return CommonAppFolderScanResult(
       installedApps: [],
       details: [],
+      code: CommonAppFolderScanResultCode.unknownError,
+      msg: e.toString(),
     );
   }
-  final installedApps = _buildAppList(setting, entries);
-  return CommonAppFolderScanResult(
-    installedApps: installedApps,
-    details: entries,
-  );
 }
 
-List<InstalledCommonApps> _buildAppList(CommonAppFolderScanSetting setting,
-    List<CommonAppFolderScanResultDetail> entries) {
+(List<InstalledCommonApps>, List<CommonAppFolderScanResultDetail>)
+    _buildAppList(
+  CommonAppFolderScanSetting setting,
+  List<CommonAppFolderScanResultDetail> entries,
+) {
+  entries.sort((a, b) => a.path.length.compareTo(b.path.length));
   final Map<String, CommonAppFolderScanResultDetail> entryMap =
       entries.asMap().map(
             (key, value) => MapEntry(value.path, value),
           );
   final Map<String, InstalledCommonApps> appMap = {};
+
   for (final entry in entryMap.values) {
     if (entry.status != CommonAppFolderScanEntryStatus.hit) {
       continue;
     }
-    final pathFields = entry.path.split(Platform.pathSeparator);
-    if (pathFields.length <= setting.pathFieldMatcher.length) {
-      continue;
-    }
-    final installPath = pathFields
-        .sublist(
-          0,
-          pathFields.length - setting.pathFieldMatcher.length,
-        )
-        .join(Platform.pathSeparator);
+    final pathFields = entry.path
+        .replaceFirst(setting.basePath + Platform.pathSeparator, '')
+        .split(Platform.pathSeparator);
+    for (var i = 0; i < pathFields.length; i++) {
+      if (i < setting.minInstallDirDepth) {
+        continue;
+      }
+      final currentPath = [
+        setting.basePath,
+        pathFields.sublist(0, i).join(Platform.pathSeparator),
+      ].join(Platform.pathSeparator);
 
-    var name = '';
-    var version = '';
-    for (var i = 0;
-        i < min(pathFields.length, setting.pathFieldMatcher.length);
-        i++) {
-      final fieldValue = pathFields[pathFields.length - i - 1];
-      switch (setting.pathFieldMatcher[i]) {
-        case CommonAppFolderScanPathFieldMatcher.name:
-          name = fieldValue;
-        case CommonAppFolderScanPathFieldMatcher.version:
-          version = fieldValue;
-        case CommonAppFolderScanPathFieldMatcher.ignore:
-          continue;
+      if (appMap[currentPath] != null) {
+        if (setting.minExecutableDepth <= i &&
+            i <= setting.maxExecutableDepth) {
+          appMap[currentPath]!.launcherPaths.add(entry.path);
+        } else {
+          entryMap[entry.path] = entry.copyWith(
+            status: CommonAppFolderScanEntryStatus.skipped,
+          );
+        }
+        break;
+      }
+
+      if (i > setting.maxInstallDirDepth) {
+        break;
+      }
+
+      if (i == pathFields.length - 1) {
+        appMap[currentPath] = InstalledCommonApps(
+          name: pathFields.last,
+          version: '',
+          installPath: currentPath,
+          launcherPaths: [entry.path],
+        );
+        break;
       }
     }
-    if (appMap[installPath] != null) {
-      appMap[installPath]!.launcherPaths.add(entry.path);
-    } else {
-      appMap[installPath] = InstalledCommonApps(
+
+    for (final app in appMap.values) {
+      final pathFields = app.installPath
+          .replaceFirst(setting.basePath, '')
+          .split(Platform.pathSeparator);
+
+      var name = app.name;
+      var version = app.version;
+      late int endIndex;
+      switch (setting.pathFieldMatcherAlignment) {
+        case CommonAppFolderScanPathFieldMatcherAlignment.left:
+          endIndex = min(pathFields.length, setting.pathFieldMatcher.length);
+        case CommonAppFolderScanPathFieldMatcherAlignment.right:
+          endIndex = max(pathFields.length, setting.pathFieldMatcher.length);
+      }
+      for (var i = endIndex - pathFields.length; i < endIndex; i++) {
+        final fieldValue = pathFields[i];
+        switch (setting.pathFieldMatcher[i]) {
+          case CommonAppFolderScanPathFieldMatcher.name:
+            name = fieldValue;
+          case CommonAppFolderScanPathFieldMatcher.version:
+            version = fieldValue;
+          case CommonAppFolderScanPathFieldMatcher.ignore:
+            continue;
+        }
+      }
+      appMap[app.installPath] = app.copyWith(
         name: name,
         version: version,
-        installPath: installPath,
-        launcherPaths: [entry.path],
       );
     }
   }
-  return appMap.values.toList();
+  final details = entryMap.values.toList();
+  details.sort((a, b) => a.path.compareTo(b.path));
+  return (appMap.values.toList(), details);
 }
 
-List<CommonAppFolderScanResultDetail>? _walkEntry(
+Future<List<CommonAppFolderScanResultDetail>?> _walkEntry(
   CommonAppFolderScanSetting setting,
-  String path,
-) {
-  switch (FileSystemEntity.typeSync(path)) {
-    case FileSystemEntityType.directory:
-      return _walkDirectory(setting, path);
-    case FileSystemEntityType.file:
-      final result = _walkFile(setting, path);
-      if (result != null) {
-        return [result];
-      }
-      return [];
-    case FileSystemEntityType.notFound:
-      return null;
-    case FileSystemEntityType.link:
-    case FileSystemEntityType.pipe:
-    case FileSystemEntityType.unixDomainSock:
-  }
-  return [
+  String path, {
+  int? remainWalkDepth,
+}) async {
+  final errRes = [
     CommonAppFolderScanResultDetail(
       path: path,
       type: CommonAppFolderScanEntryType.unknown,
       status: CommonAppFolderScanEntryStatus.skipped,
     )
   ];
+  try {
+    switch (FileSystemEntity.typeSync(path)) {
+      case FileSystemEntityType.directory:
+        return _walkDirectory(
+          setting,
+          path,
+          remainWalkDepth ??
+              setting.maxInstallDirDepth + setting.maxExecutableDepth,
+        );
+      case FileSystemEntityType.file:
+        final result = await _walkFile(
+          setting,
+          path,
+        );
+        if (result != null) {
+          return [result];
+        }
+        return [];
+      case FileSystemEntityType.notFound:
+        return null;
+      case FileSystemEntityType.link:
+      case FileSystemEntityType.pipe:
+      case FileSystemEntityType.unixDomainSock:
+    }
+    return errRes;
+  } catch (e) {
+    return errRes;
+  }
 }
 
-List<CommonAppFolderScanResultDetail>? _walkDirectory(
+Future<List<CommonAppFolderScanResultDetail>?> _walkDirectory(
   CommonAppFolderScanSetting setting,
   String path,
-) {
-  final skipped = CommonAppFolderScanResultDetail(
-    path: path,
-    type: CommonAppFolderScanEntryType.directory,
-    status: CommonAppFolderScanEntryStatus.skipped,
-  );
+  int remainWalkDepth,
+) async {
   try {
     final dir = Directory(path);
     if (!dir.existsSync()) {
       return null;
+    }
+    final skipped = CommonAppFolderScanResultDetail(
+      path: path,
+      type: CommonAppFolderScanEntryType.directory,
+      status: CommonAppFolderScanEntryStatus.skipped,
+    );
+    if (remainWalkDepth == 0) {
+      return [skipped];
     }
     final dirName = dir.path.split(Platform.pathSeparator).last;
     for (final matcher in setting.excludeDirectoryMatchers) {
@@ -135,7 +206,11 @@ List<CommonAppFolderScanResultDetail>? _walkDirectory(
       )
     ];
     for (final entry in entries) {
-      final details = _walkEntry(setting, entry.path);
+      final details = await _walkEntry(
+        setting,
+        entry.path,
+        remainWalkDepth: remainWalkDepth - 1,
+      );
       if (details != null) {
         result.addAll(details);
       }
@@ -152,10 +227,10 @@ List<CommonAppFolderScanResultDetail>? _walkDirectory(
   }
 }
 
-CommonAppFolderScanResultDetail? _walkFile(
+Future<CommonAppFolderScanResultDetail?> _walkFile(
   CommonAppFolderScanSetting setting,
   String path,
-) {
+) async {
   final skipped = CommonAppFolderScanResultDetail(
     path: path,
     type: CommonAppFolderScanEntryType.file,
@@ -168,7 +243,7 @@ CommonAppFolderScanResultDetail? _walkFile(
     }
     final fileName = file.path.split(Platform.pathSeparator).last;
     bool isMatched = false;
-    for (final matcher in setting.targetFileMatchers) {
+    for (final matcher in setting.includeExecutableMatchers) {
       if (Glob(matcher).matches(fileName)) {
         isMatched = true;
         break;
@@ -177,7 +252,7 @@ CommonAppFolderScanResultDetail? _walkFile(
     if (!isMatched) {
       return skipped;
     }
-    for (final matcher in setting.excludeFileMatchers) {
+    for (final matcher in setting.excludeExecutableMatchers) {
       if (Glob(matcher).matches(fileName)) {
         return skipped;
       }

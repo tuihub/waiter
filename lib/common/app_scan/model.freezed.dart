@@ -21,13 +21,24 @@ CommonAppFolderScanSetting _$CommonAppFolderScanSettingFromJson(
 
 /// @nodoc
 mixin _$CommonAppFolderScanSetting {
-  String get basePath => throw _privateConstructorUsedError;
-  List<String> get targetFileMatchers => throw _privateConstructorUsedError;
-  List<String> get excludeFileMatchers => throw _privateConstructorUsedError;
+// base path
+  String get basePath =>
+      throw _privateConstructorUsedError; // install dir matcher
   List<String> get excludeDirectoryMatchers =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // walk
+  int get minInstallDirDepth => throw _privateConstructorUsedError; // build
+  int get maxInstallDirDepth => throw _privateConstructorUsedError; // build
   List<CommonAppFolderScanPathFieldMatcher> get pathFieldMatcher =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // build
+  CommonAppFolderScanPathFieldMatcherAlignment get pathFieldMatcherAlignment =>
+      throw _privateConstructorUsedError; // build
+  List<String> get includeExecutableMatchers =>
+      throw _privateConstructorUsedError; // walk
+  List<String> get excludeExecutableMatchers =>
+      throw _privateConstructorUsedError; // walk
+// extra executable file matcher
+  int get minExecutableDepth => throw _privateConstructorUsedError; // build
+  int get maxExecutableDepth => throw _privateConstructorUsedError;
 
   /// Serializes this CommonAppFolderScanSetting to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,10 +59,15 @@ abstract class $CommonAppFolderScanSettingCopyWith<$Res> {
   @useResult
   $Res call(
       {String basePath,
-      List<String> targetFileMatchers,
-      List<String> excludeFileMatchers,
       List<String> excludeDirectoryMatchers,
-      List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher});
+      int minInstallDirDepth,
+      int maxInstallDirDepth,
+      List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher,
+      CommonAppFolderScanPathFieldMatcherAlignment pathFieldMatcherAlignment,
+      List<String> includeExecutableMatchers,
+      List<String> excludeExecutableMatchers,
+      int minExecutableDepth,
+      int maxExecutableDepth});
 }
 
 /// @nodoc
@@ -71,32 +87,57 @@ class _$CommonAppFolderScanSettingCopyWithImpl<$Res,
   @override
   $Res call({
     Object? basePath = null,
-    Object? targetFileMatchers = null,
-    Object? excludeFileMatchers = null,
     Object? excludeDirectoryMatchers = null,
+    Object? minInstallDirDepth = null,
+    Object? maxInstallDirDepth = null,
     Object? pathFieldMatcher = null,
+    Object? pathFieldMatcherAlignment = null,
+    Object? includeExecutableMatchers = null,
+    Object? excludeExecutableMatchers = null,
+    Object? minExecutableDepth = null,
+    Object? maxExecutableDepth = null,
   }) {
     return _then(_value.copyWith(
       basePath: null == basePath
           ? _value.basePath
           : basePath // ignore: cast_nullable_to_non_nullable
               as String,
-      targetFileMatchers: null == targetFileMatchers
-          ? _value.targetFileMatchers
-          : targetFileMatchers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      excludeFileMatchers: null == excludeFileMatchers
-          ? _value.excludeFileMatchers
-          : excludeFileMatchers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       excludeDirectoryMatchers: null == excludeDirectoryMatchers
           ? _value.excludeDirectoryMatchers
           : excludeDirectoryMatchers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      minInstallDirDepth: null == minInstallDirDepth
+          ? _value.minInstallDirDepth
+          : minInstallDirDepth // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxInstallDirDepth: null == maxInstallDirDepth
+          ? _value.maxInstallDirDepth
+          : maxInstallDirDepth // ignore: cast_nullable_to_non_nullable
+              as int,
       pathFieldMatcher: null == pathFieldMatcher
           ? _value.pathFieldMatcher
           : pathFieldMatcher // ignore: cast_nullable_to_non_nullable
               as List<CommonAppFolderScanPathFieldMatcher>,
+      pathFieldMatcherAlignment: null == pathFieldMatcherAlignment
+          ? _value.pathFieldMatcherAlignment
+          : pathFieldMatcherAlignment // ignore: cast_nullable_to_non_nullable
+              as CommonAppFolderScanPathFieldMatcherAlignment,
+      includeExecutableMatchers: null == includeExecutableMatchers
+          ? _value.includeExecutableMatchers
+          : includeExecutableMatchers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      excludeExecutableMatchers: null == excludeExecutableMatchers
+          ? _value.excludeExecutableMatchers
+          : excludeExecutableMatchers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      minExecutableDepth: null == minExecutableDepth
+          ? _value.minExecutableDepth
+          : minExecutableDepth // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxExecutableDepth: null == maxExecutableDepth
+          ? _value.maxExecutableDepth
+          : maxExecutableDepth // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -112,10 +153,15 @@ abstract class _$$CommonAppFolderScanSettingImplCopyWith<$Res>
   @useResult
   $Res call(
       {String basePath,
-      List<String> targetFileMatchers,
-      List<String> excludeFileMatchers,
       List<String> excludeDirectoryMatchers,
-      List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher});
+      int minInstallDirDepth,
+      int maxInstallDirDepth,
+      List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher,
+      CommonAppFolderScanPathFieldMatcherAlignment pathFieldMatcherAlignment,
+      List<String> includeExecutableMatchers,
+      List<String> excludeExecutableMatchers,
+      int minExecutableDepth,
+      int maxExecutableDepth});
 }
 
 /// @nodoc
@@ -134,32 +180,57 @@ class __$$CommonAppFolderScanSettingImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? basePath = null,
-    Object? targetFileMatchers = null,
-    Object? excludeFileMatchers = null,
     Object? excludeDirectoryMatchers = null,
+    Object? minInstallDirDepth = null,
+    Object? maxInstallDirDepth = null,
     Object? pathFieldMatcher = null,
+    Object? pathFieldMatcherAlignment = null,
+    Object? includeExecutableMatchers = null,
+    Object? excludeExecutableMatchers = null,
+    Object? minExecutableDepth = null,
+    Object? maxExecutableDepth = null,
   }) {
     return _then(_$CommonAppFolderScanSettingImpl(
       basePath: null == basePath
           ? _value.basePath
           : basePath // ignore: cast_nullable_to_non_nullable
               as String,
-      targetFileMatchers: null == targetFileMatchers
-          ? _value._targetFileMatchers
-          : targetFileMatchers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      excludeFileMatchers: null == excludeFileMatchers
-          ? _value._excludeFileMatchers
-          : excludeFileMatchers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       excludeDirectoryMatchers: null == excludeDirectoryMatchers
           ? _value._excludeDirectoryMatchers
           : excludeDirectoryMatchers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      minInstallDirDepth: null == minInstallDirDepth
+          ? _value.minInstallDirDepth
+          : minInstallDirDepth // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxInstallDirDepth: null == maxInstallDirDepth
+          ? _value.maxInstallDirDepth
+          : maxInstallDirDepth // ignore: cast_nullable_to_non_nullable
+              as int,
       pathFieldMatcher: null == pathFieldMatcher
           ? _value._pathFieldMatcher
           : pathFieldMatcher // ignore: cast_nullable_to_non_nullable
               as List<CommonAppFolderScanPathFieldMatcher>,
+      pathFieldMatcherAlignment: null == pathFieldMatcherAlignment
+          ? _value.pathFieldMatcherAlignment
+          : pathFieldMatcherAlignment // ignore: cast_nullable_to_non_nullable
+              as CommonAppFolderScanPathFieldMatcherAlignment,
+      includeExecutableMatchers: null == includeExecutableMatchers
+          ? _value._includeExecutableMatchers
+          : includeExecutableMatchers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      excludeExecutableMatchers: null == excludeExecutableMatchers
+          ? _value._excludeExecutableMatchers
+          : excludeExecutableMatchers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      minExecutableDepth: null == minExecutableDepth
+          ? _value.minExecutableDepth
+          : minExecutableDepth // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxExecutableDepth: null == maxExecutableDepth
+          ? _value.maxExecutableDepth
+          : maxExecutableDepth // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -169,41 +240,30 @@ class __$$CommonAppFolderScanSettingImplCopyWithImpl<$Res>
 class _$CommonAppFolderScanSettingImpl implements _CommonAppFolderScanSetting {
   const _$CommonAppFolderScanSettingImpl(
       {required this.basePath,
-      required final List<String> targetFileMatchers,
-      required final List<String> excludeFileMatchers,
       required final List<String> excludeDirectoryMatchers,
-      required final List<CommonAppFolderScanPathFieldMatcher>
-          pathFieldMatcher})
-      : _targetFileMatchers = targetFileMatchers,
-        _excludeFileMatchers = excludeFileMatchers,
-        _excludeDirectoryMatchers = excludeDirectoryMatchers,
-        _pathFieldMatcher = pathFieldMatcher;
+      required this.minInstallDirDepth,
+      required this.maxInstallDirDepth,
+      required final List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher,
+      required this.pathFieldMatcherAlignment,
+      required final List<String> includeExecutableMatchers,
+      required final List<String> excludeExecutableMatchers,
+      required this.minExecutableDepth,
+      required this.maxExecutableDepth})
+      : _excludeDirectoryMatchers = excludeDirectoryMatchers,
+        _pathFieldMatcher = pathFieldMatcher,
+        _includeExecutableMatchers = includeExecutableMatchers,
+        _excludeExecutableMatchers = excludeExecutableMatchers;
 
   factory _$CommonAppFolderScanSettingImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$CommonAppFolderScanSettingImplFromJson(json);
 
+// base path
   @override
   final String basePath;
-  final List<String> _targetFileMatchers;
-  @override
-  List<String> get targetFileMatchers {
-    if (_targetFileMatchers is EqualUnmodifiableListView)
-      return _targetFileMatchers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_targetFileMatchers);
-  }
-
-  final List<String> _excludeFileMatchers;
-  @override
-  List<String> get excludeFileMatchers {
-    if (_excludeFileMatchers is EqualUnmodifiableListView)
-      return _excludeFileMatchers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_excludeFileMatchers);
-  }
-
+// install dir matcher
   final List<String> _excludeDirectoryMatchers;
+// install dir matcher
   @override
   List<String> get excludeDirectoryMatchers {
     if (_excludeDirectoryMatchers is EqualUnmodifiableListView)
@@ -212,7 +272,15 @@ class _$CommonAppFolderScanSettingImpl implements _CommonAppFolderScanSetting {
     return EqualUnmodifiableListView(_excludeDirectoryMatchers);
   }
 
+// walk
+  @override
+  final int minInstallDirDepth;
+// build
+  @override
+  final int maxInstallDirDepth;
+// build
   final List<CommonAppFolderScanPathFieldMatcher> _pathFieldMatcher;
+// build
   @override
   List<CommonAppFolderScanPathFieldMatcher> get pathFieldMatcher {
     if (_pathFieldMatcher is EqualUnmodifiableListView)
@@ -221,9 +289,42 @@ class _$CommonAppFolderScanSettingImpl implements _CommonAppFolderScanSetting {
     return EqualUnmodifiableListView(_pathFieldMatcher);
   }
 
+// build
+  @override
+  final CommonAppFolderScanPathFieldMatcherAlignment pathFieldMatcherAlignment;
+// build
+  final List<String> _includeExecutableMatchers;
+// build
+  @override
+  List<String> get includeExecutableMatchers {
+    if (_includeExecutableMatchers is EqualUnmodifiableListView)
+      return _includeExecutableMatchers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_includeExecutableMatchers);
+  }
+
+// walk
+  final List<String> _excludeExecutableMatchers;
+// walk
+  @override
+  List<String> get excludeExecutableMatchers {
+    if (_excludeExecutableMatchers is EqualUnmodifiableListView)
+      return _excludeExecutableMatchers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_excludeExecutableMatchers);
+  }
+
+// walk
+// extra executable file matcher
+  @override
+  final int minExecutableDepth;
+// build
+  @override
+  final int maxExecutableDepth;
+
   @override
   String toString() {
-    return 'CommonAppFolderScanSetting(basePath: $basePath, targetFileMatchers: $targetFileMatchers, excludeFileMatchers: $excludeFileMatchers, excludeDirectoryMatchers: $excludeDirectoryMatchers, pathFieldMatcher: $pathFieldMatcher)';
+    return 'CommonAppFolderScanSetting(basePath: $basePath, excludeDirectoryMatchers: $excludeDirectoryMatchers, minInstallDirDepth: $minInstallDirDepth, maxInstallDirDepth: $maxInstallDirDepth, pathFieldMatcher: $pathFieldMatcher, pathFieldMatcherAlignment: $pathFieldMatcherAlignment, includeExecutableMatchers: $includeExecutableMatchers, excludeExecutableMatchers: $excludeExecutableMatchers, minExecutableDepth: $minExecutableDepth, maxExecutableDepth: $maxExecutableDepth)';
   }
 
   @override
@@ -233,14 +334,25 @@ class _$CommonAppFolderScanSettingImpl implements _CommonAppFolderScanSetting {
             other is _$CommonAppFolderScanSettingImpl &&
             (identical(other.basePath, basePath) ||
                 other.basePath == basePath) &&
-            const DeepCollectionEquality()
-                .equals(other._targetFileMatchers, _targetFileMatchers) &&
-            const DeepCollectionEquality()
-                .equals(other._excludeFileMatchers, _excludeFileMatchers) &&
             const DeepCollectionEquality().equals(
                 other._excludeDirectoryMatchers, _excludeDirectoryMatchers) &&
+            (identical(other.minInstallDirDepth, minInstallDirDepth) ||
+                other.minInstallDirDepth == minInstallDirDepth) &&
+            (identical(other.maxInstallDirDepth, maxInstallDirDepth) ||
+                other.maxInstallDirDepth == maxInstallDirDepth) &&
             const DeepCollectionEquality()
-                .equals(other._pathFieldMatcher, _pathFieldMatcher));
+                .equals(other._pathFieldMatcher, _pathFieldMatcher) &&
+            (identical(other.pathFieldMatcherAlignment,
+                    pathFieldMatcherAlignment) ||
+                other.pathFieldMatcherAlignment == pathFieldMatcherAlignment) &&
+            const DeepCollectionEquality().equals(
+                other._includeExecutableMatchers, _includeExecutableMatchers) &&
+            const DeepCollectionEquality().equals(
+                other._excludeExecutableMatchers, _excludeExecutableMatchers) &&
+            (identical(other.minExecutableDepth, minExecutableDepth) ||
+                other.minExecutableDepth == minExecutableDepth) &&
+            (identical(other.maxExecutableDepth, maxExecutableDepth) ||
+                other.maxExecutableDepth == maxExecutableDepth));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -248,10 +360,15 @@ class _$CommonAppFolderScanSettingImpl implements _CommonAppFolderScanSetting {
   int get hashCode => Object.hash(
       runtimeType,
       basePath,
-      const DeepCollectionEquality().hash(_targetFileMatchers),
-      const DeepCollectionEquality().hash(_excludeFileMatchers),
       const DeepCollectionEquality().hash(_excludeDirectoryMatchers),
-      const DeepCollectionEquality().hash(_pathFieldMatcher));
+      minInstallDirDepth,
+      maxInstallDirDepth,
+      const DeepCollectionEquality().hash(_pathFieldMatcher),
+      pathFieldMatcherAlignment,
+      const DeepCollectionEquality().hash(_includeExecutableMatchers),
+      const DeepCollectionEquality().hash(_excludeExecutableMatchers),
+      minExecutableDepth,
+      maxExecutableDepth);
 
   /// Create a copy of CommonAppFolderScanSetting
   /// with the given fields replaced by the non-null parameter values.
@@ -274,25 +391,44 @@ abstract class _CommonAppFolderScanSetting
     implements CommonAppFolderScanSetting {
   const factory _CommonAppFolderScanSetting(
       {required final String basePath,
-      required final List<String> targetFileMatchers,
-      required final List<String> excludeFileMatchers,
       required final List<String> excludeDirectoryMatchers,
-      required final List<CommonAppFolderScanPathFieldMatcher>
-          pathFieldMatcher}) = _$CommonAppFolderScanSettingImpl;
+      required final int minInstallDirDepth,
+      required final int maxInstallDirDepth,
+      required final List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher,
+      required final CommonAppFolderScanPathFieldMatcherAlignment
+          pathFieldMatcherAlignment,
+      required final List<String> includeExecutableMatchers,
+      required final List<String> excludeExecutableMatchers,
+      required final int minExecutableDepth,
+      required final int
+          maxExecutableDepth}) = _$CommonAppFolderScanSettingImpl;
 
   factory _CommonAppFolderScanSetting.fromJson(Map<String, dynamic> json) =
       _$CommonAppFolderScanSettingImpl.fromJson;
 
+// base path
   @override
-  String get basePath;
+  String get basePath; // install dir matcher
   @override
-  List<String> get targetFileMatchers;
+  List<String> get excludeDirectoryMatchers; // walk
   @override
-  List<String> get excludeFileMatchers;
+  int get minInstallDirDepth; // build
   @override
-  List<String> get excludeDirectoryMatchers;
+  int get maxInstallDirDepth; // build
   @override
-  List<CommonAppFolderScanPathFieldMatcher> get pathFieldMatcher;
+  List<CommonAppFolderScanPathFieldMatcher> get pathFieldMatcher; // build
+  @override
+  CommonAppFolderScanPathFieldMatcherAlignment
+      get pathFieldMatcherAlignment; // build
+  @override
+  List<String> get includeExecutableMatchers; // walk
+  @override
+  List<String> get excludeExecutableMatchers; // walk
+// extra executable file matcher
+  @override
+  int get minExecutableDepth; // build
+  @override
+  int get maxExecutableDepth;
 
   /// Create a copy of CommonAppFolderScanSetting
   /// with the given fields replaced by the non-null parameter values.
@@ -313,6 +449,8 @@ mixin _$CommonAppFolderScanResult {
       throw _privateConstructorUsedError;
   List<CommonAppFolderScanResultDetail> get details =>
       throw _privateConstructorUsedError;
+  CommonAppFolderScanResultCode get code => throw _privateConstructorUsedError;
+  String? get msg => throw _privateConstructorUsedError;
 
   /// Serializes this CommonAppFolderScanResult to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -332,7 +470,9 @@ abstract class $CommonAppFolderScanResultCopyWith<$Res> {
   @useResult
   $Res call(
       {List<InstalledCommonApps> installedApps,
-      List<CommonAppFolderScanResultDetail> details});
+      List<CommonAppFolderScanResultDetail> details,
+      CommonAppFolderScanResultCode code,
+      String? msg});
 }
 
 /// @nodoc
@@ -353,6 +493,8 @@ class _$CommonAppFolderScanResultCopyWithImpl<$Res,
   $Res call({
     Object? installedApps = null,
     Object? details = null,
+    Object? code = null,
+    Object? msg = freezed,
   }) {
     return _then(_value.copyWith(
       installedApps: null == installedApps
@@ -363,6 +505,14 @@ class _$CommonAppFolderScanResultCopyWithImpl<$Res,
           ? _value.details
           : details // ignore: cast_nullable_to_non_nullable
               as List<CommonAppFolderScanResultDetail>,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as CommonAppFolderScanResultCode,
+      msg: freezed == msg
+          ? _value.msg
+          : msg // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -378,7 +528,9 @@ abstract class _$$CommonAppFolderScanResultImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<InstalledCommonApps> installedApps,
-      List<CommonAppFolderScanResultDetail> details});
+      List<CommonAppFolderScanResultDetail> details,
+      CommonAppFolderScanResultCode code,
+      String? msg});
 }
 
 /// @nodoc
@@ -398,6 +550,8 @@ class __$$CommonAppFolderScanResultImplCopyWithImpl<$Res>
   $Res call({
     Object? installedApps = null,
     Object? details = null,
+    Object? code = null,
+    Object? msg = freezed,
   }) {
     return _then(_$CommonAppFolderScanResultImpl(
       installedApps: null == installedApps
@@ -408,6 +562,14 @@ class __$$CommonAppFolderScanResultImplCopyWithImpl<$Res>
           ? _value._details
           : details // ignore: cast_nullable_to_non_nullable
               as List<CommonAppFolderScanResultDetail>,
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as CommonAppFolderScanResultCode,
+      msg: freezed == msg
+          ? _value.msg
+          : msg // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -417,7 +579,9 @@ class __$$CommonAppFolderScanResultImplCopyWithImpl<$Res>
 class _$CommonAppFolderScanResultImpl implements _CommonAppFolderScanResult {
   const _$CommonAppFolderScanResultImpl(
       {required final List<InstalledCommonApps> installedApps,
-      required final List<CommonAppFolderScanResultDetail> details})
+      required final List<CommonAppFolderScanResultDetail> details,
+      required this.code,
+      this.msg})
       : _installedApps = installedApps,
         _details = details;
 
@@ -441,8 +605,13 @@ class _$CommonAppFolderScanResultImpl implements _CommonAppFolderScanResult {
   }
 
   @override
+  final CommonAppFolderScanResultCode code;
+  @override
+  final String? msg;
+
+  @override
   String toString() {
-    return 'CommonAppFolderScanResult(installedApps: $installedApps, details: $details)';
+    return 'CommonAppFolderScanResult(installedApps: $installedApps, details: $details, code: $code, msg: $msg)';
   }
 
   @override
@@ -452,7 +621,9 @@ class _$CommonAppFolderScanResultImpl implements _CommonAppFolderScanResult {
             other is _$CommonAppFolderScanResultImpl &&
             const DeepCollectionEquality()
                 .equals(other._installedApps, _installedApps) &&
-            const DeepCollectionEquality().equals(other._details, _details));
+            const DeepCollectionEquality().equals(other._details, _details) &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.msg, msg) || other.msg == msg));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -460,7 +631,9 @@ class _$CommonAppFolderScanResultImpl implements _CommonAppFolderScanResult {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_installedApps),
-      const DeepCollectionEquality().hash(_details));
+      const DeepCollectionEquality().hash(_details),
+      code,
+      msg);
 
   /// Create a copy of CommonAppFolderScanResult
   /// with the given fields replaced by the non-null parameter values.
@@ -481,9 +654,10 @@ class _$CommonAppFolderScanResultImpl implements _CommonAppFolderScanResult {
 
 abstract class _CommonAppFolderScanResult implements CommonAppFolderScanResult {
   const factory _CommonAppFolderScanResult(
-          {required final List<InstalledCommonApps> installedApps,
-          required final List<CommonAppFolderScanResultDetail> details}) =
-      _$CommonAppFolderScanResultImpl;
+      {required final List<InstalledCommonApps> installedApps,
+      required final List<CommonAppFolderScanResultDetail> details,
+      required final CommonAppFolderScanResultCode code,
+      final String? msg}) = _$CommonAppFolderScanResultImpl;
 
   factory _CommonAppFolderScanResult.fromJson(Map<String, dynamic> json) =
       _$CommonAppFolderScanResultImpl.fromJson;
@@ -492,6 +666,10 @@ abstract class _CommonAppFolderScanResult implements CommonAppFolderScanResult {
   List<InstalledCommonApps> get installedApps;
   @override
   List<CommonAppFolderScanResultDetail> get details;
+  @override
+  CommonAppFolderScanResultCode get code;
+  @override
+  String? get msg;
 
   /// Create a copy of CommonAppFolderScanResult
   /// with the given fields replaced by the non-null parameter values.
@@ -861,7 +1039,7 @@ class __$$InstalledCommonAppsImplCopyWithImpl<$Res>
           : installPath // ignore: cast_nullable_to_non_nullable
               as String,
       launcherPaths: null == launcherPaths
-          ? _value._launcherPaths
+          ? _value.launcherPaths
           : launcherPaths // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -875,8 +1053,7 @@ class _$InstalledCommonAppsImpl implements _InstalledCommonApps {
       {required this.name,
       required this.version,
       required this.installPath,
-      required final List<String> launcherPaths})
-      : _launcherPaths = launcherPaths;
+      required this.launcherPaths});
 
   factory _$InstalledCommonAppsImpl.fromJson(Map<String, dynamic> json) =>
       _$$InstalledCommonAppsImplFromJson(json);
@@ -887,13 +1064,8 @@ class _$InstalledCommonAppsImpl implements _InstalledCommonApps {
   final String version;
   @override
   final String installPath;
-  final List<String> _launcherPaths;
   @override
-  List<String> get launcherPaths {
-    if (_launcherPaths is EqualUnmodifiableListView) return _launcherPaths;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_launcherPaths);
-  }
+  final List<String> launcherPaths;
 
   @override
   String toString() {
@@ -910,13 +1082,13 @@ class _$InstalledCommonAppsImpl implements _InstalledCommonApps {
             (identical(other.installPath, installPath) ||
                 other.installPath == installPath) &&
             const DeepCollectionEquality()
-                .equals(other._launcherPaths, _launcherPaths));
+                .equals(other.launcherPaths, launcherPaths));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, version, installPath,
-      const DeepCollectionEquality().hash(_launcherPaths));
+      const DeepCollectionEquality().hash(launcherPaths));
 
   /// Create a copy of InstalledCommonApps
   /// with the given fields replaced by the non-null parameter values.

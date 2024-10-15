@@ -1,15 +1,28 @@
+import 'dart:convert';
+
+import 'package:animated_tree_view/listenable_node/indexed_listenable_node.dart';
+import 'package:animated_tree_view/tree_view/tree_node.dart';
+import 'package:animated_tree_view/tree_view/tree_view.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_file/open_file.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_io/io.dart' as io;
+import 'package:universal_io/io.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
+import '../../../common/app_scan/_native.dart';
+import '../../../common/app_scan/model.dart';
 import '../../../common/steam/steam.dart';
 import '../../../l10n/l10n.dart';
+import '../../components/pop_alert.dart';
+import '../../form/form_field.dart';
 import '../../helper/spacing.dart';
+import '../../layout/bootstrap_container.dart';
 
 part 'gebura_library_settings_common.dart';
 part 'gebura_library_settings_steam.dart';
@@ -88,7 +101,8 @@ class _OverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final libraryFolders = state.localSteamLibraryFolders ?? [];
+      final commonLibraryFolders = state.localCommonLibraryFolders ?? {};
+      final steamLibraryFolders = state.localSteamLibraryFolders ?? [];
       return Card(
         margin: EdgeInsets.zero,
         child: Container(
@@ -111,7 +125,7 @@ class _OverviewCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final folder in libraryFolders)
+                    for (final folder in steamLibraryFolders)
                       InkWell(
                         onTap: () async {
                           await OpenFile.open(folder);
@@ -144,6 +158,36 @@ class _OverviewCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(folder),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    for (final folder in commonLibraryFolders.values)
+                      InkWell(
+                        onTap: () async {
+                          await OpenFile.open(folder.basePath);
+                        },
+                        child: Container(
+                          width: 150,
+                          padding: const EdgeInsets.all(16),
+                          child: Ink(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Stack(
+                                  children: [
+                                    Center(
+                                      child: Icon(
+                                        FontAwesomeIcons.folder,
+                                        size: 48,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(folder.basePath),
                               ],
                             ),
                           ),

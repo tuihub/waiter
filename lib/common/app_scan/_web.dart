@@ -1,8 +1,10 @@
 import 'model.dart';
 
-CommonAppFolderScanResult scanCommonApps(CommonAppFolderScanSetting setting) {
+Future<CommonAppFolderScanResult> scanCommonApps(
+    CommonAppFolderScanSetting setting) async {
   return const CommonAppFolderScanResult(
     installedApps: [],
     details: [],
+    code: CommonAppFolderScanResultCode.unavailable,
   );
 }

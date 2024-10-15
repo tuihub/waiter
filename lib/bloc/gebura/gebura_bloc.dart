@@ -9,6 +9,8 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../common/app_scan/app_scan.dart';
+import '../../common/app_scan/model.dart';
 import '../../common/bloc_event_status_mixin.dart';
 import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
@@ -44,10 +46,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
               .loadTrackedAppInsts()
               .asMap()
               .map((_, value) => MapEntry(value.uuid, value));
+      final localCommonLibraryFolders = state.localCommonLibraryFolders ??
+          _repo
+              .loadTrackedCommonAppFolders()
+              .asMap()
+              .map((_, value) => MapEntry(value.basePath, value));
+
       add(GeburaRefreshLibraryListEvent());
       emit(state.copyWith(
         localTrackedApps: localTrackedApps,
         localTrackedAppInsts: localTrackedAppInsts,
+        localCommonLibraryFolders: localCommonLibraryFolders,
       ));
     });
 
@@ -228,6 +237,18 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         librarySettings: settings,
       ));
     });
+
+    on<GeburaSaveLocalCommonAppFolderSettingEvent>((event, emit) async {
+      final setting = event.setting;
+      await _repo.setTrackedCommonAppFolder(setting);
+      emit(state.copyWith(
+        localCommonLibraryFolders: {
+          ...state.localCommonLibraryFolders ?? {},
+          setting.basePath: setting,
+        },
+      ));
+      add(GeburaScanLocalLibraryEvent());
+    }, transformer: droppable());
 
     on<GeburaSearchAppInfosEvent>((event, emit) async {
       emit(GeburaSearchAppInfosState(state, EventStatus.processing));
@@ -504,6 +525,36 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaScanLocalLibraryEvent>((event, emit) async {
+      add(GeburaScanLocalCommonLibraryEvent());
+      add(GeburaScanLocalSteamLibraryEvent());
+    }, transformer: droppable());
+
+    on<GeburaScanLocalCommonLibraryEvent>((event, emit) async {
+      emit(state.copyWith(
+          localLibraryStateMessage: S.current.scanningLocalFiles));
+      final folders = state.localCommonLibraryFolders ?? {};
+      for (final folder in folders.values) {
+        final result = await scanCommonApps(folder);
+        final tracked = _repo.loadTrackedAppInsts();
+        final unTracked = result.installedApps.where(
+          (element) => !tracked.any(
+            (t) =>
+                t.type == LocalAppInstType.common &&
+                t.path == element.installPath,
+          ),
+        );
+        emit(state.copyWith(
+          localLibraryStateMessage: unTracked.isNotEmpty
+              ? S.current.newApplicationFound(unTracked.length)
+              : '',
+          localInstalledCommonAppInsts: result.installedApps
+              .asMap()
+              .map((_, value) => MapEntry(value.installPath, value)),
+        ));
+      }
+    }, transformer: droppable());
+
+    on<GeburaScanLocalSteamLibraryEvent>((event, emit) async {
       if (!PlatformHelper.isWindowsApp()) {
         return;
       }

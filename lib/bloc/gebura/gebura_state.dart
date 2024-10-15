@@ -18,7 +18,9 @@ class GeburaState {
   late LibrarySettings? librarySettings;
   late Map<String, LocalTrackedApp>? localTrackedApps;
   late Map<String, LocalTrackedAppInst>? localTrackedAppInsts;
+  late Map<String, InstalledCommonApps>? localInstalledCommonAppInsts;
   late Map<String, InstalledSteamApps>? localInstalledSteamAppInsts;
+  late Map<String, CommonAppFolderScanSetting>? localCommonLibraryFolders;
   late List<String>? localSteamLibraryFolders;
 
   Map<App, List<AppInst>> getAppInsts(Int64 id) {
@@ -84,7 +86,9 @@ class GeburaState {
     this.librarySettings,
     this.localTrackedApps,
     this.localTrackedAppInsts,
+    this.localInstalledCommonAppInsts,
     this.localInstalledSteamAppInsts,
+    this.localCommonLibraryFolders,
     this.localSteamLibraryFolders,
   });
 
@@ -101,7 +105,9 @@ class GeburaState {
     LibrarySettings? librarySettings,
     Map<String, LocalTrackedApp>? localTrackedApps,
     Map<String, LocalTrackedAppInst>? localTrackedAppInsts,
+    Map<String, InstalledCommonApps>? localInstalledCommonAppInsts,
     Map<String, InstalledSteamApps>? localInstalledSteamAppInsts,
+    Map<String, CommonAppFolderScanSetting>? localCommonLibraryFolders,
     List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
@@ -118,8 +124,12 @@ class GeburaState {
       librarySettings: librarySettings ?? this.librarySettings,
       localTrackedApps: localTrackedApps ?? this.localTrackedApps,
       localTrackedAppInsts: localTrackedAppInsts ?? this.localTrackedAppInsts,
+      localInstalledCommonAppInsts:
+          localInstalledCommonAppInsts ?? this.localInstalledCommonAppInsts,
       localInstalledSteamAppInsts:
           localInstalledSteamAppInsts ?? this.localInstalledSteamAppInsts,
+      localCommonLibraryFolders:
+          localCommonLibraryFolders ?? this.localCommonLibraryFolders,
       localSteamLibraryFolders:
           localSteamLibraryFolders ?? this.localSteamLibraryFolders,
     );
@@ -140,7 +150,9 @@ class GeburaState {
     librarySettings = other.librarySettings;
     localTrackedApps = other.localTrackedApps;
     localTrackedAppInsts = other.localTrackedAppInsts;
+    localInstalledCommonAppInsts = other.localInstalledCommonAppInsts;
     localInstalledSteamAppInsts = other.localInstalledSteamAppInsts;
+    localCommonLibraryFolders = other.localCommonLibraryFolders;
     localSteamLibraryFolders = other.localSteamLibraryFolders;
   }
 }

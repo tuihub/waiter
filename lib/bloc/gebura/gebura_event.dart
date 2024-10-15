@@ -23,6 +23,10 @@ final class GeburaApplyLibraryFilterEvent extends GeburaEvent {
 
 final class GeburaScanLocalLibraryEvent extends GeburaEvent {}
 
+final class GeburaScanLocalCommonLibraryEvent extends GeburaEvent {}
+
+final class GeburaScanLocalSteamLibraryEvent extends GeburaEvent {}
+
 final class GeburaClearLocalLibraryStateEvent extends GeburaEvent {}
 
 final class GeburaTrackSteamAppsEvent extends GeburaEvent {
@@ -59,6 +63,12 @@ final class GeburaLaunchLocalCommonAppInstEvent extends GeburaEvent {
   final String uuid;
 
   GeburaLaunchLocalCommonAppInstEvent(this.uuid);
+}
+
+final class GeburaSaveLocalCommonAppFolderSettingEvent extends GeburaEvent {
+  final CommonAppFolderScanSetting setting;
+
+  GeburaSaveLocalCommonAppFolderSettingEvent(this.setting);
 }
 
 // Events handle server data.

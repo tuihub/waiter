@@ -51,7 +51,7 @@ class _SteamSettingCard extends StatelessWidget {
                         onPressed: () {
                           context
                               .read<GeburaBloc>()
-                              .add(GeburaScanLocalLibraryEvent());
+                              .add(GeburaScanLocalSteamLibraryEvent());
                         },
                         icon: const Icon(Icons.refresh),
                         label: const Text('刷新'),
@@ -189,8 +189,7 @@ class _SteamGameListState extends State<_SteamGameList> {
                             .read<GeburaBloc>()
                             .showSteamAppDetails(e.appId);
                       },
-                      icon: Icon(const FaIcon(FontAwesomeIcons.steam).icon,
-                          size: 16),
+                      icon: const Icon(FontAwesomeIcons.steam, size: 16),
                       label: const Text('查看'),
                     )),
               ),
