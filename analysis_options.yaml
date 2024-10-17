@@ -30,6 +30,7 @@ analyzer:
     - "bin/cache/**"
     - "lib/generated_plugin_registrant.dart"
     - "lib/l10n/intl/**"
+    - "rust_builder/**"
 
   # For more information see: https://dart.dev/tools/analysis
   language:
