@@ -37,6 +37,7 @@ import 'repo/grpc/api_helper.dart';
 import 'repo/grpc/client.dart';
 import 'repo/local/common.dart';
 import 'route.dart';
+import 'rust/frb_generated.dart';
 import 'view/helper/spacing.dart';
 
 part 'init.dart';

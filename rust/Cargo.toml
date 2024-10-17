@@ -1,0 +1,19 @@
+[package]
+name = "rust_lib_waiter"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+anyhow = "1.0"
+flutter_rust_bridge = "=2.5.0"
+log = "0.4.14"
+strum = "0.25.0"
+strum_macros = "0.25.3"
+sysinfo = "0.29.0"
+sysproxy = "0.3.0"
+time = "0.3.21"
+walkdir = "2"
+winapi = { version = "0.3.9", features = ["processthreadsapi"] }

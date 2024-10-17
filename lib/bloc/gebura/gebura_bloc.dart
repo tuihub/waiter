@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:path/path.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -14,13 +13,12 @@ import '../../common/app_scan/model.dart';
 import '../../common/bloc_event_status_mixin.dart';
 import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
-import '../../ffi/ffi.dart';
-import '../../ffi/ffi_model.dart';
 import '../../l10n/l10n.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/grpc/api_helper.dart';
 import '../../repo/grpc/type_helper.dart';
 import '../../repo/local/gebura.dart';
+import '../../rust/api/simple.dart';
 
 part 'gebura_event.dart';
 part 'gebura_state.dart';
@@ -483,14 +481,14 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       emit(GeburaLaunchLocalAppInstState(
           state, event.uuid, EventStatus.processing));
       try {
-        final (start, end, suceess) = await FFI().processRunner(
-            setting.advancedTracing ? TraceMode.ByName : TraceMode.Simple,
-            setting.processName,
-            setting.path,
-            setting.realPath,
-            dirname(setting.path),
-            setting.sleepTime,
-            1000);
+        final (start, end, suceess) = await processRunner(
+            mode: setting.advancedTracing ? TraceMode.byName : TraceMode.simple,
+            name: setting.processName,
+            executePath: setting.path,
+            monitorPath: setting.realPath,
+            workingDir: dirname(setting.path),
+            sleepCount: setting.sleepTime,
+            sleepMillis: BigInt.from(1000));
         if (!suceess) {
           runningInsts.remove(event.uuid);
           emit(GeburaLaunchLocalAppInstState(
@@ -518,8 +516,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         runningInsts.remove(event.uuid);
         emit(GeburaLaunchLocalAppInstState(
             state, event.uuid, EventStatus.failed,
-            msg:
-                '${S.current.launcherError} ${e is FrbAnyhowException ? e.anyhow : e}'));
+            msg: '${S.current.launcherError} $e'));
         return;
       }
     });

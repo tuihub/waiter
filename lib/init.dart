@@ -2,6 +2,7 @@ part of 'main.dart';
 
 Future<MyApp> init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await RustLib.init();
   final packageInfo = await PackageInfo.fromPlatform();
 
   // https://github.com/hivedb/hive/issues/1044

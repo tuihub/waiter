@@ -1,12 +1,12 @@
 init:
-	cd rust_ffi && make init
-	cargo install flutter_rust_bridge_codegen --version 1.82.1
+	cd rust && make init
+	cargo install flutter_rust_bridge_codegen --version 2.5.0
 
 generate_rust_bridge:
-	flutter_rust_bridge_codegen -r rust_ffi/src/api.rs -d lib/ffi/rust_ffi/rust_ffi.dart
+	flutter_rust_bridge_codegen generate
 
 format:
-	cd rust_ffi && make format
+	cd rust && make format
 	dart fix --apply
 	dart format .
 

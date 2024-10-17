@@ -7,7 +7,7 @@ import 'package:native_flutter_proxy/native_proxy_reader.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
 import '../../common/platform.dart';
-import '../../ffi/ffi.dart';
+import '../../rust/api/simple.dart';
 
 Future<LibrarianSephirahServiceClient> newGrpc({
   required String host,
@@ -64,7 +64,7 @@ Future<Proxy?> _readSystemProxy() async {
   }
   if (PlatformHelper.isWindowsApp()) {
     try {
-      final (enabled, host, port) = await FFI().getSystemProxy();
+      final (enabled, host, port) = await getSystemProxy();
       if (enabled) {
         proxy = Proxy(
           host: host,

@@ -67,7 +67,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     debugPrint(state.currentServer!.host);
     final repoPath = _basePath != null
         ? path.join(
-            _basePath!,
+            _basePath,
             '${state.currentServer!.host}#${state.currentServer!.port}',
             state.currentUser!.id.id.toHexString(),
           )
