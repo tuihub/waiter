@@ -57,16 +57,23 @@ Future<CommonAppFolderScanResult> scanCommonApps(
       continue;
     }
     final pathFields = entry.path
-        .replaceFirst(setting.basePath + Platform.pathSeparator, '')
+        .replaceFirst(
+            setting.basePath.endsWith(Platform.pathSeparator)
+                ? setting.basePath
+                : setting.basePath + Platform.pathSeparator,
+            '')
         .split(Platform.pathSeparator);
     for (var i = 0; i < pathFields.length; i++) {
       if (i < setting.minInstallDirDepth) {
         continue;
       }
       final currentPath = [
-        setting.basePath,
+        if (setting.basePath.endsWith(Platform.pathSeparator))
+          setting.basePath
+        else
+          setting.basePath + Platform.pathSeparator,
         pathFields.sublist(0, i).join(Platform.pathSeparator),
-      ].join(Platform.pathSeparator);
+      ].join();
 
       if (appMap[currentPath] != null) {
         if (setting.minExecutableDepth <= i &&
@@ -84,7 +91,7 @@ Future<CommonAppFolderScanResult> scanCommonApps(
         break;
       }
 
-      if (i == pathFields.length - 1) {
+      if (i == setting.maxInstallDirDepth || i == pathFields.length - 1) {
         appMap[currentPath] = InstalledCommonApps(
           name: pathFields.last,
           version: '',
@@ -94,37 +101,64 @@ Future<CommonAppFolderScanResult> scanCommonApps(
         break;
       }
     }
+  }
+  for (final app in appMap.values) {
+    final pathFields = app.installPath
+        .replaceFirst(
+            setting.basePath.endsWith(Platform.pathSeparator)
+                ? setting.basePath
+                : setting.basePath + Platform.pathSeparator,
+            '')
+        .split(Platform.pathSeparator);
 
-    for (final app in appMap.values) {
-      final pathFields = app.installPath
-          .replaceFirst(setting.basePath, '')
-          .split(Platform.pathSeparator);
-
-      var name = app.name;
-      var version = app.version;
-      late int endIndex;
-      switch (setting.pathFieldMatcherAlignment) {
-        case CommonAppFolderScanPathFieldMatcherAlignment.left:
-          endIndex = min(pathFields.length, setting.pathFieldMatcher.length);
-        case CommonAppFolderScanPathFieldMatcherAlignment.right:
-          endIndex = max(pathFields.length, setting.pathFieldMatcher.length);
-      }
-      for (var i = endIndex - pathFields.length; i < endIndex; i++) {
-        final fieldValue = pathFields[i];
-        switch (setting.pathFieldMatcher[i]) {
-          case CommonAppFolderScanPathFieldMatcher.name:
-            name = fieldValue;
-          case CommonAppFolderScanPathFieldMatcher.version:
-            version = fieldValue;
-          case CommonAppFolderScanPathFieldMatcher.ignore:
-            continue;
-        }
-      }
-      appMap[app.installPath] = app.copyWith(
-        name: name,
-        version: version,
-      );
+    var name = app.name;
+    var version = app.version;
+    late int indexOffset;
+    switch (setting.pathFieldMatcherAlignment) {
+      case CommonAppFolderScanPathFieldMatcherAlignment.left:
+        indexOffset = 0;
+      case CommonAppFolderScanPathFieldMatcherAlignment.right:
+        indexOffset = max(pathFields.length, setting.pathFieldMatcher.length) -
+            pathFields.length;
     }
+    for (var i = 0; i < pathFields.length; i++) {
+      final fieldValue = pathFields[i];
+      final currentPath = [
+        if (setting.basePath.endsWith(Platform.pathSeparator))
+          setting.basePath
+        else
+          setting.basePath + Platform.pathSeparator,
+        pathFields.sublist(0, i + 1).join(Platform.pathSeparator),
+      ].join();
+      switch (setting.pathFieldMatcher[i + indexOffset]) {
+        case CommonAppFolderScanPathFieldMatcher.name:
+          name = fieldValue;
+          if (entryMap[currentPath] != null) {
+            entryMap[currentPath] = entryMap[currentPath]!.copyWith(
+              usedMatchers: [
+                ...entryMap[currentPath]!.usedMatchers,
+                CommonAppFolderScanPathFieldMatcher.name
+              ],
+            );
+          }
+        case CommonAppFolderScanPathFieldMatcher.version:
+          version = fieldValue;
+          if (entryMap[currentPath] != null) {
+            entryMap[currentPath] = entryMap[currentPath]!.copyWith(
+              usedMatchers: [
+                ...entryMap[currentPath]!.usedMatchers,
+                CommonAppFolderScanPathFieldMatcher.version
+              ],
+            );
+          }
+        case CommonAppFolderScanPathFieldMatcher.ignore:
+          continue;
+      }
+    }
+    appMap[app.installPath] = app.copyWith(
+      name: name,
+      version: version,
+    );
   }
   final details = entryMap.values.toList();
   details.sort((a, b) => a.path.compareTo(b.path));
@@ -183,6 +217,12 @@ Future<List<CommonAppFolderScanResultDetail>?> _walkDirectory(
     if (!dir.existsSync()) {
       return null;
     }
+    if (PlatformHelper.isWindowsApp()) {
+      final result = await Process.run('attrib', [path]);
+      if (result.stdout.toString().contains('H')) {
+        return null;
+      }
+    }
     final skipped = CommonAppFolderScanResultDetail(
       path: path,
       type: CommonAppFolderScanEntryType.directory,
@@ -191,7 +231,12 @@ Future<List<CommonAppFolderScanResultDetail>?> _walkDirectory(
     if (remainWalkDepth == 0) {
       return [skipped];
     }
-    final dirName = dir.path.split(Platform.pathSeparator).last;
+    late String dirName;
+    if (dir.path.endsWith(Platform.pathSeparator)) {
+      dirName = dir.path.split(Platform.pathSeparator).reversed.skip(1).first;
+    } else {
+      dirName = dir.path.split(Platform.pathSeparator).last;
+    }
     for (final matcher in setting.excludeDirectoryMatchers) {
       if (Glob(matcher).matches(dirName)) {
         return [skipped];

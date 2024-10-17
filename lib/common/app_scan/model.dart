@@ -46,6 +46,11 @@ const defaultCommonAppFolderScanExcludeDirectoryMatchers = <String>[
   '.*',
 ];
 
+const allowedMinInstallDirDepth = 1;
+const allowedMaxInstallDirDepth = 20;
+const allowedMinExecutableDepth = 1;
+const allowedMaxExecutableDepth = 20;
+
 enum CommonAppFolderScanPathFieldMatcher {
   ignore,
   name,

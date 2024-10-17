@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:input_quantity/input_quantity.dart';
 
 class SectionDividerFormField extends FormField<void> {
   SectionDividerFormField({super.key, required Widget title})
@@ -17,13 +18,13 @@ class SectionDividerFormField extends FormField<void> {
 }
 
 class CheckboxFormField extends FormField<bool> {
-  CheckboxFormField(
-      {super.key,
-      Widget? title,
-      super.onSaved,
-      super.validator,
-      bool super.initialValue = false})
-      : super(builder: (FormFieldState<bool> state) {
+  CheckboxFormField({
+    super.key,
+    Widget? title,
+    super.onSaved,
+    super.validator,
+    bool super.initialValue = false,
+  }) : super(builder: (FormFieldState<bool> state) {
           return CheckboxListTile(
             dense: state.hasError,
             title: title,
@@ -44,18 +45,24 @@ class CheckboxFormField extends FormField<bool> {
 }
 
 class SwitchFormField extends FormField<bool> {
-  SwitchFormField(
-      {super.key,
-      Widget? title,
-      super.onSaved,
-      super.validator,
-      bool super.initialValue = false})
-      : super(builder: (FormFieldState<bool> state) {
+  SwitchFormField({
+    super.key,
+    Widget? title,
+    super.onSaved,
+    ValueChanged<bool>? onChanged,
+    super.validator,
+    bool super.initialValue = false,
+  }) : super(builder: (FormFieldState<bool> state) {
           return SwitchListTile(
             dense: state.hasError,
             title: title,
             value: state.value ?? false,
-            onChanged: state.didChange,
+            onChanged: (value) {
+              state.didChange(value);
+              if (onChanged != null) {
+                onChanged(value);
+              }
+            },
             subtitle: state.hasError
                 ? Builder(
                     builder: (BuildContext context) => Text(
@@ -66,6 +73,46 @@ class SwitchFormField extends FormField<bool> {
                   )
                 : null,
             controlAffinity: ListTileControlAffinity.platform,
+          );
+        });
+}
+
+class NumberFormField extends FormField<num> {
+  NumberFormField({
+    super.key,
+    Widget? title,
+    super.onSaved,
+    num maxValue = double.infinity,
+    num minValue = double.negativeInfinity,
+    num steps = 1,
+    num super.initialValue = 0,
+    super.validator,
+  }) : super(builder: (FormFieldState<num> state) {
+          return Column(
+            children: [
+              if (title != null) title,
+              InputQty(
+                maxVal: maxValue,
+                initVal: initialValue,
+                minVal: minValue,
+                steps: steps,
+                validator: validator,
+                decoration: const QtyDecorationProps(
+                  plusBtn: Icon(Icons.add),
+                  minusBtn: Icon(Icons.remove),
+                  isBordered: false,
+                  borderShape: BorderShapeBtn.circle,
+                ),
+                onQtyChanged: (value) {
+                  if (value is num) {
+                    state.didChange(value);
+                    if (onSaved != null) {
+                      onSaved(value);
+                    }
+                  }
+                },
+              ),
+            ],
           );
         });
 }

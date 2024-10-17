@@ -93,6 +93,7 @@ dependencies:
       url: https://github.com/tuihub/flutter_jsonschema_builder.git
       ref: main
   animated_tree_view: ^2.1.0
+  input_quantity: ^2.4.1
 
   # rust bridge
   flutter_rust_bridge: 2.5.0 # use fixed version
