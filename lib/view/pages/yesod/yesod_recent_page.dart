@@ -15,7 +15,7 @@ import '../../../common/bloc_event_status_mixin.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
-import '../../form/form_field.dart';
+import '../../components/form_field.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/duration_format.dart';
 import '../../helper/spacing.dart';

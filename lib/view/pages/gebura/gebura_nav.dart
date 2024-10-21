@@ -9,6 +9,7 @@ import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
+import '../../universal/list.dart';
 import 'gebura_common.dart';
 
 class GeburaNav extends StatelessWidget {
@@ -31,7 +32,7 @@ class GeburaNav extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            ListTile(
+            UniversalListTile(
               leading: const Icon(Icons.shopping_cart),
               onTap: () {
                 const GeburaStoreRoute().go(context);
@@ -40,7 +41,7 @@ class GeburaNav extends StatelessWidget {
               title: Text(S.of(context).store),
               selected: function == GeburaFunctions.store,
             ),
-            ListTile(
+            UniversalListTile(
               leading: const Icon(Icons.apps),
               onTap: () {
                 const GeburaLibraryRoute().go(context);
@@ -98,7 +99,7 @@ class GeburaNav extends StatelessWidget {
                           for (final LibraryListItem item
                               in state.libraryListItems ?? [])
                             Material(
-                                child: ListTile(
+                                child: UniversalListTile(
                               // https://github.com/flutter/flutter/issues/86584
                               selected: item.uuid == selectedItem,
                               onTap: () {
@@ -112,7 +113,6 @@ class GeburaNav extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              minVerticalPadding: 0,
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 8),
                             ))
@@ -134,7 +134,7 @@ class GeburaNav extends StatelessWidget {
                 },
               ),
             ),
-            ListTile(
+            UniversalListTile(
               leading: const Icon(Icons.library_add_check),
               onTap: () {
                 const GeburaLibrarySettingsRoute().go(context);

@@ -18,10 +18,10 @@ class GeburaSteamAppScanResultPanel extends StatelessWidget {
           shape: AppBarHelper.defaultShape,
           leading: AppBarHelper.defaultRightLeading(context),
           actions: [
-            OutlinedButton.icon(
+            UniversalOutlinedButton.icon(
               onPressed: () {
                 context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(
-                      refreshCommon: [],
+                      refreshCommon: const [],
                     ));
               },
               icon: const Icon(Icons.refresh),
@@ -112,7 +112,7 @@ class _SteamGameListState extends State<_SteamGameList> {
         DataCell(
           Align(
               alignment: Alignment.centerRight,
-              child: OutlinedButton.icon(
+              child: UniversalOutlinedButton.icon(
                 onPressed: () async {
                   await context
                       .read<GeburaBloc>()

@@ -27,6 +27,18 @@ class ChoreSetting extends StatelessWidget {
                     },
                   ),
                 ),
+              if (PlatformHelper.isWindowsApp())
+                ListTile(
+                  title: const Text('使用 Fluent UI（实验性）'),
+                  trailing: Switch(
+                    value: state.useFluentUI ?? false,
+                    onChanged: (value) {
+                      context
+                          .read<ClientSettingBloc>()
+                          .add(ChangeUseFluentUIEvent(value));
+                    },
+                  ),
+                ),
               if (basePath != null && PlatformHelper.isWindowsApp())
                 ListTile(
                   title: const Text('数据目录'),

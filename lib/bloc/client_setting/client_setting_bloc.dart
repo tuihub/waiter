@@ -51,5 +51,9 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
       await _repo.set(common.copyWith(useSystemProxy: event.useSystemProxy));
       emit(state.copyWith(useSystemProxy: event.useSystemProxy));
     });
+
+    on<ChangeUseFluentUIEvent>((event, emit) async {
+      emit(state.copyWith(useFluentUI: event.useFluentUI));
+    });
   }
 }

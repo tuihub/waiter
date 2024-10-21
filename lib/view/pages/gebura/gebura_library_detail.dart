@@ -21,6 +21,7 @@ import '../../components/toast.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
+import '../../universal/list.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 import 'gebura_common.dart';
 
@@ -282,7 +283,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         }
       });
     }
-    return ListTile(
+    return UniversalListTile(
       leading: _activeRadio(context, inst, triggerActivation),
       title: const Text('由Steam管理'),
       subtitle: steamApp != null
@@ -309,7 +310,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
   Widget _localItem(
       BuildContext context, LocalTrackedAppInst inst, bool triggerActivation) {
     final settings = inst.commonLaunchSetting;
-    return ListTile(
+    return UniversalListTile(
       leading: _activeRadio(context, inst, triggerActivation),
       title: Text(inst.name ?? '未知应用'),
       subtitle: settings != null

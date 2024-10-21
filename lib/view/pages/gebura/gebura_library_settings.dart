@@ -21,12 +21,14 @@ import '../../../common/app_scan/model.dart';
 import '../../../common/steam/steam.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
+import '../../components/form_field.dart';
 import '../../components/pop_alert.dart';
-import '../../form/form_field.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
+import '../../universal/button.dart';
+import '../../universal/list.dart';
 import '../frame_page.dart';
 
 part 'gebura_library_settings_common.dart';
@@ -46,7 +48,7 @@ class GeburaLibrarySettings extends StatelessWidget {
       untracked,
     ) = state.analyzeCommonAppInsts(folder);
 
-    return ListTile(
+    return UniversalListTile(
       leading: const Icon(FontAwesomeIcons.folder),
       title: Text(folder),
       subtitle: Text(
@@ -104,7 +106,7 @@ class GeburaLibrarySettings extends StatelessWidget {
       untracked,
     ) = state.analyzeSteamAppInsts(folder);
 
-    return ListTile(
+    return UniversalListTile(
       leading: const Icon(FontAwesomeIcons.steam),
       title: Text(folder),
       subtitle: Text(

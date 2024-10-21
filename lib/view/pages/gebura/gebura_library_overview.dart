@@ -7,6 +7,7 @@ import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/url.dart';
+import '../../universal/button.dart';
 import 'gebura_common.dart';
 
 class GeburaLibraryOverview extends StatelessWidget {
@@ -45,7 +46,7 @@ class GeburaLibraryOverview extends StatelessWidget {
                         children: [
                           Text(S.of(context).noAppInLibrary),
                           const SizedBox(height: 12),
-                          OutlinedButton(
+                          UniversalOutlinedButton(
                             onPressed: () {
                               const GeburaLibrarySettingsRoute().go(context);
                             },

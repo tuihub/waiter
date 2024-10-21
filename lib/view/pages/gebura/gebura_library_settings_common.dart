@@ -18,7 +18,7 @@ class GeburaCommonAppScanResultPanel extends StatelessWidget {
           shape: AppBarHelper.defaultShape,
           leading: AppBarHelper.defaultRightLeading(context),
           actions: [
-            OutlinedButton.icon(
+            UniversalOutlinedButton.icon(
               onPressed: () {
                 context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(
                       refreshSteam: false,
@@ -121,7 +121,7 @@ class _CommonGameListState extends State<_CommonGameList> {
         DataCell(
           Align(
               alignment: Alignment.centerRight,
-              child: OutlinedButton.icon(
+              child: UniversalOutlinedButton.icon(
                 onPressed: () async {
                   await OpenFile.open(app.installPath);
                 },
@@ -862,7 +862,7 @@ class _CommonAppFolderScanSettingPageState
                               )
                               .toList();
                         }
-                        return ListTile(
+                        return UniversalListTile(
                           leading: Icon(
                             _entryTypeIcon(node.data?.type ??
                                 CommonAppFolderScanEntryType.unknown),
@@ -894,10 +894,6 @@ class _CommonAppFolderScanSettingPageState
                                   ),
                                 ),
                             ],
-                          ),
-                          visualDensity: const VisualDensity(
-                            horizontal: VisualDensity.minimumDensity,
-                            vertical: VisualDensity.minimumDensity,
                           ),
                         );
                       },

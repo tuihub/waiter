@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:chinese_font_library/chinese_font_library.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -209,19 +210,37 @@ class _MyAppWidget extends StatelessWidget {
               swapLegacyOnMaterial3: true,
             ));
 
-        return MaterialApp.router(
-          onGenerateTitle: (context) => S.of(context).title,
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: state.themeMode,
-          routerConfig: router,
+        late fluent.FluentThemeData fluentTheme;
+        switch (state.themeMode) {
+          case ThemeMode.light:
+            fluentTheme = fluent.FluentThemeData.light();
+          case ThemeMode.dark:
+            fluentTheme = fluent.FluentThemeData.dark();
+          case ThemeMode.system:
+            switch (MediaQuery.of(context).platformBrightness) {
+              case Brightness.light:
+                fluentTheme = fluent.FluentThemeData.light();
+              case Brightness.dark:
+                fluentTheme = fluent.FluentThemeData.dark();
+            }
+        }
+
+        return fluent.FluentTheme(
+          data: fluentTheme,
+          child: MaterialApp.router(
+            onGenerateTitle: (context) => S.of(context).title,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: state.themeMode,
+            routerConfig: router,
+          ),
         );
       },
     );

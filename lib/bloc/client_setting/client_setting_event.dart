@@ -24,3 +24,9 @@ class ChangeUseSystemProxyEvent extends ClientSettingEvent {
 
   ChangeUseSystemProxyEvent(this.useSystemProxy);
 }
+
+class ChangeUseFluentUIEvent extends ClientSettingEvent {
+  final bool useFluentUI;
+
+  ChangeUseFluentUIEvent(this.useFluentUI);
+}
