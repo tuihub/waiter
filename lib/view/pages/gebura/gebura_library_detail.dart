@@ -274,7 +274,9 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
           .read<GeburaBloc>()
           .state
           .localInstalledSteamAppInsts
-          ?.forEach((_, v) {
+          ?.values
+          .expand((e) => e)
+          .forEach((v) {
         if (v.appId == inst.steamLaunchSetting!.steamAppID) {
           steamApp = v;
         }

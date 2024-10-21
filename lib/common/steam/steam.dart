@@ -56,20 +56,21 @@ enum SteamScanResult {
   fullyScanned,
 }
 
-Future<(List<InstalledSteamApps>, SteamScanResult)> scanSteamLibrary() async {
-  final apps = <InstalledSteamApps>[];
+Future<(Map<String, List<InstalledSteamApps>>, SteamScanResult)>
+    scanSteamLibrary() async {
+  final Map<String, List<InstalledSteamApps>> appInsts = {};
   try {
     if (!PlatformHelper.isWindowsApp()) {
-      return (apps, SteamScanResult.unavailable);
+      return (appInsts, SteamScanResult.unavailable);
     }
     final steamInstallPath = getSteamInstallPath();
     if (steamInstallPath == null) {
-      return (apps, SteamScanResult.steamInstallationNotFound);
+      return (appInsts, SteamScanResult.steamInstallationNotFound);
     }
     final folders = _getLibraryFolders(
         p.join(steamInstallPath, 'config', 'libraryfolders.vdf'));
     if (folders.isEmpty) {
-      return (apps, SteamScanResult.libraryFoldersNotFound);
+      return (appInsts, SteamScanResult.libraryFoldersNotFound);
     }
     for (final folder in folders) {
       final files = io.Directory(p.join(folder, 'steamapps'))
@@ -79,25 +80,27 @@ Future<(List<InstalledSteamApps>, SteamScanResult)> scanSteamLibrary() async {
         return p.basename(file.path).startsWith('appmanifest_') &&
             p.basename(file.path).endsWith('.acf');
       }).toList();
+      final apps = <InstalledSteamApps>[];
       for (final file in files) {
         final appInfo = _getAppInfo(file.path);
         if (appInfo != null) {
           apps.add(appInfo);
         }
       }
-    }
-    for (var i = 0; i < apps.length; i += 1) {
-      apps[i] = apps[i].copyWith(
-        iconFilePath: getAppIconFilePath(apps[i].appId),
-      );
+      for (var i = 0; i < apps.length; i += 1) {
+        apps[i] = apps[i].copyWith(
+          iconFilePath: getAppIconFilePath(apps[i].appId),
+        );
+      }
+      appInsts[folder] = apps;
     }
   } catch (e) {
-    return (apps, SteamScanResult.unknownError);
+    return (appInsts, SteamScanResult.unknownError);
   }
-  if (apps.isEmpty) {
-    return (apps, SteamScanResult.libraryEmpty);
+  if (appInsts.isEmpty) {
+    return (appInsts, SteamScanResult.libraryEmpty);
   }
-  return (apps, SteamScanResult.fullyScanned);
+  return (appInsts, SteamScanResult.fullyScanned);
 }
 
 Future<List<String>> getSteamLibraryFolders() async {

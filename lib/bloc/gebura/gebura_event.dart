@@ -21,13 +21,15 @@ final class GeburaApplyLibraryFilterEvent extends GeburaEvent {
 
 // Events handle local data.
 
-final class GeburaScanLocalLibraryEvent extends GeburaEvent {}
+final class GeburaScanLocalLibraryEvent extends GeburaEvent {
+  final bool refreshSteam;
+  final List<String>? refreshCommon;
 
-final class GeburaScanLocalCommonLibraryEvent extends GeburaEvent {}
-
-final class GeburaScanLocalSteamLibraryEvent extends GeburaEvent {}
-
-final class GeburaClearLocalLibraryStateEvent extends GeburaEvent {}
+  GeburaScanLocalLibraryEvent({
+    this.refreshSteam = true,
+    this.refreshCommon,
+  });
+}
 
 final class GeburaTrackSteamAppsEvent extends GeburaEvent {
   final List<String> steamAppIDs;

@@ -17,7 +17,6 @@ class GeburaLibraryOverview extends StatelessWidget {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
         final apps = state.libraryListItems ?? [];
-        final localLibraryState = state.localLibraryStateMessage ?? '';
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,36 +70,36 @@ class GeburaLibraryOverview extends StatelessWidget {
           // floatingActionButtonLocation: localLibraryState.isNotEmpty
           //     ? FloatingActionButtonLocation.endContained
           //     : FloatingActionButtonLocation.endFloat,
-          bottomNavigationBar: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(16),
-              topLeft: Radius.circular(16),
-            ),
-            child: BottomAppBar(
-              height: localLibraryState.isNotEmpty ? 88 : 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    localLibraryState,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaClearLocalLibraryStateEvent());
-                    },
-                    child: Text(S.of(context).hide),
-                  ),
-                  // const SizedBox(width: 64),
-                ],
-              ),
-            ),
-          ),
+          // bottomNavigationBar: ClipRRect(
+          //   borderRadius: const BorderRadius.only(
+          //     topRight: Radius.circular(16),
+          //     topLeft: Radius.circular(16),
+          //   ),
+          //   child: BottomAppBar(
+          //     height: localLibraryState.isNotEmpty ? 88 : 0,
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.end,
+          //       crossAxisAlignment: CrossAxisAlignment.center,
+          //       children: [
+          //         Text(
+          //           localLibraryState,
+          //           style: const TextStyle(
+          //             fontWeight: FontWeight.bold,
+          //           ),
+          //         ),
+          //         TextButton(
+          //           onPressed: () {
+          //             context
+          //                 .read<GeburaBloc>()
+          //                 .add(GeburaClearLocalLibraryStateEvent());
+          //           },
+          //           child: Text(S.of(context).hide),
+          //         ),
+          //         // const SizedBox(width: 64),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         );
       },
     );

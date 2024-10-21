@@ -456,19 +456,38 @@ class GeburaLibraryRoute extends GoRouteData {
   }
 }
 
+enum GeburaLibrarySettingsActions {
+  commonAppScanResult,
+  steamAppScanResult,
+}
+
 class GeburaLibrarySettingsRoute extends GoRouteData {
-  const GeburaLibrarySettingsRoute();
+  const GeburaLibrarySettingsRoute({this.action, this.$extra});
+
+  final GeburaLibrarySettingsActions? action;
+  final dynamic $extra;
 
   @override
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+    final actions = {
+      GeburaLibrarySettingsActions.commonAppScanResult:
+          GeburaCommonAppScanResultPanel(
+        folder: $extra is String ? $extra! as String : '',
+      ),
+      GeburaLibrarySettingsActions.steamAppScanResult:
+          GeburaSteamAppScanResultPanel(
+        folder: $extra is String ? $extra! as String : '',
+      ),
+    };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
-        child: const FramePage(
+        child: FramePage(
           selectedNav: ModuleName.gebura,
-          leftPart: GeburaNav(
+          leftPart: const GeburaNav(
             function: GeburaFunctions.librarySettings,
           ),
-          middlePart: GeburaLibrarySettings(),
+          middlePart: const GeburaLibrarySettings(),
+          rightPart: actions[action] ?? Container(),
         ),
       ),
     );

@@ -1,100 +1,48 @@
 part of 'gebura_library_settings.dart';
 
-class _CommonSettingCard extends StatelessWidget {
-  const _CommonSettingCard();
+class GeburaCommonAppScanResultPanel extends StatelessWidget {
+  const GeburaCommonAppScanResultPanel({super.key, required this.folder});
+
+  final String folder;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final localCommonApps = state.localInstalledCommonAppInsts ?? {};
-      final localTrackedCommonAppInsts = state.localTrackedAppInsts?.values
-              .where((e) => e.commonLaunchSetting != null)
-              .toList() ??
-          [];
-      final untrackedCommonApps = localCommonApps.values
-          .where(
-            (l) => localTrackedCommonAppInsts.every(
-              (i) =>
-                  i.commonLaunchSetting == null ||
-                  l.installPath != i.commonLaunchSetting!.installPath,
+      final (
+        tracked,
+        untracked,
+      ) = state.analyzeCommonAppInsts(folder);
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(folder),
+          shape: AppBarHelper.defaultShape,
+          leading: AppBarHelper.defaultRightLeading(context),
+          actions: [
+            OutlinedButton.icon(
+              onPressed: () {
+                context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(
+                      refreshSteam: false,
+                    ));
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('刷新'),
             ),
-          )
-          .toList();
-      final uninstalledCommonApps = localTrackedCommonAppInsts
-          .where((e) =>
-              localCommonApps[e.commonLaunchSetting!.installPath] == null)
-          .toList();
-      return Card(
-        margin: EdgeInsets.zero,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: SpacingHelper.listSpacing(width: 16, children: [
-                  const Icon(Icons.folder),
-                  const Text('文件夹扫描'),
-                  Expanded(child: Container()),
-                  // OutlinedButton.icon(
-                  //   label: const Text('添加应用'),
-                  //   icon: const Icon(FontAwesomeIcons.circlePlus),
-                  //   onPressed: () {
-                  //     // unawaited(
-                  //     //   showDialog(
-                  //     //     context: context,
-                  //     //     builder: (_) {
-                  //     //       return BlocProvider.value(
-                  //     //         value: context.read<GeburaBloc>(),
-                  //     //         child: const NewLocalAppInstDialog(),
-                  //     //       );
-                  //     //     },
-                  //     //   ),
-                  //     // );
-                  //   },
-                  // ),
-                  OutlinedButton.icon(
-                    label: const Text('添加文件夹'),
-                    icon: const Icon(FontAwesomeIcons.folderPlus),
-                    onPressed: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return const _CommonAppFolderScanSettingPage();
-                        }),
-                      );
-                    },
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaScanLocalCommonLibraryEvent());
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('刷新'),
-                  ),
-                ]),
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.zero,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).dividerColor,
               ),
-              const SizedBox(height: 16),
-              Text(
-                  '发现${untrackedCommonApps.length}个游戏（已导入${localTrackedCommonAppInsts.length}个${uninstalledCommonApps.isNotEmpty ? '，已卸载${uninstalledCommonApps.length}个' : ''}）'),
-              if (untrackedCommonApps.isNotEmpty)
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).dividerColor,
-                    ),
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  constraints: const BoxConstraints(
-                    maxHeight: 400,
-                  ),
-                  child: _CommonGameList(apps: untrackedCommonApps),
-                ),
-            ],
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: _CommonGameList(
+              untracked: untracked,
+              tracked: tracked,
+            ),
           ),
         ),
       );
@@ -104,10 +52,12 @@ class _CommonSettingCard extends StatelessWidget {
 
 class _CommonGameList extends StatefulWidget {
   const _CommonGameList({
-    required this.apps,
+    required this.untracked,
+    required this.tracked,
   });
 
-  final List<InstalledCommonApps> apps;
+  final List<InstalledCommonApps> untracked;
+  final List<InstalledCommonApps> tracked;
 
   @override
   State<_CommonGameList> createState() => _CommonGameListState();
@@ -117,10 +67,71 @@ class _CommonGameListState extends State<_CommonGameList> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = List.generate(widget.apps.length, (index) => false);
+    selectedIndex = List.generate(widget.untracked.length, (index) => false);
   }
 
   late List<bool> selectedIndex;
+
+  DataRow _buildRow(InstalledCommonApps app, bool tracked) {
+    return DataRow(
+      selected: tracked || selectedIndex[widget.untracked.indexOf(app)],
+      onSelectChanged: tracked
+          ? null
+          : (isSelected) {
+              setState(() {
+                selectedIndex[widget.untracked.indexOf(app)] =
+                    isSelected ?? false;
+              });
+            },
+      cells: [
+        DataCell(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  app.name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: tracked ? Theme.of(context).disabledColor : null,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: AutoSizeText(
+                  app.installPath,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: tracked ? Theme.of(context).disabledColor : null,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        DataCell(
+          Align(
+              alignment: Alignment.centerRight,
+              child: OutlinedButton.icon(
+                onPressed: () async {
+                  await OpenFile.open(app.installPath);
+                },
+                icon: const Icon(Icons.folder, size: 16),
+                label: const Text('查看'),
+              )),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,18 +139,22 @@ class _CommonGameListState extends State<_CommonGameList> {
       onSelectAll: (isSelectedAll) {
         if (isSelectedAll ?? false) {
           setState(() {
-            selectedIndex = List.generate(widget.apps.length, (index) => true);
+            selectedIndex =
+                List.generate(widget.untracked.length, (index) => true);
           });
         } else {
           setState(() {
-            selectedIndex = List.generate(widget.apps.length, (index) => false);
+            selectedIndex =
+                List.generate(widget.untracked.length, (index) => false);
           });
         }
       },
       columns: [
         DataColumn2(
           label: Text(
-              '游戏列表${selectedIndex.contains(true) ? '（已选${selectedIndex.where((element) => element).length}个）' : ''}'),
+            '游戏列表${selectedIndex.contains(true) ? '（已选${selectedIndex.where((element) => element).length}个）' : ''}',
+            overflow: TextOverflow.ellipsis,
+          ),
           size: ColumnSize.L,
         ),
         DataColumn2(
@@ -168,36 +183,10 @@ class _CommonGameListState extends State<_CommonGameList> {
           fixedWidth: 150,
         ),
       ],
-      rows: widget.apps.map(
-        (e) {
-          return DataRow(
-            selected: selectedIndex[widget.apps.indexOf(e)],
-            onSelectChanged: (isSelected) {
-              setState(() {
-                selectedIndex[widget.apps.indexOf(e)] = isSelected ?? false;
-              });
-            },
-            cells: [
-              DataCell(Row(
-                children: [
-                  Text(e.name),
-                ],
-              )),
-              DataCell(
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        await OpenFile.open(e.installPath);
-                      },
-                      icon: const Icon(Icons.folder, size: 16),
-                      label: const Text('查看'),
-                    )),
-              ),
-            ],
-          );
-        },
-      ).toList(),
+      rows: [
+        ...widget.untracked.map((e) => _buildRow(e, false)),
+        ...widget.tracked.map((e) => _buildRow(e, true)),
+      ],
     );
   }
 }
@@ -409,7 +398,7 @@ class _CommonAppFolderScanSettingPageState
   @override
   Widget build(BuildContext context) {
     return PopAlert(
-      title: '确定退出',
+      title: '保存更改？',
       content: '是否保存更改再退出',
       onConfirm: () {
         _saveAndExit(context);
@@ -865,7 +854,7 @@ class _CommonAppFolderScanSettingPageState
                                 (e) => Chip(
                                   label: Text(
                                       '${e.key.toString().split('.').last}${e.value > 1 ? ' x${e.value}' : ''}'),
-                                  visualDensity: VisualDensity(
+                                  visualDensity: const VisualDensity(
                                     horizontal: VisualDensity.minimumDensity,
                                     vertical: VisualDensity.minimumDensity,
                                   ),

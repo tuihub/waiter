@@ -1,83 +1,48 @@
 part of 'gebura_library_settings.dart';
 
-class _SteamSettingCard extends StatelessWidget {
-  const _SteamSettingCard();
+class GeburaSteamAppScanResultPanel extends StatelessWidget {
+  const GeburaSteamAppScanResultPanel({super.key, required this.folder});
+
+  final String folder;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final localSteamApps = state.localInstalledSteamAppInsts ?? {};
-      final localTrackedSteamAppInsts = state.localTrackedAppInsts?.values
-              .where((e) => e.steamLaunchSetting != null)
-              .toList() ??
-          [];
-      final untrackedSteamApps = localSteamApps.values
-          .where(
-            (l) => localTrackedSteamAppInsts.every(
-              (i) =>
-                  i.steamLaunchSetting == null ||
-                  l.appId != i.steamLaunchSetting!.steamAppID,
+      final (
+        tracked,
+        untracked,
+      ) = state.analyzeSteamAppInsts(folder);
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(folder),
+          shape: AppBarHelper.defaultShape,
+          leading: AppBarHelper.defaultRightLeading(context),
+          actions: [
+            OutlinedButton.icon(
+              onPressed: () {
+                context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(
+                      refreshCommon: [],
+                    ));
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('刷新'),
             ),
-          )
-          .toList();
-      final uninstalledSteamApps = localTrackedSteamAppInsts
-          .where(
-              (e) => localSteamApps[e.steamLaunchSetting!.steamAppID] == null)
-          .toList();
-      final String? localSteamStateMsg = steamScanResultString(
-        context,
-        state.localSteamScanResult,
-      );
-      return Card(
-        margin: EdgeInsets.zero,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: SpacingHelper.listSpacing(
-                  width: 16,
-                  children: [
-                    const Icon(FontAwesomeIcons.steam),
-                    const Text('Steam 集成'),
-                    if (localSteamStateMsg != null)
-                      Chip(label: Text(localSteamStateMsg)),
-                    Expanded(child: Container()),
-                    if (state.localSteamScanResult !=
-                        SteamScanResult.unavailable)
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          context
-                              .read<GeburaBloc>()
-                              .add(GeburaScanLocalSteamLibraryEvent());
-                        },
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('刷新'),
-                      ),
-                  ],
-                ),
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.zero,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).dividerColor,
               ),
-              const SizedBox(height: 16),
-              Text(
-                  '发现${untrackedSteamApps.length}个Steam游戏（已导入${localTrackedSteamAppInsts.length}个${uninstalledSteamApps.isNotEmpty ? '，已卸载${uninstalledSteamApps.length}个' : ''}）'),
-              if (untrackedSteamApps.isNotEmpty)
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).dividerColor,
-                    ),
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  constraints: const BoxConstraints(
-                    maxHeight: 400,
-                  ),
-                  child: _SteamGameList(apps: untrackedSteamApps),
-                ),
-            ],
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: _SteamGameList(
+              untracked: untracked,
+              tracked: tracked,
+            ),
           ),
         ),
       );
@@ -87,10 +52,12 @@ class _SteamSettingCard extends StatelessWidget {
 
 class _SteamGameList extends StatefulWidget {
   const _SteamGameList({
-    required this.apps,
+    required this.untracked,
+    required this.tracked,
   });
 
-  final List<InstalledSteamApps> apps;
+  final List<InstalledSteamApps> untracked;
+  final List<InstalledSteamApps> tracked;
 
   @override
   State<_SteamGameList> createState() => _SteamGameListState();
@@ -100,10 +67,64 @@ class _SteamGameListState extends State<_SteamGameList> {
   @override
   void initState() {
     super.initState();
-    selectedIndex = List.generate(widget.apps.length, (index) => false);
+    selectedIndex = List.generate(widget.untracked.length, (index) => false);
   }
 
   late List<bool> selectedIndex;
+
+  DataRow _buildRow(InstalledSteamApps app, bool tracked) {
+    final file = io.File(app.iconFilePath!);
+    return DataRow(
+      selected: tracked || selectedIndex[widget.untracked.indexOf(app)],
+      onSelectChanged: tracked
+          ? null
+          : (isSelected) {
+              setState(() {
+                selectedIndex[widget.untracked.indexOf(app)] =
+                    isSelected ?? false;
+              });
+            },
+      cells: [
+        DataCell(Row(
+          children: [
+            if (app.iconFilePath != null)
+              Container(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: ExtendedImage.file(
+                        file,
+                        width: 16,
+                        height: 16,
+                      )))
+            else
+              const Icon(Icons.image),
+            Text(
+              app.name,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: tracked ? Theme.of(context).disabledColor : null,
+                  ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ],
+        )),
+        DataCell(
+          Align(
+              alignment: Alignment.centerRight,
+              child: OutlinedButton.icon(
+                onPressed: () async {
+                  await context
+                      .read<GeburaBloc>()
+                      .showSteamAppDetails(app.appId);
+                },
+                icon: const Icon(FontAwesomeIcons.steam, size: 16),
+                label: const Text('查看'),
+              )),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,11 +132,13 @@ class _SteamGameListState extends State<_SteamGameList> {
       onSelectAll: (isSelectedAll) {
         if (isSelectedAll ?? false) {
           setState(() {
-            selectedIndex = List.generate(widget.apps.length, (index) => true);
+            selectedIndex =
+                List.generate(widget.untracked.length, (index) => true);
           });
         } else {
           setState(() {
-            selectedIndex = List.generate(widget.apps.length, (index) => false);
+            selectedIndex =
+                List.generate(widget.untracked.length, (index) => false);
           });
         }
       },
@@ -133,9 +156,9 @@ class _SteamGameListState extends State<_SteamGameList> {
                   ? () {
                       context.read<GeburaBloc>().add(
                             GeburaTrackSteamAppsEvent(
-                              widget.apps
+                              widget.untracked
                                   .where((element) => selectedIndex[
-                                      widget.apps.indexOf(element)])
+                                      widget.untracked.indexOf(element)])
                                   .map((e) => e.appId)
                                   .toList(),
                             ),
@@ -151,52 +174,10 @@ class _SteamGameListState extends State<_SteamGameList> {
           fixedWidth: 150,
         ),
       ],
-      rows: widget.apps.map(
-        (e) {
-          final file = io.File(e.iconFilePath!);
-          final content = file.readAsBytesSync();
-          return DataRow(
-            selected: selectedIndex[widget.apps.indexOf(e)],
-            onSelectChanged: (isSelected) {
-              setState(() {
-                selectedIndex[widget.apps.indexOf(e)] = isSelected ?? false;
-              });
-            },
-            cells: [
-              DataCell(Row(
-                children: [
-                  if (e.iconFilePath != null)
-                    Container(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(2),
-                            child: ExtendedImage.memory(
-                              content,
-                              width: 16,
-                              height: 16,
-                            )))
-                  else
-                    const Icon(Icons.image),
-                  Text(e.name),
-                ],
-              )),
-              DataCell(
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        await context
-                            .read<GeburaBloc>()
-                            .showSteamAppDetails(e.appId);
-                      },
-                      icon: const Icon(FontAwesomeIcons.steam, size: 16),
-                      label: const Text('查看'),
-                    )),
-              ),
-            ],
-          );
-        },
-      ).toList(),
+      rows: [
+        ...widget.untracked.map((e) => _buildRow(e, false)),
+        ...widget.tracked.map((e) => _buildRow(e, true)),
+      ],
     );
   }
 }

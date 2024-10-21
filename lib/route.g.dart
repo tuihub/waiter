@@ -331,21 +331,36 @@ extension $GeburaLibraryRouteExtension on GeburaLibraryRoute {
 
 extension $GeburaLibrarySettingsRouteExtension on GeburaLibrarySettingsRoute {
   static GeburaLibrarySettingsRoute _fromState(GoRouterState state) =>
-      const GeburaLibrarySettingsRoute();
+      GeburaLibrarySettingsRoute(
+        action: _$convertMapValue('action', state.uri.queryParameters,
+            _$GeburaLibrarySettingsActionsEnumMap._$fromName),
+        $extra: state.extra as dynamic,
+      );
 
   String get location => GoRouteData.$location(
         '/module/Gebura/librarySettings',
+        queryParams: {
+          if (action != null)
+            'action': _$GeburaLibrarySettingsActionsEnumMap[action!],
+        },
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
+
+const _$GeburaLibrarySettingsActionsEnumMap = {
+  GeburaLibrarySettingsActions.commonAppScanResult: 'common-app-scan-result',
+  GeburaLibrarySettingsActions.steamAppScanResult: 'steam-app-scan-result',
+};
 
 extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
   static GeburaLibraryDetailRoute _fromState(GoRouterState state) =>

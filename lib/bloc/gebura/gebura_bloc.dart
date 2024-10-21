@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
@@ -245,7 +246,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           setting.basePath: setting,
         },
       ));
-      add(GeburaScanLocalLibraryEvent());
+      add(GeburaScanLocalLibraryEvent(
+        refreshCommon: [setting.basePath],
+      ));
     }, transformer: droppable());
 
     on<GeburaSearchAppInfosEvent>((event, emit) async {
@@ -522,60 +525,32 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaScanLocalLibraryEvent>((event, emit) async {
-      add(GeburaScanLocalCommonLibraryEvent());
-      add(GeburaScanLocalSteamLibraryEvent());
-    }, transformer: droppable());
-
-    on<GeburaScanLocalCommonLibraryEvent>((event, emit) async {
-      emit(state.copyWith(
-          localLibraryStateMessage: S.current.scanningLocalFiles));
-      final folders = state.localCommonLibraryFolders ?? {};
-      for (final folder in folders.values) {
-        final result = await scanCommonApps(folder);
-        final tracked = _repo.loadTrackedAppInsts();
-        final unTracked = result.installedApps.where(
-          (element) => !tracked.any(
-            (t) =>
-                t.type == LocalAppInstType.common &&
-                t.path == element.installPath,
-          ),
-        );
-        emit(state.copyWith(
-          localLibraryStateMessage: unTracked.isNotEmpty
-              ? S.current.newApplicationFound(unTracked.length)
-              : '',
-          localInstalledCommonAppInsts: result.installedApps
-              .asMap()
-              .map((_, value) => MapEntry(value.installPath, value)),
-        ));
-      }
-    }, transformer: droppable());
-
-    on<GeburaScanLocalSteamLibraryEvent>((event, emit) async {
       if (!PlatformHelper.isWindowsApp()) {
         return;
       }
+      emit(GeburaScanLocalLibraryState(state, EventStatus.processing));
+      final appInsts = state.localInstalledCommonAppInsts ?? {};
+      final folders = state.localCommonLibraryFolders ?? {};
+      Map<String, List<InstalledSteamApps>> installed =
+          state.localInstalledSteamAppInsts ?? {};
+      SteamScanResult result =
+          state.localSteamScanResult ?? SteamScanResult.unknownError;
+      for (final folder in folders.values) {
+        if (event.refreshCommon == null ||
+            event.refreshCommon!.contains(folder.basePath)) {
+          final result = await scanCommonApps(folder);
+          appInsts[folder.basePath] = result.installedApps;
+        }
+      }
+      if (event.refreshSteam) {
+        (installed, result) = await scanSteamLibrary();
+      }
       emit(state.copyWith(
-          localLibraryStateMessage: S.current.scanningLocalFiles));
-      final (installed, result) = await scanSteamLibrary();
-      final folders = await getSteamLibraryFolders();
-      final tracked = _repo.loadTrackedAppInsts();
-      final unTracked = installed.where(
-        (element) => !tracked.any(
-          (t) =>
-              t.type == LocalAppInstType.steam &&
-              t.steamLaunchSetting?.steamAppID == element.appId,
-        ),
-      );
-      emit(state.copyWith(
-        localLibraryStateMessage: unTracked.isNotEmpty
-            ? S.current.newApplicationFound(unTracked.length)
-            : '',
+        localInstalledCommonAppInsts: appInsts,
         localSteamScanResult: result,
-        localInstalledSteamAppInsts:
-            installed.asMap().map((_, value) => MapEntry(value.appId, value)),
-        localSteamLibraryFolders: folders,
+        localInstalledSteamAppInsts: installed,
       ));
+      emit(GeburaScanLocalLibraryState(state, EventStatus.success));
     }, transformer: droppable());
 
     on<GeburaTrackSteamAppsEvent>((event, emit) async {
@@ -585,7 +560,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       var failedCount = 0;
       for (final id in event.steamAppIDs) {
         processCount += 1;
-        final steamApp = state.localInstalledSteamAppInsts?[id];
+        final steamApp = state.localInstalledSteamAppInsts?.values
+            .expand((e) => e)
+            .firstWhereOrNull((e) => e.appId == id);
         if (steamApp == null) {
           failedCount += 1;
           continue;
@@ -615,7 +592,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           state.copyWith(
             localTrackedApps: localTrackedApps,
             localTrackedAppInsts: localTrackedAppInsts,
-            localLibraryStateMessage: msg,
           ),
           EventStatus.processing,
           msg: msg,
@@ -628,7 +604,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         state.copyWith(
           localTrackedApps: localTrackedApps,
           localTrackedAppInsts: localTrackedAppInsts,
-          localLibraryStateMessage: msg,
         ),
         EventStatus.success,
         msg: msg,
@@ -658,12 +633,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       if (event.refreshAfterSuccess ?? false) {
         add(GeburaApplyLibraryFilterEvent());
       }
-    });
-
-    on<GeburaClearLocalLibraryStateEvent>((event, emit) async {
-      emit(state.copyWith(
-        localLibraryStateMessage: '',
-      ));
     });
 
     on<GeburaRefreshAppInfoEvent>((event, emit) async {

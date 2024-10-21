@@ -189,7 +189,7 @@ class _MyAppWidget extends StatelessWidget {
                 useTextTheme: true,
                 useM2StyleDividerInM3: true,
               ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
               swapLegacyOnMaterial3: true,
             ));
 
@@ -204,7 +204,7 @@ class _MyAppWidget extends StatelessWidget {
                 useTextTheme: true,
                 useM2StyleDividerInM3: true,
               ),
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
               useMaterial3: true,
               swapLegacyOnMaterial3: true,
             ));
@@ -231,7 +231,6 @@ class _MyAppWidget extends StatelessWidget {
 ThemeData _customizeTheme(Brightness brightness, ThemeData theme) {
   final t = theme.copyWith(
     listTileTheme: theme.listTileTheme.copyWith(
-      visualDensity: VisualDensity.adaptivePlatformDensity,
       selectedColor: theme.colorScheme.onPrimary,
       selectedTileColor: theme.colorScheme.primary,
       shape: RoundedRectangleBorder(

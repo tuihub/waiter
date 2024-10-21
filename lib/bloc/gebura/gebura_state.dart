@@ -12,16 +12,54 @@ class GeburaState {
   late List<LibraryListItem>? libraryListItems;
   late Map<String, LocalAppInstRunRecord>? runningInsts;
   late SteamScanResult? localSteamScanResult;
-  late String? localLibraryStateMessage;
 
   // local data
   late LibrarySettings? librarySettings;
   late Map<String, LocalTrackedApp>? localTrackedApps;
   late Map<String, LocalTrackedAppInst>? localTrackedAppInsts;
-  late Map<String, InstalledCommonApps>? localInstalledCommonAppInsts;
-  late Map<String, InstalledSteamApps>? localInstalledSteamAppInsts;
+  late Map<String, List<InstalledCommonApps>>? localInstalledCommonAppInsts;
+  late Map<String, List<InstalledSteamApps>>? localInstalledSteamAppInsts;
   late Map<String, CommonAppFolderScanSetting>? localCommonLibraryFolders;
-  late List<String>? localSteamLibraryFolders;
+
+  (
+    List<InstalledCommonApps>,
+    List<InstalledCommonApps>,
+  ) analyzeCommonAppInsts(String folder) {
+    final installed = localInstalledCommonAppInsts?[folder] ?? [];
+    final trackedPaths = localTrackedAppInsts?.values
+            .where((e) => e.commonLaunchSetting != null)
+            .map((e) => e.commonLaunchSetting!.installPath)
+            .toSet() ??
+        {};
+
+    final tracked = installed
+        .where((app) => trackedPaths.contains(app.installPath))
+        .toList();
+    final untracked = installed
+        .where((app) => !trackedPaths.contains(app.installPath))
+        .toList();
+
+    return (tracked, untracked);
+  }
+
+  (
+    List<InstalledSteamApps>,
+    List<InstalledSteamApps>,
+  ) analyzeSteamAppInsts(String folder) {
+    final installed = localInstalledSteamAppInsts?[folder] ?? [];
+    final trackedAppID = localTrackedAppInsts?.values
+            .where((e) => e.steamLaunchSetting != null)
+            .map((e) => e.steamLaunchSetting!.steamAppID)
+            .toList() ??
+        [];
+
+    final tracked =
+        installed.where((app) => trackedAppID.contains(app.appId)).toList();
+    final untracked =
+        installed.where((app) => !trackedAppID.contains(app.appId)).toList();
+
+    return (tracked, untracked);
+  }
 
   Map<App, List<AppInst>> getAppInsts(Int64 id) {
     if (ownedAppInsts == null || ownedApps == null) {
@@ -82,14 +120,12 @@ class GeburaState {
     this.libraryListItems,
     this.runningInsts,
     this.localSteamScanResult,
-    this.localLibraryStateMessage,
     this.librarySettings,
     this.localTrackedApps,
     this.localTrackedAppInsts,
     this.localInstalledCommonAppInsts,
     this.localInstalledSteamAppInsts,
     this.localCommonLibraryFolders,
-    this.localSteamLibraryFolders,
   });
 
   GeburaState copyWith({
@@ -101,14 +137,12 @@ class GeburaState {
     List<LibraryListItem>? libraryListItems,
     Map<String, LocalAppInstRunRecord>? runningInsts,
     SteamScanResult? localSteamScanResult,
-    String? localLibraryStateMessage,
     LibrarySettings? librarySettings,
     Map<String, LocalTrackedApp>? localTrackedApps,
     Map<String, LocalTrackedAppInst>? localTrackedAppInsts,
-    Map<String, InstalledCommonApps>? localInstalledCommonAppInsts,
-    Map<String, InstalledSteamApps>? localInstalledSteamAppInsts,
+    Map<String, List<InstalledCommonApps>>? localInstalledCommonAppInsts,
+    Map<String, List<InstalledSteamApps>>? localInstalledSteamAppInsts,
     Map<String, CommonAppFolderScanSetting>? localCommonLibraryFolders,
-    List<String>? localSteamLibraryFolders,
   }) {
     return GeburaState(
       appInfoMap: appInfoMap ?? this.appInfoMap,
@@ -119,8 +153,6 @@ class GeburaState {
       libraryListItems: libraryListItems ?? this.libraryListItems,
       runningInsts: runningInsts ?? this.runningInsts,
       localSteamScanResult: localSteamScanResult ?? this.localSteamScanResult,
-      localLibraryStateMessage:
-          localLibraryStateMessage ?? this.localLibraryStateMessage,
       librarySettings: librarySettings ?? this.librarySettings,
       localTrackedApps: localTrackedApps ?? this.localTrackedApps,
       localTrackedAppInsts: localTrackedAppInsts ?? this.localTrackedAppInsts,
@@ -130,8 +162,6 @@ class GeburaState {
           localInstalledSteamAppInsts ?? this.localInstalledSteamAppInsts,
       localCommonLibraryFolders:
           localCommonLibraryFolders ?? this.localCommonLibraryFolders,
-      localSteamLibraryFolders:
-          localSteamLibraryFolders ?? this.localSteamLibraryFolders,
     );
   }
 
@@ -145,7 +175,6 @@ class GeburaState {
     libraryListItems = other.libraryListItems;
     runningInsts = other.runningInsts;
     localSteamScanResult = other.localSteamScanResult;
-    localLibraryStateMessage = other.localLibraryStateMessage;
 
     librarySettings = other.librarySettings;
     localTrackedApps = other.localTrackedApps;
@@ -153,7 +182,6 @@ class GeburaState {
     localInstalledCommonAppInsts = other.localInstalledCommonAppInsts;
     localInstalledSteamAppInsts = other.localInstalledSteamAppInsts;
     localCommonLibraryFolders = other.localCommonLibraryFolders;
-    localSteamLibraryFolders = other.localSteamLibraryFolders;
   }
 }
 
@@ -386,6 +414,18 @@ class GeburaSaveLastLaunchAppInstState extends GeburaState
     with EventStatusMixin {
   GeburaSaveLastLaunchAppInstState(GeburaState state, this.statusCode,
       {this.msg})
+      : super() {
+    _from(state);
+  }
+
+  @override
+  final EventStatus? statusCode;
+  @override
+  final String? msg;
+}
+
+class GeburaScanLocalLibraryState extends GeburaState with EventStatusMixin {
+  GeburaScanLocalLibraryState(GeburaState state, this.statusCode, {this.msg})
       : super() {
     _from(state);
   }
