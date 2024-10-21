@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
+import 'api/app_scan.dart';
 import 'api/simple.dart';
 import 'frb_generated.dart';
 
@@ -32,13 +33,42 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  CommonAppScanSetting dco_decode_box_autoadd_common_app_scan_setting(
+      dynamic raw);
+
+  @protected
+  CommonAppScanSetting dco_decode_common_app_scan_setting(dynamic raw);
+
+  @protected
+  CommonAppScannedEntry dco_decode_common_app_scanned_entry(dynamic raw);
+
+  @protected
+  CommonAppScannedEntryStatus dco_decode_common_app_scanned_entry_status(
+      dynamic raw);
+
+  @protected
+  CommonAppScannedEntryType dco_decode_common_app_scanned_entry_type(
+      dynamic raw);
+
+  @protected
   int dco_decode_i_32(dynamic raw);
 
   @protected
   PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<CommonAppScannedEntry> dco_decode_list_common_app_scanned_entry(
+      dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<CommonAppScannedEntry>? dco_decode_opt_list_common_app_scanned_entry(
+      dynamic raw);
 
   @protected
   (bool, String, int) dco_decode_record_bool_string_u_16(dynamic raw);
@@ -69,13 +99,44 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  CommonAppScanSetting sse_decode_box_autoadd_common_app_scan_setting(
+      SseDeserializer deserializer);
+
+  @protected
+  CommonAppScanSetting sse_decode_common_app_scan_setting(
+      SseDeserializer deserializer);
+
+  @protected
+  CommonAppScannedEntry sse_decode_common_app_scanned_entry(
+      SseDeserializer deserializer);
+
+  @protected
+  CommonAppScannedEntryStatus sse_decode_common_app_scanned_entry_status(
+      SseDeserializer deserializer);
+
+  @protected
+  CommonAppScannedEntryType sse_decode_common_app_scanned_entry_type(
+      SseDeserializer deserializer);
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
 
   @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<CommonAppScannedEntry> sse_decode_list_common_app_scanned_entry(
+      SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<CommonAppScannedEntry>? sse_decode_opt_list_common_app_scanned_entry(
+      SseDeserializer deserializer);
 
   @protected
   (bool, String, int) sse_decode_record_bool_string_u_16(
@@ -108,14 +169,45 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_common_app_scan_setting(
+      CommonAppScanSetting self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_common_app_scan_setting(
+      CommonAppScanSetting self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_common_app_scanned_entry(
+      CommonAppScannedEntry self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_common_app_scanned_entry_status(
+      CommonAppScannedEntryStatus self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_common_app_scanned_entry_type(
+      CommonAppScannedEntryType self, SseSerializer serializer);
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_common_app_scanned_entry(
+      List<CommonAppScannedEntry> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_common_app_scanned_entry(
+      List<CommonAppScannedEntry>? self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_bool_string_u_16(

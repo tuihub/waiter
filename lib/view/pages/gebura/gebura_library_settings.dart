@@ -15,7 +15,7 @@ import 'package:universal_io/io.dart' as io;
 import 'package:universal_io/io.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../../common/app_scan/_native.dart';
+import '../../../common/app_scan/app_scan.dart';
 import '../../../common/app_scan/model.dart';
 import '../../../common/steam/steam.dart';
 import '../../../l10n/l10n.dart';

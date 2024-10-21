@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+import 'api/app_scan.dart';
 import 'api/simple.dart';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
@@ -68,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.5.0';
 
   @override
-  int get rustContentHash => -953886251;
+  int get rustContentHash => 515802758;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -79,6 +80,9 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<List<CommonAppScannedEntry>?> crateApiAppScanScanCommonApps(
+      {required CommonAppScanSetting setting});
+
   Future<(bool, String, int)> crateApiSimpleGetSystemProxy();
 
   Future<(PlatformInt64, PlatformInt64, bool)> crateApiSimpleProcessRunner(
@@ -100,12 +104,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
+  Future<List<CommonAppScannedEntry>?> crateApiAppScanScanCommonApps(
+      {required CommonAppScanSetting setting}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_common_app_scan_setting(setting, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 1, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_opt_list_common_app_scanned_entry,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiAppScanScanCommonAppsConstMeta,
+      argValues: [setting],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiAppScanScanCommonAppsConstMeta =>
+      const TaskConstMeta(
+        debugName: 'scan_common_apps',
+        argNames: ['setting'],
+      );
+
+  @override
   Future<(bool, String, int)> crateApiSimpleGetSystemProxy() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 1, port: port_);
+            funcId: 2, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_record_bool_string_u_16,
@@ -143,7 +173,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_i_32(sleepCount, serializer);
         sse_encode_u_64(sleepMillis, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
+            funcId: 3, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_record_i_64_i_64_bool,
@@ -196,6 +226,58 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CommonAppScanSetting dco_decode_box_autoadd_common_app_scan_setting(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_common_app_scan_setting(raw);
+  }
+
+  @protected
+  CommonAppScanSetting dco_decode_common_app_scan_setting(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return CommonAppScanSetting(
+      basePath: dco_decode_String(arr[0]),
+      minInstallDirDepth: dco_decode_i_32(arr[1]),
+      maxInstallDirDepth: dco_decode_i_32(arr[2]),
+      minExecutableDepth: dco_decode_i_32(arr[3]),
+      maxExecutableDepth: dco_decode_i_32(arr[4]),
+      excludeDirectoryMatchers: dco_decode_list_String(arr[5]),
+      includeExecutableMatchers: dco_decode_list_String(arr[6]),
+      excludeExecutableMatchers: dco_decode_list_String(arr[7]),
+    );
+  }
+
+  @protected
+  CommonAppScannedEntry dco_decode_common_app_scanned_entry(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return CommonAppScannedEntry(
+      path: dco_decode_String(arr[0]),
+      entryType: dco_decode_common_app_scanned_entry_type(arr[1]),
+      status: dco_decode_common_app_scanned_entry_status(arr[2]),
+    );
+  }
+
+  @protected
+  CommonAppScannedEntryStatus dco_decode_common_app_scanned_entry_status(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return CommonAppScannedEntryStatus.values[raw as int];
+  }
+
+  @protected
+  CommonAppScannedEntryType dco_decode_common_app_scanned_entry_type(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return CommonAppScannedEntryType.values[raw as int];
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -208,9 +290,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<CommonAppScannedEntry> dco_decode_list_common_app_scanned_entry(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_common_app_scanned_entry)
+        .toList();
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
+  }
+
+  @protected
+  List<CommonAppScannedEntry>? dco_decode_opt_list_common_app_scanned_entry(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_list_common_app_scanned_entry(raw);
   }
 
   @protected
@@ -287,6 +391,64 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CommonAppScanSetting sse_decode_box_autoadd_common_app_scan_setting(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return sse_decode_common_app_scan_setting(deserializer);
+  }
+
+  @protected
+  CommonAppScanSetting sse_decode_common_app_scan_setting(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_basePath = sse_decode_String(deserializer);
+    final var_minInstallDirDepth = sse_decode_i_32(deserializer);
+    final var_maxInstallDirDepth = sse_decode_i_32(deserializer);
+    final var_minExecutableDepth = sse_decode_i_32(deserializer);
+    final var_maxExecutableDepth = sse_decode_i_32(deserializer);
+    final var_excludeDirectoryMatchers = sse_decode_list_String(deserializer);
+    final var_includeExecutableMatchers = sse_decode_list_String(deserializer);
+    final var_excludeExecutableMatchers = sse_decode_list_String(deserializer);
+    return CommonAppScanSetting(
+        basePath: var_basePath,
+        minInstallDirDepth: var_minInstallDirDepth,
+        maxInstallDirDepth: var_maxInstallDirDepth,
+        minExecutableDepth: var_minExecutableDepth,
+        maxExecutableDepth: var_maxExecutableDepth,
+        excludeDirectoryMatchers: var_excludeDirectoryMatchers,
+        includeExecutableMatchers: var_includeExecutableMatchers,
+        excludeExecutableMatchers: var_excludeExecutableMatchers);
+  }
+
+  @protected
+  CommonAppScannedEntry sse_decode_common_app_scanned_entry(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_path = sse_decode_String(deserializer);
+    final var_entryType =
+        sse_decode_common_app_scanned_entry_type(deserializer);
+    final var_status = sse_decode_common_app_scanned_entry_status(deserializer);
+    return CommonAppScannedEntry(
+        path: var_path, entryType: var_entryType, status: var_status);
+  }
+
+  @protected
+  CommonAppScannedEntryStatus sse_decode_common_app_scanned_entry_status(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return CommonAppScannedEntryStatus.values[inner];
+  }
+
+  @protected
+  CommonAppScannedEntryType sse_decode_common_app_scanned_entry_type(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return CommonAppScannedEntryType.values[inner];
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
@@ -299,10 +461,47 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<CommonAppScannedEntry> sse_decode_list_common_app_scanned_entry(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <CommonAppScannedEntry>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_common_app_scanned_entry(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     final len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  List<CommonAppScannedEntry>? sse_decode_opt_list_common_app_scanned_entry(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return sse_decode_list_common_app_scanned_entry(deserializer);
+    } else {
+      return null;
+    }
   }
 
   @protected
@@ -370,6 +569,50 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_common_app_scan_setting(
+      CommonAppScanSetting self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_common_app_scan_setting(self, serializer);
+  }
+
+  @protected
+  void sse_encode_common_app_scan_setting(
+      CommonAppScanSetting self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.basePath, serializer);
+    sse_encode_i_32(self.minInstallDirDepth, serializer);
+    sse_encode_i_32(self.maxInstallDirDepth, serializer);
+    sse_encode_i_32(self.minExecutableDepth, serializer);
+    sse_encode_i_32(self.maxExecutableDepth, serializer);
+    sse_encode_list_String(self.excludeDirectoryMatchers, serializer);
+    sse_encode_list_String(self.includeExecutableMatchers, serializer);
+    sse_encode_list_String(self.excludeExecutableMatchers, serializer);
+  }
+
+  @protected
+  void sse_encode_common_app_scanned_entry(
+      CommonAppScannedEntry self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.path, serializer);
+    sse_encode_common_app_scanned_entry_type(self.entryType, serializer);
+    sse_encode_common_app_scanned_entry_status(self.status, serializer);
+  }
+
+  @protected
+  void sse_encode_common_app_scanned_entry_status(
+      CommonAppScannedEntryStatus self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_common_app_scanned_entry_type(
+      CommonAppScannedEntryType self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
@@ -382,11 +625,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_common_app_scanned_entry(
+      List<CommonAppScannedEntry> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_common_app_scanned_entry(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_opt_list_common_app_scanned_entry(
+      List<CommonAppScannedEntry>? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_list_common_app_scanned_entry(self, serializer);
+    }
   }
 
   @protected

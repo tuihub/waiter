@@ -848,49 +848,70 @@ class _CommonAppFolderScanSettingPageState
                           ExpansionBehavior.collapseOthersAndSnapToTop,
                       shrinkWrap: true,
                       showRootNode: false,
-                      builder: (context, node) => ListTile(
-                        leading: Icon(
-                          _entryTypeIcon(node.data?.type ??
-                              CommonAppFolderScanEntryType.unknown),
-                        ),
-                        title: Text(
-                          node.data?.path.split(Platform.pathSeparator).last ??
-                              '未知',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: node.data != null
-                              ? TextStyle(
-                                  color: _entryStatusColor(
-                                      context, node.data!.status))
-                              : null,
-                        ),
-                        trailing: Wrap(
-                          children: [
-                            for (final used in node.data?.usedMatchers ?? [])
-                              Chip(
-                                label: Text(used.toString().split('.').last),
-                                visualDensity: VisualDensity(
-                                  horizontal: VisualDensity.minimumDensity,
-                                  vertical: VisualDensity.minimumDensity,
+                      builder: (context, node) {
+                        List<Widget> chips = [];
+                        final usedMatchersCount =
+                            <CommonAppFolderScanPathFieldMatcher, int>{};
+                        if (node.data != null) {
+                          for (final matcher in node.data!.usedMatchers) {
+                            usedMatchersCount.update(
+                              matcher,
+                              (value) => value + 1,
+                              ifAbsent: () => 1,
+                            );
+                          }
+                          chips = usedMatchersCount.entries
+                              .map(
+                                (e) => Chip(
+                                  label: Text(
+                                      '${e.key.toString().split('.').last}${e.value > 1 ? ' x${e.value}' : ''}'),
+                                  visualDensity: VisualDensity(
+                                    horizontal: VisualDensity.minimumDensity,
+                                    vertical: VisualDensity.minimumDensity,
+                                  ),
                                 ),
-                              ),
-                            if (result?.installedApps.any(
-                                    (e) => e.installPath == node.data?.path) ??
-                                false)
-                              const Chip(
-                                label: Text('安装目录'),
-                                visualDensity: VisualDensity(
-                                  horizontal: VisualDensity.minimumDensity,
-                                  vertical: VisualDensity.minimumDensity,
+                              )
+                              .toList();
+                        }
+                        return ListTile(
+                          leading: Icon(
+                            _entryTypeIcon(node.data?.type ??
+                                CommonAppFolderScanEntryType.unknown),
+                          ),
+                          title: Text(
+                            node.data?.path
+                                    .split(Platform.pathSeparator)
+                                    .last ??
+                                '未知',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: node.data != null
+                                ? TextStyle(
+                                    color: _entryStatusColor(
+                                        context, node.data!.status))
+                                : null,
+                          ),
+                          trailing: Wrap(
+                            children: [
+                              ...chips,
+                              if (result?.installedApps.any((e) =>
+                                      e.installPath == node.data?.path) ??
+                                  false)
+                                const Chip(
+                                  label: Text('安装目录'),
+                                  visualDensity: VisualDensity(
+                                    horizontal: VisualDensity.minimumDensity,
+                                    vertical: VisualDensity.minimumDensity,
+                                  ),
                                 ),
-                              ),
-                          ],
-                        ),
-                        visualDensity: const VisualDensity(
-                          horizontal: VisualDensity.minimumDensity,
-                          vertical: VisualDensity.minimumDensity,
-                        ),
-                      ),
+                            ],
+                          ),
+                          visualDensity: const VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 16),

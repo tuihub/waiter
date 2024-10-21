@@ -41,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.5.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -953886251;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 515802758;
 
 // Section: executor
 
@@ -49,6 +49,42 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
+fn wire__crate__api__app_scan__scan_common_apps_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "scan_common_apps",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_setting =
+                <crate::api::app_scan::CommonAppScanSetting>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::app_scan::scan_common_apps(api_setting)?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__simple__get_system_proxy_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -158,6 +194,73 @@ impl SseDecode for bool {
     }
 }
 
+impl SseDecode for crate::api::app_scan::CommonAppScanSetting {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_basePath = <String>::sse_decode(deserializer);
+        let mut var_minInstallDirDepth = <i32>::sse_decode(deserializer);
+        let mut var_maxInstallDirDepth = <i32>::sse_decode(deserializer);
+        let mut var_minExecutableDepth = <i32>::sse_decode(deserializer);
+        let mut var_maxExecutableDepth = <i32>::sse_decode(deserializer);
+        let mut var_excludeDirectoryMatchers = <Vec<String>>::sse_decode(deserializer);
+        let mut var_includeExecutableMatchers = <Vec<String>>::sse_decode(deserializer);
+        let mut var_excludeExecutableMatchers = <Vec<String>>::sse_decode(deserializer);
+        return crate::api::app_scan::CommonAppScanSetting {
+            base_path: var_basePath,
+            min_install_dir_depth: var_minInstallDirDepth,
+            max_install_dir_depth: var_maxInstallDirDepth,
+            min_executable_depth: var_minExecutableDepth,
+            max_executable_depth: var_maxExecutableDepth,
+            exclude_directory_matchers: var_excludeDirectoryMatchers,
+            include_executable_matchers: var_includeExecutableMatchers,
+            exclude_executable_matchers: var_excludeExecutableMatchers,
+        };
+    }
+}
+
+impl SseDecode for crate::api::app_scan::CommonAppScannedEntry {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_path = <String>::sse_decode(deserializer);
+        let mut var_entryType =
+            <crate::api::app_scan::CommonAppScannedEntryType>::sse_decode(deserializer);
+        let mut var_status =
+            <crate::api::app_scan::CommonAppScannedEntryStatus>::sse_decode(deserializer);
+        return crate::api::app_scan::CommonAppScannedEntry {
+            path: var_path,
+            entry_type: var_entryType,
+            status: var_status,
+        };
+    }
+}
+
+impl SseDecode for crate::api::app_scan::CommonAppScannedEntryStatus {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::app_scan::CommonAppScannedEntryStatus::Accessed,
+            1 => crate::api::app_scan::CommonAppScannedEntryStatus::Skipped,
+            2 => crate::api::app_scan::CommonAppScannedEntryStatus::Hit,
+            3 => crate::api::app_scan::CommonAppScannedEntryStatus::Error,
+            _ => unreachable!("Invalid variant for CommonAppScannedEntryStatus: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::app_scan::CommonAppScannedEntryType {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::app_scan::CommonAppScannedEntryType::Directory,
+            1 => crate::api::app_scan::CommonAppScannedEntryType::File,
+            2 => crate::api::app_scan::CommonAppScannedEntryType::Unknown,
+            _ => unreachable!("Invalid variant for CommonAppScannedEntryType: {}", inner),
+        };
+    }
+}
+
 impl SseDecode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -172,6 +275,32 @@ impl SseDecode for i64 {
     }
 }
 
+impl SseDecode for Vec<String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::app_scan::CommonAppScannedEntry> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::app_scan::CommonAppScannedEntry>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<u8> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -181,6 +310,19 @@ impl SseDecode for Vec<u8> {
             ans_.push(<u8>::sse_decode(deserializer));
         }
         return ans_;
+    }
+}
+
+impl SseDecode for Option<Vec<crate::api::app_scan::CommonAppScannedEntry>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <Vec<crate::api::app_scan::CommonAppScannedEntry>>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
     }
 }
 
@@ -246,8 +388,9 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__simple__get_system_proxy_impl(port, ptr, rust_vec_len, data_len),
-        2 => wire__crate__api__simple__process_runner_impl(port, ptr, rust_vec_len, data_len),
+        1 => wire__crate__api__app_scan__scan_common_apps_impl(port, ptr, rust_vec_len, data_len),
+        2 => wire__crate__api__simple__get_system_proxy_impl(port, ptr, rust_vec_len, data_len),
+        3 => wire__crate__api__simple__process_runner_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -266,6 +409,104 @@ fn pde_ffi_dispatcher_sync_impl(
 
 // Section: rust2dart
 
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::app_scan::CommonAppScanSetting {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.base_path.into_into_dart().into_dart(),
+            self.min_install_dir_depth.into_into_dart().into_dart(),
+            self.max_install_dir_depth.into_into_dart().into_dart(),
+            self.min_executable_depth.into_into_dart().into_dart(),
+            self.max_executable_depth.into_into_dart().into_dart(),
+            self.exclude_directory_matchers.into_into_dart().into_dart(),
+            self.include_executable_matchers
+                .into_into_dart()
+                .into_dart(),
+            self.exclude_executable_matchers
+                .into_into_dart()
+                .into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::app_scan::CommonAppScanSetting
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::app_scan::CommonAppScanSetting>
+    for crate::api::app_scan::CommonAppScanSetting
+{
+    fn into_into_dart(self) -> crate::api::app_scan::CommonAppScanSetting {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::app_scan::CommonAppScannedEntry {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.path.into_into_dart().into_dart(),
+            self.entry_type.into_into_dart().into_dart(),
+            self.status.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::app_scan::CommonAppScannedEntry
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::app_scan::CommonAppScannedEntry>
+    for crate::api::app_scan::CommonAppScannedEntry
+{
+    fn into_into_dart(self) -> crate::api::app_scan::CommonAppScannedEntry {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::app_scan::CommonAppScannedEntryStatus {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Accessed => 0.into_dart(),
+            Self::Skipped => 1.into_dart(),
+            Self::Hit => 2.into_dart(),
+            Self::Error => 3.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::app_scan::CommonAppScannedEntryStatus
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::app_scan::CommonAppScannedEntryStatus>
+    for crate::api::app_scan::CommonAppScannedEntryStatus
+{
+    fn into_into_dart(self) -> crate::api::app_scan::CommonAppScannedEntryStatus {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::app_scan::CommonAppScannedEntryType {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Directory => 0.into_dart(),
+            Self::File => 1.into_dart(),
+            Self::Unknown => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::app_scan::CommonAppScannedEntryType
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::app_scan::CommonAppScannedEntryType>
+    for crate::api::app_scan::CommonAppScannedEntryType
+{
+    fn into_into_dart(self) -> crate::api::app_scan::CommonAppScannedEntryType {
+        self
+    }
+}
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::simple::TraceMode {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
@@ -306,6 +547,64 @@ impl SseEncode for bool {
     }
 }
 
+impl SseEncode for crate::api::app_scan::CommonAppScanSetting {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.base_path, serializer);
+        <i32>::sse_encode(self.min_install_dir_depth, serializer);
+        <i32>::sse_encode(self.max_install_dir_depth, serializer);
+        <i32>::sse_encode(self.min_executable_depth, serializer);
+        <i32>::sse_encode(self.max_executable_depth, serializer);
+        <Vec<String>>::sse_encode(self.exclude_directory_matchers, serializer);
+        <Vec<String>>::sse_encode(self.include_executable_matchers, serializer);
+        <Vec<String>>::sse_encode(self.exclude_executable_matchers, serializer);
+    }
+}
+
+impl SseEncode for crate::api::app_scan::CommonAppScannedEntry {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.path, serializer);
+        <crate::api::app_scan::CommonAppScannedEntryType>::sse_encode(self.entry_type, serializer);
+        <crate::api::app_scan::CommonAppScannedEntryStatus>::sse_encode(self.status, serializer);
+    }
+}
+
+impl SseEncode for crate::api::app_scan::CommonAppScannedEntryStatus {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::app_scan::CommonAppScannedEntryStatus::Accessed => 0,
+                crate::api::app_scan::CommonAppScannedEntryStatus::Skipped => 1,
+                crate::api::app_scan::CommonAppScannedEntryStatus::Hit => 2,
+                crate::api::app_scan::CommonAppScannedEntryStatus::Error => 3,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::app_scan::CommonAppScannedEntryType {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::app_scan::CommonAppScannedEntryType::Directory => 0,
+                crate::api::app_scan::CommonAppScannedEntryType::File => 1,
+                crate::api::app_scan::CommonAppScannedEntryType::Unknown => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -320,12 +619,42 @@ impl SseEncode for i64 {
     }
 }
 
+impl SseEncode for Vec<String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::app_scan::CommonAppScannedEntry> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::app_scan::CommonAppScannedEntry>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<u8> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <u8>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<Vec<crate::api::app_scan::CommonAppScannedEntry>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <Vec<crate::api::app_scan::CommonAppScannedEntry>>::sse_encode(value, serializer);
         }
     }
 }

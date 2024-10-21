@@ -16,7 +16,6 @@ const defaultCommonAppFolderScanExcludeFileMatchers = <String>[
   'Lec.ExtProtocol.exe',
   'ezTransXP.ExtProtocol.exe',
   'Common.ExtProtocol.Executor.exe',
-  'MTool_Game.exe',
   'MTool_Config.exe',
   'MtoolBakinPlayerWrapper.exe',
   'BakinLauncher.exe',
