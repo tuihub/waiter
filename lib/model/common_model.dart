@@ -31,6 +31,7 @@ class ClientCommonData with _$ClientCommonData {
     int? themeMode,
     Map<String, ServerConfig>? servers,
     bool? useSystemProxy,
+    bool? useFluentUI,
   }) = _ClientCommonData;
 
   factory ClientCommonData.fromJson(Map<String, Object?> json) =>

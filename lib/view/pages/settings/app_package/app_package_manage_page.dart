@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../route.dart';
-import '../../../helper/spacing.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class AppPackageManagePage extends StatefulWidget {
@@ -38,7 +38,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
               DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                 ),
               ),
               const Expanded(child: SizedBox()),
@@ -47,7 +47,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.appPackage,
                           action: SettingsActions.appPackageAdd)
                       .go(context);
-                  FramePage.of(context)?.openDrawer();
+                  ModuleFramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -113,7 +113,7 @@ class AppPackageTableSource extends AsyncDataTableSource {
                 SettingsFunctionRoute(SettingsFunctions.appPackage,
                         action: SettingsActions.appPackageEdit, $extra: app)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

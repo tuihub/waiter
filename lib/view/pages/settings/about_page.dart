@@ -7,7 +7,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
-import '../../helper/spacing.dart';
+import '../../universal/list.dart';
+import '../../universal/spacing.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -64,7 +65,7 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ExpansionTile(
+            UniversalExpansionTile(
               title: const Text(
                 'Privacy Policy',
               ),
@@ -86,7 +87,7 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (ConnectionHelper.isNotLocal(context))
-              ExpansionTile(
+              UniversalExpansionTile(
                 title: const Text(
                   'Current Server Information',
                 ),

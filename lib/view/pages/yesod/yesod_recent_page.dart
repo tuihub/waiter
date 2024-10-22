@@ -18,10 +18,11 @@ import '../../../route.dart';
 import '../../components/form_field.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/duration_format.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';
@@ -101,7 +102,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
               closedShape: RoundedRectangleBorder(
                 borderRadius: filled
                     ? BorderRadius.zero
-                    : SpacingHelper.defaultBorderRadius,
+                    : UniversalUI.of(context).defaultBorderRadius,
               ),
               closedElevation: 0,
               closedColor: theme.cardColor,
@@ -153,7 +154,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                 const YesodFunctionRoute(YesodFunctions.recent,
                         action: YesodActions.recentSettings)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               },
               icon: const Icon(Icons.settings),
             ),
@@ -250,7 +251,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
   FeedItemListType listType = FeedItemListType.card;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   void submit(BuildContext context) {
@@ -341,7 +342,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                 feedIDFilter = values;
               },
               decoration: BoxDecoration(
-                borderRadius: SpacingHelper.defaultBorderRadius,
+                borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
             MultiSelectDialogField(
@@ -367,7 +368,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
                 categoryFilter = values;
               },
               decoration: BoxDecoration(
-                borderRadius: SpacingHelper.defaultBorderRadius,
+                borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
           ],

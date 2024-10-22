@@ -8,8 +8,9 @@ import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
-import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
+import '../../universal/list.dart';
+import '../../universal/spacing.dart';
 
 class YesodNav extends StatelessWidget {
   const YesodNav({super.key, required this.function});
@@ -21,7 +22,7 @@ class YesodNav extends StatelessWidget {
     return BlocBuilder<YesodBloc, YesodState>(builder: (context, state) {
       return Column(
         children: [
-          ListTile(
+          UniversalListTile(
             leading: const Icon(Icons.feed),
             onTap: () {
               context.read<YesodBloc>().add(YesodFeedItemListConfigSetEvent(
@@ -54,11 +55,11 @@ class YesodNav extends StatelessWidget {
             child: _YesodFeedList(function: function),
           ),
           Material(
-            child: ExpansionTile(
+            child: UniversalExpansionTile(
                 leading: const Icon(Icons.auto_awesome),
                 title: Text(S.of(context).automation),
                 children: [
-                  ListTile(
+                  UniversalListTile(
                     leading: const Icon(
                       Icons.featured_play_list,
                     ),
@@ -71,7 +72,7 @@ class YesodNav extends StatelessWidget {
                     title: Text(S.of(context).notifyTargetManage),
                     selected: function == YesodFunctions.notifyTargetManage,
                   ),
-                  ListTile(
+                  UniversalListTile(
                     leading: const Icon(
                       FontAwesomeIcons.codeFork,
                     ),
@@ -84,7 +85,7 @@ class YesodNav extends StatelessWidget {
                     selected: function == YesodFunctions.notifyFlowManage,
                   ),
                   SpacingHelper.defaultDivider,
-                  ListTile(
+                  UniversalListTile(
                     leading: const Icon(
                       Icons.filter_list,
                     ),
@@ -98,7 +99,7 @@ class YesodNav extends StatelessWidget {
                   ),
                 ]),
           ),
-          ListTile(
+          UniversalListTile(
             leading: const Icon(
               Icons.rss_feed,
             ),
@@ -131,7 +132,7 @@ class _YesodFeedList extends StatelessWidget {
             physics: physics,
             children: [
               for (final feedConfig in feedConfigs)
-                ListTile(
+                UniversalListTile(
                   leading: Container(
                     decoration: feedConfig.feed.image.url.isEmpty
                         ? const BoxDecoration()

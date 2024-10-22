@@ -39,7 +39,6 @@ import 'repo/grpc/client.dart';
 import 'repo/local/common.dart';
 import 'route.dart';
 import 'rust/frb_generated.dart';
-import 'view/helper/spacing.dart';
 
 part 'init.dart';
 
@@ -188,9 +187,9 @@ class _MyAppWidget extends StatelessWidget {
               subThemesData: const FlexSubThemesData(
                 blendOnLevel: 7,
                 useTextTheme: true,
-                useM2StyleDividerInM3: true,
+                // useM2StyleDividerInM3: true,
               ),
-              visualDensity: VisualDensity.adaptivePlatformDensity,
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
               swapLegacyOnMaterial3: true,
             ));
 
@@ -203,7 +202,7 @@ class _MyAppWidget extends StatelessWidget {
               subThemesData: const FlexSubThemesData(
                 blendOnLevel: 20,
                 useTextTheme: true,
-                useM2StyleDividerInM3: true,
+                // useM2StyleDividerInM3: true,
               ),
               visualDensity: VisualDensity.adaptivePlatformDensity,
               useMaterial3: true,
@@ -232,6 +231,7 @@ class _MyAppWidget extends StatelessWidget {
             localizationsDelegates: const [
               S.delegate,
               GlobalMaterialLocalizations.delegate,
+              fluent.FluentLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
@@ -253,7 +253,7 @@ ThemeData _customizeTheme(Brightness brightness, ThemeData theme) {
       selectedColor: theme.colorScheme.onPrimary,
       selectedTileColor: theme.colorScheme.primary,
       shape: RoundedRectangleBorder(
-        borderRadius: SpacingHelper.defaultBorderRadius,
+        borderRadius: BorderRadius.circular(8),
       ),
     ),
   );

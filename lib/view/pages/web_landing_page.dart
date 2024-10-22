@@ -12,8 +12,8 @@ import '../../l10n/l10n.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
-import '../helper/spacing.dart';
 import '../layout/bootstrap_container.dart';
+import '../universal/spacing.dart';
 
 class WebLandingPage extends StatelessWidget {
   const WebLandingPage({super.key});

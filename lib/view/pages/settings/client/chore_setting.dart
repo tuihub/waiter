@@ -12,11 +12,11 @@ class ChoreSetting extends StatelessWidget {
         margin: EdgeInsets.zero,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 8),
-          child: ExpansionTile(
+          child: UniversalExpansionTile(
             title: const Text('杂项'),
             children: [
               if (!PlatformHelper.isWeb())
-                ListTile(
+                UniversalListTile(
                   title: const Text('使用系统代理（实验性）'),
                   trailing: Switch(
                     value: state.useSystemProxy ?? false,
@@ -28,7 +28,7 @@ class ChoreSetting extends StatelessWidget {
                   ),
                 ),
               if (PlatformHelper.isWindowsApp())
-                ListTile(
+                UniversalListTile(
                   title: const Text('使用 Fluent UI（实验性）'),
                   trailing: Switch(
                     value: state.useFluentUI ?? false,
@@ -40,7 +40,7 @@ class ChoreSetting extends StatelessWidget {
                   ),
                 ),
               if (basePath != null && PlatformHelper.isWindowsApp())
-                ListTile(
+                UniversalListTile(
                   title: const Text('数据目录'),
                   subtitle: Text(basePath),
                   trailing: IconButton(

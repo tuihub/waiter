@@ -14,6 +14,7 @@ import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
 import '../frame_page.dart';
 
 class NotifyTargetPage extends StatelessWidget {
@@ -34,11 +35,11 @@ class NotifyTargetPage extends StatelessWidget {
           const YesodFunctionRoute(YesodFunctions.notifyTargetManage,
                   action: YesodActions.notifyTargetAdd)
               .go(context);
-          FramePage.of(context)?.openDrawer();
+          ModuleFramePage.of(context)?.openDrawer();
         },
         children: [
           for (final item in listData)
-            ListTile(
+            UniversalListTile(
               title: Text(item.name),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +53,7 @@ class NotifyTargetPage extends StatelessWidget {
                         action: YesodActions.notifyTargetEdit,
                         $extra: listData.indexOf(item))
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               },
               trailing: const Icon(Icons.edit),
             ),
@@ -66,7 +67,7 @@ class NotifyTargetAddPanel extends StatelessWidget {
   const NotifyTargetAddPanel({super.key});
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
@@ -159,7 +160,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
   final int? index;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   List<Widget> specSectionTuiHubRSS(NotifyTarget target, FeatureFlag flag) {

@@ -659,7 +659,7 @@ class _CommonAppFolderScanSettingPageState
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
                                 ),
-                                ExpansionTile(
+                                UniversalExpansionTile(
                                   title: const Text('文件名匹配'),
                                   subtitle: const Text('点击展开，推荐保持默认'),
                                   children: SpacingHelper.listSpacing(

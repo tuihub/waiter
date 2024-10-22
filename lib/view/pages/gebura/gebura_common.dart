@@ -6,8 +6,8 @@ import 'package:universal_io/io.dart' as io;
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../common/steam/steam.dart';
 import '../../../model/gebura_model.dart';
-import '../../helper/spacing.dart';
 import '../../helper/url.dart';
+import '../../universal/universal.dart';
 
 String? _getSteamAppID(BuildContext context, LibraryListItem item) {
   final state = context.read<GeburaBloc>().state;
@@ -128,7 +128,7 @@ class GeburaAppBackgroundImage extends StatelessWidget {
       builder: (context, state) {
         return Container(
           decoration: BoxDecoration(
-            borderRadius: SpacingHelper.defaultBorderRadius,
+            borderRadius: UniversalUI.of(context).defaultBorderRadius,
             image: DecorationImage(
               image: _buildImageProvider(context),
               fit: BoxFit.cover,

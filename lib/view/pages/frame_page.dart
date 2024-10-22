@@ -1,21 +1,147 @@
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/client_setting/client_setting_bloc.dart';
 import '../../consts.dart';
 import '../../route.dart';
 import '../helper/connection.dart';
-import '../helper/spacing.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
-import '../specialized/nav_rail.dart';
+import '../universal/universal.dart';
 import 'server_select_overlay.dart';
 
 const double restWidth = 36;
 const double gapWidth = 8;
-const double navWidth = 64;
+const double navWidth = 0;
 const double defaultLeftPartWidth = 256;
 
-class FramePage extends StatefulWidget {
-  const FramePage({
+class AppFramePage extends StatefulWidget {
+  const AppFramePage({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  State<AppFramePage> createState() => AppFramePageState();
+}
+
+class AppFramePageState extends State<AppFramePage> {
+  @override
+  void initState() {
+    super.initState();
+    final offlineAllowedModules = <ModuleName>{
+      ModuleName.tiphereth,
+      ModuleName.gebura,
+      ModuleName.settings,
+    };
+    if (ConnectionHelper.isLocal(context)) {
+      _allowedModules = moduleList
+          .where((e) => offlineAllowedModules.contains(e.name))
+          .toList();
+    } else {
+      _allowedModules = moduleList;
+    }
+    _selectedNavIndex = 0;
+  }
+
+  late List<App> _allowedModules;
+  late int _selectedNavIndex;
+
+  void _onSelectedNav(int index) {
+    ServerSelectOverlay.of(context)?.hide();
+    _allowedModules[index].go(context);
+    setState(() {
+      _selectedNavIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+      buildWhen: (previous, current) =>
+          previous.useFluentUI != current.useFluentUI,
+      builder: (context, state) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.biggest.width;
+            final compact = width <= BootstrapBreakpoints.md;
+            final design = UniversalUI.of(context).design;
+
+            switch (design) {
+              case UIDesign.material:
+                if (compact) {
+                  return Scaffold(
+                    body: widget.child,
+                    bottomNavigationBar: BottomNavigationBar(
+                      currentIndex: _selectedNavIndex,
+                      onTap: _onSelectedNav,
+                      type: BottomNavigationBarType.fixed,
+                      items: [
+                        for (final module in _allowedModules)
+                          BottomNavigationBarItem(
+                            icon: Icon(module.icon),
+                            label: module.name.toString().split('.').last,
+                          ),
+                      ],
+                    ),
+                  );
+                }
+                return Row(
+                  children: [
+                    NavigationRail(
+                      selectedIndex: _selectedNavIndex,
+                      onDestinationSelected: _onSelectedNav,
+                      groupAlignment: 0,
+                      labelType: NavigationRailLabelType.selected,
+                      destinations: [
+                        for (final module in _allowedModules)
+                          NavigationRailDestination(
+                            icon: Icon(module.icon),
+                            label: Text(module.name.toString().split('.').last),
+                          ),
+                      ],
+                    ),
+                    const VerticalDivider(thickness: 1, width: 1),
+                    Expanded(child: widget.child),
+                  ],
+                );
+              case UIDesign.fluent:
+                return fluent.NavigationView(
+                  pane: fluent.NavigationPane(
+                    selected: _selectedNavIndex,
+                    onItemPressed: _onSelectedNav,
+                    displayMode: compact
+                        ? fluent.PaneDisplayMode.top
+                        : fluent.PaneDisplayMode.compact,
+                    toggleable: false,
+                    items: [
+                      for (final module in _allowedModules)
+                        fluent.PaneItem(
+                          icon: Icon(module.icon),
+                          title: Text(module.name.toString().split('.').last),
+                          onTap: () {
+                            ServerSelectOverlay.of(context)?.hide();
+                            module.go(context);
+                          },
+                          body: Container(),
+                        ),
+                    ],
+                  ),
+                  paneBodyBuilder: (context, child) => widget.child,
+                );
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class ModuleFramePage extends StatefulWidget {
+  const ModuleFramePage({
     super.key,
     required this.selectedNav,
     required this.leftPart,
@@ -34,15 +160,18 @@ class FramePage extends StatefulWidget {
   final double? rightPartWidth;
   final bool gestureRight;
 
-  static FramePageState? of(BuildContext context) {
-    return context.findAncestorStateOfType<FramePageState>();
+  static ModuleFramePageState? of(BuildContext context) {
+    return context.findAncestorStateOfType<ModuleFramePageState>();
   }
 
   @override
-  State<StatefulWidget> createState() => FramePageState();
+  State<StatefulWidget> createState() => ModuleFramePageState();
 }
 
-class FramePageState extends State<FramePage> {
+class ModuleFramePageState extends State<ModuleFramePage> {
+  final GlobalKey<ScaffoldState> _frameScaffold = GlobalKey();
+  final GlobalKey<OverlappingPanelsState> _overlappingPanelsKey = GlobalKey();
+
   void openDrawer() {
     _frameScaffold.currentState?.openEndDrawer();
     _overlappingPanelsKey.currentState?.reveal(RevealSide.right);
@@ -53,9 +182,6 @@ class FramePageState extends State<FramePage> {
     _overlappingPanelsKey.currentState?.reveal(RevealSide.main);
   }
 
-  final GlobalKey<ScaffoldState> _frameScaffold = GlobalKey();
-  final GlobalKey<OverlappingPanelsState> _overlappingPanelsKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -65,7 +191,6 @@ class FramePageState extends State<FramePage> {
         Widget content = widget.middlePart != null
             ? Row(
                 children: [
-                  _Nav(selectedNav: widget.selectedNav),
                   Padding(
                     padding: const EdgeInsets.only(right: gapWidth),
                     child: Material(
@@ -81,12 +206,7 @@ class FramePageState extends State<FramePage> {
                   Expanded(child: widget.middlePart!),
                 ],
               )
-            : Row(
-                children: [
-                  _Nav(selectedNav: widget.selectedNav),
-                  Expanded(child: widget.leftPart),
-                ],
-              );
+            : widget.leftPart;
 
         if (width <= BootstrapBreakpoints.md) {
           content = widget.middlePart != null
@@ -94,23 +214,18 @@ class FramePageState extends State<FramePage> {
                   key: _overlappingPanelsKey,
                   restWidth: restWidth,
                   gestureRight: widget.gestureRight,
-                  left: Row(
-                    children: [
-                      _Nav(selectedNav: widget.selectedNav),
-                      Material(
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          width: width - navWidth - gapWidth - restWidth,
-                          child: widget.leftPart,
-                        ),
-                      ),
-                    ],
+                  left: Material(
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      width: width - navWidth - gapWidth - restWidth,
+                      child: widget.leftPart,
+                    ),
                   ),
                   main: DecoratedBox(
                     decoration: BoxDecoration(
                       color:
                           Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+                      borderRadius: UniversalUI.of(context).defaultBorderRadius,
                     ),
                     child: widget.middlePart,
                   ),
@@ -127,14 +242,9 @@ class FramePageState extends State<FramePage> {
               : OverlappingPanels(
                   key: _overlappingPanelsKey,
                   gestureRight: widget.gestureRight,
-                  main: Row(
-                    children: [
-                      _Nav(selectedNav: widget.selectedNav),
-                      SizedBox(
-                        width: width - navWidth,
-                        child: widget.leftPart,
-                      ),
-                    ],
+                  main: SizedBox(
+                    width: width - navWidth,
+                    child: widget.leftPart,
                   ),
                   right: widget.rightPart != null
                       ? Align(
@@ -162,70 +272,6 @@ class FramePageState extends State<FramePage> {
               : null,
         );
       },
-    );
-  }
-}
-
-class _Nav extends StatelessWidget {
-  const _Nav({required this.selectedNav});
-
-  final ModuleName selectedNav;
-
-  @override
-  Widget build(BuildContext context) {
-    final offlineAllowedModules = <ModuleName>{
-      ModuleName.tiphereth,
-      ModuleName.gebura,
-      ModuleName.settings,
-    };
-    late Set<ModuleName> allowedModules;
-    if (ConnectionHelper.isLocal(context)) {
-      allowedModules = offlineAllowedModules;
-    } else {
-      allowedModules = moduleList.map((e) => e.name).toSet();
-    }
-    return NavRail(
-      leading: [
-        IconMenuItem(
-          icon: Icons.account_circle_sharp,
-          selected: ModuleName.tiphereth == selectedNav,
-          onPressed: () {
-            ServerSelectOverlay.of(context)?.minimize();
-            const TipherethRootRoute().go(context);
-          },
-        ),
-      ],
-      body: [
-        for (final module in moduleList)
-          if (allowedModules.contains(module.name))
-            IconMenuItem(
-              icon: module.icon,
-              selected: module.name == selectedNav,
-              onPressed: () {
-                ServerSelectOverlay.of(context)?.hide();
-                module.go(context);
-              },
-            ),
-      ],
-      trailing: [
-        if (allowedModules.contains(ModuleName.notification))
-          IconMenuItem(
-            icon: Icons.notifications,
-            selected: ModuleName.notification == selectedNav,
-            onPressed: () {
-              ServerSelectOverlay.of(context)?.hide();
-              const NotificationRootRoute().go(context);
-            },
-          ),
-        IconMenuItem(
-          icon: Icons.settings,
-          selected: ModuleName.settings == selectedNav,
-          onPressed: () {
-            ServerSelectOverlay.of(context)?.hide();
-            const SettingsRootRoute().go(context);
-          },
-        ),
-      ],
     );
   }
 }

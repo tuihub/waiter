@@ -7,9 +7,10 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
-import '../../helper/spacing.dart';
 import '../../layout/overlapping_panels.dart';
 import '../../universal/list.dart';
+import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 import 'gebura_common.dart';
 
 class GeburaNav extends StatelessWidget {
@@ -71,13 +72,13 @@ class GeburaNav extends StatelessWidget {
                           : null,
                   contentPadding: EdgeInsets.zero,
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
+                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
                     borderSide: const BorderSide(
                       style: BorderStyle.none,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
+                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   ),
                 ),
                 onChanged: (query) {

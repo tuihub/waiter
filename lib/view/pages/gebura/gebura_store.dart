@@ -6,8 +6,8 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/universal.dart';
 import 'gebura_store_detail.dart';
 
 class GeburaStorePage extends StatelessWidget {
@@ -40,7 +40,7 @@ class GeburaStorePage extends StatelessWidget {
             : Center(child: Text(msg)),
         appBar: AppBar(
           shape: RoundedRectangleBorder(
-            borderRadius: SpacingHelper.defaultBorderRadius,
+            borderRadius: UniversalUI.of(context).defaultBorderRadius,
           ),
           title: BootstrapContainer(
             children: [
@@ -154,7 +154,8 @@ class StoreList extends StatelessWidget {
                         height: 128,
                         child: Card(
                           child: InkWell(
-                            borderRadius: SpacingHelper.defaultBorderRadius,
+                            borderRadius:
+                                UniversalUI.of(context).defaultBorderRadius,
                             onTap: () {
                               openContainer();
                             },
@@ -164,8 +165,8 @@ class StoreList extends StatelessWidget {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          SpacingHelper.defaultBorderRadius,
+                                      borderRadius: UniversalUI.of(context)
+                                          .defaultBorderRadius,
                                       image: DecorationImage(
                                           image: ExtendedNetworkImageProvider(
                                             app.coverImageUrl,

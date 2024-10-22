@@ -23,7 +23,7 @@ class _UserAddPanelState extends State<UserAddPanel> {
   UserStatus userStatus = UserStatus.USER_STATUS_ACTIVE;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

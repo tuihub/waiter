@@ -18,10 +18,11 @@ import '../../../model/gebura_model.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../components/toast.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import '../../universal/list.dart';
+import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
 import 'gebura_common.dart';
 
@@ -131,13 +132,14 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                           child: Container(
                               padding: const EdgeInsets.only(top: 400 - 96),
                               decoration: BoxDecoration(
-                                borderRadius: SpacingHelper.defaultBorderRadius,
+                                borderRadius:
+                                    UniversalUI.of(context).defaultBorderRadius,
                               ),
                               child: Stack(
                                 children: [
                                   ClipRRect(
-                                    borderRadius:
-                                        SpacingHelper.defaultBorderRadius,
+                                    borderRadius: UniversalUI.of(context)
+                                        .defaultBorderRadius,
                                     child: const BackdropBlur(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -356,7 +358,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         final insts = appInstsMap[version]!;
         final msg = insts.length == 1 ? '已安装' : '已安装 ${insts.length} 个在当前设备';
 
-        final listTile = ExpansionTile(
+        final listTile = UniversalExpansionTile(
           initiallyExpanded: true,
           title: Text(msg),
           children: [

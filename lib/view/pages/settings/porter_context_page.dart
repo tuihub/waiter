@@ -14,6 +14,7 @@ import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
 import '../frame_page.dart';
 
 class PorterContextManagePage extends StatelessWidget {
@@ -37,10 +38,10 @@ class PorterContextManagePage extends StatelessWidget {
         action: SettingsActions.porterContextEdit,
         $extra: porterContext,
       ).go(context);
-      FramePage.of(context)?.openDrawer();
+      ModuleFramePage.of(context)?.openDrawer();
     }
 
-    return ExpansionTile(
+    return UniversalExpansionTile(
       title: Text(group.binarySummary.name.isNotEmpty
           ? group.binarySummary.name
           : group.globalName),
@@ -58,12 +59,12 @@ class PorterContextManagePage extends StatelessWidget {
             action: SettingsActions.porterContextAdd,
             $extra: group,
           ).go(context);
-          FramePage.of(context)?.openDrawer();
+          ModuleFramePage.of(context)?.openDrawer();
         },
       ),
       children: [
         for (final context in contexts)
-          ListTile(
+          UniversalListTile(
             title: Text(context.name),
             subtitle: Row(
               children: [
@@ -145,7 +146,7 @@ class PorterContextAddPanel extends StatelessWidget {
   final PorterGroup porterGroup;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
@@ -249,7 +250,7 @@ class PorterContextEditPanel extends StatelessWidget {
   final PorterContext porterContext;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

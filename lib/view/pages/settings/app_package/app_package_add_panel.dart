@@ -11,7 +11,7 @@ class AppPackageAddPanel extends StatelessWidget {
   const AppPackageAddPanel({super.key});
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

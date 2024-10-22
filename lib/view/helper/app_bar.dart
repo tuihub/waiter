@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../layout/overlapping_panels.dart';
-import 'spacing.dart';
 
 class AppBarHelper {
   static RoundedRectangleBorder defaultShape = RoundedRectangleBorder(
-    borderRadius: SpacingHelper.defaultBorderRadius,
+    borderRadius: BorderRadius.circular(8),
   );
 
   static Widget? defaultMainLeading(

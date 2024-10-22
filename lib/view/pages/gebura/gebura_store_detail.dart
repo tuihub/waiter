@@ -9,8 +9,9 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 
 class GeburaStoreDetail extends StatelessWidget {
   const GeburaStoreDetail({super.key, required this.appID});
@@ -55,8 +56,8 @@ class GeburaStoreDetail extends StatelessWidget {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          SpacingHelper.defaultBorderRadius,
+                                      borderRadius: UniversalUI.of(context)
+                                          .defaultBorderRadius,
                                       image: DecorationImage(
                                         image: ExtendedNetworkImageProvider(
                                           app.backgroundImageUrl,

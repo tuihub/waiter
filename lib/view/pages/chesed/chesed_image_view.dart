@@ -1,7 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../helper/spacing.dart';
+import '../../universal/universal.dart';
 
 class ChesedImageViewWidget extends StatelessWidget {
   final String imageUrl;
@@ -17,7 +17,7 @@ class ChesedImageViewWidget extends StatelessWidget {
         },
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: SpacingHelper.defaultBorderRadius,
+            borderRadius: UniversalUI.of(context).defaultBorderRadius,
             image: DecorationImage(
               image: ExtendedNetworkImageProvider(
                 imageUrl,

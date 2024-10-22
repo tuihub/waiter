@@ -27,9 +27,10 @@ import '../../components/form_field.dart';
 import '../../components/input_formatters.dart';
 import '../../components/toast.dart';
 import '../../helper/duration_format.dart';
-import '../../helper/spacing.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 
 class YesodFeedManagePage extends StatelessWidget {
@@ -50,7 +51,7 @@ class YesodFeedManagePage extends StatelessWidget {
           const YesodFunctionRoute(YesodFunctions.feedManage,
                   action: YesodActions.feedAdd)
               .go(context);
-          FramePage.of(context)?.openDrawer();
+          ModuleFramePage.of(context)?.openDrawer();
         },
         popupMenuItems: [
           PopupMenuItem(
@@ -71,7 +72,7 @@ class YesodFeedManagePage extends StatelessWidget {
         ],
         children: [
           for (var i = 0; i < listData.length; i++)
-            ListTile(
+            UniversalListTile(
               leading: listData[i].feed.image.url.isNotEmpty
                   ? CircleAvatar(
                       backgroundImage: ExtendedNetworkImageProvider(
@@ -84,7 +85,7 @@ class YesodFeedManagePage extends StatelessWidget {
                 YesodFunctionRoute(YesodFunctions.feedManage,
                         action: YesodActions.feedEdit, $extra: i)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               },
               title: Text(listData[i].config.name.isNotEmpty
                   ? listData[i].config.name
@@ -117,7 +118,7 @@ class YesodFeedManageAddPanel extends StatelessWidget {
   const YesodFeedManageAddPanel({super.key});
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
@@ -233,7 +234,7 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                 actions = values;
               },
               decoration: BoxDecoration(
-                borderRadius: SpacingHelper.defaultBorderRadius,
+                borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
             SwitchFormField(
@@ -285,7 +286,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
   final int? index;
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
@@ -403,7 +404,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 actions = values;
               },
               decoration: BoxDecoration(
-                borderRadius: SpacingHelper.defaultBorderRadius,
+                borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
             SwitchFormField(

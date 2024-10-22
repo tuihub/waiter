@@ -23,7 +23,10 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
         final themeMode = ThemeMode.values[common.themeMode!];
         emit(state.copyWith(themeMode: themeMode));
       }
-      emit(state.copyWith(useSystemProxy: common.useSystemProxy));
+      emit(state.copyWith(
+        useSystemProxy: common.useSystemProxy,
+        useFluentUI: common.useFluentUI,
+      ));
     });
 
     on<ChangeThemeEvent>((event, emit) async {
@@ -53,6 +56,7 @@ class ClientSettingBloc extends Bloc<ClientSettingEvent, ClientSettingState> {
     });
 
     on<ChangeUseFluentUIEvent>((event, emit) async {
+      await _repo.set(common.copyWith(useFluentUI: event.useFluentUI));
       emit(state.copyWith(useFluentUI: event.useFluentUI));
     });
   }

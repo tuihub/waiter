@@ -5,6 +5,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
 import '../frame_page.dart';
 
 class GeburaAssignAppPanel extends StatefulWidget {
@@ -16,7 +17,7 @@ class GeburaAssignAppPanel extends StatefulWidget {
 
 class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   int _index = 0;
@@ -146,7 +147,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                           )
                         else if (searchResults != null)
                           for (final info in searchResults!)
-                            ListTile(
+                            UniversalListTile(
                               title: Text(info.name),
                               subtitle: Text(info.source),
                               onTap: () {
@@ -168,15 +169,15 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                       const SizedBox(
                         height: 8,
                       ),
-                      ListTile(
+                      UniversalListTile(
                         title: const Text('受影响的应用'),
                         subtitle: Text(app.name),
                       ),
-                      ListTile(
+                      UniversalListTile(
                         title: const Text('新应用信息'),
                         subtitle: Text('${selectedAppInfo?.name}'),
                       ),
-                      ListTile(
+                      UniversalListTile(
                         title: const Text('应用信息来源'),
                         subtitle: Text('${selectedAppInfo?.source}'),
                       ),

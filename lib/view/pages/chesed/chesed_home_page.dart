@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../components/toast.dart';
-import '../../helper/spacing.dart';
+import '../../universal/universal.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
@@ -25,7 +25,7 @@ class ChesedHome extends StatelessWidget {
               Ink(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   // color: Theme.of(context).colorScheme.secondaryContainer,
                 ),
                 child: LayoutBuilder(builder: (context, constrains) {
@@ -98,7 +98,8 @@ class ChesedHome extends StatelessWidget {
                         if (index == state.imageUrls!.length) {
                           return Ink(
                             decoration: BoxDecoration(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
+                              borderRadius:
+                                  UniversalUI.of(context).defaultBorderRadius,
                               color: Theme.of(context)
                                   .colorScheme
                                   .secondaryContainer,
@@ -120,7 +121,8 @@ class ChesedHome extends StatelessWidget {
                             },
                             child: Ink(
                               decoration: BoxDecoration(
-                                borderRadius: SpacingHelper.defaultBorderRadius,
+                                borderRadius:
+                                    UniversalUI.of(context).defaultBorderRadius,
                                 image: DecorationImage(
                                   image: ExtendedNetworkImageProvider(
                                     item,
@@ -132,7 +134,8 @@ class ChesedHome extends StatelessWidget {
                       }
                       return Ink(
                         decoration: BoxDecoration(
-                          borderRadius: SpacingHelper.defaultBorderRadius,
+                          borderRadius:
+                              UniversalUI.of(context).defaultBorderRadius,
                           color:
                               Theme.of(context).colorScheme.secondaryContainer,
                         ),

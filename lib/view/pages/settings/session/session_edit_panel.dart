@@ -12,7 +12,7 @@ class SessionEditPanel extends StatelessWidget {
   const SessionEditPanel({super.key});
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../helper/spacing.dart';
+import '../universal/universal.dart';
 
 class ThemePresent extends StatelessWidget {
   final String title;
@@ -139,7 +139,8 @@ class ThemePresent extends StatelessWidget {
                         width: 24,
                         margin: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          borderRadius: SpacingHelper.defaultBorderRadius,
+                          borderRadius:
+                              UniversalUI.of(context).defaultBorderRadius,
                           color: theme.colorScheme.tertiaryContainer,
                         ),
                       ),

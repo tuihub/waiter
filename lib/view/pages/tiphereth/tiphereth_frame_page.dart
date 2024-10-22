@@ -15,13 +15,13 @@ import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
+import '../../universal/universal.dart';
 import '../server_select_overlay.dart';
 
-part 'my_accounts_card.dart';
 part 'account_dialog.dart';
+part 'my_accounts_card.dart';
 
 class TipherethFramePage extends StatelessWidget {
   const TipherethFramePage({super.key});

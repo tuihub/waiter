@@ -98,10 +98,10 @@ class _AccountCard extends StatelessWidget {
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                 ),
                 child: ClipRRect(
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   child: const BackdropBlur(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -116,7 +116,7 @@ class _AccountCard extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: SpacingHelper.defaultBorderRadius,
+                      borderRadius: UniversalUI.of(context).defaultBorderRadius,
                       image: DecorationImage(
                           image: ExtendedNetworkImageProvider(
                             account!.avatarUrl,

@@ -8,8 +8,8 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../helper/duration_format.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/universal.dart';
 
 class YesodDetailPage extends StatefulWidget {
   const YesodDetailPage({super.key, required this.itemId});
@@ -52,7 +52,7 @@ class YesodDetailPageState extends State<YesodDetailPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             ClipRRect(
-              borderRadius: SpacingHelper.defaultBorderRadius,
+              borderRadius: UniversalUI.of(context).defaultBorderRadius,
               child: AppBar(
                 title: Text(item != null ? item!.title : '加载中...'),
               ),

@@ -8,6 +8,7 @@ import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
+import '../../universal/list.dart';
 
 class SettingsNav extends StatelessWidget {
   const SettingsNav({super.key, required this.function});
@@ -28,7 +29,7 @@ class SettingsNav extends StatelessWidget {
                     physics: physics,
                     child: Column(
                       children: [
-                        ListTile(
+                        UniversalListTile(
                           onTap: () {
                             const SettingsFunctionRoute(
                                     SettingsFunctions.client)
@@ -40,7 +41,7 @@ class SettingsNav extends StatelessWidget {
                           selected: function == SettingsFunctions.client,
                         ),
                         if (ConnectionHelper.isNotLocal(context))
-                          ListTile(
+                          UniversalListTile(
                             onTap: () {
                               const SettingsFunctionRoute(
                                       SettingsFunctions.session)
@@ -52,7 +53,7 @@ class SettingsNav extends StatelessWidget {
                             selected: function == SettingsFunctions.session,
                           ),
                         if (ConnectionHelper.isNotLocal(context))
-                          ListTile(
+                          UniversalListTile(
                             onTap: () {
                               const SettingsFunctionRoute(
                                       SettingsFunctions.porterContext)
@@ -67,13 +68,13 @@ class SettingsNav extends StatelessWidget {
                         if (ConnectionHelper.isNotLocal(context))
                           if (state.currentUser!.type ==
                               UserType.USER_TYPE_ADMIN)
-                            ExpansionTile(
+                            UniversalExpansionTile(
                               title: const Text(
                                 '管理区域',
                               ),
                               childrenPadding: const EdgeInsets.only(left: 12),
                               children: [
-                                ListTile(
+                                UniversalListTile(
                                   title: Text(S.of(context).pluginManage),
                                   onTap: () {
                                     const SettingsFunctionRoute(
@@ -85,7 +86,7 @@ class SettingsNav extends StatelessWidget {
                                   selected:
                                       function == SettingsFunctions.porter,
                                 ),
-                                ListTile(
+                                UniversalListTile(
                                   title: const Text('用户管理'),
                                   onTap: () {
                                     const SettingsFunctionRoute(
@@ -96,7 +97,7 @@ class SettingsNav extends StatelessWidget {
                                   },
                                   selected: function == SettingsFunctions.user,
                                 ),
-                                ListTile(
+                                UniversalListTile(
                                   title: const Text('应用管理'),
                                   onTap: () {
                                     const SettingsFunctionRoute(
@@ -107,7 +108,7 @@ class SettingsNav extends StatelessWidget {
                                   },
                                   selected: function == SettingsFunctions.app,
                                 ),
-                                ListTile(
+                                UniversalListTile(
                                   title: const Text('应用包管理'),
                                   onTap: () {
                                     const SettingsFunctionRoute(
@@ -129,7 +130,7 @@ class SettingsNav extends StatelessWidget {
                 },
               ),
             ),
-            ListTile(
+            UniversalListTile(
               onTap: () {
                 const SettingsFunctionRoute(SettingsFunctions.about)
                     .go(context);

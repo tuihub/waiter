@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
-import '../../helper/spacing.dart';
+import '../../universal/universal.dart';
 import '../image_viewer.dart';
 
 class YesodPreviewCard extends StatelessWidget {
@@ -32,7 +32,7 @@ class YesodPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cardBorderRadius_ =
-        cardBorderRadius ?? SpacingHelper.defaultBorderRadius;
+        cardBorderRadius ?? UniversalUI.of(context).defaultBorderRadius;
     return LayoutBuilder(builder: (context, constraints) {
       const maxTitleLines = 2;
       const maxDescriptionLines = 3;
@@ -69,7 +69,8 @@ class YesodPreviewCard extends StatelessWidget {
                         maxWidth: leftImageSize,
                       ),
                       child: ClipRRect(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        borderRadius:
+                            UniversalUI.of(context).defaultBorderRadius,
                         child: images != null && images!.isNotEmpty
                             ? _ResizedSpecialImage(images![0])
                             : Container(),
@@ -156,7 +157,8 @@ class YesodPreviewCard extends StatelessWidget {
                               maxWidth: bottomImageSize * 3 + imgPadding * 2,
                             ),
                             child: ClipRRect(
-                              borderRadius: SpacingHelper.defaultBorderRadius,
+                              borderRadius:
+                                  UniversalUI.of(context).defaultBorderRadius,
                               child: images!.length == 1
                                   ? GestureDetector(
                                       onTap: () {

@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/client_setting/client_setting_bloc.dart';
@@ -12,6 +12,7 @@ class UniversalUI {
   UniversalUI(this.design);
 
   final UIDesign design;
+  final VisualDensity visualDensity = VisualDensity.adaptivePlatformDensity;
 
   static UniversalUI of(BuildContext context) {
     try {
@@ -23,4 +24,8 @@ class UniversalUI {
       return UniversalUI(UIDesign.material);
     }
   }
+
+  BorderRadius get defaultBorderRadius => BorderRadius.circular(
+        design == UIDesign.material ? 8 : 4,
+      );
 }

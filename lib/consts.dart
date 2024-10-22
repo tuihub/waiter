@@ -16,6 +16,9 @@ class App {
 
 final moduleList = [
   // App('Home', Icons.home, const HomePage()),
+  App(ModuleName.tiphereth, Icons.account_circle, (context) {
+    const TipherethRootRoute().go(context);
+  }),
   App(ModuleName.gebura, Icons.casino, (context) {
     const GeburaRootRoute().go(context);
   }),
@@ -24,6 +27,12 @@ final moduleList = [
   }),
   // App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
+  App(ModuleName.notification, Icons.notifications, (context) {
+    const NotificationRootRoute().go(context);
+  }),
+  App(ModuleName.settings, Icons.settings, (context) {
+    const SettingsRootRoute().go(context);
+  }),
 ];
 
 final moduleMap = Map.fromEntries(moduleList.map((e) => MapEntry(e.name, e)));

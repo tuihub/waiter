@@ -31,7 +31,7 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
   }
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

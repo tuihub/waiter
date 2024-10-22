@@ -17,6 +17,7 @@ import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
 import '../frame_page.dart';
 
 class YesodActionManagePage extends StatelessWidget {
@@ -37,17 +38,17 @@ class YesodActionManagePage extends StatelessWidget {
           const YesodFunctionRoute(YesodFunctions.actionManage,
                   action: YesodActions.actionAdd)
               .go(context);
-          FramePage.of(context)?.openDrawer();
+          ModuleFramePage.of(context)?.openDrawer();
         },
         children: [
           for (var i = 0; i < listData.length; i++)
-            ListTile(
+            UniversalListTile(
               trailing: const Icon(Icons.edit),
               onTap: () {
                 YesodFunctionRoute(YesodFunctions.actionManage,
                         action: YesodActions.actionEdit, $extra: i)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               },
               title: Text(listData[i].name.isNotEmpty
                   ? listData[i].name
@@ -77,7 +78,7 @@ class YesodActionManageAddPanel extends StatefulWidget {
 
 class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   String name = '';
@@ -117,7 +118,7 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
                 label: Text('描述'),
               ),
             ),
-            ExpansionTile(
+            UniversalExpansionTile(
               title: Center(
                 child: Text('已配置${actions.length}个规则'),
               ),
@@ -139,7 +140,7 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
               ),
               children: [
                 for (var i = 0; i < actions.length; i++)
-                  ListTile(
+                  UniversalListTile(
                     title: Text(features
                         .firstWhere((element) => element.id == actions[i].id)
                         .name),
@@ -200,7 +201,7 @@ class _YesodActionManageEditPanelState
   }
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   InternalID id = InternalID();
@@ -244,7 +245,7 @@ class _YesodActionManageEditPanelState
                 labelText: '描述',
               ),
             ),
-            ExpansionTile(
+            UniversalExpansionTile(
               title: Center(
                 child: Text('已配置${actions.length}个规则'),
               ),
@@ -266,7 +267,7 @@ class _YesodActionManageEditPanelState
               ),
               children: [
                 for (var i = 0; i < actions.length; i++)
-                  ListTile(
+                  UniversalListTile(
                     title: Text(features
                         .firstWhere((element) => element.id == actions[i].id)
                         .name),

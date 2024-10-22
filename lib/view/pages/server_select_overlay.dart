@@ -61,6 +61,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
     _minimized = true;
     _fullscreen = false;
     _animateTo(minimizedHeight - _height);
+    hide();
   }
 
   void hide() {

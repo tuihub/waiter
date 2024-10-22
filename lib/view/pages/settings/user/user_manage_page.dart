@@ -9,7 +9,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
-import '../../../helper/spacing.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class UserManagePage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _UserManagePageState extends State<UserManagePage> {
               DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                 ),
                 child: MultiSelectDialogField(
                   title: const Text('按用户类型筛选'),
@@ -67,7 +67,7 @@ class _UserManagePageState extends State<UserManagePage> {
                     paginatorController.goToFirstPage();
                   },
                   decoration: BoxDecoration(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
+                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   ),
                 ),
               ),
@@ -77,7 +77,7 @@ class _UserManagePageState extends State<UserManagePage> {
               DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                 ),
                 child: MultiSelectDialogField(
                   title: const Text('按用户状态筛选'),
@@ -99,7 +99,7 @@ class _UserManagePageState extends State<UserManagePage> {
                     paginatorController.goToFirstPage();
                   },
                   decoration: BoxDecoration(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
+                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   ),
                 ),
               ),
@@ -109,7 +109,7 @@ class _UserManagePageState extends State<UserManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.user,
                           action: SettingsActions.userAdd)
                       .go(context);
-                  FramePage.of(context)?.openDrawer();
+                  ModuleFramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -181,7 +181,7 @@ class UserTableSource extends AsyncDataTableSource {
                 const SettingsFunctionRoute(SettingsFunctions.user,
                         action: SettingsActions.userEdit)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

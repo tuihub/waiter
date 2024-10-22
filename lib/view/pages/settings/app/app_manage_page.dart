@@ -9,7 +9,7 @@ import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../bloc/main_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
-import '../../../helper/spacing.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class AppManagePage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _AppManagePageState extends State<AppManagePage> {
               DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: SpacingHelper.defaultBorderRadius,
+                  borderRadius: UniversalUI.of(context).defaultBorderRadius,
                 ),
                 child: MultiSelectDialogField(
                   title: const Text('按数据来源筛选'),
@@ -60,7 +60,7 @@ class _AppManagePageState extends State<AppManagePage> {
                     paginatorController.goToFirstPage();
                   },
                   decoration: BoxDecoration(
-                    borderRadius: SpacingHelper.defaultBorderRadius,
+                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
                   ),
                 ),
               ),
@@ -70,7 +70,7 @@ class _AppManagePageState extends State<AppManagePage> {
                   const SettingsFunctionRoute(SettingsFunctions.app,
                           action: SettingsActions.appAdd)
                       .go(context);
-                  FramePage.of(context)?.openDrawer();
+                  ModuleFramePage.of(context)?.openDrawer();
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('新增'),
@@ -142,7 +142,7 @@ class AppTableSource extends AsyncDataTableSource {
                 const SettingsFunctionRoute(SettingsFunctions.app,
                         action: SettingsActions.appEdit)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               });
         },
       ).toList(),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 final class SpacingHelper {
-  static BorderRadius defaultBorderRadius = BorderRadius.circular(8);
   static Widget defaultDivider = _DefaultDivider();
 
   static List<Widget> listSpacing({

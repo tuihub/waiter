@@ -11,6 +11,7 @@ import '../../../components/form_field.dart';
 import '../../../components/toast.dart';
 import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../../universal/list.dart';
 import '../../frame_page.dart';
 
 class PorterManagePage extends StatelessWidget {
@@ -31,10 +32,10 @@ class PorterManagePage extends StatelessWidget {
       const SettingsFunctionRoute(SettingsFunctions.porter,
               action: SettingsActions.porterEdit)
           .go(context);
-      FramePage.of(context)?.openDrawer();
+      ModuleFramePage.of(context)?.openDrawer();
     }
 
-    return ExpansionTile(
+    return UniversalExpansionTile(
       title: Text(porters.firstOrNull?.binarySummary.name ?? ''),
       subtitle: Text(S
           .of(context)
@@ -42,7 +43,7 @@ class PorterManagePage extends StatelessWidget {
       initiallyExpanded: true,
       children: [
         for (final porter in porters)
-          ListTile(
+          UniversalListTile(
             title: Text(porter.binarySummary.name),
             subtitle: Row(
               children: [
@@ -119,7 +120,7 @@ class PorterEditPanel extends StatelessWidget {
   const PorterEditPanel({super.key});
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override

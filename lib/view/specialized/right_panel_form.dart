@@ -13,7 +13,8 @@ import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
 import '../helper/app_bar.dart';
-import '../helper/spacing.dart';
+import '../universal/list.dart';
+import '../universal/spacing.dart';
 
 class RightPanelForm extends StatefulWidget {
   const RightPanelForm({
@@ -179,7 +180,7 @@ class TextFormMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
+    return UniversalExpansionTile(
       title: Text(
         title,
       ),
@@ -211,7 +212,7 @@ class TextFormErrorMessage extends StatelessWidget {
         color: Theme.of(context).colorScheme.error.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: ListTile(
+      child: UniversalListTile(
         leading: const Icon(Icons.error, color: Colors.red),
         title: Text(
           message,

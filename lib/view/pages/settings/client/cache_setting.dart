@@ -19,7 +19,7 @@ class _CacheSettingState extends State<CacheSetting> {
         margin: EdgeInsets.zero,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 8),
-          child: ListTile(
+          child: UniversalListTile(
             title: Text(S.of(context).cache),
             subtitle: Text(
               FileSize.getSize(_cacheSize),

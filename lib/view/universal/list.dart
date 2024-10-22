@@ -63,3 +63,68 @@ class UniversalListTile extends StatelessWidget {
     }
   }
 }
+
+class UniversalExpansionTile extends StatelessWidget {
+  const UniversalExpansionTile({
+    super.key,
+    this.leading,
+    required this.title,
+    this.subtitle,
+    required this.children,
+    this.trailing,
+    this.initiallyExpanded = false,
+    this.onExpansionChanged,
+    this.backgroundColor,
+    this.childrenPadding = const EdgeInsets.all(16.0),
+  });
+
+  final Widget? leading;
+  final Widget title;
+  final Widget? subtitle;
+  final List<Widget> children;
+  final Widget? trailing;
+  final bool initiallyExpanded;
+  final ValueChanged<bool>? onExpansionChanged;
+  final Color? backgroundColor;
+  final EdgeInsetsGeometry childrenPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    final design = UniversalUI.of(context).design;
+
+    switch (design) {
+      case UIDesign.material:
+        return material.ExpansionTile(
+          leading: leading,
+          title: title,
+          subtitle: subtitle,
+          trailing: trailing,
+          initiallyExpanded: initiallyExpanded,
+          onExpansionChanged: onExpansionChanged,
+          backgroundColor: backgroundColor,
+          childrenPadding: childrenPadding,
+          children: children,
+        );
+      case UIDesign.fluent:
+        return fluent.Expander(
+          leading: leading,
+          header: Wrap(
+            direction: Axis.horizontal,
+            children: [
+              fluent.Expanded(child: title),
+              if (subtitle != null) fluent.Expanded(child: subtitle!),
+            ],
+          ),
+          initiallyExpanded: initiallyExpanded,
+          onStateChanged: onExpansionChanged,
+          trailing: trailing,
+          content: Wrap(
+            direction: Axis.horizontal,
+            children: children,
+          ),
+          contentBackgroundColor: backgroundColor,
+          contentPadding: childrenPadding,
+        );
+    }
+  }
+}

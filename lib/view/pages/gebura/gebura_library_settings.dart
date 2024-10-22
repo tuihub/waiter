@@ -24,11 +24,11 @@ import '../../../route.dart';
 import '../../components/form_field.dart';
 import '../../components/pop_alert.dart';
 import '../../helper/app_bar.dart';
-import '../../helper/spacing.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../universal/button.dart';
 import '../../universal/list.dart';
+import '../../universal/spacing.dart';
 import '../frame_page.dart';
 
 part 'gebura_library_settings_common.dart';
@@ -63,7 +63,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                     action: GeburaLibrarySettingsActions.commonAppScanResult,
                     $extra: folder)
                 .go(context);
-            FramePage.of(context)?.openDrawer();
+            ModuleFramePage.of(context)?.openDrawer();
           },
         ),
         PopupMenuButton(
@@ -121,7 +121,7 @@ class GeburaLibrarySettings extends StatelessWidget {
                     action: GeburaLibrarySettingsActions.steamAppScanResult,
                     $extra: folder)
                 .go(context);
-            FramePage.of(context)?.openDrawer();
+            ModuleFramePage.of(context)?.openDrawer();
           },
         ),
         PopupMenuButton(

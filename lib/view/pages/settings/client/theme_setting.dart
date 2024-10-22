@@ -11,7 +11,7 @@ class ThemeSetting extends StatelessWidget {
           margin: EdgeInsets.zero,
           child: Column(
             children: [
-              ListTile(
+              UniversalListTile(
                 title: Text(S.of(context).theme),
                 trailing: IconButton(
                   onPressed: () {

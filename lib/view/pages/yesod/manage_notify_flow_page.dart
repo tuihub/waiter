@@ -14,9 +14,11 @@ import '../../../route.dart';
 import '../../components/chips_input.dart';
 import '../../components/form_field.dart';
 import '../../components/toast.dart';
-import '../../helper/spacing.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
+import '../../universal/list.dart';
+import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 
 class NotifyFlowPage extends StatelessWidget {
@@ -37,11 +39,11 @@ class NotifyFlowPage extends StatelessWidget {
           const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
                   action: YesodActions.notifyFlowAdd)
               .go(context);
-          FramePage.of(context)?.openDrawer();
+          ModuleFramePage.of(context)?.openDrawer();
         },
         children: [
           for (final item in listData)
-            ListTile(
+            UniversalListTile(
               title: Text(item.name),
               subtitle: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +61,7 @@ class NotifyFlowPage extends StatelessWidget {
                 const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
                         action: YesodActions.notifyFlowEdit)
                     .go(context);
-                FramePage.of(context)?.openDrawer();
+                ModuleFramePage.of(context)?.openDrawer();
               },
               trailing: const Icon(Icons.edit),
             ),
@@ -78,7 +80,7 @@ class NotifyFlowAddPanel extends StatefulWidget {
 
 class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   int _index = 0;
@@ -216,7 +218,8 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                         });
                       },
                       decoration: BoxDecoration(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        borderRadius:
+                            UniversalUI.of(context).defaultBorderRadius,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -239,112 +242,116 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                         const SizedBox(
                           height: 8,
                         ),
-                        ExpansionTile(title: const Text('过滤器'), children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: sources[i].filter.excludeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '排除关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                sources[i].filter.excludeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (sources[i]
-                                  .filter
-                                  .excludeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [
-                                    ...sources[i].filter.excludeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              sources[i].filter.extraExcludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [
-                                    ...sources[i]
-                                        .filter
-                                        .excludeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: sources[i].filter.includeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '包含关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                sources[i].filter.includeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (sources[i]
-                                  .filter
-                                  .includeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [
-                                    ...sources[i].filter.includeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              sources[i].filter.extraIncludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [
-                                    ...sources[i]
-                                        .filter
-                                        .includeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                        ]),
+                        UniversalExpansionTile(
+                            title: const Text('过滤器'),
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: sources[i].filter.excludeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '排除关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    sources[i].filter.excludeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (sources[i]
+                                      .filter
+                                      .excludeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [
+                                        ...sources[i].filter.excludeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  sources[i].filter.extraExcludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [
+                                        ...sources[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: sources[i].filter.includeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '包含关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    sources[i].filter.includeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (sources[i]
+                                      .filter
+                                      .includeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [
+                                        ...sources[i].filter.includeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  sources[i].filter.extraIncludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [
+                                        ...sources[i]
+                                            .filter
+                                            .includeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                            ]),
                       ]),
                   ]),
                 ),
@@ -393,7 +400,8 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                         });
                       },
                       decoration: BoxDecoration(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        borderRadius:
+                            UniversalUI.of(context).defaultBorderRadius,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -414,112 +422,116 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                         const SizedBox(
                           height: 8,
                         ),
-                        ExpansionTile(title: const Text('过滤器'), children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: targets[i].filter.excludeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '排除关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                targets[i].filter.excludeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (targets[i]
-                                  .filter
-                                  .excludeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [
-                                    ...targets[i].filter.excludeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              targets[i].filter.extraExcludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [
-                                    ...targets[i]
-                                        .filter
-                                        .excludeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: targets[i].filter.includeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '包含关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                targets[i].filter.includeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (targets[i]
-                                  .filter
-                                  .includeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [
-                                    ...targets[i].filter.includeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              targets[i].filter.extraIncludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [
-                                    ...targets[i]
-                                        .filter
-                                        .includeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                        ]),
+                        UniversalExpansionTile(
+                            title: const Text('过滤器'),
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: targets[i].filter.excludeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '排除关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    targets[i].filter.excludeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (targets[i]
+                                      .filter
+                                      .excludeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [
+                                        ...targets[i].filter.excludeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  targets[i].filter.extraExcludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [
+                                        ...targets[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: targets[i].filter.includeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '包含关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    targets[i].filter.includeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (targets[i]
+                                      .filter
+                                      .includeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [
+                                        ...targets[i].filter.includeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  targets[i].filter.extraIncludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [
+                                        ...targets[i]
+                                            .filter
+                                            .includeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                            ]),
                       ]),
                   ]),
                 ),
@@ -572,7 +584,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
   }
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   int _index = 0;
@@ -712,7 +724,8 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                         });
                       },
                       decoration: BoxDecoration(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        borderRadius:
+                            UniversalUI.of(context).defaultBorderRadius,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -735,112 +748,116 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                         const SizedBox(
                           height: 8,
                         ),
-                        ExpansionTile(title: const Text('过滤器'), children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: sources[i].filter.excludeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '排除关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                sources[i].filter.excludeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (sources[i]
-                                  .filter
-                                  .excludeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [
-                                    ...sources[i].filter.excludeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              sources[i].filter.extraExcludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  sources[i].filter.excludeKeywords = [
-                                    ...sources[i]
-                                        .filter
-                                        .excludeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: sources[i].filter.includeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '包含关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                sources[i].filter.includeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (sources[i]
-                                  .filter
-                                  .includeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [
-                                    ...sources[i].filter.includeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              sources[i].filter.extraIncludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  sources[i].filter.includeKeywords = [
-                                    ...sources[i]
-                                        .filter
-                                        .includeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                        ]),
+                        UniversalExpansionTile(
+                            title: const Text('过滤器'),
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: sources[i].filter.excludeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '排除关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    sources[i].filter.excludeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (sources[i]
+                                      .filter
+                                      .excludeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [
+                                        ...sources[i].filter.excludeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  sources[i].filter.extraExcludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      sources[i].filter.excludeKeywords = [
+                                        ...sources[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: sources[i].filter.includeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '包含关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    sources[i].filter.includeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (sources[i]
+                                      .filter
+                                      .includeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [
+                                        ...sources[i].filter.includeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  sources[i].filter.extraIncludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      sources[i].filter.includeKeywords = [
+                                        ...sources[i]
+                                            .filter
+                                            .includeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                            ]),
                       ]),
                   ]),
                 ),
@@ -889,7 +906,8 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                         });
                       },
                       decoration: BoxDecoration(
-                        borderRadius: SpacingHelper.defaultBorderRadius,
+                        borderRadius:
+                            UniversalUI.of(context).defaultBorderRadius,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -910,112 +928,116 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                         const SizedBox(
                           height: 8,
                         ),
-                        ExpansionTile(title: const Text('过滤器'), children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: targets[i].filter.excludeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '排除关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                targets[i].filter.excludeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (targets[i]
-                                  .filter
-                                  .excludeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [
-                                    ...targets[i].filter.excludeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              targets[i].filter.extraExcludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  targets[i].filter.excludeKeywords = [
-                                    ...targets[i]
-                                        .filter
-                                        .excludeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ChipsInput<String>(
-                            values: targets[i].filter.includeKeywords,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '包含关键字',
-                            ),
-                            onChanged: (data) {
-                              setState(() {
-                                targets[i].filter.includeKeywords = data;
-                              });
-                            },
-                            onSubmitted: (text) {
-                              if (targets[i]
-                                  .filter
-                                  .includeKeywords
-                                  .contains(text)) {
-                                return;
-                              } else if (text.trim().isNotEmpty) {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [
-                                    ...targets[i].filter.includeKeywords,
-                                    text
-                                  ];
-                                });
-                              } else {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [];
-                                });
-                              }
-                            },
-                            onTextChanged: (text) {
-                              targets[i].filter.extraIncludeKeywords =
-                                  text.isNotEmpty ? [text] : [];
-                            },
-                            chipBuilder: (context, topping) => ToppingInputChip(
-                              topping: topping,
-                              onDeleted: (text) {
-                                setState(() {
-                                  targets[i].filter.includeKeywords = [
-                                    ...targets[i]
-                                        .filter
-                                        .includeKeywords
-                                        .where((e) => e != text)
-                                  ];
-                                });
-                              },
-                              onSelected: (_) {},
-                            ),
-                          ),
-                        ]),
+                        UniversalExpansionTile(
+                            title: const Text('过滤器'),
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: targets[i].filter.excludeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '排除关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    targets[i].filter.excludeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (targets[i]
+                                      .filter
+                                      .excludeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [
+                                        ...targets[i].filter.excludeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  targets[i].filter.extraExcludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      targets[i].filter.excludeKeywords = [
+                                        ...targets[i]
+                                            .filter
+                                            .excludeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ChipsInput<String>(
+                                values: targets[i].filter.includeKeywords,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '包含关键字',
+                                ),
+                                onChanged: (data) {
+                                  setState(() {
+                                    targets[i].filter.includeKeywords = data;
+                                  });
+                                },
+                                onSubmitted: (text) {
+                                  if (targets[i]
+                                      .filter
+                                      .includeKeywords
+                                      .contains(text)) {
+                                    return;
+                                  } else if (text.trim().isNotEmpty) {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [
+                                        ...targets[i].filter.includeKeywords,
+                                        text
+                                      ];
+                                    });
+                                  } else {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [];
+                                    });
+                                  }
+                                },
+                                onTextChanged: (text) {
+                                  targets[i].filter.extraIncludeKeywords =
+                                      text.isNotEmpty ? [text] : [];
+                                },
+                                chipBuilder: (context, topping) =>
+                                    ToppingInputChip(
+                                  topping: topping,
+                                  onDeleted: (text) {
+                                    setState(() {
+                                      targets[i].filter.includeKeywords = [
+                                        ...targets[i]
+                                            .filter
+                                            .includeKeywords
+                                            .where((e) => e != text)
+                                      ];
+                                    });
+                                  },
+                                  onSelected: (_) {},
+                                ),
+                              ),
+                            ]),
                       ]),
                   ]),
                 ),

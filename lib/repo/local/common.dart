@@ -20,11 +20,12 @@ class ClientCommonRepo {
     return ClientCommonRepo._init(box);
   }
 
-  Future<void> set(ClientCommonData data) {
-    return _box.put(
+  Future<void> set(ClientCommonData data) async {
+    await _box.put(
       _clientCommonBoxKey,
       jsonEncode(data.toJson()),
     );
+    await _box.flush();
   }
 
   ClientCommonData get() {

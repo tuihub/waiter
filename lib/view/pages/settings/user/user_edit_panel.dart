@@ -6,6 +6,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../../universal/list.dart';
 import '../../frame_page.dart';
 
 class UserEditPanel extends StatefulWidget {
@@ -34,7 +35,7 @@ class _UserEditPanelState extends State<UserEditPanel> {
   }
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
@@ -116,7 +117,7 @@ class _UserEditPanelState extends State<UserEditPanel> {
               });
             },
           ),
-          ExpansionTile(
+          UniversalExpansionTile(
             title: const Text('修改密码'),
             children: [
               const Text('你必须拥有旧密码才能修改密码'),

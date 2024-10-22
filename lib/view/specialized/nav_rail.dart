@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/avatar.dart';
-import '../helper/spacing.dart';
+import '../universal/spacing.dart';
 
 class NavRail extends StatelessWidget {
   const NavRail(

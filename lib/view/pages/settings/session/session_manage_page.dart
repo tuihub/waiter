@@ -9,6 +9,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
+import '../../../universal/list.dart';
 import '../../frame_page.dart';
 
 class SessionManagePage extends StatelessWidget {
@@ -79,7 +80,7 @@ class SessionManagePage extends StatelessWidget {
                     const SettingsFunctionRoute(SettingsFunctions.session,
                             action: SettingsActions.sessionEdit)
                         .go(context);
-                    FramePage.of(context)?.openDrawer();
+                    ModuleFramePage.of(context)?.openDrawer();
                   }
 
                   if (item.deviceInfo.deviceId ==
@@ -87,7 +88,7 @@ class SessionManagePage extends StatelessWidget {
                     return const SizedBox();
                   }
 
-                  return ListTile(
+                  return UniversalListTile(
                     title: Text(
                       item.id.id.toHexString(),
                       style: TextStyle(

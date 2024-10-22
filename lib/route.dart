@@ -18,7 +18,6 @@ import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'main_window.dart';
 import 'repo/grpc/api_helper.dart';
-import 'view/helper/spacing.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_assign_app_panel.dart';
@@ -54,6 +53,7 @@ import 'view/pages/yesod/manage_yesod_action_page.dart';
 import 'view/pages/yesod/manage_yesod_feed_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
+import 'view/universal/spacing.dart';
 
 part 'route.g.dart';
 
@@ -143,6 +143,7 @@ final GlobalKey<NavigatorState> _notificationNavigateKey =
 final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 final mainWindowKey = GlobalKey();
+final appFrameKey = GlobalKey();
 
 @TypedGoRoute<AppRoute>(
   path: '/',
@@ -274,7 +275,10 @@ class ModuleRoute extends StatefulShellRouteData {
             context.read<MainBloc>().tipherethBloc != null) {
           return MainWindow(
             key: mainWindowKey,
-            child: navigationShell,
+            child: AppFramePage(
+              key: appFrameKey,
+              child: navigationShell,
+            ),
           );
         }
         return MainWindow(
@@ -301,7 +305,7 @@ class TipherethRootRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
     return const NoTransitionPage(
-      child: FramePage(
+      child: ModuleFramePage(
         selectedNav: ModuleName.tiphereth,
         leftPart: TipherethFramePage(),
       ),
@@ -382,7 +386,7 @@ class YesodFunctionRoute extends GoRouteData {
       }
     }
     return NoTransitionPage(
-      child: FramePage(
+      child: ModuleFramePage(
         selectedNav: ModuleName.yesod,
         leftPart: YesodNav(
           function: function,
@@ -425,7 +429,7 @@ class GeburaStoreRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
-        child: const FramePage(
+        child: const ModuleFramePage(
           selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.store,
@@ -444,7 +448,7 @@ class GeburaLibraryRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
-        child: const FramePage(
+        child: const ModuleFramePage(
           selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.library,
@@ -481,7 +485,7 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
     };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
-        child: FramePage(
+        child: ModuleFramePage(
           selectedNav: ModuleName.gebura,
           leftPart: const GeburaNav(
             function: GeburaFunctions.librarySettings,
@@ -509,7 +513,7 @@ class GeburaLibraryDetailRoute extends GoRouteData {
     };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
-        child: FramePage(
+        child: ModuleFramePage(
           selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.library,
@@ -536,7 +540,7 @@ class ChesedRootRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
     return const NoTransitionPage(
-      child: FramePage(
+      child: ModuleFramePage(
         selectedNav: ModuleName.chesed,
         leftPart: ChesedHome(),
       ),
@@ -558,7 +562,7 @@ class NotificationRootRoute extends GoRouteData {
   NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
     return const NoTransitionPage(
-      child: FramePage(
+      child: ModuleFramePage(
         selectedNav: ModuleName.notification,
         leftPart: NotificationPage(),
       ),
@@ -642,7 +646,7 @@ class SettingsFunctionRoute extends GoRouteData {
       }
     }
     return NoTransitionPage(
-      child: FramePage(
+      child: ModuleFramePage(
         selectedNav: ModuleName.settings,
         leftPart: SettingsNav(
           function: function,

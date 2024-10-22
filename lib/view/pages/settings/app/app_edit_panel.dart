@@ -38,7 +38,7 @@ class _AppEditPanelState extends State<AppEditPanel> {
   }
 
   void close(BuildContext context) {
-    FramePage.of(context)?.closeDrawer();
+    ModuleFramePage.of(context)?.closeDrawer();
   }
 
   @override
