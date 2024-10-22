@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../l10n/l10n.dart';
 import '../helper/app_bar.dart';
+import '../universal/card.dart';
+import '../universal/universal.dart';
 
 class ListManagePage extends StatefulWidget {
   const ListManagePage({
@@ -36,7 +38,8 @@ class ListManagePageState extends State<ListManagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: AppBarHelper.defaultShape,
+        shape: UniversalUI.of(context).defaultShape,
+        backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         leading:
             AppBarHelper.defaultMainLeading(context, onPressed: widget.onBack),
         title: Text(widget.title),
@@ -95,12 +98,8 @@ class ListManagePageState extends State<ListManagePage> {
               itemBuilder: (context, index) {
                 return SelectionArea(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: UniversalCard(
                       child: widget.children.elementAt(index),
                     ),
                   ),

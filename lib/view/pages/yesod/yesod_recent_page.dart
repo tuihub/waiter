@@ -146,7 +146,8 @@ class YesodRecentPageState extends State<YesodRecentPage> {
       return Scaffold(
         appBar: AppBar(
           title: Text(_title(context, state)),
-          shape: AppBarHelper.defaultShape,
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           leading: AppBarHelper.defaultMainLeading(context),
           actions: [
             IconButton(

@@ -7,7 +7,7 @@ class ThemeSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
       builder: (context, state) {
-        return Card(
+        return UniversalCard(
           margin: EdgeInsets.zero,
           child: Column(
             children: [

@@ -15,7 +15,8 @@ class GeburaCommonAppScanResultPanel extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text(folder),
-          shape: AppBarHelper.defaultShape,
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           leading: AppBarHelper.defaultRightLeading(context),
           actions: [
             UniversalOutlinedButton.icon(
@@ -408,6 +409,8 @@ class _CommonAppFolderScanSettingPageState
       child: Scaffold(
         appBar: AppBar(
           title: const Text('文件夹扫描设置'),
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           actions: [
             TextButton.icon(
               label: const Text('保存并退出'),

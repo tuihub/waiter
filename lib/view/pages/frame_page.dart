@@ -8,6 +8,7 @@ import '../../route.dart';
 import '../helper/connection.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
+import '../specialized/title_bar.dart';
 import '../universal/universal.dart';
 import 'server_select_overlay.dart';
 
@@ -69,12 +70,24 @@ class AppFramePageState extends State<AppFramePage> {
             final width = constraints.biggest.width;
             final compact = width <= BootstrapBreakpoints.md;
             final design = UniversalUI.of(context).design;
+            final title =
+                Text('TuiHub', style: Theme.of(context).textTheme.titleMedium);
 
             switch (design) {
               case UIDesign.material:
                 if (compact) {
                   return Scaffold(
-                    body: widget.child,
+                    body: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: TitleBar.height,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: title,
+                        ),
+                        Expanded(child: widget.child),
+                      ],
+                    ),
                     bottomNavigationBar: BottomNavigationBar(
                       currentIndex: _selectedNavIndex,
                       onTap: _onSelectedNav,
@@ -91,25 +104,49 @@ class AppFramePageState extends State<AppFramePage> {
                 }
                 return Row(
                   children: [
-                    NavigationRail(
-                      selectedIndex: _selectedNavIndex,
-                      onDestinationSelected: _onSelectedNav,
-                      groupAlignment: 0,
-                      labelType: NavigationRailLabelType.selected,
-                      destinations: [
-                        for (final module in _allowedModules)
-                          NavigationRailDestination(
-                            icon: Icon(module.icon),
-                            label: Text(module.name.toString().split('.').last),
+                    Column(
+                      children: [
+                        Container(
+                          height: TitleBar.height,
+                          alignment: Alignment.bottomCenter,
+                          child: title,
+                        ),
+                        Expanded(
+                          child: NavigationRail(
+                            selectedIndex: _selectedNavIndex,
+                            onDestinationSelected: _onSelectedNav,
+                            groupAlignment: 0,
+                            labelType: NavigationRailLabelType.selected,
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            destinations: [
+                              for (final module in _allowedModules)
+                                NavigationRailDestination(
+                                  icon: Icon(module.icon),
+                                  label: Text(
+                                      module.name.toString().split('.').last),
+                                ),
+                            ],
                           ),
+                        ),
                       ],
                     ),
-                    const VerticalDivider(thickness: 1, width: 1),
-                    Expanded(child: widget.child),
+
+                    // const VerticalDivider(thickness: 1, width: 1),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(top: TitleBar.height),
+                        child: widget.child,
+                      ),
+                    ),
                   ],
                 );
               case UIDesign.fluent:
                 return fluent.NavigationView(
+                  appBar: fluent.NavigationAppBar(
+                    title: title,
+                    automaticallyImplyLeading: false,
+                  ),
                   pane: fluent.NavigationPane(
                     selected: _selectedNavIndex,
                     onItemPressed: _onSelectedNav,

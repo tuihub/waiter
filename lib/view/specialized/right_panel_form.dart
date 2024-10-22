@@ -15,6 +15,7 @@ import '../components/toast.dart';
 import '../helper/app_bar.dart';
 import '../universal/list.dart';
 import '../universal/spacing.dart';
+import '../universal/universal.dart';
 
 class RightPanelForm extends StatefulWidget {
   const RightPanelForm({
@@ -62,7 +63,8 @@ class _RightPanelFormState extends State<RightPanelForm> {
     return Scaffold(
       appBar: AppBar(
         title: widget.title,
-        shape: AppBarHelper.defaultShape,
+        shape: UniversalUI.of(context).defaultShape,
+        backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         leading: AppBarHelper.defaultRightLeading(context),
       ),
       body: DynMouseScroll(builder: (context, controller, physics) {

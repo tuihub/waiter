@@ -15,7 +15,7 @@ class _CacheSettingState extends State<CacheSetting> {
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       _cacheSize = context.read<MainBloc>().cacheSize();
-      return Card(
+      return UniversalCard(
         margin: EdgeInsets.zero,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 8),

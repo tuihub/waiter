@@ -8,8 +8,9 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 import '../../bloc/netzach/netzach_bloc.dart';
 import '../../model/netzach_model.dart';
 import '../../repo/grpc/l10n.dart';
-import '../helper/app_bar.dart';
 import '../helper/duration_format.dart';
+import '../universal/card.dart';
+import '../universal/universal.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -23,7 +24,8 @@ class NotificationPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text('通知'),
-          shape: AppBarHelper.defaultShape,
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         ),
         body: Column(
           children: [
@@ -189,7 +191,7 @@ class NotificationPage extends StatelessWidget {
 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: Card(
+                            child: UniversalCard(
                               margin: EdgeInsets.zero,
                               shadowColor:
                                   _systemNotificationLevelColor(item.level),

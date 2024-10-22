@@ -15,7 +15,8 @@ class GeburaSteamAppScanResultPanel extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: Text(folder),
-          shape: AppBarHelper.defaultShape,
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           leading: AppBarHelper.defaultRightLeading(context),
           actions: [
             UniversalOutlinedButton.icon(

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../components/toast.dart';
+import '../../universal/card.dart';
 import '../../universal/universal.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
@@ -81,7 +82,7 @@ class ChesedHome extends StatelessWidget {
                 height: 8,
               ),
               Expanded(
-                child: Card(
+                child: UniversalCard(
                   margin: EdgeInsets.zero,
                   child: GridView.builder(
                     padding: const EdgeInsets.all(8),

@@ -8,6 +8,7 @@ import '../../components/form_field.dart';
 import '../../components/input_formatters.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/universal.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
   const GeburaAppLauncherSettingDialog(this.appInst, {super.key});
@@ -125,6 +126,8 @@ class _GeburaAppLauncherSettingTestPageState
     return Scaffold(
       appBar: AppBar(
         title: const Text('调试应用启动设置'),
+        shape: UniversalUI.of(context).defaultShape,
+        backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
       ),
       body: BootstrapContainer(
         children: [

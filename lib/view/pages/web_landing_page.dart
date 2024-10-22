@@ -13,6 +13,7 @@ import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
+import '../universal/card.dart';
 import '../universal/spacing.dart';
 
 class WebLandingPage extends StatelessWidget {
@@ -47,7 +48,7 @@ class WebLandingPage extends StatelessWidget {
                 xxs: 12,
                 md: 8,
                 lg: 6,
-                child: Card(
+                child: UniversalCard(
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Column(

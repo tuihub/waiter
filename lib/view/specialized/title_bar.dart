@@ -12,6 +12,8 @@ class TitleBar extends StatelessWidget {
 
   final List<Widget> actions;
 
+  static const double height = 28;
+
   @override
   Widget build(BuildContext context) {
     if (PlatformHelper.isAndroidApp()) {
@@ -23,22 +25,22 @@ class TitleBar extends StatelessWidget {
           width: 8,
           height: 28,
         ),
-        const Text(
-          'Tui',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: const Text(
-            'Hub',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ),
+        // const Text(
+        //   'Tui',
+        //   style: TextStyle(fontWeight: FontWeight.bold),
+        // ),
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 4),
+        //   margin: const EdgeInsets.symmetric(horizontal: 2),
+        //   decoration: BoxDecoration(
+        //     color: Theme.of(context).colorScheme.primary,
+        //     borderRadius: BorderRadius.circular(4),
+        //   ),
+        //   child: const Text(
+        //     'Hub',
+        //     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        //   ),
+        // ),
         Expanded(
           child: PlatformHelper.isWindowsApp()
               ? WindowTitleBarBox(

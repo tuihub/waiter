@@ -7,8 +7,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
+import '../../universal/card.dart';
 import '../../universal/list.dart';
 import '../../universal/spacing.dart';
+import '../../universal/universal.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -27,14 +29,15 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('关于'),
-        shape: AppBarHelper.defaultShape,
+        shape: UniversalUI.of(context).defaultShape,
+        backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         leading: AppBarHelper.defaultMainLeading(context),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8),
         child: ListView(
           children: [
-            Card(
+            UniversalCard(
               margin: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.all(8),

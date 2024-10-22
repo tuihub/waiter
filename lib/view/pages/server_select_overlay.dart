@@ -19,6 +19,7 @@ import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
+import '../universal/card.dart';
 import 'settings/client/client_setting_page.dart';
 
 class ServerSelectOverlay extends StatefulWidget {
@@ -418,7 +419,7 @@ class ServerDetail extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
             ),
-          Card(
+          UniversalCard(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Column(
@@ -504,8 +505,9 @@ class _NewServerState extends State<NewServer> {
               FlipCard(
                 controller: flipCardController,
                 flipOnTouch: false,
-                front: Card(child: LoginForm(readOnly: !flipCardIsFront)),
-                back: Card(
+                front:
+                    UniversalCard(child: LoginForm(readOnly: !flipCardIsFront)),
+                back: UniversalCard(
                   child: RegisterForm(
                     readOnly: flipCardIsFront,
                     onRegistered: toggleCard,
@@ -516,7 +518,7 @@ class _NewServerState extends State<NewServer> {
             ],
           );
         }
-        return const Card(
+        return const UniversalCard(
           child: ServerSelectForm(),
         );
       },

@@ -8,7 +8,7 @@ class ChoreSetting extends StatelessWidget {
     final basePath = context.read<MainBloc>().basePath;
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
-      return Card(
+      return UniversalCard(
         margin: EdgeInsets.zero,
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 8),

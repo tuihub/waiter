@@ -13,7 +13,9 @@ import '../../../../consts.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../helper/app_bar.dart';
 import '../../../specialized/theme_presentation.dart';
+import '../../../universal/card.dart';
 import '../../../universal/list.dart';
+import '../../../universal/universal.dart';
 
 part 'cache_setting.dart';
 part 'theme_setting.dart';
@@ -27,7 +29,8 @@ class ClientSettingPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).clientSetting),
-        shape: AppBarHelper.defaultShape,
+        shape: UniversalUI.of(context).defaultShape,
+        backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         automaticallyImplyLeading: false,
         leading: AppBarHelper.defaultMainLeading(context),
       ),

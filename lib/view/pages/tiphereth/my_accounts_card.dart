@@ -186,7 +186,7 @@ class _AccountCard extends StatelessWidget {
       );
     } else {
       content = Center(
-        child: Card(
+        child: UniversalCard(
           color: Theme.of(context).colorScheme.surface.withOpacity(0.75),
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -196,7 +196,7 @@ class _AccountCard extends StatelessWidget {
       );
     }
 
-    return Card(
+    return UniversalCard(
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -267,7 +267,7 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                                   : 0,
                           child:
                               state is TipherethLinkAccountState && state.failed
-                                  ? Card(
+                                  ? UniversalCard(
                                       child: Center(
                                         child: Text(
                                           state.msg ?? '未知错误',

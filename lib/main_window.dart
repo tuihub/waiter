@@ -25,15 +25,13 @@ class MainWindow extends StatelessWidget {
         child: Scaffold(
           body: SafeArea(
             maintainBottomViewPadding: true,
-            child: Column(
+            child: Stack(
               children: [
+                ClipRect(
+                  child: ServerSelectOverlay(child: child),
+                ),
                 const TitleBar(
                   actions: [ThemeModeToggle()],
-                ),
-                Expanded(
-                  child: ClipRect(
-                    child: ServerSelectOverlay(child: child),
-                  ),
                 ),
               ],
             ),

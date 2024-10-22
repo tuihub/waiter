@@ -7,6 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/card.dart';
 import '../../universal/universal.dart';
 import 'gebura_store_detail.dart';
 
@@ -39,9 +40,8 @@ class GeburaStorePage extends StatelessWidget {
             ? StoreList(apps: apps!)
             : Center(child: Text(msg)),
         appBar: AppBar(
-          shape: RoundedRectangleBorder(
-            borderRadius: UniversalUI.of(context).defaultBorderRadius,
-          ),
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           title: BootstrapContainer(
             children: [
               BootstrapColumn(
@@ -152,7 +152,7 @@ class StoreList extends StatelessWidget {
                     closedBuilder: (context, openContainer) {
                       return SizedBox(
                         height: 128,
-                        child: Card(
+                        child: UniversalCard(
                           child: InkWell(
                             borderRadius:
                                 UniversalUI.of(context).defaultBorderRadius,

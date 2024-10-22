@@ -9,6 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
+import '../universal/card.dart';
 import 'server_select_overlay.dart';
 
 class InitPage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _InitPageState extends State<InitPage> {
               BootstrapColumn(
                 xxs: 12,
                 md: 6,
-                child: Card(
+                child: UniversalCard(
                   child: SizedBox(
                     height: 320,
                     child: getInitWidget(state),

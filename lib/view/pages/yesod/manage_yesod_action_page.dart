@@ -18,6 +18,7 @@ import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
 import '../../universal/list.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 
 class YesodActionManagePage extends StatelessWidget {
@@ -351,7 +352,8 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
       child: Scaffold(
         appBar: AppBar(
           title: const Text('编辑规则'),
-          shape: AppBarHelper.defaultShape,
+          shape: UniversalUI.of(context).defaultShape,
+          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           leading: AppBarHelper.defaultMainLeading(context, onPressed: () {
             Navigator.of(context).pop();
           }),

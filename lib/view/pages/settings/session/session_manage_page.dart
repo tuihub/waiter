@@ -9,6 +9,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
+import '../../../universal/card.dart';
 import '../../../universal/list.dart';
 import '../../frame_page.dart';
 
@@ -34,7 +35,7 @@ class SessionManagePage extends StatelessWidget {
             )
           else
             ListView(children: [
-              Card(
+              UniversalCard(
                 color: Theme.of(context).colorScheme.primary,
                 margin: const EdgeInsets.only(bottom: 8),
                 child: Padding(
