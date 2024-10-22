@@ -8,6 +8,7 @@ import '../../components/form_field.dart';
 import '../../components/input_formatters.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/button.dart';
 import '../../universal/universal.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
@@ -56,7 +57,7 @@ class GeburaAppLauncherSettingDialogState
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 16),
-                      child: ElevatedButton(
+                      child: UniversalElevatedButton(
                         onPressed: () async {
                           Navigator.of(context).pop();
                           await Navigator.of(context).push(
@@ -79,7 +80,7 @@ class GeburaAppLauncherSettingDialogState
             ),
           ),
           actions: <Widget>[
-            TextButton(
+            UniversalTextButton(
               onPressed: newSetting != null
                   ? () {
                       context.read<GeburaBloc>().add(
@@ -91,7 +92,7 @@ class GeburaAppLauncherSettingDialogState
                   : null,
               child: const Text('保存'),
             ),
-            TextButton(
+            UniversalTextButton(
               onPressed: () {
                 Navigator.pop(context); //close Dialog
               },
@@ -150,7 +151,7 @@ class _GeburaAppLauncherSettingTestPageState
                 const SizedBox(
                   height: 16,
                 ),
-                ElevatedButton(
+                UniversalElevatedButton(
                   onPressed: () async {
                     if (newSetting != null) {
                       context.read<GeburaBloc>().add(
@@ -185,7 +186,7 @@ class _GeburaAppLauncherSettingTestPageState
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
+                    UniversalElevatedButton(
                       onPressed: () {
                         setState(() {
                           currentStep = 0;
@@ -208,7 +209,7 @@ class _GeburaAppLauncherSettingTestPageState
                                 style: TextStyle(color: Colors.red),
                               ),
                               const Text('点击确定将会保存您当前的设置'),
-                              ElevatedButton(
+                              UniversalElevatedButton(
                                 onPressed: () async {
                                   if (newSetting != null) {
                                     context.read<GeburaBloc>().add(
@@ -233,7 +234,7 @@ class _GeburaAppLauncherSettingTestPageState
                             children: [
                               const Text(
                                   '点击启动按钮启动应用\n如果您的应用有启动器，请在您设置的等待时间内完成实际应用的启动'),
-                              ElevatedButton(
+                              UniversalElevatedButton(
                                 onPressed: () async {
                                   final setting =
                                       widget.appInst.commonLaunchSetting;
@@ -264,7 +265,7 @@ class _GeburaAppLauncherSettingTestPageState
                                   style: TextStyle(color: Colors.red),
                                 ),
                               if (runState == null)
-                                ElevatedButton(
+                                UniversalElevatedButton(
                                   onPressed: () async {
                                     setState(() {
                                       currentStep = 3;
@@ -288,7 +289,7 @@ class _GeburaAppLauncherSettingTestPageState
                               else
                                 const Text('应用已关闭'),
                               if (!(runState == null))
-                                ElevatedButton(
+                                UniversalElevatedButton(
                                   onPressed: () async {
                                     setState(() {
                                       currentStep = 4;
@@ -305,7 +306,7 @@ class _GeburaAppLauncherSettingTestPageState
                             children: [
                               Text('启动时间：${runState?.startTime ?? ''}'),
                               Text('停止时间：${runState?.endTime ?? ''}'),
-                              ElevatedButton(
+                              UniversalElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -404,7 +405,7 @@ class _GeburaAppLauncherSettingFormState
           TextFormField(
             controller: pathController,
             decoration: InputDecoration(
-              suffixIcon: TextButton(
+              suffixIcon: UniversalTextButton(
                 onPressed: () async {
                   final initialDirectory = widget.setting?.installPath;
                   final pickResult =
@@ -433,7 +434,7 @@ class _GeburaAppLauncherSettingFormState
           TextFormField(
             controller: installPathController,
             decoration: InputDecoration(
-              suffixIcon: TextButton(
+              suffixIcon: UniversalTextButton(
                 onPressed: () async {
                   final pickResult =
                       await file_picker.FilePicker.platform.getDirectoryPath();
@@ -477,7 +478,7 @@ class _GeburaAppLauncherSettingFormState
           TextFormField(
             controller: realPathController,
             decoration: InputDecoration(
-              suffixIcon: TextButton(
+              suffixIcon: UniversalTextButton(
                 onPressed: () async {
                   final pickResult =
                       await file_picker.FilePicker.platform.pickFiles();

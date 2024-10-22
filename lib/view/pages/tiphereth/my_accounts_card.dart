@@ -45,7 +45,7 @@ class MyAccountsCard extends StatelessWidget {
                     ],
                   ),
                   Expanded(child: Container()),
-                  IconButton(
+                  UniversalIconButton(
                     onPressed: () {
                       context
                           .read<TipherethBloc>()
@@ -280,7 +280,7 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                       ],
                     ),
                   ),
-                  ElevatedButton(
+                  UniversalElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();

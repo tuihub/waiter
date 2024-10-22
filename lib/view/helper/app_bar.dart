@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../layout/overlapping_panels.dart';
+import '../universal/button.dart';
 
 class AppBarHelper {
   static RoundedRectangleBorder defaultShape = RoundedRectangleBorder(
@@ -44,7 +45,7 @@ class AppBarHelper {
     void Function()? onPressed,
   ) {
     if (onPressed != null) {
-      return IconButton(
+      return UniversalIconButton(
         onPressed: onPressed,
         icon: const Icon(Icons.arrow_back),
       );

@@ -13,7 +13,8 @@ import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
 import '../helper/app_bar.dart';
-import '../universal/list.dart';
+import '../universal/button.dart';
+import '../universal/list_tile.dart';
 import '../universal/spacing.dart';
 import '../universal/universal.dart';
 
@@ -116,7 +117,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
               children: [
                 ...widget.extraActions ?? [],
                 if (widget.onSubmit != null)
-                  ElevatedButton(
+                  UniversalElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
@@ -127,7 +128,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
                         ? const CircularProgressIndicator()
                         : Text(S.of(context).submit),
                   ),
-                ElevatedButton(
+                UniversalElevatedButton(
                   onPressed: () => widget.close(),
                   child: Text(S.of(context).close),
                 )
@@ -244,12 +245,12 @@ class TextReadOnlyFormField extends StatelessWidget {
       readOnly: true,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: IconButton(
+        prefixIcon: UniversalIconButton(
             icon: const Icon(Icons.lock_outline),
             onPressed: () {
               const Toast(title: '', message: '该项目无法修改').show(context);
             }),
-        suffixIcon: IconButton(
+        suffixIcon: UniversalIconButton(
           icon: const Icon(Icons.copy),
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: value)).then((value) {

@@ -16,7 +16,7 @@ import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';

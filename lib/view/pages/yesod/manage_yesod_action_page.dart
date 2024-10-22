@@ -17,7 +17,8 @@ import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list.dart';
+import '../../universal/button.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -146,7 +147,7 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
                         .firstWhere((element) => element.id == actions[i].id)
                         .name),
                     subtitle: Text(actions[i].region),
-                    trailing: IconButton(
+                    trailing: UniversalIconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () {
                         setState(() => actions.removeAt(i));
@@ -273,7 +274,7 @@ class _YesodActionManageEditPanelState
                         .firstWhere((element) => element.id == actions[i].id)
                         .name),
                     subtitle: Text(actions[i].region),
-                    trailing: IconButton(
+                    trailing: UniversalIconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () {
                         setState(() => actions.removeAt(i));
@@ -358,7 +359,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
             Navigator.of(context).pop();
           }),
           actions: [
-            IconButton(
+            UniversalIconButton(
               icon: const Icon(Icons.check),
               onPressed: () {
                 widget.onSave(widget.actions);
@@ -397,7 +398,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton.icon(
+                        UniversalElevatedButton.icon(
                           onPressed: i > 0
                               ? () {
                                   setState(() {
@@ -413,7 +414,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: ElevatedButton.icon(
+                          child: UniversalElevatedButton.icon(
                             onPressed: () {
                               setState(() {
                                 actions.removeAt(i);
@@ -425,7 +426,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                             label: const Text('删除'),
                           ),
                         ),
-                        ElevatedButton.icon(
+                        UniversalElevatedButton.icon(
                           onPressed: i < actions.length - 1
                               ? () {
                                   setState(() {

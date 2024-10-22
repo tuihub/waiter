@@ -19,6 +19,7 @@ import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
+import '../universal/button.dart';
 import '../universal/card.dart';
 import 'settings/client/client_setting_page.dart';
 
@@ -307,7 +308,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                                       title: const Text('进入本地模式'),
                                       content: const Text('是否进入本地模式？'),
                                       actions: [
-                                        TextButton(
+                                        UniversalTextButton(
                                           onPressed: () {
                                             context
                                                 .read<MainBloc>()
@@ -316,7 +317,7 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                                           },
                                           child: const Text('是'),
                                         ),
-                                        TextButton(
+                                        UniversalTextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -492,7 +493,7 @@ class _NewServerState extends State<NewServer> {
                 alignment: Alignment.centerRight,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 4),
-                  child: ElevatedButton(
+                  child: UniversalElevatedButton(
                     onPressed: toggleCard,
                     child: Text(
                       flipCardIsFront
@@ -603,10 +604,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             const SizedBox(
               height: 8,
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(128, 32),
-              ),
+            UniversalElevatedButton(
               onPressed: submit,
               child: Text(S.of(context).check),
             ),
@@ -707,7 +705,7 @@ class _LoginFormState extends State<LoginForm> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16),
-                    child: TextButton(
+                    child: UniversalTextButton(
                       onPressed: () {
                         context
                             .read<MainBloc>()
@@ -731,7 +729,7 @@ class _LoginFormState extends State<LoginForm> {
                   obscureText: hidePassword,
                   decoration: InputDecoration(
                     labelText: S.of(context).password,
-                    suffixIcon: IconButton(
+                    suffixIcon: UniversalIconButton(
                       onPressed: () {
                         setState(() {
                           hidePassword = !hidePassword;
@@ -749,7 +747,7 @@ class _LoginFormState extends State<LoginForm> {
                 const SizedBox(
                   height: 16,
                 ),
-                ElevatedButton(
+                UniversalElevatedButton(
                   onPressed: login,
                   child: state is MainManualLoginState && state.processing
                       ? const SizedBox(
@@ -903,7 +901,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   obscureText: hidePassword,
                   decoration: InputDecoration(
                     labelText: S.of(context).password,
-                    suffixIcon: IconButton(
+                    suffixIcon: UniversalIconButton(
                       onPressed: () {
                         setState(() {
                           hidePassword = !hidePassword;
@@ -925,7 +923,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   obscureText: hidePassword,
                   decoration: InputDecoration(
                     labelText: S.of(context).repeatPassword,
-                    suffixIcon: IconButton(
+                    suffixIcon: UniversalIconButton(
                       onPressed: () {
                         setState(() {
                           hidePassword = !hidePassword;
@@ -945,7 +943,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 if (_captchaImage != null) ExtendedImage.memory(_captchaImage!),
                 if (_captchaImage != null)
-                  TextButton(
+                  UniversalTextButton(
                     onPressed: () => register(newCaptcha: true),
                     child: Text(S.of(context).refreshCaptcha),
                   ),
@@ -961,7 +959,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   const SizedBox(
                     height: 16,
                   ),
-                ElevatedButton(
+                UniversalElevatedButton(
                   onPressed: register,
                   child: state is MainManualLoginState && state.processing
                       ? const SizedBox(

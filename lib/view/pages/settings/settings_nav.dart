@@ -8,7 +8,7 @@ import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
-import '../../universal/list.dart';
+import '../../universal/list_tile.dart';
 
 class SettingsNav extends StatelessWidget {
   const SettingsNav({super.key, required this.function});

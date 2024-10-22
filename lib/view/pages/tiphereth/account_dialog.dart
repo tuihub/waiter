@@ -97,7 +97,7 @@ class UnLinkAccountDialog extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          TextButton(
+          UniversalTextButton(
             onPressed: () {
               context.read<TipherethBloc>().add(TipherethUnLinkAccountEvent(
                     account.platform,
@@ -108,7 +108,7 @@ class UnLinkAccountDialog extends StatelessWidget {
                 ? const CircularProgressIndicator()
                 : const Text('解绑'),
           ),
-          TextButton(
+          UniversalTextButton(
             onPressed: () {
               Navigator.pop(context); //close Dialog
             },

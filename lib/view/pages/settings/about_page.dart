@@ -8,7 +8,7 @@ import '../../../bloc/main_bloc.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
 import '../../universal/card.dart';
-import '../../universal/list.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 

@@ -9,7 +9,7 @@ import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
-import '../../universal/list.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
 
 class YesodNav extends StatelessWidget {

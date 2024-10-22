@@ -53,6 +53,7 @@ import 'view/pages/yesod/manage_yesod_action_page.dart';
 import 'view/pages/yesod/manage_yesod_feed_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
+import 'view/universal/button.dart';
 import 'view/universal/spacing.dart';
 
 part 'route.g.dart';
@@ -202,7 +203,7 @@ class AppRoute extends GoRouteData {
         child: Column(
           children: SpacingHelper.listSpacing(height: 8, children: [
             Text('Wrong route: ${state.matchedLocation}'),
-            ElevatedButton(
+            UniversalElevatedButton(
               onPressed: () => const InitRoute().go(context),
               child: const Text('Back to initial page'),
             ),

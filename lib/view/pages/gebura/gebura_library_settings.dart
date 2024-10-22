@@ -27,8 +27,9 @@ import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../universal/button.dart';
-import '../../universal/list.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
+import '../../universal/tool_bar.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -55,45 +56,47 @@ class GeburaLibrarySettings extends StatelessWidget {
       subtitle: Text(
         '共 ${untracked.length + tracked.length}，已导入 ${tracked.length}',
       ),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-        TextButton.icon(
-          icon: const Icon(Icons.open_in_full),
-          label: const Text('详情'),
-          onPressed: () {
-            GeburaLibrarySettingsRoute(
-                    action: GeburaLibrarySettingsActions.commonAppScanResult,
-                    $extra: folder)
-                .go(context);
-            ModuleFramePage.of(context)?.openDrawer();
-          },
+      trailing: Flexible(
+        child: UniversalToolBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            UniversalToolBarItem(
+              icon: Icons.open_in_full,
+              label: const Text('详情'),
+              onPressed: () {
+                GeburaLibrarySettingsRoute(
+                        action:
+                            GeburaLibrarySettingsActions.commonAppScanResult,
+                        $extra: folder)
+                    .go(context);
+                ModuleFramePage.of(context)?.openDrawer();
+              },
+            ),
+          ],
+          secondaryItems: [
+            UniversalToolBarItem(
+              icon: Icons.edit,
+              label: const Text('编辑扫描设置'),
+              onPressed: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return _CommonAppFolderScanSettingPage(
+                      initialValue: setting,
+                    );
+                  }),
+                );
+              },
+            ),
+            UniversalToolBarItem(
+              icon: Icons.folder_open,
+              label: const Text('使用资源管理器打开'),
+              onPressed: () async {
+                await OpenFile.open(folder);
+              },
+            ),
+          ],
         ),
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: 'edit',
-                child: const Text('编辑扫描设置'),
-                onTap: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return _CommonAppFolderScanSettingPage(
-                        initialValue: setting,
-                      );
-                    }),
-                  );
-                },
-              ),
-              PopupMenuItem(
-                value: 'open-in-explorer',
-                child: const Text('使用资源管理器打开'),
-                onTap: () async {
-                  await OpenFile.open(folder);
-                },
-              ),
-            ];
-          },
-        ),
-      ]),
+      ),
     );
   }
 
@@ -113,32 +116,33 @@ class GeburaLibrarySettings extends StatelessWidget {
       subtitle: Text(
         '共 ${untracked.length + tracked.length}，已导入 ${tracked.length}',
       ),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-        TextButton.icon(
-          icon: const Icon(Icons.open_in_full),
-          label: const Text('详情'),
-          onPressed: () {
-            GeburaLibrarySettingsRoute(
-                    action: GeburaLibrarySettingsActions.steamAppScanResult,
-                    $extra: folder)
-                .go(context);
-            ModuleFramePage.of(context)?.openDrawer();
-          },
+      trailing: Flexible(
+        child: UniversalToolBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            UniversalToolBarItem(
+              icon: Icons.open_in_full,
+              label: const Text('详情'),
+              onPressed: () {
+                GeburaLibrarySettingsRoute(
+                        action: GeburaLibrarySettingsActions.steamAppScanResult,
+                        $extra: folder)
+                    .go(context);
+                ModuleFramePage.of(context)?.openDrawer();
+              },
+            ),
+          ],
+          secondaryItems: [
+            UniversalToolBarItem(
+              icon: Icons.folder_open,
+              label: const Text('使用资源管理器打开'),
+              onPressed: () async {
+                await OpenFile.open(folder);
+              },
+            ),
+          ],
         ),
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                value: 'open-in-explorer',
-                child: const Text('使用资源管理器打开'),
-                onTap: () async {
-                  await OpenFile.open(folder);
-                },
-              ),
-            ];
-          },
-        ),
-      ]),
+      ),
     );
   }
 

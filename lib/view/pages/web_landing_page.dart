@@ -6,13 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/main_bloc.dart';
-import '../../common/platform.dart';
 import '../../consts.dart';
 import '../../l10n/l10n.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
+import '../universal/button.dart';
 import '../universal/card.dart';
 import '../universal/spacing.dart';
 
@@ -71,7 +71,7 @@ class WebLandingPage extends StatelessWidget {
                               spacing: 16,
                               runSpacing: 16,
                               children: [
-                                ElevatedButton.icon(
+                                UniversalElevatedButton.icon(
                                   onPressed: () async {
                                     final host = DotEnvValue.host;
                                     final port = DotEnvValue.port.isNotEmpty
@@ -84,13 +84,13 @@ class WebLandingPage extends StatelessWidget {
                                         'tuihub://connect/$host?port=$port&tls=$tls');
                                     await launchUrl(url);
                                   },
-                                  style: primaryButtonStyle,
+                                  // style: primaryButtonStyle,
                                   icon: Icon(const FaIcon(FontAwesomeIcons
                                           .arrowUpRightFromSquare)
                                       .icon),
                                   label: Text(S.of(context).connectInClient),
                                 ),
-                                ElevatedButton.icon(
+                                UniversalElevatedButton.icon(
                                   onPressed: () async {
                                     final host = DotEnvValue.host;
                                     final port = DotEnvValue.port.isNotEmpty
@@ -138,7 +138,7 @@ class WebLandingPage extends StatelessWidget {
                           spacing: 16,
                           runSpacing: 16,
                           children: [
-                            ElevatedButton.icon(
+                            UniversalElevatedButton.icon(
                               onPressed:
                                   DotEnvValue.winClientDownloadUrl.isNotEmpty
                                       ? () async {
@@ -147,16 +147,16 @@ class WebLandingPage extends StatelessWidget {
                                           await launchUrl(url);
                                         }
                                       : null,
-                              style: PlatformHelper.isWindows() &&
-                                      DotEnvValue
-                                          .winClientDownloadUrl.isNotEmpty
-                                  ? primaryButtonStyle
-                                  : null,
+                              // style: PlatformHelper.isWindows() &&
+                              //         DotEnvValue
+                              //             .winClientDownloadUrl.isNotEmpty
+                              //     ? primaryButtonStyle
+                              //     : null,
                               icon: Icon(
                                   const FaIcon(FontAwesomeIcons.windows).icon),
                               label: const Text('Windows'),
                             ),
-                            ElevatedButton.icon(
+                            UniversalElevatedButton.icon(
                               onPressed:
                                   DotEnvValue.andClientDownloadUrl.isNotEmpty
                                       ? () async {
@@ -165,11 +165,11 @@ class WebLandingPage extends StatelessWidget {
                                           await launchUrl(url);
                                         }
                                       : null,
-                              style: PlatformHelper.isAndroid() &&
-                                      DotEnvValue
-                                          .andClientDownloadUrl.isNotEmpty
-                                  ? primaryButtonStyle
-                                  : null,
+                              // style: PlatformHelper.isAndroid() &&
+                              //         DotEnvValue
+                              //             .andClientDownloadUrl.isNotEmpty
+                              //     ? primaryButtonStyle
+                              //     : null,
                               icon: Icon(
                                   const FaIcon(FontAwesomeIcons.android).icon),
                               label: const Text('Android'),

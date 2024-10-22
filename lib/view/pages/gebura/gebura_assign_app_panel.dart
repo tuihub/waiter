@@ -5,7 +5,8 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list.dart';
+import '../../universal/button.dart';
+import '../../universal/list_tile.dart';
 import '../frame_page.dart';
 
 class GeburaAssignAppPanel extends StatefulWidget {
@@ -117,7 +118,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           label: const Text('搜索'),
-                          suffixIcon: IconButton(
+                          suffixIcon: UniversalIconButton(
                             icon: const Icon(Icons.search),
                             onPressed: () {
                               context

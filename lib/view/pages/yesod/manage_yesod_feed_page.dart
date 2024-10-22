@@ -29,7 +29,9 @@ import '../../components/toast.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list.dart';
+import '../../universal/button.dart';
+import '../../universal/list_tile.dart';
+import '../../universal/tool_bar.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -54,9 +56,8 @@ class YesodFeedManagePage extends StatelessWidget {
           ModuleFramePage.of(context)?.openDrawer();
         },
         popupMenuItems: [
-          PopupMenuItem(
-            value: 'export_opml',
-            onTap: () {
+          UniversalToolBarItem(
+            onPressed: () {
               unawaited(showDialog<void>(
                 context: context,
                 builder: (_) {
@@ -67,7 +68,7 @@ class YesodFeedManagePage extends StatelessWidget {
                 },
               ));
             },
-            child: const Text('导出OPML'),
+            label: const Text('导出OPML'),
           ),
         ],
         children: [
@@ -499,7 +500,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
             : Text('导出${_opml!.items.length}个订阅'),
       ),
       actions: [
-        TextButton(
+        UniversalTextButton(
           onPressed: _opml != null
               ? () async {
                   final data = _opml!.toOPMLString();
@@ -510,7 +511,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
               : null,
           child: const Text('复制到剪贴板'),
         ),
-        TextButton(
+        UniversalTextButton(
           onPressed: _opml != null
               ? () async {
                   final data = _opml!.toOPMLString();
@@ -526,7 +527,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
               : null,
           child: const Text('保存到文件'),
         ),
-        TextButton(
+        UniversalTextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },

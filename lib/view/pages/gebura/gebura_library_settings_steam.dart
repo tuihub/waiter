@@ -152,7 +152,7 @@ class _SteamGameListState extends State<_SteamGameList> {
         DataColumn2(
           label: Align(
             alignment: Alignment.centerRight,
-            child: ElevatedButton(
+            child: UniversalElevatedButton(
               onPressed: selectedIndex.contains(true)
                   ? () {
                       context.read<GeburaBloc>().add(

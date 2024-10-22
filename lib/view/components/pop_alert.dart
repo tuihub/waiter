@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../universal/button.dart';
+
 class PopAlert extends StatelessWidget {
   const PopAlert({
     super.key,
@@ -29,7 +31,7 @@ class PopAlert extends StatelessWidget {
               title: Text(title),
               content: Text(content),
               actions: [
-                TextButton(
+                UniversalTextButton(
                   onPressed: () => {
                     Navigator.of(context).pop(true),
                     onConfirm(),
@@ -37,14 +39,14 @@ class PopAlert extends StatelessWidget {
                   child: const Text('是'),
                 ),
                 if (onDeny != null)
-                  TextButton(
+                  UniversalTextButton(
                     onPressed: () => {
                       Navigator.of(context).pop(true),
                       onDeny!(),
                     },
                     child: const Text('否'),
                   ),
-                TextButton(
+                UniversalTextButton(
                   onPressed: () => {
                     Navigator.of(context).pop(false),
                     onCancel(),

@@ -7,6 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../components/toast.dart';
+import '../../../universal/button.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
   const AppPackageAssignDialog(
@@ -84,7 +85,7 @@ class AppPackageAssignDialog extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          TextButton(
+          UniversalTextButton(
             onPressed: () {
               context.read<GeburaBloc>().add(GeburaAssignAppEvent(
                     appPackage.id,
@@ -95,7 +96,7 @@ class AppPackageAssignDialog extends StatelessWidget {
                 ? const CircularProgressIndicator()
                 : const Text('应用更改'),
           ),
-          TextButton(
+          UniversalTextButton(
             onPressed: () {
               Navigator.pop(context); //close Dialog
             },

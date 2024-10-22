@@ -6,7 +6,8 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
-import '../../../universal/list.dart';
+import '../../../universal/button.dart';
+import '../../../universal/list_tile.dart';
 import '../../frame_page.dart';
 
 class UserEditPanel extends StatefulWidget {
@@ -131,7 +132,7 @@ class _UserEditPanelState extends State<UserEditPanel> {
                   icon: const Icon(Icons.password),
                   border: const OutlineInputBorder(),
                   labelText: '旧密码',
-                  suffixIcon: IconButton(
+                  suffixIcon: UniversalIconButton(
                     icon: passwordSecure
                         ? const Icon(Icons.visibility_off)
                         : const Icon(Icons.visibility),
@@ -162,7 +163,7 @@ class _UserEditPanelState extends State<UserEditPanel> {
                   icon: const Icon(Icons.password),
                   border: const OutlineInputBorder(),
                   labelText: '新密码',
-                  suffixIcon: IconButton(
+                  suffixIcon: UniversalIconButton(
                     icon: passwordSecure
                         ? const Icon(Icons.visibility_off)
                         : const Icon(Icons.visibility),

@@ -6,6 +6,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../../universal/button.dart';
 import '../../frame_page.dart';
 
 class UserAddPanel extends StatefulWidget {
@@ -61,7 +62,7 @@ class _UserAddPanelState extends State<UserAddPanel> {
               icon: const Icon(Icons.password),
               border: const OutlineInputBorder(),
               labelText: '密码',
-              suffixIcon: IconButton(
+              suffixIcon: UniversalIconButton(
                 icon: passwordSecure
                     ? const Icon(Icons.visibility_off)
                     : const Icon(Icons.visibility),

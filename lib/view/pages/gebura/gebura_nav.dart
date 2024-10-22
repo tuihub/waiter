@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -8,7 +9,8 @@ import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
-import '../../universal/list.dart';
+import '../../universal/button.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import 'gebura_common.dart';
@@ -53,41 +55,71 @@ class GeburaNav extends StatelessWidget {
                   function == GeburaFunctions.library && selectedItem == null,
             ),
             SpacingHelper.defaultDivider,
-            Container(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.filter_alt_outlined),
-                  suffixIcon:
-                      state.librarySettings?.filter?.query?.isNotEmpty ?? false
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                context.read<GeburaBloc>().add(
-                                    GeburaApplyLibraryFilterEvent(query: ''));
-                                searchController.clear();
-                              },
-                            )
-                          : null,
-                  contentPadding: EdgeInsets.zero,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
-                    borderSide: const BorderSide(
-                      style: BorderStyle.none,
+            if (UniversalUI.of(context).design == UIDesign.fluent)
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.only(bottom: 4),
+                child: fluent.TextBox(
+                  controller: searchController,
+                  prefix: const UniversalIconButton(
+                    icon: Icon(fluent.FluentIcons.filter),
+                  ),
+                  suffix: state.librarySettings?.filter?.query?.isNotEmpty ??
+                          false
+                      ? UniversalIconButton(
+                          icon: const Icon(fluent.FluentIcons.clear),
+                          onPressed: () {
+                            context
+                                .read<GeburaBloc>()
+                                .add(GeburaApplyLibraryFilterEvent(query: ''));
+                            searchController.clear();
+                          },
+                        )
+                      : null,
+                  onChanged: (query) {
+                    context
+                        .read<GeburaBloc>()
+                        .add(GeburaApplyLibraryFilterEvent(query: query));
+                  },
+                ),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.filter_alt_outlined),
+                    suffixIcon:
+                        state.librarySettings?.filter?.query?.isNotEmpty ??
+                                false
+                            ? UniversalIconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  context.read<GeburaBloc>().add(
+                                      GeburaApplyLibraryFilterEvent(query: ''));
+                                  searchController.clear();
+                                },
+                              )
+                            : null,
+                    contentPadding: EdgeInsets.zero,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: UniversalUI.of(context).defaultBorderRadius,
+                      borderSide: const BorderSide(
+                        style: BorderStyle.none,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: UniversalUI.of(context).defaultBorderRadius,
                     ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: UniversalUI.of(context).defaultBorderRadius,
-                  ),
+                  onChanged: (query) {
+                    context
+                        .read<GeburaBloc>()
+                        .add(GeburaApplyLibraryFilterEvent(query: query));
+                  },
                 ),
-                onChanged: (query) {
-                  context
-                      .read<GeburaBloc>()
-                      .add(GeburaApplyLibraryFilterEvent(query: query));
-                },
               ),
-            ),
             Expanded(
               child: DynMouseScroll(
                 builder: (context, controller, physics) {

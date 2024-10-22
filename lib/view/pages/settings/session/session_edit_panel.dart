@@ -6,6 +6,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../../universal/button.dart';
 import '../../frame_page.dart';
 
 class SessionEditPanel extends StatelessWidget {
@@ -78,15 +79,13 @@ class SessionEditPanel extends StatelessWidget {
               ? state.msg
               : null,
           extraActions: [
-            ElevatedButton(
+            UniversalElevatedButton(
               onPressed: () {
                 context.read<TipherethBloc>().add(TipherethEditSessionEvent(
                       session.id,
                     ));
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
+              backgroundColor: Colors.red,
               child: state is TipherethEditSessionState && state.processing
                   ? const CircularProgressIndicator()
                   : Text(

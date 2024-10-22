@@ -161,7 +161,7 @@ class _CommonGameListState extends State<_CommonGameList> {
         DataColumn2(
           label: Align(
             alignment: Alignment.centerRight,
-            child: ElevatedButton(
+            child: UniversalElevatedButton(
               onPressed: selectedIndex.contains(true)
                   ? () {
                       // context.read<GeburaBloc>().add(
@@ -412,7 +412,7 @@ class _CommonAppFolderScanSettingPageState
           shape: UniversalUI.of(context).defaultShape,
           backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           actions: [
-            TextButton.icon(
+            UniversalTextButton.icon(
               label: const Text('保存并退出'),
               icon: const Icon(Icons.check),
               onPressed: () {
@@ -458,7 +458,7 @@ class _CommonAppFolderScanSettingPageState
                                   decoration: InputDecoration(
                                     labelText: '起始路径',
                                     hintText: '请输入起始路径',
-                                    suffixIcon: TextButton(
+                                    suffixIcon: UniversalTextButton(
                                       onPressed: () async {
                                         final path = await FilePicker.platform
                                             .getDirectoryPath();
@@ -796,7 +796,7 @@ class _CommonAppFolderScanSettingPageState
               children: SpacingHelper.listSpacing(
                 height: 16,
                 children: [
-                  ElevatedButton.icon(
+                  UniversalElevatedButton.icon(
                     onPressed: testRunning
                         ? null
                         : () async {
@@ -808,7 +808,7 @@ class _CommonAppFolderScanSettingPageState
                     label: const Text('测试'),
                     icon: const Icon(Icons.play_arrow),
                   ),
-                  ElevatedButton.icon(
+                  UniversalElevatedButton.icon(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();

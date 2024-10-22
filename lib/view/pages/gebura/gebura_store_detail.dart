@@ -10,6 +10,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
+import '../../universal/button.dart';
 import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 
@@ -112,12 +113,12 @@ class GeburaStoreDetail extends StatelessWidget {
                                 children: [
                                   if (state.purchasedAppInfos?.contains(app) ??
                                       false)
-                                    const ElevatedButton(
+                                    const UniversalElevatedButton(
                                       onPressed: null,
                                       child: Text('已在库中'),
                                     )
                                   else
-                                    ElevatedButton(
+                                    UniversalElevatedButton(
                                       onPressed: () {
                                         unawaited(showDialog<void>(
                                           context: context,
@@ -208,7 +209,7 @@ class PurchaseAppDialog extends StatelessWidget {
                 '确定将${app.name}加入你的库存？${msg.isNotEmpty ? '\n错误：$msg' : ''}'),
           ),
           actions: <Widget>[
-            TextButton(
+            UniversalTextButton(
               onPressed: () {
                 context.read<GeburaBloc>().add(GeburaPurchaseEvent(app.id));
               },
@@ -216,7 +217,7 @@ class PurchaseAppDialog extends StatelessWidget {
                   ? const CircularProgressIndicator()
                   : const Text('确定'),
             ),
-            TextButton(
+            UniversalTextButton(
               onPressed: () {
                 Navigator.pop(context); //close Dialog
               },

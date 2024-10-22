@@ -8,51 +8,47 @@ class ChoreSetting extends StatelessWidget {
     final basePath = context.read<MainBloc>().basePath;
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
-      return UniversalCard(
-        margin: EdgeInsets.zero,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          child: UniversalExpansionTile(
-            title: const Text('杂项'),
-            children: [
-              if (!PlatformHelper.isWeb())
-                UniversalListTile(
-                  title: const Text('使用系统代理（实验性）'),
-                  trailing: Switch(
-                    value: state.useSystemProxy ?? false,
-                    onChanged: (value) {
-                      context
-                          .read<ClientSettingBloc>()
-                          .add(ChangeUseSystemProxyEvent(value));
-                    },
-                  ),
-                ),
-              if (PlatformHelper.isWindowsApp())
-                UniversalListTile(
-                  title: const Text('使用 Fluent UI（实验性）'),
-                  trailing: Switch(
-                    value: state.useFluentUI ?? false,
-                    onChanged: (value) {
-                      context
-                          .read<ClientSettingBloc>()
-                          .add(ChangeUseFluentUIEvent(value));
-                    },
-                  ),
-                ),
-              if (basePath != null && PlatformHelper.isWindowsApp())
-                UniversalListTile(
-                  title: const Text('数据目录'),
-                  subtitle: Text(basePath),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.open_in_new),
-                    onPressed: () {
-                      unawaited(OpenFile.open(basePath));
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
+      return UniversalExpansionTile(
+        leading: const Icon(Icons.warning),
+        title: const Text('高级'),
+        subtitle: const Text('一些高级设置'),
+        children: [
+          if (!PlatformHelper.isWeb())
+            UniversalListTile(
+              title: const Text('使用系统代理（实验性）'),
+              trailing: Switch(
+                value: state.useSystemProxy ?? false,
+                onChanged: (value) {
+                  context
+                      .read<ClientSettingBloc>()
+                      .add(ChangeUseSystemProxyEvent(value));
+                },
+              ),
+            ),
+          if (PlatformHelper.isWindowsApp())
+            UniversalListTile(
+              title: const Text('使用 Fluent UI（实验性）'),
+              trailing: Switch(
+                value: state.useFluentUI ?? false,
+                onChanged: (value) {
+                  context
+                      .read<ClientSettingBloc>()
+                      .add(ChangeUseFluentUIEvent(value));
+                },
+              ),
+            ),
+          if (basePath != null && PlatformHelper.isWindowsApp())
+            UniversalListTile(
+              title: const Text('数据目录'),
+              subtitle: Text(basePath),
+              trailing: UniversalIconButton(
+                icon: const Icon(Icons.open_in_new),
+                onPressed: () {
+                  unawaited(OpenFile.open(basePath));
+                },
+              ),
+            ),
+        ],
       );
     });
   }

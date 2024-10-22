@@ -13,7 +13,7 @@ class ThemeSetting extends StatelessWidget {
             children: [
               UniversalListTile(
                 title: Text(S.of(context).theme),
-                trailing: IconButton(
+                trailing: UniversalIconButton(
                   onPressed: () {
                     context
                         .read<ClientSettingBloc>()

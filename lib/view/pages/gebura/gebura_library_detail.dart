@@ -20,7 +20,8 @@ import '../../../route.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
-import '../../universal/list.dart';
+import '../../universal/button.dart';
+import '../../universal/list_tile.dart';
 import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import 'gebura_app_launcher_setting_dialog.dart';
@@ -199,7 +200,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         children:
                             SpacingHelper.listSpacing(width: 24, children: [
                           if (PlatformHelper.isWindowsApp())
-                            ElevatedButton.icon(
+                            UniversalElevatedButton.icon(
                               onPressed: (launchAppInstUUID == null)
                                   ? null
                                   : () async {
@@ -296,7 +297,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
             )
           : const Text('未找到Steam应用'),
       trailing: steamApp != null
-          ? ElevatedButton.icon(
+          ? UniversalElevatedButton.icon(
               onPressed: () async {
                 await context
                     .read<GeburaBloc>()
@@ -322,7 +323,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             )
           : const Text('未找到应用'),
-      trailing: ElevatedButton.icon(
+      trailing: UniversalElevatedButton.icon(
         onPressed: () async {
           unawaited(showDialog<void>(
             context: context,
@@ -619,7 +620,7 @@ class _GeburaLibraryDetailChangeAppInfoDialogState
         ),
       ),
       actions: <Widget>[
-        TextButton(
+        UniversalTextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },

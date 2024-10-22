@@ -91,6 +91,7 @@ class UniversalExpansionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final design = UniversalUI.of(context).design;
+    final theme = fluent.FluentTheme.of(context);
 
     switch (design) {
       case UIDesign.material:
@@ -108,18 +109,36 @@ class UniversalExpansionTile extends StatelessWidget {
       case UIDesign.fluent:
         return fluent.Expander(
           leading: leading,
-          header: Wrap(
-            direction: Axis.horizontal,
-            children: [
-              fluent.Expanded(child: title),
-              if (subtitle != null) fluent.Expanded(child: subtitle!),
-            ],
+          header: Container(
+            constraints: const BoxConstraints(
+              minHeight: fluent.kOneLineTileHeight,
+              minWidth: 88.0,
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+            padding: fluent.kDefaultListTilePadding,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DefaultTextStyle.merge(
+                  style: (theme.typography.body ?? const TextStyle())
+                      .copyWith(fontSize: 16),
+                  child: title,
+                ),
+                if (subtitle != null)
+                  DefaultTextStyle.merge(
+                    style: theme.typography.caption ?? const TextStyle(),
+                    child: subtitle!,
+                  ),
+              ],
+            ),
           ),
           initiallyExpanded: initiallyExpanded,
           onStateChanged: onExpansionChanged,
           trailing: trailing,
-          content: Wrap(
-            direction: Axis.horizontal,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
           ),
           contentBackgroundColor: backgroundColor,
