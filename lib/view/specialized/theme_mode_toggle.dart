@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/client_setting/client_setting_bloc.dart';
+import '../universal/universal.dart';
 
 class ThemeModeToggle extends StatelessWidget {
   const ThemeModeToggle({super.key});
@@ -26,19 +27,10 @@ class ThemeModeToggle extends StatelessWidget {
           icon: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: state.themeMode == ThemeMode.system
-                ? const Icon(
-                    Icons.brightness_auto,
-                    key: ValueKey('auto'),
-                  )
+                ? Icon(UniversalUI.of(context).icons.brightness)
                 : state.themeMode == ThemeMode.light
-                    ? const Icon(
-                        Icons.brightness_5,
-                        key: ValueKey('light'),
-                      )
-                    : const Icon(
-                        Icons.brightness_3,
-                        key: ValueKey('dark'),
-                      ),
+                    ? Icon(UniversalUI.of(context).icons.brightnessLight)
+                    : Icon(UniversalUI.of(context).icons.brightnessDark),
           ),
           iconSize: 14,
         );

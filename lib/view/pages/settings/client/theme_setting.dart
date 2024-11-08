@@ -22,10 +22,12 @@ class ThemeSetting extends StatelessWidget {
                   icon: AnimatedSwitcher(
                     duration: Duration.zero,
                     child: state.themeMode == ThemeMode.system
-                        ? const Icon(Icons.brightness_auto)
+                        ? Icon(UniversalUI.of(context).icons.brightness)
                         : state.themeMode == ThemeMode.light
-                            ? const Icon(Icons.brightness_5)
-                            : const Icon(Icons.brightness_3),
+                            ? Icon(
+                                UniversalUI.of(context).icons.brightnessLight)
+                            : Icon(
+                                UniversalUI.of(context).icons.brightnessDark),
                   ),
                 ),
               ),

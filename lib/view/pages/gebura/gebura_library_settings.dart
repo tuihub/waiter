@@ -61,7 +61,7 @@ class GeburaLibrarySettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           primaryItems: [
             UniversalToolBarItem(
-              icon: Icons.open_in_full,
+              icon: UniversalUI.of(context).icons.openInFull,
               label: const Text('详情'),
               onPressed: () {
                 GeburaLibrarySettingsRoute(
@@ -75,7 +75,7 @@ class GeburaLibrarySettings extends StatelessWidget {
           ],
           secondaryItems: [
             UniversalToolBarItem(
-              icon: Icons.edit,
+              icon: UniversalUI.of(context).icons.edit,
               label: const Text('编辑扫描设置'),
               onPressed: () async {
                 await Navigator.of(context).push(
@@ -88,7 +88,7 @@ class GeburaLibrarySettings extends StatelessWidget {
               },
             ),
             UniversalToolBarItem(
-              icon: Icons.folder_open,
+              icon: UniversalUI.of(context).icons.folderOpen,
               label: const Text('使用资源管理器打开'),
               onPressed: () async {
                 await OpenFile.open(folder);
@@ -121,7 +121,7 @@ class GeburaLibrarySettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           primaryItems: [
             UniversalToolBarItem(
-              icon: Icons.open_in_full,
+              icon: UniversalUI.of(context).icons.openInFull,
               label: const Text('详情'),
               onPressed: () {
                 GeburaLibrarySettingsRoute(
@@ -134,7 +134,7 @@ class GeburaLibrarySettings extends StatelessWidget {
           ],
           secondaryItems: [
             UniversalToolBarItem(
-              icon: Icons.folder_open,
+              icon: UniversalUI.of(context).icons.folderOpen,
               label: const Text('使用资源管理器打开'),
               onPressed: () async {
                 await OpenFile.open(folder);

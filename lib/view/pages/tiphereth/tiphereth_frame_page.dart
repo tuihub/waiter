@@ -45,7 +45,7 @@ class TipherethFramePage extends StatelessWidget {
         onPressed: () {
           ServerSelectOverlay.of(context)?.fullscreen();
         },
-        icon: const Icon(Icons.logout),
+        icon: Icon(UniversalUI.of(context).icons.logout),
         label: Text(S.of(context).changeServer),
       ),
     );

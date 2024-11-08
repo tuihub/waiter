@@ -25,7 +25,7 @@ class GeburaCommonAppScanResultPanel extends StatelessWidget {
                       refreshSteam: false,
                     ));
               },
-              icon: const Icon(Icons.refresh),
+              icon: Icon(UniversalUI.of(context).icons.refresh),
               label: const Text('刷新'),
             ),
           ],
@@ -126,7 +126,7 @@ class _CommonGameListState extends State<_CommonGameList> {
                 onPressed: () async {
                   await OpenFile.open(app.installPath);
                 },
-                icon: const Icon(Icons.folder, size: 16),
+                icon: Icon(UniversalUI.of(context).icons.folder, size: 16),
                 label: const Text('查看'),
               )),
         ),
@@ -371,14 +371,15 @@ class _CommonAppFolderScanSettingPageState
     return newTree;
   }
 
-  IconData _entryTypeIcon(CommonAppFolderScanEntryType type) {
+  IconData _entryTypeIcon(
+      BuildContext context, CommonAppFolderScanEntryType type) {
     switch (type) {
       case CommonAppFolderScanEntryType.file:
-        return Icons.file_copy;
+        return UniversalUI.of(context).icons.fileCopy;
       case CommonAppFolderScanEntryType.directory:
-        return Icons.folder;
+        return UniversalUI.of(context).icons.folder;
       case CommonAppFolderScanEntryType.unknown:
-        return Icons.help;
+        return UniversalUI.of(context).icons.help;
     }
   }
 
@@ -414,7 +415,7 @@ class _CommonAppFolderScanSettingPageState
           actions: [
             UniversalTextButton.icon(
               label: const Text('保存并退出'),
-              icon: const Icon(Icons.check),
+              icon: Icon(UniversalUI.of(context).icons.check),
               onPressed: () {
                 _saveAndExit(context);
               },
@@ -806,7 +807,7 @@ class _CommonAppFolderScanSettingPageState
                             }
                           },
                     label: const Text('测试'),
-                    icon: const Icon(Icons.play_arrow),
+                    icon: Icon(UniversalUI.of(context).icons.play),
                   ),
                   UniversalElevatedButton.icon(
                     onPressed: () async {
@@ -815,7 +816,7 @@ class _CommonAppFolderScanSettingPageState
                       }
                     },
                     label: const Text('提交'),
-                    icon: const Icon(Icons.check),
+                    icon: Icon(UniversalUI.of(context).icons.check),
                   ),
                 ],
               ),
@@ -867,8 +868,10 @@ class _CommonAppFolderScanSettingPageState
                         }
                         return UniversalListTile(
                           leading: Icon(
-                            _entryTypeIcon(node.data?.type ??
-                                CommonAppFolderScanEntryType.unknown),
+                            _entryTypeIcon(
+                                context,
+                                node.data?.type ??
+                                    CommonAppFolderScanEntryType.unknown),
                           ),
                           title: Text(
                             node.data?.path

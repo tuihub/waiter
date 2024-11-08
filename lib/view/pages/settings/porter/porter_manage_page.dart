@@ -13,6 +13,7 @@ import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
 import '../../../universal/button.dart';
 import '../../../universal/list_tile.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class PorterManagePage extends StatelessWidget {
@@ -75,7 +76,7 @@ class PorterManagePage extends StatelessWidget {
                   },
                 ),
                 UniversalIconButton(
-                  icon: const Icon(Icons.edit),
+                  icon: Icon(UniversalUI.of(context).icons.edit),
                   onPressed: () {
                     openEditPanel(porter.id.id.toInt());
                   },

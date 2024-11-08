@@ -5,6 +5,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class AppPackageAddPanel extends StatelessWidget {
@@ -30,9 +31,9 @@ class AppPackageAddPanel extends StatelessWidget {
         formFields: [
           TextFormField(
             onSaved: (newValue) => name = newValue!,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              icon: Icon(UniversalUI.of(context).icons.person),
+              border: const OutlineInputBorder(),
               labelText: '名称',
             ),
             validator: (value) {
@@ -44,9 +45,9 @@ class AppPackageAddPanel extends StatelessWidget {
           ),
           TextFormField(
             onSaved: (newValue) => description = newValue!,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              icon: Icon(UniversalUI.of(context).icons.person),
+              border: const OutlineInputBorder(),
               labelText: '描述',
             ),
           ),

@@ -16,6 +16,7 @@ import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
 import '../../universal/button.dart';
 import '../../universal/list_tile.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 
 class PorterContextManagePage extends StatelessWidget {
@@ -64,9 +65,9 @@ class PorterContextManagePage extends StatelessWidget {
         },
       ),
       children: [
-        for (final context in contexts)
+        for (final ctx in contexts)
           UniversalListTile(
-            title: Text(context.name),
+            title: Text(ctx.name),
             subtitle: Row(
               children: [
                 Container(
@@ -74,32 +75,31 @@ class PorterContextManagePage extends StatelessWidget {
                   height: 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color:
-                        _porterContextHandleStatusColor(context.handleStatus),
+                    color: _porterContextHandleStatusColor(ctx.handleStatus),
                   ),
                   margin: const EdgeInsets.only(right: 8),
                 ),
-                Text(porterContextHandleStatusString(context.handleStatus)),
+                Text(porterContextHandleStatusString(ctx.handleStatus)),
               ],
             ),
-            leading: _porterContextHandleStatusIcon(context.handleStatus),
+            leading: _porterContextHandleStatusIcon(ctx.handleStatus),
             onTap: () {
-              openEditPanel(context);
+              openEditPanel(ctx);
             },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Switch(
-                  value: context.status ==
+                  value: ctx.status ==
                       PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,
                   onChanged: (_) {
-                    openEditPanel(context);
+                    openEditPanel(ctx);
                   },
                 ),
                 UniversalIconButton(
-                  icon: const Icon(Icons.edit),
+                  icon: Icon(UniversalUI.of(context).icons.edit),
                   onPressed: () {
-                    openEditPanel(context);
+                    openEditPanel(ctx);
                   },
                 ),
               ],

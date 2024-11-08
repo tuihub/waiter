@@ -63,7 +63,7 @@ class NotifyFlowPage extends StatelessWidget {
                     .go(context);
                 ModuleFramePage.of(context)?.openDrawer();
               },
-              trailing: const Icon(Icons.edit),
+              trailing: Icon(UniversalUI.of(context).icons.edit),
             ),
         ],
       );

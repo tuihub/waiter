@@ -7,127 +7,16 @@ part of 'route.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-      $appRoute,
+      $initRoute,
+      $webLandingRoute,
+      $imageViewerRoute,
+      $moduleRoute,
     ];
 
-RouteBase get $appRoute => GoRouteData.$route(
-      path: '/',
-      factory: $AppRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'init',
-          factory: $InitRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'webLanding',
-          factory: $WebLandingRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'imageViewer/:index',
-          factory: $ImageViewerRouteExtension._fromState,
-        ),
-        StatefulShellRouteData.$route(
-          factory: $ModuleRouteExtension._fromState,
-          branches: [
-            StatefulShellBranchData.$branch(
-              navigatorKey: TipherethRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Tiphereth',
-                  factory: $TipherethRootRouteExtension._fromState,
-                ),
-              ],
-            ),
-            StatefulShellBranchData.$branch(
-              navigatorKey: YesodRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Yesod',
-                  factory: $YesodRootRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Yesod/:function',
-                  factory: $YesodFunctionRouteExtension._fromState,
-                ),
-              ],
-            ),
-            StatefulShellBranchData.$branch(
-              navigatorKey: GeburaRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Gebura',
-                  factory: $GeburaRootRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Gebura/store',
-                  factory: $GeburaStoreRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Gebura/library',
-                  factory: $GeburaLibraryRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Gebura/librarySettings',
-                  factory: $GeburaLibrarySettingsRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Gebura/library/:uuid',
-                  factory: $GeburaLibraryDetailRouteExtension._fromState,
-                ),
-              ],
-            ),
-            StatefulShellBranchData.$branch(
-              navigatorKey: ChesedRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Chesed',
-                  factory: $ChesedRootRouteExtension._fromState,
-                ),
-              ],
-            ),
-            StatefulShellBranchData.$branch(
-              navigatorKey: NotificationRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Notification',
-                  factory: $NotificationRootRouteExtension._fromState,
-                ),
-              ],
-            ),
-            StatefulShellBranchData.$branch(
-              navigatorKey: SettingsRoute.$navigatorKey,
-              routes: [
-                GoRouteData.$route(
-                  path: 'module/Settings',
-                  factory: $SettingsRootRouteExtension._fromState,
-                ),
-                GoRouteData.$route(
-                  path: 'module/Settings/:function',
-                  factory: $SettingsFunctionRouteExtension._fromState,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+RouteBase get $initRoute => GoRouteData.$route(
+      path: '/init',
+      factory: $InitRouteExtension._fromState,
     );
-
-extension $AppRouteExtension on AppRoute {
-  static AppRoute _fromState(GoRouterState state) => const AppRoute();
-
-  String get location => GoRouteData.$location(
-        '/',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
 
 extension $InitRouteExtension on InitRoute {
   static InitRoute _fromState(GoRouterState state) => const InitRoute();
@@ -146,6 +35,11 @@ extension $InitRouteExtension on InitRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+RouteBase get $webLandingRoute => GoRouteData.$route(
+      path: '/webLanding',
+      factory: $WebLandingRouteExtension._fromState,
+    );
+
 extension $WebLandingRouteExtension on WebLandingRoute {
   static WebLandingRoute _fromState(GoRouterState state) =>
       const WebLandingRoute();
@@ -163,6 +57,11 @@ extension $WebLandingRouteExtension on WebLandingRoute {
 
   void replace(BuildContext context) => context.replace(location);
 }
+
+RouteBase get $imageViewerRoute => GoRouteData.$route(
+      path: '/imageViewer/:index',
+      factory: $ImageViewerRouteExtension._fromState,
+    );
 
 extension $ImageViewerRouteExtension on ImageViewerRoute {
   static ImageViewerRoute _fromState(GoRouterState state) => ImageViewerRoute(
@@ -185,6 +84,90 @@ extension $ImageViewerRouteExtension on ImageViewerRoute {
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
 }
+
+RouteBase get $moduleRoute => StatefulShellRouteData.$route(
+      factory: $ModuleRouteExtension._fromState,
+      branches: [
+        StatefulShellBranchData.$branch(
+          navigatorKey: TipherethRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Tiphereth',
+              factory: $TipherethRootRouteExtension._fromState,
+            ),
+          ],
+        ),
+        StatefulShellBranchData.$branch(
+          navigatorKey: YesodRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Yesod',
+              factory: $YesodRootRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Yesod/:function',
+              factory: $YesodFunctionRouteExtension._fromState,
+            ),
+          ],
+        ),
+        StatefulShellBranchData.$branch(
+          navigatorKey: GeburaRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Gebura',
+              factory: $GeburaRootRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Gebura/store',
+              factory: $GeburaStoreRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Gebura/library',
+              factory: $GeburaLibraryRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Gebura/librarySettings',
+              factory: $GeburaLibrarySettingsRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Gebura/library/:uuid',
+              factory: $GeburaLibraryDetailRouteExtension._fromState,
+            ),
+          ],
+        ),
+        StatefulShellBranchData.$branch(
+          navigatorKey: ChesedRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Chesed',
+              factory: $ChesedRootRouteExtension._fromState,
+            ),
+          ],
+        ),
+        StatefulShellBranchData.$branch(
+          navigatorKey: NotificationRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Notification',
+              factory: $NotificationRootRouteExtension._fromState,
+            ),
+          ],
+        ),
+        StatefulShellBranchData.$branch(
+          navigatorKey: SettingsRoute.$navigatorKey,
+          routes: [
+            GoRouteData.$route(
+              path: '/module/Settings',
+              factory: $SettingsRootRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: '/module/Settings/:function',
+              factory: $SettingsFunctionRouteExtension._fromState,
+            ),
+          ],
+        ),
+      ],
+    );
 
 extension $ModuleRouteExtension on ModuleRoute {
   static ModuleRoute _fromState(GoRouterState state) => const ModuleRoute();

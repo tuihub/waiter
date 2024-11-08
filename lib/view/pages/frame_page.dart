@@ -68,7 +68,7 @@ class AppFramePageState extends State<AppFramePage> {
         return LayoutBuilder(
           builder: (context, constraints) {
             final width = constraints.biggest.width;
-            final compact = width <= BootstrapBreakpoints.md;
+            final compact = width <= BootstrapBreakpoints.lg;
             final design = UniversalUI.of(context).design;
             final title =
                 Text('TuiHub', style: Theme.of(context).textTheme.titleMedium);
@@ -95,7 +95,7 @@ class AppFramePageState extends State<AppFramePage> {
                       items: [
                         for (final module in _allowedModules)
                           BottomNavigationBarItem(
-                            icon: Icon(module.icon),
+                            icon: Icon(module.icon(context)),
                             label: module.name.toString().split('.').last,
                           ),
                       ],
@@ -122,7 +122,7 @@ class AppFramePageState extends State<AppFramePage> {
                             destinations: [
                               for (final module in _allowedModules)
                                 NavigationRailDestination(
-                                  icon: Icon(module.icon),
+                                  icon: Icon(module.icon(context)),
                                   label: Text(
                                       module.name.toString().split('.').last),
                                 ),
@@ -154,17 +154,34 @@ class AppFramePageState extends State<AppFramePage> {
                         ? fluent.PaneDisplayMode.top
                         : fluent.PaneDisplayMode.compact,
                     toggleable: false,
+                    size: const fluent.NavigationPaneSize(
+                      openWidth: 220,
+                    ),
                     items: [
                       for (final module in _allowedModules)
-                        fluent.PaneItem(
-                          icon: Icon(module.icon),
-                          title: Text(module.name.toString().split('.').last),
-                          onTap: () {
-                            ServerSelectOverlay.of(context)?.hide();
-                            module.go(context);
-                          },
-                          body: Container(),
-                        ),
+                        if (module.name != ModuleName.settings)
+                          fluent.PaneItem(
+                            icon: Icon(module.icon(context), size: 18),
+                            title: Text(module.name.toString().split('.').last),
+                            onTap: () {
+                              ServerSelectOverlay.of(context)?.hide();
+                              module.go(context);
+                            },
+                            body: Container(),
+                          ),
+                    ],
+                    footerItems: [
+                      for (final module in _allowedModules)
+                        if (module.name == ModuleName.settings)
+                          fluent.PaneItem(
+                            icon: Icon(module.icon(context), size: 18),
+                            title: Text(module.name.toString().split('.').last),
+                            onTap: () {
+                              ServerSelectOverlay.of(context)?.hide();
+                              module.go(context);
+                            },
+                            body: Container(),
+                          ),
                     ],
                   ),
                   paneBodyBuilder: (context, child) => widget.child,

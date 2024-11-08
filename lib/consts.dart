@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'route.dart';
+import 'view/universal/universal.dart';
 
 const clientSourceCodeUrl = 'github.com/tuihub/waiter';
 
 class App {
   final ModuleName name;
-  final IconData icon;
+  IconData Function(BuildContext context) icon;
   void Function(BuildContext context) go;
 
   App(this.name, this.icon, this.go);
@@ -16,21 +17,31 @@ class App {
 
 final moduleList = [
   // App('Home', Icons.home, const HomePage()),
-  App(ModuleName.tiphereth, Icons.account_circle, (context) {
+  App(ModuleName.tiphereth, (context) {
+    return UniversalUI.of(context).icons.tiphereth;
+  }, (context) {
     const TipherethRootRoute().go(context);
   }),
-  App(ModuleName.gebura, Icons.casino, (context) {
+  App(ModuleName.gebura, (context) {
+    return UniversalUI.of(context).icons.gebura;
+  }, (context) {
     const GeburaRootRoute().go(context);
   }),
-  App(ModuleName.yesod, Icons.rss_feed, (context) {
+  App(ModuleName.yesod, (context) {
+    return UniversalUI.of(context).icons.yesod;
+  }, (context) {
     const YesodRootRoute().go(context);
   }),
   // App(ModuleName.chesed, Icons.photo_album),
   // App('Ffi', Icons.timelapse, const FfiTestPage()),
-  App(ModuleName.notification, Icons.notifications, (context) {
+  App(ModuleName.notification, (context) {
+    return UniversalUI.of(context).icons.notification;
+  }, (context) {
     const NotificationRootRoute().go(context);
   }),
-  App(ModuleName.settings, Icons.settings, (context) {
+  App(ModuleName.settings, (context) {
+    return UniversalUI.of(context).icons.settings;
+  }, (context) {
     const SettingsRootRoute().go(context);
   }),
 ];

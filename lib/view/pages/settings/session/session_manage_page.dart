@@ -12,6 +12,7 @@ import '../../../helper/duration_format.dart';
 import '../../../universal/button.dart';
 import '../../../universal/card.dart';
 import '../../../universal/list_tile.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class SessionManagePage extends StatelessWidget {
@@ -128,7 +129,7 @@ class SessionManagePage extends StatelessWidget {
                     leading: _systemIcon(item.deviceInfo.systemType),
                     trailing: UniversalIconButton(
                       onPressed: openEditPage,
-                      icon: const Icon(Icons.edit),
+                      icon: Icon(UniversalUI.of(context).icons.edit),
                     ),
                     onTap: openEditPage,
                   );

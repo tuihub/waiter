@@ -216,7 +216,7 @@ class TextFormErrorMessage extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: UniversalListTile(
-        leading: const Icon(Icons.error, color: Colors.red),
+        leading: Icon(UniversalUI.of(context).icons.error, color: Colors.red),
         title: Text(
           message,
           style: TextStyle(
@@ -246,12 +246,12 @@ class TextReadOnlyFormField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: UniversalIconButton(
-            icon: const Icon(Icons.lock_outline),
+            icon: Icon(UniversalUI.of(context).icons.lock),
             onPressed: () {
               const Toast(title: '', message: '该项目无法修改').show(context);
             }),
         suffixIcon: UniversalIconButton(
-          icon: const Icon(Icons.copy),
+          icon: Icon(UniversalUI.of(context).icons.copy),
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: value)).then((value) {
               const Toast(title: '', message: '已复制').show(context);

@@ -7,6 +7,7 @@ import '../../components/toast.dart';
 import '../../specialized/right_panel_form.dart';
 import '../../universal/button.dart';
 import '../../universal/list_tile.dart';
+import '../../universal/universal.dart';
 import '../frame_page.dart';
 
 class GeburaAssignAppPanel extends StatefulWidget {
@@ -119,7 +120,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                           border: const OutlineInputBorder(),
                           label: const Text('搜索'),
                           suffixIcon: UniversalIconButton(
-                            icon: const Icon(Icons.search),
+                            icon: Icon(UniversalUI.of(context).icons.search),
                             onPressed: () {
                               context
                                   .read<GeburaBloc>()

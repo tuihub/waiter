@@ -146,53 +146,6 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
 final mainWindowKey = GlobalKey();
 final appFrameKey = GlobalKey();
 
-@TypedGoRoute<AppRoute>(
-  path: '/',
-  routes: [
-    TypedGoRoute<InitRoute>(path: 'init'),
-    TypedGoRoute<WebLandingRoute>(path: 'webLanding'),
-    TypedGoRoute<ImageViewerRoute>(path: 'imageViewer/:index'),
-    TypedStatefulShellRoute<ModuleRoute>(
-      branches: [
-        TypedStatefulShellBranch<TipherethRoute>(
-          routes: [TypedGoRoute<TipherethRootRoute>(path: 'module/Tiphereth')],
-        ),
-        TypedStatefulShellBranch<YesodRoute>(
-          routes: [
-            TypedGoRoute<YesodRootRoute>(path: 'module/Yesod'),
-            TypedGoRoute<YesodFunctionRoute>(path: 'module/Yesod/:function'),
-          ],
-        ),
-        TypedStatefulShellBranch<GeburaRoute>(
-          routes: [
-            TypedGoRoute<GeburaRootRoute>(path: 'module/Gebura'),
-            TypedGoRoute<GeburaStoreRoute>(path: 'module/Gebura/store'),
-            TypedGoRoute<GeburaLibraryRoute>(path: 'module/Gebura/library'),
-            TypedGoRoute<GeburaLibrarySettingsRoute>(
-                path: 'module/Gebura/librarySettings'),
-            TypedGoRoute<GeburaLibraryDetailRoute>(
-                path: 'module/Gebura/library/:uuid'),
-          ],
-        ),
-        TypedStatefulShellBranch<ChesedRoute>(
-          routes: [TypedGoRoute<ChesedRootRoute>(path: 'module/Chesed')],
-        ),
-        TypedStatefulShellBranch<NotificationRoute>(
-          routes: [
-            TypedGoRoute<NotificationRootRoute>(path: 'module/Notification')
-          ],
-        ),
-        TypedStatefulShellBranch<SettingsRoute>(
-          routes: [
-            TypedGoRoute<SettingsRootRoute>(path: 'module/Settings'),
-            TypedGoRoute<SettingsFunctionRoute>(
-                path: 'module/Settings/:function'),
-          ],
-        ),
-      ],
-    )
-  ],
-)
 class AppRoute extends GoRouteData {
   const AppRoute();
 
@@ -214,6 +167,7 @@ class AppRoute extends GoRouteData {
   }
 }
 
+@TypedGoRoute<InitRoute>(path: '/init')
 class InitRoute extends GoRouteData {
   const InitRoute();
 
@@ -227,6 +181,7 @@ class InitRoute extends GoRouteData {
       );
 }
 
+@TypedGoRoute<WebLandingRoute>(path: '/webLanding')
 class WebLandingRoute extends GoRouteData {
   const WebLandingRoute();
 
@@ -240,6 +195,7 @@ class WebLandingRoute extends GoRouteData {
       );
 }
 
+@TypedGoRoute<ImageViewerRoute>(path: '/imageViewer/:index')
 class ImageViewerRoute extends GoRouteData {
   const ImageViewerRoute(this.index, this.$extra);
 
@@ -261,6 +217,44 @@ class ImageViewerRoute extends GoRouteData {
   }
 }
 
+@TypedStatefulShellRoute<ModuleRoute>(
+  branches: [
+    TypedStatefulShellBranch<TipherethRoute>(
+      routes: [TypedGoRoute<TipherethRootRoute>(path: '/module/Tiphereth')],
+    ),
+    TypedStatefulShellBranch<YesodRoute>(
+      routes: [
+        TypedGoRoute<YesodRootRoute>(path: '/module/Yesod'),
+        TypedGoRoute<YesodFunctionRoute>(path: '/module/Yesod/:function'),
+      ],
+    ),
+    TypedStatefulShellBranch<GeburaRoute>(
+      routes: [
+        TypedGoRoute<GeburaRootRoute>(path: '/module/Gebura'),
+        TypedGoRoute<GeburaStoreRoute>(path: '/module/Gebura/store'),
+        TypedGoRoute<GeburaLibraryRoute>(path: '/module/Gebura/library'),
+        TypedGoRoute<GeburaLibrarySettingsRoute>(
+            path: '/module/Gebura/librarySettings'),
+        TypedGoRoute<GeburaLibraryDetailRoute>(
+            path: '/module/Gebura/library/:uuid'),
+      ],
+    ),
+    TypedStatefulShellBranch<ChesedRoute>(
+      routes: [TypedGoRoute<ChesedRootRoute>(path: '/module/Chesed')],
+    ),
+    TypedStatefulShellBranch<NotificationRoute>(
+      routes: [
+        TypedGoRoute<NotificationRootRoute>(path: '/module/Notification')
+      ],
+    ),
+    TypedStatefulShellBranch<SettingsRoute>(
+      routes: [
+        TypedGoRoute<SettingsRootRoute>(path: '/module/Settings'),
+        TypedGoRoute<SettingsFunctionRoute>(path: '/module/Settings/:function'),
+      ],
+    ),
+  ],
+)
 class ModuleRoute extends StatefulShellRouteData {
   const ModuleRoute();
 

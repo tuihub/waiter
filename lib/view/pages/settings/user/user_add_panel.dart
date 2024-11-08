@@ -7,6 +7,7 @@ import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
 import '../../../universal/button.dart';
+import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
 class UserAddPanel extends StatefulWidget {
@@ -41,9 +42,9 @@ class _UserAddPanelState extends State<UserAddPanel> {
         formFields: [
           TextFormField(
             onSaved: (newValue) => username = newValue!,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              icon: Icon(UniversalUI.of(context).icons.person),
+              border: const OutlineInputBorder(),
               labelText: '用户名',
             ),
             // The validator receives the text that the user has entered.

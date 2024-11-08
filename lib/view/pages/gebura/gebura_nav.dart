@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -36,7 +37,7 @@ class GeburaNav extends StatelessWidget {
         return Column(
           children: [
             UniversalListTile(
-              leading: const Icon(Icons.shopping_cart),
+              leading: Icon(UniversalUI.of(context).icons.shoppingCart),
               onTap: () {
                 const GeburaStoreRoute().go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -45,7 +46,7 @@ class GeburaNav extends StatelessWidget {
               selected: function == GeburaFunctions.store,
             ),
             UniversalListTile(
-              leading: const Icon(Icons.apps),
+              leading: Icon(UniversalUI.of(context).icons.apps),
               onTap: () {
                 const GeburaLibraryRoute().go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -62,12 +63,12 @@ class GeburaNav extends StatelessWidget {
                 child: fluent.TextBox(
                   controller: searchController,
                   prefix: const UniversalIconButton(
-                    icon: Icon(fluent.FluentIcons.filter),
+                    icon: Icon(FluentIcons.filter_24_regular),
                   ),
                   suffix: state.librarySettings?.filter?.query?.isNotEmpty ??
                           false
                       ? UniversalIconButton(
-                          icon: const Icon(fluent.FluentIcons.clear),
+                          icon: const Icon(FluentIcons.dismiss_24_regular),
                           onPressed: () {
                             context
                                 .read<GeburaBloc>()
@@ -89,12 +90,12 @@ class GeburaNav extends StatelessWidget {
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.filter_alt_outlined),
+                    prefixIcon: Icon(UniversalUI.of(context).icons.filter),
                     suffixIcon:
                         state.librarySettings?.filter?.query?.isNotEmpty ??
                                 false
                             ? UniversalIconButton(
-                                icon: const Icon(Icons.clear),
+                                icon: Icon(UniversalUI.of(context).icons.clear),
                                 onPressed: () {
                                   context.read<GeburaBloc>().add(
                                       GeburaApplyLibraryFilterEvent(query: ''));
@@ -168,7 +169,7 @@ class GeburaNav extends StatelessWidget {
               ),
             ),
             UniversalListTile(
-              leading: const Icon(Icons.library_add_check),
+              leading: Icon(UniversalUI.of(context).icons.libraryAdd),
               onTap: () {
                 const GeburaLibrarySettingsRoute().go(context);
                 OverlappingPanels.of(context)?.reveal(RevealSide.main);

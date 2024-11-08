@@ -25,7 +25,7 @@ class GeburaSteamAppScanResultPanel extends StatelessWidget {
                       refreshCommon: const [],
                     ));
               },
-              icon: const Icon(Icons.refresh),
+              icon: Icon(UniversalUI.of(context).icons.refresh),
               label: const Text('刷新'),
             ),
           ],
@@ -99,7 +99,7 @@ class _SteamGameListState extends State<_SteamGameList> {
                         height: 16,
                       )))
             else
-              const Icon(Icons.image),
+              Icon(UniversalUI.of(context).icons.image),
             Text(
               app.name,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(

@@ -1,8 +1,11 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/client_setting/client_setting_bloc.dart';
+
+part 'icons.dart';
 
 enum UIDesign {
   material,
@@ -37,4 +40,6 @@ class UniversalUI {
   Color? get appBarBackgroundColor => design == UIDesign.material
       ? materialTheme.appBarTheme.backgroundColor
       : material.Colors.transparent;
+
+  UniversalIcon get icons => UniversalIcon(design);
 }

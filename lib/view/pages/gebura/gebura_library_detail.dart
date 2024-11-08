@@ -211,7 +211,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               icon: Icon(
                                 appInstType == LocalAppInstType.steam
                                     ? FontAwesomeIcons.steam
-                                    : Icons.play_arrow,
+                                    : UniversalUI.of(context).icons.play,
                               ),
                               label: const Text('启动'),
                             ),
@@ -333,7 +333,7 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
             ),
           ));
         },
-        icon: const Icon(Icons.settings, size: 16),
+        icon: Icon(UniversalUI.of(context).icons.settings, size: 16),
         label: const Text('设置'),
       ),
     );
