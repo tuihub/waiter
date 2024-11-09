@@ -53,8 +53,6 @@ import 'view/pages/yesod/manage_yesod_action_page.dart';
 import 'view/pages/yesod/manage_yesod_feed_page.dart';
 import 'view/pages/yesod/yesod_nav.dart';
 import 'view/pages/yesod/yesod_recent_page.dart';
-import 'view/universal/button.dart';
-import 'view/universal/spacing.dart';
 
 part 'route.g.dart';
 
@@ -145,27 +143,6 @@ final GlobalKey<NavigatorState> _settingsNavigateKey =
     GlobalKey<NavigatorState>();
 final mainWindowKey = GlobalKey();
 final appFrameKey = GlobalKey();
-
-class AppRoute extends GoRouteData {
-  const AppRoute();
-
-  @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(
-      child: MainWindow(
-        child: Column(
-          children: SpacingHelper.listSpacing(height: 8, children: [
-            Text('Wrong route: ${state.matchedLocation}'),
-            UniversalElevatedButton(
-              onPressed: () => const InitRoute().go(context),
-              child: const Text('Back to initial page'),
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-}
 
 @TypedGoRoute<InitRoute>(path: '/init')
 class InitRoute extends GoRouteData {
@@ -272,6 +249,7 @@ class ModuleRoute extends StatefulShellRouteData {
             key: mainWindowKey,
             child: AppFramePage(
               key: appFrameKey,
+              navigationShell: navigationShell,
               child: navigationShell,
             ),
           );
@@ -301,7 +279,6 @@ class TipherethRootRoute extends GoRouteData {
     context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
     return const NoTransitionPage(
       child: ModuleFramePage(
-        selectedNav: ModuleName.tiphereth,
         leftPart: TipherethFramePage(),
       ),
     );
@@ -382,7 +359,6 @@ class YesodFunctionRoute extends GoRouteData {
     }
     return NoTransitionPage(
       child: ModuleFramePage(
-        selectedNav: ModuleName.yesod,
         leftPart: YesodNav(
           function: function,
         ),
@@ -425,7 +401,6 @@ class GeburaStoreRoute extends GoRouteData {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: const ModuleFramePage(
-          selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.store,
           ),
@@ -444,7 +419,6 @@ class GeburaLibraryRoute extends GoRouteData {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: const ModuleFramePage(
-          selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.library,
           ),
@@ -481,7 +455,6 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: ModuleFramePage(
-          selectedNav: ModuleName.gebura,
           leftPart: const GeburaNav(
             function: GeburaFunctions.librarySettings,
           ),
@@ -509,7 +482,6 @@ class GeburaLibraryDetailRoute extends GoRouteData {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: ModuleFramePage(
-          selectedNav: ModuleName.gebura,
           leftPart: GeburaNav(
             function: GeburaFunctions.library,
             selectedItem: uuid ?? '',
@@ -536,7 +508,6 @@ class ChesedRootRoute extends GoRouteData {
     context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
     return const NoTransitionPage(
       child: ModuleFramePage(
-        selectedNav: ModuleName.chesed,
         leftPart: ChesedHome(),
       ),
     );
@@ -558,7 +529,6 @@ class NotificationRootRoute extends GoRouteData {
     context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
     return const NoTransitionPage(
       child: ModuleFramePage(
-        selectedNav: ModuleName.notification,
         leftPart: NotificationPage(),
       ),
     );
@@ -642,7 +612,6 @@ class SettingsFunctionRoute extends GoRouteData {
     }
     return NoTransitionPage(
       child: ModuleFramePage(
-        selectedNav: ModuleName.settings,
         leftPart: SettingsNav(
           function: function,
         ),

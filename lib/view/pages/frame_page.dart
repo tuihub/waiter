@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../bloc/client_setting/client_setting_bloc.dart';
 import '../../consts.dart';
@@ -21,9 +22,11 @@ class AppFramePage extends StatefulWidget {
   const AppFramePage({
     super.key,
     required this.child,
+    required this.navigationShell,
   });
 
   final Widget child;
+  final StatefulNavigationShell navigationShell;
 
   @override
   State<AppFramePage> createState() => AppFramePageState();
@@ -33,30 +36,52 @@ class AppFramePageState extends State<AppFramePage> {
   @override
   void initState() {
     super.initState();
-    final offlineAllowedModules = <ModuleName>{
-      ModuleName.tiphereth,
-      ModuleName.gebura,
-      ModuleName.settings,
-    };
     if (ConnectionHelper.isLocal(context)) {
-      _allowedModules = moduleList
+      _allowedModules = modules
           .where((e) => offlineAllowedModules.contains(e.name))
+          .map((e) => e.name)
           .toList();
     } else {
-      _allowedModules = moduleList;
+      _allowedModules = modules.map((e) => e.name).toList();
     }
-    _selectedNavIndex = 0;
+    _moduleIndexMap = Map.fromEntries(
+      modules
+          .map((e) => MapEntry(e.name.index, _allowedModules.indexOf(e.name))),
+    );
+    _navIndexMap = Map.fromEntries(
+      _moduleIndexMap.entries.map((e) => MapEntry(e.value, e.key)),
+    );
   }
 
-  late List<App> _allowedModules;
-  late int _selectedNavIndex;
+  late List<ModuleName> _allowedModules;
+  late Map<int, int> _moduleIndexMap;
+  late Map<int, int> _navIndexMap;
+
+  int _convNavIndex(int index) {
+    if (_moduleIndexMap[index] != null) {
+      if (_moduleIndexMap[index]! >= 0) {
+        return _moduleIndexMap[index]!;
+      }
+    }
+    return 0;
+  }
+
+  int _deConvNavIndex(int index) {
+    if (_navIndexMap[index] != null) {
+      if (_navIndexMap[index]! >= 0) {
+        return _navIndexMap[index]!;
+      }
+    }
+    return 0;
+  }
 
   void _onSelectedNav(int index) {
+    final moduleIndex = _deConvNavIndex(index);
     ServerSelectOverlay.of(context)?.hide();
-    _allowedModules[index].go(context);
-    setState(() {
-      _selectedNavIndex = index;
-    });
+    widget.navigationShell.goBranch(
+      moduleIndex,
+      initialLocation: moduleIndex == widget.navigationShell.currentIndex,
+    );
   }
 
   @override
@@ -85,19 +110,35 @@ class AppFramePageState extends State<AppFramePage> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: title,
                         ),
-                        Expanded(child: widget.child),
+                        Expanded(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder:
+                                (Widget child, Animation<double> animation) {
+                              return FadeTransition(
+                                  opacity: animation, child: child);
+                            },
+                            child: Container(
+                              key:
+                                  ValueKey(widget.navigationShell.currentIndex),
+                              child: widget.child,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     bottomNavigationBar: BottomNavigationBar(
-                      currentIndex: _selectedNavIndex,
+                      currentIndex:
+                          _convNavIndex(widget.navigationShell.currentIndex),
                       onTap: _onSelectedNav,
                       type: BottomNavigationBarType.fixed,
                       items: [
-                        for (final module in _allowedModules)
-                          BottomNavigationBarItem(
-                            icon: Icon(module.icon(context)),
-                            label: module.name.toString().split('.').last,
-                          ),
+                        for (final module in modules)
+                          if (_allowedModules.contains(module.name))
+                            BottomNavigationBarItem(
+                              icon: Icon(module.icon(context)),
+                              label: module.name.toString().split('.').last,
+                            ),
                       ],
                     ),
                   );
@@ -113,19 +154,21 @@ class AppFramePageState extends State<AppFramePage> {
                         ),
                         Expanded(
                           child: NavigationRail(
-                            selectedIndex: _selectedNavIndex,
+                            selectedIndex: _convNavIndex(
+                                widget.navigationShell.currentIndex),
                             onDestinationSelected: _onSelectedNav,
                             groupAlignment: 0,
                             labelType: NavigationRailLabelType.selected,
                             backgroundColor:
                                 Theme.of(context).scaffoldBackgroundColor,
                             destinations: [
-                              for (final module in _allowedModules)
-                                NavigationRailDestination(
-                                  icon: Icon(module.icon(context)),
-                                  label: Text(
-                                      module.name.toString().split('.').last),
-                                ),
+                              for (final module in modules)
+                                if (_allowedModules.contains(module.name))
+                                  NavigationRailDestination(
+                                    icon: Icon(module.icon(context)),
+                                    label: Text(
+                                        module.name.toString().split('.').last),
+                                  ),
                             ],
                           ),
                         ),
@@ -136,7 +179,18 @@ class AppFramePageState extends State<AppFramePage> {
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.only(top: TitleBar.height),
-                        child: widget.child,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return FadeTransition(
+                                opacity: animation, child: child);
+                          },
+                          child: Container(
+                            key: ValueKey(widget.navigationShell.currentIndex),
+                            child: widget.child,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -148,7 +202,8 @@ class AppFramePageState extends State<AppFramePage> {
                     automaticallyImplyLeading: false,
                   ),
                   pane: fluent.NavigationPane(
-                    selected: _selectedNavIndex,
+                    selected:
+                        _convNavIndex(widget.navigationShell.currentIndex),
                     onItemPressed: _onSelectedNav,
                     displayMode: compact
                         ? fluent.PaneDisplayMode.top
@@ -158,33 +213,32 @@ class AppFramePageState extends State<AppFramePage> {
                       openWidth: 220,
                     ),
                     items: [
-                      for (final module in _allowedModules)
-                        if (module.name != ModuleName.settings)
-                          fluent.PaneItem(
-                            icon: Icon(module.icon(context), size: 18),
-                            title: Text(module.name.toString().split('.').last),
-                            onTap: () {
-                              ServerSelectOverlay.of(context)?.hide();
-                              module.go(context);
-                            },
-                            body: Container(),
-                          ),
+                      for (final module in modules)
+                        if (_allowedModules.contains(module.name))
+                          if (module.name != ModuleName.settings)
+                            fluent.PaneItem(
+                              icon: Icon(module.icon(context), size: 18),
+                              title:
+                                  Text(module.name.toString().split('.').last),
+                              body: Container(),
+                            ),
                     ],
                     footerItems: [
-                      for (final module in _allowedModules)
-                        if (module.name == ModuleName.settings)
-                          fluent.PaneItem(
-                            icon: Icon(module.icon(context), size: 18),
-                            title: Text(module.name.toString().split('.').last),
-                            onTap: () {
-                              ServerSelectOverlay.of(context)?.hide();
-                              module.go(context);
-                            },
-                            body: Container(),
-                          ),
+                      for (final module in modules)
+                        if (_allowedModules.contains(module.name))
+                          if (module.name == ModuleName.settings)
+                            fluent.PaneItem(
+                              icon: Icon(module.icon(context), size: 18),
+                              title:
+                                  Text(module.name.toString().split('.').last),
+                              body: Container(),
+                            ),
                     ],
                   ),
-                  paneBodyBuilder: (context, child) => widget.child,
+                  paneBodyBuilder: (item, child) => Container(
+                    key: ValueKey(widget.navigationShell.currentIndex),
+                    child: widget.child,
+                  ),
                 );
             }
           },
@@ -197,7 +251,6 @@ class AppFramePageState extends State<AppFramePage> {
 class ModuleFramePage extends StatefulWidget {
   const ModuleFramePage({
     super.key,
-    required this.selectedNav,
     required this.leftPart,
     this.leftPartWidth,
     this.middlePart,
@@ -206,7 +259,6 @@ class ModuleFramePage extends StatefulWidget {
     this.gestureRight = true,
   });
 
-  final ModuleName selectedNav;
   final Widget leftPart;
   final double? leftPartWidth;
   final Widget? middlePart;

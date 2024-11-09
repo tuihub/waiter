@@ -7,46 +7,54 @@ import 'view/universal/universal.dart';
 
 const clientSourceCodeUrl = 'github.com/tuihub/waiter';
 
-class App {
+class Module {
   final ModuleName name;
   IconData Function(BuildContext context) icon;
   void Function(BuildContext context) go;
 
-  App(this.name, this.icon, this.go);
+  Module(this.name, this.icon, this.go);
 }
 
-final moduleList = [
-  // App('Home', Icons.home, const HomePage()),
-  App(ModuleName.tiphereth, (context) {
+final modules = [
+  Module(ModuleName.tiphereth, (context) {
     return UniversalUI.of(context).icons.tiphereth;
   }, (context) {
     const TipherethRootRoute().go(context);
   }),
-  App(ModuleName.gebura, (context) {
-    return UniversalUI.of(context).icons.gebura;
-  }, (context) {
-    const GeburaRootRoute().go(context);
-  }),
-  App(ModuleName.yesod, (context) {
+  Module(ModuleName.yesod, (context) {
     return UniversalUI.of(context).icons.yesod;
   }, (context) {
     const YesodRootRoute().go(context);
   }),
-  // App(ModuleName.chesed, Icons.photo_album),
-  // App('Ffi', Icons.timelapse, const FfiTestPage()),
-  App(ModuleName.notification, (context) {
+  Module(ModuleName.gebura, (context) {
+    return UniversalUI.of(context).icons.gebura;
+  }, (context) {
+    const GeburaRootRoute().go(context);
+  }),
+  Module(ModuleName.chesed, (context) {
+    return UniversalUI.of(context).icons.chesed;
+  }, (context) {
+    const ChesedRootRoute().go(context);
+  }),
+  Module(ModuleName.notification, (context) {
     return UniversalUI.of(context).icons.notification;
   }, (context) {
     const NotificationRootRoute().go(context);
   }),
-  App(ModuleName.settings, (context) {
+  Module(ModuleName.settings, (context) {
     return UniversalUI.of(context).icons.settings;
   }, (context) {
     const SettingsRootRoute().go(context);
   }),
 ];
 
-final moduleMap = Map.fromEntries(moduleList.map((e) => MapEntry(e.name, e)));
+final moduleMap = Map.fromEntries(modules.map((e) => MapEntry(e.name, e)));
+
+final offlineAllowedModules = [
+  ModuleName.tiphereth,
+  ModuleName.gebura,
+  ModuleName.settings,
+];
 
 const appDefaultAccentColor = Color.fromARGB(255, 255, 145, 0);
 // const AppBackgroudColor = Color.fromARGB(255, 32, 34, 37);
