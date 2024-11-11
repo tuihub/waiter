@@ -6,7 +6,7 @@ import 'package:system_tray/system_tray.dart';
 
 import '../../common/platform.dart';
 import '../../l10n/l10n.dart';
-import '../universal/button.dart';
+import '../universal/universal.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});
@@ -64,11 +64,12 @@ class TitleBar extends StatelessWidget {
                 unawaited(showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
+                    return UniversalDialog(
                       title: Text(S.of(context).close),
                       content: Text(S.of(context).areYouSureToClose),
-                      actions: <Widget>[
-                        UniversalTextButton(
+                      actions: [
+                        UniversalDialogAction(
+                          isPrimary: true,
                           child: Text(S.of(context).exit),
                           onPressed: () {
                             final SystemTray systemTray = SystemTray();
@@ -76,14 +77,14 @@ class TitleBar extends StatelessWidget {
                             appWindow.close();
                           },
                         ),
-                        UniversalTextButton(
+                        UniversalDialogAction(
                           child: Text(S.of(context).minimizeToTray),
                           onPressed: () {
                             Navigator.of(context).pop();
                             appWindow.hide();
                           },
                         ),
-                        UniversalTextButton(
+                        UniversalDialogAction(
                           child: Text(S.of(context).cancel),
                           onPressed: () {
                             Navigator.of(context).pop();

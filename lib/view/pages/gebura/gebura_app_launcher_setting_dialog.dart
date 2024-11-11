@@ -34,7 +34,7 @@ class GeburaAppLauncherSettingDialogState
         }
       },
       builder: (context, state) {
-        return AlertDialog(
+        return UniversalDialog(
           title: const Text('本地设置'),
           content: SizedBox(
             width: 600,
@@ -77,8 +77,8 @@ class GeburaAppLauncherSettingDialogState
               ),
             ),
           ),
-          actions: <Widget>[
-            UniversalTextButton(
+          actions: [
+            UniversalDialogAction(
               onPressed: newSetting != null
                   ? () {
                       context.read<GeburaBloc>().add(
@@ -88,9 +88,10 @@ class GeburaAppLauncherSettingDialogState
                           );
                     }
                   : null,
+              isPrimary: true,
               child: const Text('保存'),
             ),
-            UniversalTextButton(
+            UniversalDialogAction(
               onPressed: () {
                 Navigator.pop(context); //close Dialog
               },

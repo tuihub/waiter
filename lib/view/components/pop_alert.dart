@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../universal/button.dart';
+import '../universal/universal.dart';
 
 class PopAlert extends StatelessWidget {
   const PopAlert({
@@ -27,26 +27,27 @@ class PopAlert extends StatelessWidget {
         final shouldPop = await showDialog<bool>(
           context: context,
           builder: (context) {
-            return AlertDialog(
+            return UniversalDialog(
               title: Text(title),
               content: Text(content),
               actions: [
-                UniversalTextButton(
+                UniversalDialogAction(
                   onPressed: () => {
                     Navigator.of(context).pop(true),
                     onConfirm(),
                   },
+                  isPrimary: true,
                   child: const Text('是'),
                 ),
                 if (onDeny != null)
-                  UniversalTextButton(
+                  UniversalDialogAction(
                     onPressed: () => {
                       Navigator.of(context).pop(true),
                       onDeny!(),
                     },
                     child: const Text('否'),
                   ),
-                UniversalTextButton(
+                UniversalDialogAction(
                   onPressed: () => {
                     Navigator.of(context).pop(false),
                     onCancel(),

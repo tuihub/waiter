@@ -4,7 +4,7 @@ import 'package:universal_io/io.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../../common/platform.dart';
-import '../../universal/button.dart';
+import '../../universal/universal.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;
@@ -26,13 +26,13 @@ class ChesedUploadState extends State<ChesedUpload> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChesedBloc, ChesedState>(builder: (context, state) {
-      return AlertDialog(
+      return UniversalDialog(
         title: const Text('上传图片'),
         content: state is ChesedUploadImageState && state.msg != null
             ? Text(state.msg!)
             : null,
-        actions: <Widget>[
-          UniversalTextButton(
+        actions: [
+          UniversalDialogAction(
             onPressed: () {
               context
                   .read<ChesedBloc>()
@@ -43,7 +43,7 @@ class ChesedUploadState extends State<ChesedUpload> {
                 : const Text('选择文件'),
           ),
           if (PlatformHelper.isWindowsApp())
-            UniversalTextButton(
+            UniversalDialogAction(
               onPressed: () {
                 context
                     .read<ChesedBloc>()
@@ -53,7 +53,7 @@ class ChesedUploadState extends State<ChesedUpload> {
                   ? const CircularProgressIndicator()
                   : const Text('截取屏幕'),
             ),
-          UniversalTextButton(
+          UniversalDialogAction(
             onPressed: () {
               Navigator.pop(context); //close Dialog
             },

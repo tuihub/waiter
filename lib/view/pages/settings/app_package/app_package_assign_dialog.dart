@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../components/toast.dart';
-import '../../../universal/button.dart';
+import '../../../universal/universal.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
   const AppPackageAssignDialog(
@@ -29,7 +29,7 @@ class AppPackageAssignDialog extends StatelessWidget {
         Navigator.of(context).pop();
       }
     }, builder: (context, state) {
-      return AlertDialog(
+      return UniversalDialog(
         title: const Text('绑定应用'),
         content: SingleChildScrollView(
           child: Form(
@@ -84,19 +84,20 @@ class AppPackageAssignDialog extends StatelessWidget {
             ),
           ),
         ),
-        actions: <Widget>[
-          UniversalTextButton(
+        actions: [
+          UniversalDialogAction(
             onPressed: () {
               context.read<GeburaBloc>().add(GeburaAssignAppEvent(
                     appPackage.id,
                     InternalID(id: $fixnum.Int64(appID)),
                   ));
             },
+            isPrimary: true,
             child: state is GeburaAssignAppPackageState && state.failed
                 ? const CircularProgressIndicator()
                 : const Text('应用更改'),
           ),
-          UniversalTextButton(
+          UniversalDialogAction(
             onPressed: () {
               Navigator.pop(context); //close Dialog
             },

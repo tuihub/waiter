@@ -302,20 +302,21 @@ class ServerSelectOverlayState extends State<ServerSelectOverlay>
                                 unawaited(showDialog<void>(
                                   context: context,
                                   builder: (context) {
-                                    return AlertDialog(
+                                    return UniversalDialog(
                                       title: const Text('进入本地模式'),
                                       content: const Text('是否进入本地模式？'),
                                       actions: [
-                                        UniversalTextButton(
+                                        UniversalDialogAction(
                                           onPressed: () {
                                             context
                                                 .read<MainBloc>()
                                                 .add(MainEnterLocalModeEvent());
                                             Navigator.of(context).pop();
                                           },
+                                          isPrimary: true,
                                           child: const Text('是'),
                                         ),
-                                        UniversalTextButton(
+                                        UniversalDialogAction(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },

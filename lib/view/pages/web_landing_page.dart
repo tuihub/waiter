@@ -12,9 +12,7 @@ import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import '../universal/button.dart';
-import '../universal/card.dart';
-import '../universal/spacing.dart';
+import '../universal/universal.dart';
 
 class WebLandingPage extends StatelessWidget {
   const WebLandingPage({super.key});
@@ -102,7 +100,7 @@ class WebLandingPage extends StatelessWidget {
                                     unawaited(showDialog<void>(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return AlertDialog(
+                                        return UniversalDialog(
                                           content: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [

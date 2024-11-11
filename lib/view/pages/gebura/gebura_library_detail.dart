@@ -576,7 +576,7 @@ class _GeburaLibraryDetailChangeAppInfoDialogState
     final sources =
         context.read<MainBloc>().state.serverFeatureSummary?.appInfoSources ??
             [];
-    return AlertDialog(
+    return UniversalDialog(
       title: const Text('设置应用信息'),
       content: SingleChildScrollView(
         child: Column(
@@ -616,8 +616,8 @@ class _GeburaLibraryDetailChangeAppInfoDialogState
           ],
         ),
       ),
-      actions: <Widget>[
-        UniversalTextButton(
+      actions: [
+        UniversalDialogAction(
           onPressed: () {
             Navigator.of(context).pop();
           },

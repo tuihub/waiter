@@ -44,7 +44,6 @@ class CheckboxFormField extends FormField<bool> {
         });
 }
 
-
 class NumberFormField extends FormField<num> {
   NumberFormField({
     super.key,

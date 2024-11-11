@@ -36,7 +36,7 @@ class UniversalOutlinedButton extends StatelessWidget {
           label: child,
         );
       case UIDesign.fluent:
-        return fluent.OutlinedButton(
+        return fluent.Button(
           onPressed: onPressed,
           onLongPress: onLongPress,
           focusNode: focusNode,

@@ -13,7 +13,7 @@ class UnLinkAccountDialog extends StatelessWidget {
         Navigator.of(context).pop();
       }
     }, builder: (context, state) {
-      return AlertDialog(
+      return UniversalDialog(
         title: const Text('账户详情'),
         content: SizedBox(
           width: 600,
@@ -96,8 +96,8 @@ class UnLinkAccountDialog extends StatelessWidget {
             ],
           ),
         ),
-        actions: <Widget>[
-          UniversalTextButton(
+        actions: [
+          UniversalDialogAction(
             onPressed: () {
               context.read<TipherethBloc>().add(TipherethUnLinkAccountEvent(
                     account.platform,
@@ -108,10 +108,11 @@ class UnLinkAccountDialog extends StatelessWidget {
                 ? const CircularProgressIndicator()
                 : const Text('解绑'),
           ),
-          UniversalTextButton(
+          UniversalDialogAction(
             onPressed: () {
               Navigator.pop(context); //close Dialog
             },
+            isPrimary: true,
             child: const Text('关闭'),
           )
         ],

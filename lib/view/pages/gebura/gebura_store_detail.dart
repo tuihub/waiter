@@ -199,23 +199,24 @@ class PurchaseAppDialog extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return AlertDialog(
+        return UniversalDialog(
           title: const Text('入库'),
           content: SizedBox(
             width: 600,
             child: Text(
                 '确定将${app.name}加入你的库存？${msg.isNotEmpty ? '\n错误：$msg' : ''}'),
           ),
-          actions: <Widget>[
-            UniversalTextButton(
+          actions: [
+            UniversalDialogAction(
               onPressed: () {
                 context.read<GeburaBloc>().add(GeburaPurchaseEvent(app.id));
               },
+              isPrimary: true,
               child: state is GeburaPurchaseState && state.processing
                   ? const CircularProgressIndicator()
                   : const Text('确定'),
             ),
-            UniversalTextButton(
+            UniversalDialogAction(
               onPressed: () {
                 Navigator.pop(context); //close Dialog
               },

@@ -487,7 +487,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return UniversalDialog(
       title: const Text('导出OPML'),
       content: SizedBox(
         width: 600,
@@ -496,7 +496,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
             : Text('导出${_opml!.items.length}个订阅'),
       ),
       actions: [
-        UniversalTextButton(
+        UniversalDialogAction(
           onPressed: _opml != null
               ? () async {
                   final data = _opml!.toOPMLString();
@@ -507,7 +507,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
               : null,
           child: const Text('复制到剪贴板'),
         ),
-        UniversalTextButton(
+        UniversalDialogAction(
           onPressed: _opml != null
               ? () async {
                   final data = _opml!.toOPMLString();
@@ -523,10 +523,11 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
               : null,
           child: const Text('保存到文件'),
         ),
-        UniversalTextButton(
+        UniversalDialogAction(
           onPressed: () {
             Navigator.of(context).pop();
           },
+          isPrimary: true,
           child: const Text('关闭'),
         ),
       ],
