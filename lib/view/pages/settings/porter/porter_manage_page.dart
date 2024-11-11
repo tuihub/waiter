@@ -7,12 +7,9 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
-import '../../../components/form_field.dart';
 import '../../../components/toast.dart';
 import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
-import '../../../universal/button.dart';
-import '../../../universal/list_tile.dart';
 import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 
@@ -69,7 +66,7 @@ class PorterManagePage extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Switch(
+                UniversalSwitch(
                   value: porter.status == UserStatus.USER_STATUS_ACTIVE,
                   onChanged: (_) {
                     openEditPanel(porter.id.id.toInt());
@@ -181,7 +178,7 @@ class PorterEditPanel extends StatelessWidget {
                 labelText: '全局名称',
               ),
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue: enabled,
               onSaved: (newValue) => enabled = newValue!,
               title: const Text('启用'),

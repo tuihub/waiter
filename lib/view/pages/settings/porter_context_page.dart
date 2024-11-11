@@ -10,12 +10,9 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
 import '../../../repo/grpc/l10n.dart';
-import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/button.dart';
-import '../../universal/list_tile.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -89,7 +86,7 @@ class PorterContextManagePage extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Switch(
+                UniversalSwitch(
                   value: ctx.status ==
                       PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,
                   onChanged: (_) {
@@ -210,7 +207,7 @@ class PorterContextAddPanel extends StatelessWidget {
                   submitButtonBuilder: (_) => Container(),
                 ),
               ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue:
                   status == PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,
               onSaved: (newValue) => status = newValue!
@@ -323,7 +320,7 @@ class PorterContextEditPanel extends StatelessWidget {
                   submitButtonBuilder: (_) => Container(),
                 ),
               ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue:
                   status == PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,
               onSaved: (newValue) => status = newValue!

@@ -9,7 +9,6 @@ import '../../bloc/netzach/netzach_bloc.dart';
 import '../../model/netzach_model.dart';
 import '../../repo/grpc/l10n.dart';
 import '../helper/duration_format.dart';
-import '../universal/card.dart';
 import '../universal/universal.dart';
 
 class NotificationPage extends StatelessWidget {

@@ -17,8 +17,6 @@ import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/button.dart';
-import '../../universal/list_tile.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 

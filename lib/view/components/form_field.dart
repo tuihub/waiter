@@ -44,38 +44,6 @@ class CheckboxFormField extends FormField<bool> {
         });
 }
 
-class SwitchFormField extends FormField<bool> {
-  SwitchFormField({
-    super.key,
-    Widget? title,
-    super.onSaved,
-    ValueChanged<bool>? onChanged,
-    super.validator,
-    bool super.initialValue = false,
-  }) : super(builder: (FormFieldState<bool> state) {
-          return SwitchListTile(
-            dense: state.hasError,
-            title: title,
-            value: state.value ?? false,
-            onChanged: (value) {
-              state.didChange(value);
-              if (onChanged != null) {
-                onChanged(value);
-              }
-            },
-            subtitle: state.hasError
-                ? Builder(
-                    builder: (BuildContext context) => Text(
-                      state.errorText ?? '',
-                      style:
-                          TextStyle(color: Theme.of(context).colorScheme.error),
-                    ),
-                  )
-                : null,
-            controlAffinity: ListTileControlAffinity.platform,
-          );
-        });
-}
 
 class NumberFormField extends FormField<num> {
   NumberFormField({

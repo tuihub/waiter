@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'universal.dart';
+import 'common.dart';
 
 class UniversalToolBar extends StatelessWidget {
   const UniversalToolBar({

@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../model/gebura_model.dart';
-import '../../components/form_field.dart';
 import '../../components/input_formatters.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
-import '../../universal/button.dart';
 import '../../universal/universal.dart';
 
 class GeburaAppLauncherSettingDialog extends StatefulWidget {
@@ -454,7 +452,7 @@ class _GeburaAppLauncherSettingFormState
           const SizedBox(
             height: 16,
           ),
-          SwitchFormField(
+          UniversalSwitchFormField(
             onSaved: (newValue) => advancedTracing = newValue ?? false,
             title: const Text('高级模式'),
             initialValue: advancedTracing,

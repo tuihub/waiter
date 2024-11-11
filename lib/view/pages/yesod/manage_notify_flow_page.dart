@@ -12,12 +12,9 @@ import '../../../model/netzach_model.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../components/chips_input.dart';
-import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list_tile.dart';
-import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -161,7 +158,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       const SizedBox(
                         height: 16,
                       ),
-                      SwitchFormField(
+                      UniversalSwitchFormField(
                         onSaved: (newValue) => enabled = newValue ?? false,
                         title: const Text('启用'),
                         initialValue: enabled,
@@ -667,7 +664,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       const SizedBox(
                         height: 16,
                       ),
-                      SwitchFormField(
+                      UniversalSwitchFormField(
                         onSaved: (newValue) => enabled = newValue ?? false,
                         title: const Text('启用'),
                         initialValue: enabled,

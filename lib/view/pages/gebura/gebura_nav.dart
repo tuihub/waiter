@@ -10,9 +10,6 @@ import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
-import '../../universal/button.dart';
-import '../../universal/list_tile.dart';
-import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import 'gebura_common.dart';
 

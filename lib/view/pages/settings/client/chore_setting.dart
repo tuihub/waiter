@@ -9,14 +9,14 @@ class ChoreSetting extends StatelessWidget {
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
       return UniversalExpansionTile(
-        leading: const Icon(Icons.warning),
+        leading: Icon(UniversalUI.of(context).icons.warning),
         title: const Text('高级'),
-        subtitle: const Text('一些高级设置'),
+        subtitle: const Text('使用前确保你知道你在做什么'),
         children: [
           if (!PlatformHelper.isWeb())
             UniversalListTile(
               title: const Text('使用系统代理（实验性）'),
-              trailing: Switch(
+              trailing: UniversalSwitch(
                 value: state.useSystemProxy ?? false,
                 onChanged: (value) {
                   context
@@ -28,7 +28,7 @@ class ChoreSetting extends StatelessWidget {
           if (PlatformHelper.isWindowsApp())
             UniversalListTile(
               title: const Text('使用 Fluent UI（实验性）'),
-              trailing: Switch(
+              trailing: UniversalSwitch(
                 value: state.useFluentUI ?? false,
                 onChanged: (value) {
                   context

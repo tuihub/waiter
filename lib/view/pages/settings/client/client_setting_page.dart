@@ -13,15 +13,11 @@ import '../../../../consts.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../helper/app_bar.dart';
 import '../../../specialized/theme_presentation.dart';
-import '../../../universal/button.dart';
-import '../../../universal/card.dart';
-import '../../../universal/list_tile.dart';
-import '../../../universal/tool_bar.dart';
 import '../../../universal/universal.dart';
 
 part 'cache_setting.dart';
-part 'theme_setting.dart';
 part 'chore_setting.dart';
+part 'theme_setting.dart';
 
 class ClientSettingPage extends StatelessWidget {
   const ClientSettingPage({super.key});

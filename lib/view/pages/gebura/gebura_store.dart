@@ -7,7 +7,6 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../layout/bootstrap_container.dart';
-import '../../universal/card.dart';
 import '../../universal/universal.dart';
 import 'gebura_store_detail.dart';
 

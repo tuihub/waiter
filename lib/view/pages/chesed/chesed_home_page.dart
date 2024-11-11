@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../components/toast.dart';
-import '../../universal/card.dart';
 import '../../universal/universal.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';

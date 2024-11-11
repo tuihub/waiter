@@ -23,15 +23,11 @@ import '../../../common/opml/opml.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
-import '../../components/form_field.dart';
 import '../../components/input_formatters.dart';
 import '../../components/toast.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/button.dart';
-import '../../universal/list_tile.dart';
-import '../../universal/tool_bar.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -238,12 +234,12 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                 borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               onSaved: (newValue) => enabled = newValue ?? false,
               title: const Text('立即启用'),
               initialValue: enabled,
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               onSaved: (newValue) => hideItems = newValue ?? false,
               title: const Text('隐藏内容'),
               initialValue: hideItems,
@@ -408,12 +404,12 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 borderRadius: UniversalUI.of(context).defaultBorderRadius,
               ),
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue: feedEnabled,
               onSaved: (newValue) => feedEnabled = newValue!,
               title: const Text('启用'),
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue: hideItems,
               onSaved: (newValue) => hideItems = newValue!,
               title: const Text('隐藏内容'),

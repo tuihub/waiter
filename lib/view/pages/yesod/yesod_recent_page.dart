@@ -15,14 +15,11 @@ import '../../../common/bloc_event_status_mixin.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
-import '../../components/form_field.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/button.dart';
-import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 import 'yesod_detail_page.dart';
@@ -310,7 +307,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
               alignment: Alignment.centerLeft,
               child: Text('筛选'),
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               onSaved: (newValue) {
                 setState(() {
                   hideRead = newValue ?? false;

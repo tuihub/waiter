@@ -12,15 +12,13 @@ import '../../bloc/main_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../../model/common_model.dart';
 import '../../route.dart';
-import '../components/form_field.dart';
 import '../components/toast.dart';
 import '../helper/connection.dart';
 import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
-import '../universal/button.dart';
-import '../universal/card.dart';
+import '../universal/universal.dart';
 import 'settings/client/client_setting_page.dart';
 
 class ServerSelectOverlay extends StatefulWidget {
@@ -561,12 +559,9 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextFormField(
+            UniversalTextFormField(
               onSaved: (newValue) => host = newValue!,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: S.of(context).address,
-              ),
+              labelText: S.of(context).address,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return S.of(context).pleaseInputServerAddress;
@@ -577,12 +572,9 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             const SizedBox(
               height: 16,
             ),
-            TextFormField(
+            UniversalTextFormField(
               onSaved: (newValue) => port = int.parse(newValue!),
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: S.of(context).port,
-              ),
+              labelText: S.of(context).port,
               validator: (value) {
                 final p = int.tryParse(value!) ?? 0;
                 if (p <= 0) {
@@ -596,7 +588,7 @@ class _ServerSelectFormState extends State<ServerSelectForm> {
             const SizedBox(
               height: 8,
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               onSaved: (newValue) => tls = newValue!,
               title: Text(S.of(context).tls),
               initialValue: tls,
@@ -715,30 +707,26 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).username,
-                  ),
+                UniversalTextFormField(
+                  labelText: S.of(context).username,
                   controller: _usernameController,
                   readOnly: widget.readOnly,
                 ),
                 const SizedBox(
                   height: 16,
                 ),
-                TextFormField(
+                UniversalTextFormField(
                   obscureText: hidePassword,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).password,
-                    suffixIcon: UniversalIconButton(
-                      onPressed: () {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
-                      },
-                      icon: hidePassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                    ),
+                  labelText: S.of(context).password,
+                  suffixIcon: UniversalIconButton(
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    icon: hidePassword
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
                   ),
                   controller: _passwordController,
                   obscuringCharacter: '*',
@@ -887,30 +875,26 @@ class _RegisterFormState extends State<RegisterForm> {
                 const SizedBox(
                   height: 16,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).username,
-                  ),
+                UniversalTextFormField(
+                  labelText: S.of(context).username,
                   controller: _usernameController,
                   readOnly: widget.readOnly,
                 ),
                 const SizedBox(
                   height: 16,
                 ),
-                TextFormField(
+                UniversalTextFormField(
                   obscureText: hidePassword,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).password,
-                    suffixIcon: UniversalIconButton(
-                      onPressed: () {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
-                      },
-                      icon: hidePassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                    ),
+                  labelText: S.of(context).password,
+                  suffixIcon: UniversalIconButton(
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    icon: hidePassword
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
                   ),
                   controller: _passwordController,
                   obscuringCharacter: '*',
@@ -919,20 +903,18 @@ class _RegisterFormState extends State<RegisterForm> {
                 const SizedBox(
                   height: 16,
                 ),
-                TextFormField(
+                UniversalTextFormField(
                   obscureText: hidePassword,
-                  decoration: InputDecoration(
-                    labelText: S.of(context).repeatPassword,
-                    suffixIcon: UniversalIconButton(
-                      onPressed: () {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
-                      },
-                      icon: hidePassword
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
-                    ),
+                  labelText: S.of(context).repeatPassword,
+                  suffixIcon: UniversalIconButton(
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                    icon: hidePassword
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off),
                   ),
                   controller: _repeatPasswordController,
                   obscuringCharacter: '*',
@@ -948,10 +930,8 @@ class _RegisterFormState extends State<RegisterForm> {
                     child: Text(S.of(context).refreshCaptcha),
                   ),
                 if (_captchaID != null)
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: S.of(context).captcha,
-                    ),
+                  UniversalTextFormField(
+                    labelText: S.of(context).captcha,
                     controller: _captchaAnsController,
                     readOnly: widget.readOnly,
                   ),

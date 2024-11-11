@@ -454,24 +454,22 @@ class _CommonAppFolderScanSettingPageState
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
                                 ),
-                                TextFormField(
+                                UniversalTextFormField(
                                   controller: basePathController,
-                                  decoration: InputDecoration(
-                                    labelText: '起始路径',
-                                    hintText: '请输入起始路径',
-                                    suffixIcon: UniversalTextButton(
-                                      onPressed: () async {
-                                        final path = await FilePicker.platform
-                                            .getDirectoryPath();
-                                        if (path != null) {
-                                          basePathController.text = path;
-                                          setState(() {
-                                            basePath = path;
-                                          });
-                                        }
-                                      },
-                                      child: const Text('选择'),
-                                    ),
+                                  labelText: '起始路径',
+                                  hintText: '请输入起始路径',
+                                  suffixIcon: UniversalTextButton(
+                                    onPressed: () async {
+                                      final path = await FilePicker.platform
+                                          .getDirectoryPath();
+                                      if (path != null) {
+                                        basePathController.text = path;
+                                        setState(() {
+                                          basePath = path;
+                                        });
+                                      }
+                                    },
+                                    child: const Text('选择'),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -494,13 +492,11 @@ class _CommonAppFolderScanSettingPageState
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
                                 ),
-                                TextFormField(
+                                UniversalTextFormField(
                                   controller:
                                       excludeDirectoryMatchersController,
-                                  decoration: const InputDecoration(
-                                    labelText: '排除文件夹',
-                                    hintText: '请输入排除文件夹',
-                                  ),
+                                  labelText: '排除文件夹',
+                                  hintText: '请输入排除文件夹',
                                   keyboardType: TextInputType.multiline,
                                   maxLines: null,
                                   onSaved: (value) {
@@ -603,7 +599,7 @@ class _CommonAppFolderScanSettingPageState
                                         width: 100,
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 2),
-                                        child: DropdownButtonFormField<
+                                        child: UniversalDropdownButtonFormField<
                                             CommonAppFolderScanPathFieldMatcher>(
                                           value: pathFieldMatcherMap[i],
                                           isExpanded: true,
@@ -616,7 +612,7 @@ class _CommonAppFolderScanSettingPageState
                                               CommonAppFolderScanPathFieldMatcher
                                                   .values
                                                   .map((e) {
-                                            return DropdownMenuItem(
+                                            return UniversalDropdownMenuItem(
                                               value: e,
                                               child: Text(
                                                   e.toString().split('.').last),
@@ -636,7 +632,7 @@ class _CommonAppFolderScanSettingPageState
                                     alignment: Alignment.centerLeft,
                                     child: const Text('非最大深度时的匹配对齐'),
                                   ),
-                                  SwitchFormField(
+                                  UniversalSwitchFormField(
                                     title: Text(pathFieldMatcherAlignment ==
                                             CommonAppFolderScanPathFieldMatcherAlignment
                                                 .right
@@ -670,13 +666,11 @@ class _CommonAppFolderScanSettingPageState
                                     height: 8,
                                     includeEnds: true,
                                     children: [
-                                      TextFormField(
+                                      UniversalTextFormField(
                                         controller:
                                             targetFileMatchersController,
-                                        decoration: const InputDecoration(
-                                          labelText: '包含文件',
-                                          hintText: '请输入包含文件',
-                                        ),
+                                        labelText: '包含文件',
+                                        hintText: '请输入包含文件',
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         onSaved: (value) {
@@ -688,13 +682,11 @@ class _CommonAppFolderScanSettingPageState
                                           }
                                         },
                                       ),
-                                      TextFormField(
+                                      UniversalTextFormField(
                                         controller:
                                             excludeFileMatchersController,
-                                        decoration: const InputDecoration(
-                                          labelText: '排除文件',
-                                          hintText: '请输入排除文件',
-                                        ),
+                                        labelText: '排除文件',
+                                        hintText: '请输入排除文件',
                                         keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         onSaved: (value) {

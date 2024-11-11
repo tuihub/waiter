@@ -9,9 +9,6 @@ import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
-import '../../../universal/button.dart';
-import '../../../universal/card.dart';
-import '../../../universal/list_tile.dart';
 import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 

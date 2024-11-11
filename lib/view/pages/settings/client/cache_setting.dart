@@ -16,7 +16,7 @@ class _CacheSettingState extends State<CacheSetting> {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       _cacheSize = context.read<MainBloc>().cacheSize();
       return UniversalListTile(
-        leading: const Icon(Icons.cached),
+        leading: Icon(UniversalUI.of(context).icons.cache),
         title: Text(S.of(context).cache),
         subtitle: Text(
           FileSize.getSize(_cacheSize),
@@ -29,7 +29,7 @@ class _CacheSettingState extends State<CacheSetting> {
             mainAxisAlignment: MainAxisAlignment.end,
             primaryItems: [
               UniversalToolBarItem(
-                icon: Icons.search,
+                icon: UniversalUI.of(context).icons.refresh,
                 label: Text(S.of(context).refresh),
                 onPressed: () {
                   setState(() {
@@ -38,7 +38,7 @@ class _CacheSettingState extends State<CacheSetting> {
                 },
               ),
               UniversalToolBarItem(
-                icon: _clearing ? null : Icons.delete,
+                icon: UniversalUI.of(context).icons.delete,
                 label: Text(S.of(context).clearCache),
                 onPressed: () async {
                   setState(() {

@@ -17,8 +17,6 @@ import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
-import '../../universal/button.dart';
-import '../../universal/card.dart';
 import '../../universal/universal.dart';
 import '../server_select_overlay.dart';
 

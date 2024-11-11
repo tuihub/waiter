@@ -10,8 +10,6 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
-import '../../universal/button.dart';
-import '../../universal/spacing.dart';
 import '../../universal/universal.dart';
 
 class GeburaStoreDetail extends StatelessWidget {

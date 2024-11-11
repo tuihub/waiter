@@ -1,4 +1,4 @@
-part of 'universal.dart';
+part of 'common.dart';
 
 class UniversalIcon {
   UniversalIcon(this.design);
@@ -290,6 +290,33 @@ class UniversalIcon {
         return material.Icons.lock_outline;
       case UIDesign.fluent:
         return FluentIcons.lock_closed_24_regular;
+    }
+  }
+
+  IconData get delete {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.delete;
+      case UIDesign.fluent:
+        return FluentIcons.delete_24_regular;
+    }
+  }
+
+  IconData get cache {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.cached;
+      case UIDesign.fluent:
+        return FluentIcons.arrow_counterclockwise_dashes_24_regular;
+    }
+  }
+
+  IconData get warning {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.warning;
+      case UIDesign.fluent:
+        return FluentIcons.warning_24_regular;
     }
   }
 }

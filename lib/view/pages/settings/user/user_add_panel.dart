@@ -6,7 +6,6 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
-import '../../../universal/button.dart';
 import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 

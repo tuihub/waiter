@@ -10,11 +10,9 @@ import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
-import '../../components/form_field.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/list_tile.dart';
 import '../../universal/universal.dart';
 import '../frame_page.dart';
 
@@ -125,7 +123,7 @@ class NotifyTargetAddPanel extends StatelessWidget {
                   .state
                   .getNotifyDestinationProvider,
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               onSaved: (newValue) => enabled = newValue ?? false,
               title: const Text('启用'),
               initialValue: enabled,
@@ -251,7 +249,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
               initialValue: destination,
               flagReadOnly: true,
             ),
-            SwitchFormField(
+            UniversalSwitchFormField(
               initialValue: enabled,
               onSaved: (newValue) => enabled = newValue!,
               title: const Text('启用'),

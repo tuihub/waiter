@@ -13,9 +13,6 @@ import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
 import '../helper/app_bar.dart';
-import '../universal/button.dart';
-import '../universal/list_tile.dart';
-import '../universal/spacing.dart';
 import '../universal/universal.dart';
 
 class RightPanelForm extends StatefulWidget {
