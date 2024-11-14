@@ -1,3 +1,3 @@
-Future<String?> getSteamInstallPath() async {
+String? getSteamInstallPath() {
   return null;
 }

@@ -54,7 +54,20 @@ class UniversalDialog extends StatelessWidget {
         return fluent.ContentDialog(
           title: title,
           content: content,
-          actions: organizedActions,
+          actions: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: actions!.map((e) {
+                final index = actions!.indexOf(e);
+                return Padding(
+                  padding: EdgeInsetsDirectional.only(
+                    end: index != (actions!.length - 1) ? 6 : 0,
+                  ),
+                  child: e,
+                );
+              }).toList(),
+            )
+          ],
         );
     }
   }

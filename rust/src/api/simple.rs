@@ -26,6 +26,7 @@ pub enum TraceMode {
 }
 
 /// find and trace stared process then get end_time and exit_code
+#[cfg(any(target_os = "windows", target_os = "linux"))]
 pub fn process_runner(
     mode: TraceMode,
     name: String,
@@ -117,6 +118,20 @@ pub fn process_runner(
     }
 }
 
+
+#[cfg(not(any(target_os = "windows", target_os = "linux")))]
+pub fn process_runner(
+    mode: TraceMode,
+    name: String,
+    execute_path: String,
+    monitor_path: String,
+    working_dir: String,
+    sleep_count: i32,
+    sleep_millis: u64,
+) -> Result<(i64, i64, bool)> {
+    Err(err_msg!("unsupported platform"))
+}
+
 #[cfg(target_os = "linux")]
 fn wait_for_process_exit(pid: u32) -> Result<i32> {
     use libc::{c_int, pid_t, WEXITSTATUS, WIFEXITED, WIFSIGNALED, WTERMSIG};
@@ -181,7 +196,13 @@ fn wait_for_process_exit(pid: u32) -> Result<i32> {
 }
 
 /// get system proxy settings, support windows, macos and linux
+#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
 pub fn get_system_proxy() -> Result<(bool, String, u16)> {
     let proxy = sysproxy::Sysproxy::get_system_proxy()?;
     Ok((proxy.enable, proxy.host, proxy.port))
+}
+
+#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+pub fn get_system_proxy() -> Result<(bool, String, u16)> {
+    Err(err_msg!("Unsupported platform"))
 }

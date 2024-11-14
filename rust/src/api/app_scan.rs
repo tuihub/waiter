@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-use anyhow::Result;
+use anyhow::{anyhow as err_msg, Result};
 use glob;
 
 #[derive(Debug)]
@@ -45,6 +45,15 @@ pub fn scan_common_apps(
     setting: CommonAppScanSetting,
 ) -> Result<Option<Vec<CommonAppScannedEntry>>> {
     walk_entry(&setting, setting.base_path.as_ref(), None)
+}
+
+#[cfg(not(target_os = "windows"))]
+fn walk_entry(
+    setting: &CommonAppScanSetting,
+    path: &Path,
+    remain_walk_depth: Option<usize>,
+) -> Result<Option<Vec<CommonAppScannedEntry>>> {
+    Err(err_msg!("unsupported platform"))
 }
 
 #[cfg(target_os = "windows")]
