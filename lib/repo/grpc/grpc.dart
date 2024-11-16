@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
-import 'package:native_flutter_proxy/native_proxy_reader.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
 import '../../common/platform.dart';
@@ -49,19 +48,19 @@ Future<void> applySystemProxyImpl() async {
 
 Future<Proxy?> _readSystemProxy() async {
   Proxy? proxy;
-  if (PlatformHelper.isAndroidApp()) {
-    try {
-      final ProxySetting settings = await NativeProxyReader.proxySetting;
-      if (settings.enabled) {
-        proxy = Proxy(
-          host: settings.host!,
-          port: settings.port!,
-        );
-      }
-    } catch (e) {
-      debugPrint('Failed to get system proxy: $e');
-    }
-  }
+  // if (PlatformHelper.isAndroidApp()) {
+  //   try {
+  //     final ProxySetting settings = await NativeProxyReader.proxySetting;
+  //     if (settings.enabled) {
+  //       proxy = Proxy(
+  //         host: settings.host!,
+  //         port: settings.port!,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Failed to get system proxy: $e');
+  //   }
+  // }
   if (PlatformHelper.isWindowsApp()) {
     try {
       final (enabled, host, port) = await getSystemProxy();
