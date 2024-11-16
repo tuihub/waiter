@@ -94,7 +94,7 @@ BEGIN
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "waiter" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 TuiHub. All rights reserved." "\0"
-            VALUE "OriginalFilename", "waiter.exe" "\0"
+            VALUE "OriginalFilename", "TuiHub.exe" "\0"
             VALUE "ProductName", "waiter" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END

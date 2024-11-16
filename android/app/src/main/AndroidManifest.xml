@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tuihub.waiter">
+    package="org.tuihub.waiter">
 
    <uses-permission android:name="android.permission.INTERNET" />
    <application

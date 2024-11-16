@@ -51,7 +51,7 @@ class _AppRetainWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const channel = MethodChannel('com.tuihub.waiter/app_retain');
+    const channel = MethodChannel('org.tuihub.waiter/app_retain');
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) {
