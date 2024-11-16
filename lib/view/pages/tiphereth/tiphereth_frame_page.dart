@@ -11,14 +11,12 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../consts.dart';
-import '../../../l10n/l10n.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import '../../universal/universal.dart';
-import '../server_select_overlay.dart';
 
 part 'account_dialog.dart';
 part 'my_accounts_card.dart';
@@ -31,21 +29,23 @@ class TipherethFramePage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const SizedBox(height: 72),
-          const MyProfileCard(),
+          if (ConnectionHelper.isLocal(context))
+            const LocalCard()
+          else
+            const MyProfileCard(),
           if (ConnectionHelper.isNotLocal(context))
             const Expanded(
               child: MyAccountsCard(),
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ServerSelectOverlay.of(context)?.fullscreen();
-        },
-        icon: Icon(UniversalUI.of(context).icons.logout),
-        label: Text(S.of(context).changeServer),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {
+      //     ServerSelectOverlay.of(context)?.fullscreen();
+      //   },
+      //   icon: Icon(UniversalUI.of(context).icons.logout),
+      //   label: Text(S.of(context).changeServer),
+      // ),
     );
   }
 }
@@ -64,12 +64,13 @@ class MyProfileCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${state.currentUser?.id.id.toHexString()}',
-                    style: TextStyle(
-                      color: Theme.of(context).disabledColor,
+                  if (ConnectionHelper.isNotLocal(context))
+                    Text(
+                      '${state.currentUser?.id.id.toHexString()}',
+                      style: TextStyle(
+                        color: Theme.of(context).disabledColor,
+                      ),
                     ),
-                  ),
                   if (ConnectionHelper.isNotLocal(context))
                     Text(state.currentUser?.username ?? '',
                         style: const TextStyle(
@@ -80,14 +81,40 @@ class MyProfileCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 32,
                         )),
-                  if (state.currentUser != null)
-                    Text(userTypeString(state.currentUser!.type))
+                  if (ConnectionHelper.isNotLocal(context))
+                    if (state.currentUser != null)
+                      Text(userTypeString(state.currentUser!.type))
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class LocalCard extends StatelessWidget {
+  const LocalCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const UniversalCard(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 24.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('本地模式',
+                  style: TextStyle(
+                    fontSize: 32,
+                  )),
+              Text('添加服务器实例以使用更多功能'),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

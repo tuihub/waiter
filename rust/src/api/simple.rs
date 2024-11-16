@@ -118,7 +118,6 @@ pub fn process_runner(
     }
 }
 
-
 #[cfg(not(any(target_os = "windows", target_os = "linux")))]
 pub fn process_runner(
     mode: TraceMode,

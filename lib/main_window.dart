@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'bloc/deeplink_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'common/platform.dart';
-import 'view/pages/server_select_overlay.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
 
@@ -27,9 +26,7 @@ class MainWindow extends StatelessWidget {
             maintainBottomViewPadding: true,
             child: Stack(
               children: [
-                ClipRect(
-                  child: ServerSelectOverlay(child: child),
-                ),
+                child,
                 const TitleBar(
                   actions: [ThemeModeToggle()],
                 ),

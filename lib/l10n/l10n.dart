@@ -280,6 +280,16 @@ class S {
     );
   }
 
+  /// `跳过加载`
+  String get skipLoading {
+    return Intl.message(
+      '跳过加载',
+      name: 'skipLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

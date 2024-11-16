@@ -9,6 +9,7 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
+import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
 import '../../universal/universal.dart';
 import 'gebura_common.dart';
@@ -33,15 +34,16 @@ class GeburaNav extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            UniversalListTile(
-              leading: Icon(UniversalUI.of(context).icons.shoppingCart),
-              onTap: () {
-                const GeburaStoreRoute().go(context);
-                OverlappingPanels.of(context)?.reveal(RevealSide.main);
-              },
-              title: Text(S.of(context).store),
-              selected: function == GeburaFunctions.store,
-            ),
+            if (ConnectionHelper.isNotLocal(context))
+              UniversalListTile(
+                leading: Icon(UniversalUI.of(context).icons.shoppingCart),
+                onTap: () {
+                  const GeburaStoreRoute().go(context);
+                  OverlappingPanels.of(context)?.reveal(RevealSide.main);
+                },
+                title: Text(S.of(context).store),
+                selected: function == GeburaFunctions.store,
+              ),
             UniversalListTile(
               leading: Icon(UniversalUI.of(context).icons.apps),
               onTap: () {

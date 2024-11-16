@@ -5,5 +5,6 @@ export 'dialog.dart';
 export 'form.dart';
 export 'input.dart';
 export 'list_tile.dart';
+export 'progress.dart';
 export 'spacing.dart';
 export 'tool_bar.dart';

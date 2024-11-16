@@ -149,7 +149,7 @@ class InitRoute extends GoRouteData {
   const InitRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
       NoTransitionPage(
         child: MainWindow(
           key: mainWindowKey,
@@ -163,7 +163,7 @@ class WebLandingRoute extends GoRouteData {
   const WebLandingRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) =>
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
       NoTransitionPage(
         child: MainWindow(
           key: mainWindowKey,
@@ -180,8 +180,7 @@ class ImageViewerRoute extends GoRouteData {
   final List<PicSwiperItem>? $extra;
 
   @override
-  CustomTransitionPage<void> buildPage(
-      BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CustomTransitionPage(
       fullscreenDialog: true,
       opaque: false,
@@ -236,7 +235,7 @@ class ModuleRoute extends StatefulShellRouteData {
   const ModuleRoute();
 
   @override
-  NoTransitionPage<void> pageBuilder(
+  Page<void> pageBuilder(
     BuildContext context,
     GoRouterState state,
     StatefulNavigationShell navigationShell,
@@ -275,7 +274,7 @@ class TipherethRootRoute extends GoRouteData {
   const TipherethRootRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
     return const NoTransitionPage(
       child: ModuleFramePage(
@@ -308,7 +307,7 @@ class YesodFunctionRoute extends GoRouteData {
   final dynamic $extra;
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     final yesodPages = {
       YesodFunctions.recent: const YesodRecentPage(),
       YesodFunctions.timeline: Container(),
@@ -397,7 +396,7 @@ class GeburaStoreRoute extends GoRouteData {
   const GeburaStoreRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: const ModuleFramePage(
@@ -415,7 +414,7 @@ class GeburaLibraryRoute extends GoRouteData {
   const GeburaLibraryRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: const ModuleFramePage(
@@ -441,7 +440,7 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
   final dynamic $extra;
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
       GeburaLibrarySettingsActions.commonAppScanResult:
           GeburaCommonAppScanResultPanel(
@@ -475,7 +474,7 @@ class GeburaLibraryDetailRoute extends GoRouteData {
   final String uuid;
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
       GeburaLibraryDetailActions.assignApp: const GeburaAssignAppPanel(),
     };
@@ -504,7 +503,7 @@ class ChesedRootRoute extends GoRouteData {
   const ChesedRootRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
     return const NoTransitionPage(
       child: ModuleFramePage(
@@ -525,7 +524,7 @@ class NotificationRootRoute extends GoRouteData {
   const NotificationRootRoute();
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
     return const NoTransitionPage(
       child: ModuleFramePage(
@@ -558,7 +557,7 @@ class SettingsFunctionRoute extends GoRouteData {
   final dynamic $extra;
 
   @override
-  NoTransitionPage<void> buildPage(BuildContext context, GoRouterState state) {
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
     final settingsPages = {
       SettingsFunctions.client: const ClientSettingPage(),
       SettingsFunctions.session: const SessionManagePage(),

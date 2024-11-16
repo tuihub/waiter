@@ -9,7 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import '../universal/card.dart';
+import '../universal/universal.dart';
 import 'server_select_overlay.dart';
 
 class InitPage extends StatefulWidget {
@@ -39,51 +39,34 @@ class _InitPageState extends State<InitPage> {
             const TipherethRootRoute().go(context);
             ServerSelectOverlay.of(context)?.minimize();
             Toast(title: '', message: S.of(context).welcomeBack).show(context);
+          } else if (state is MainAutoLoginState && state.failed) {
+            if (PlatformHelper.isWeb() &&
+                (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
+                    DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
+              ServerSelectOverlay.of(context)?.hide();
+              const WebLandingRoute().go(context);
+            } else {
+              context.read<MainBloc>().add(MainEnterLocalModeEvent());
+            }
           }
-          if (state is MainAutoLoginState &&
-              state.failed &&
-              PlatformHelper.isWeb() &&
-              (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
-                  DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
+          if (state is MainEnterLocalModeState && state.success) {
+            const TipherethRootRoute().go(context);
             ServerSelectOverlay.of(context)?.hide();
-            const WebLandingRoute().go(context);
           }
         },
         builder: (context, state) {
-          return Scaffold(
+          return const Scaffold(
             body: BootstrapContainer(children: [
               BootstrapColumn(
                 xxs: 12,
                 md: 6,
-                child: UniversalCard(
-                  child: SizedBox(
-                    height: 320,
-                    child: getInitWidget(state),
-                  ),
-                ),
+                child: InitWidget(),
               ),
             ]),
-            floatingActionButton: state is MainAutoLoginState && state.failed
-                ? FloatingActionButton.extended(
-                    onPressed: () {
-                      ServerSelectOverlay.of(context)?.fullscreen();
-                    },
-                    icon: const Icon(Icons.arrow_forward),
-                    label: Text(S.of(context).login),
-                  )
-                : Container(),
           );
         },
       ),
     );
-  }
-
-  Widget getInitWidget(MainState state) {
-    return const InitWidget();
-    // if (state is AutoLogging) {
-    //   return const InitWidget();
-    // }
-    // return const WelComeWidget();
   }
 }
 
@@ -93,113 +76,69 @@ class InitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+      final logoHeight = MediaQuery.sizeOf(context).height / 5;
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Tui',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  'Hub',
+        children: SpacingHelper.listSpacing(
+          height: 16,
+          children: [
+            Image.asset('web/icons/Icon-512.png', height: logoHeight),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  ' #',
                   style: TextStyle(
+                    fontSize: 24.0,
                     fontWeight: FontWeight.bold,
-                    fontSize: 32,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          if (state is MainAutoLoginState && state.processing)
-            const SizedBox(
-              height: 24,
-              width: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-              ),
-            )
-          else
-            SizedBox(
-              height: 24,
-              child: Text(
-                S.of(context).clickLoginToStart,
-                style: const TextStyle(fontSize: 16),
-              ),
+                const SizedBox(
+                  width: 4,
+                ),
+                DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: AnimatedTextKit(
+                    repeatForever: true,
+                    pause: const Duration(milliseconds: 3000),
+                    animatedTexts: [
+                      TyperAnimatedText(
+                        'Tiphereth',
+                        speed: const Duration(
+                          milliseconds: 200,
+                        ),
+                        curve: Curves.easeOut,
+                      ),
+                      TyperAnimatedText(
+                        'Gebura',
+                        speed: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                      ),
+                      TyperAnimatedText(
+                        'Yesod',
+                        speed: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-        ],
+            const UniversalLinearProgressIndicator(),
+            UniversalTextButton(
+                child: Text(S.of(context).skipLoading),
+                onPressed: () {
+                  context.read<MainBloc>().add(MainEnterLocalModeEvent());
+                }),
+          ],
+        ),
       );
     });
-  }
-}
-
-class WelComeWidget extends StatelessWidget {
-  const WelComeWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.center,
-      // mainAxisSize: MainAxisSize.max,
-      children: [
-        Text(
-          ' #',
-          style: TextStyle(
-            fontSize: 80.0,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        const SizedBox(
-          width: 4,
-        ),
-        DefaultTextStyle(
-          style: TextStyle(
-            fontSize: 80.0,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          child: AnimatedTextKit(
-            repeatForever: true,
-            pause: const Duration(milliseconds: 3000),
-            animatedTexts: [
-              TyperAnimatedText(
-                'Tiphereth',
-                speed: const Duration(
-                  milliseconds: 200,
-                ),
-                curve: Curves.easeOut,
-              ),
-              TyperAnimatedText(
-                'Gebura',
-                speed: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
-              ),
-              TyperAnimatedText(
-                'Yesod',
-                speed: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }

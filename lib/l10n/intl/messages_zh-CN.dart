@@ -242,6 +242,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "showServerConfig": MessageLookupByLibrary.simpleMessage("查看服务器信息"),
+        "skipLoading": MessageLookupByLibrary.simpleMessage("跳过加载"),
         "steamScanResultFinished": MessageLookupByLibrary.simpleMessage("扫描完成"),
         "steamScanResultLibraryEmpty":
             MessageLookupByLibrary.simpleMessage("Steam游戏库为空"),
