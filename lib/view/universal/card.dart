@@ -27,7 +27,10 @@ class UniversalCard extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           margin: margin,
-          child: child,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
         );
       case UIDesign.fluent:
         return fluent.Card(

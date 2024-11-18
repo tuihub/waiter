@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../route.dart';
 import '../../../universal/universal.dart';
 import '../../frame_page.dart';
@@ -96,28 +94,29 @@ class AppPackageTableSource extends AsyncDataTableSource {
 
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
-    final data = await context
-        .read<GeburaBloc>()
-        .listApps(pageSize, startIndex ~/ pageSize + 1);
-    return AsyncRowsResponse(
-      data.paging.totalSize.toInt(),
-      data.apps.map(
-        (app) {
-          return DataRow2(
-              cells: [
-                DataCell(Text(app.id.id.toHexString())),
-                DataCell(Text(app.name)),
-                DataCell(Text(app.description)),
-              ],
-              onTap: () {
-                SettingsFunctionRoute(SettingsFunctions.appPackage,
-                        action: SettingsActions.appPackageEdit, $extra: app)
-                    .go(context);
-                ModuleFramePage.of(context)?.openDrawer();
-              });
-        },
-      ).toList(),
-    );
+    return AsyncRowsResponse(0, []);
+    // final data = await context
+    //     .read<GeburaBloc>()
+    //     .listApps(pageSize, startIndex ~/ pageSize + 1);
+    // return AsyncRowsResponse(
+    //   data.paging.totalSize.toInt(),
+    //   data.apps.map(
+    //     (app) {
+    //       return DataRow2(
+    //           cells: [
+    //             DataCell(Text(app.id.id.toHexString())),
+    //             DataCell(Text(app.name)),
+    //             DataCell(Text(app.description)),
+    //           ],
+    //           onTap: () {
+    //             SettingsFunctionRoute(SettingsFunctions.appPackage,
+    //                     action: SettingsActions.appPackageEdit, $extra: app)
+    //                 .go(context);
+    //             ModuleFramePage.of(context)?.openDrawer();
+    //           });
+    //     },
+    //   ).toList(),
+    // );
   }
 
   @override

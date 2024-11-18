@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:collection/collection.dart';
-import 'package:fixnum/fixnum.dart';
+import 'package:dao/dao.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -16,155 +17,131 @@ import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
 import '../../l10n/l10n.dart';
 import '../../model/gebura_model.dart';
-import '../../repo/grpc/api_helper.dart';
-import '../../repo/grpc/type_helper.dart';
-import '../../repo/local/gebura.dart';
+import '../../repo/gebura/gebura_repo.dart';
 import '../../rust/api/simple.dart';
 
 part 'gebura_event.dart';
 part 'gebura_state.dart';
+part 'gebura_bloc.mapper.dart';
 
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
-  final ApiHelper _api;
-  final GeburaRepo _repo;
-  final InternalID? _deviceID;
+  GeburaRepo get _repo => GetIt.I.get<GeburaRepo>();
 
-  GeburaBloc(this._api, this._repo, this._deviceID) : super(GeburaState()) {
+  GeburaBloc() : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
-      if (state.ownedApps == null) {
-        add(GeburaRefreshLibraryEvent());
+      if (!state.initialized) {
         add(GeburaScanLocalLibraryEvent());
+        add(GeburaRefreshLibraryListEvent());
+        add(GeburaLoadAppInstsEvent());
+        add(GeburaLoadAppInstLaunchersEvent());
       }
-      final localTrackedApps = state.localTrackedApps ??
-          _repo
-              .loadTrackedApps()
-              .asMap()
-              .map((_, value) => MapEntry(value.uuid, value));
-      final localTrackedAppInsts = state.localTrackedAppInsts ??
-          _repo
-              .loadTrackedAppInsts()
-              .asMap()
-              .map((_, value) => MapEntry(value.uuid, value));
-      final localCommonLibraryFolders = state.localCommonLibraryFolders ??
-          _repo
-              .loadTrackedCommonAppFolders()
-              .asMap()
-              .map((_, value) => MapEntry(value.basePath, value));
 
-      add(GeburaRefreshLibraryListEvent());
-      emit(state.copyWith(
-        localTrackedApps: localTrackedApps,
-        localTrackedAppInsts: localTrackedAppInsts,
-        localCommonLibraryFolders: localCommonLibraryFolders,
-      ));
+      emit(state.copyWith(initialized: true));
     });
 
-    on<GeburaRefreshLibraryEvent>((event, emit) async {
-      emit(GeburaRefreshLibraryState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.getPurchasedAppInfos,
-        GetPurchasedAppInfosRequest(),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaRefreshLibraryState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      final ownedApps = <App>[];
-      for (var i = 0; i < 1000; i++) {
-        final appResp = await _api.doRequest(
-          (client) => client.listApps,
-          ListAppsRequest(
-            paging: PagingRequest(
-              pageSize: Int64(100),
-              pageNum: Int64(i + 1),
-            ),
-          ),
-        );
-        if (appResp.status != ApiStatus.success) {
-          emit(GeburaRefreshLibraryState(state, EventStatus.failed,
-              msg: resp.error));
-          return;
-        }
-        if (appResp.getData().apps.isEmpty) {
-          break;
-        }
-        ownedApps.addAll(appResp.getData().apps);
-      }
-      final ownedAppInsts = <AppInst>[];
-      for (var i = 0; i < 1000; i++) {
-        final appInstResp = await _api.doRequest(
-          (client) => client.listAppInsts,
-          ListAppInstsRequest(
-            paging: PagingRequest(
-              pageSize: Int64(100),
-              pageNum: Int64(i + 1),
-            ),
-          ),
-        );
-        if (appInstResp.status != ApiStatus.success) {
-          emit(GeburaRefreshLibraryState(state, EventStatus.failed,
-              msg: resp.error));
-          return;
-        }
-        if (appInstResp.getData().appInsts.isEmpty) {
-          break;
-        }
-        ownedAppInsts.addAll(appInstResp.getData().appInsts);
-      }
-      final appInstRunTimes = <InternalID, Duration>{};
-      for (final appInst in ownedAppInsts) {
-        final runTimeResp = await _api.doRequest(
-          (client) => client.sumAppInstRunTime,
-          SumAppInstRunTimeRequest(
-            appInstId: appInst.id,
-            timeAggregation: TimeAggregation(
-              aggregationType:
-                  TimeAggregation_AggregationType.AGGREGATION_TYPE_OVERALL,
-              timeRange: toPBTimeRange(
-                  DateTime.now().subtract(const Duration(days: 365 * 10)),
-                  DateTime.now()),
-            ),
-          ),
-        );
-        if (runTimeResp.status != ApiStatus.success) {
-          continue;
-        }
-        if (runTimeResp.getData().runTimeGroups.isNotEmpty) {
-          final group = runTimeResp.getData().runTimeGroups.first;
-          appInstRunTimes[appInst.id] = fromPBDuration(group.duration);
-        }
-      }
-      emit(GeburaRefreshLibraryState(
-        state.copyWith(
-          purchasedAppInfos: resp.getData().appInfos,
-          ownedApps: ownedApps,
-          ownedAppInsts: ownedAppInsts,
-          appInstRunTimes: appInstRunTimes,
-        ),
-        EventStatus.success,
-        msg: resp.error,
-      ));
-      add(GeburaApplyLibraryFilterEvent());
-    }, transformer: droppable());
+    // on<GeburaRefreshLibraryEvent>((event, emit) async {
+    //   emit(GeburaRefreshLibraryState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.getPurchasedAppInfos,
+    //     GetPurchasedAppInfosRequest(),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   final ownedApps = <App>[];
+    //   for (var i = 0; i < 1000; i++) {
+    //     final appResp = await _api.doRequest(
+    //       (client) => client.listApps,
+    //       ListAppsRequest(
+    //         paging: PagingRequest(
+    //           pageSize: Int64(100),
+    //           pageNum: Int64(i + 1),
+    //         ),
+    //       ),
+    //     );
+    //     if (appResp.status != ApiStatus.success) {
+    //       emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+    //           msg: resp.error));
+    //       return;
+    //     }
+    //     if (appResp.getData().apps.isEmpty) {
+    //       break;
+    //     }
+    //     ownedApps.addAll(appResp.getData().apps);
+    //   }
+    //   final ownedAppInsts = <AppInst>[];
+    //   for (var i = 0; i < 1000; i++) {
+    //     final appInstResp = await _api.doRequest(
+    //       (client) => client.listAppInsts,
+    //       ListAppInstsRequest(
+    //         paging: PagingRequest(
+    //           pageSize: Int64(100),
+    //           pageNum: Int64(i + 1),
+    //         ),
+    //       ),
+    //     );
+    //     if (appInstResp.status != ApiStatus.success) {
+    //       emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+    //           msg: resp.error));
+    //       return;
+    //     }
+    //     if (appInstResp.getData().appInsts.isEmpty) {
+    //       break;
+    //     }
+    //     ownedAppInsts.addAll(appInstResp.getData().appInsts);
+    //   }
+    //   final appInstRunTimes = <InternalID, Duration>{};
+    //   for (final appInst in ownedAppInsts) {
+    //     final runTimeResp = await _api.doRequest(
+    //       (client) => client.sumAppInstRunTime,
+    //       SumAppInstRunTimeRequest(
+    //         appInstId: appInst.id,
+    //         timeAggregation: TimeAggregation(
+    //           aggregationType:
+    //               TimeAggregation_AggregationType.AGGREGATION_TYPE_OVERALL,
+    //           timeRange: toPBTimeRange(
+    //               DateTime.now().subtract(const Duration(days: 365 * 10)),
+    //               DateTime.now()),
+    //         ),
+    //       ),
+    //     );
+    //     if (runTimeResp.status != ApiStatus.success) {
+    //       continue;
+    //     }
+    //     if (runTimeResp.getData().runTimeGroups.isNotEmpty) {
+    //       final group = runTimeResp.getData().runTimeGroups.first;
+    //       appInstRunTimes[appInst.id] = fromPBDuration(group.duration);
+    //     }
+    //   }
+    //   emit(GeburaRefreshLibraryState(
+    //     state.copyWith(
+    //       purchasedAppInfos: resp.getData().appInfos,
+    //       ownedApps: ownedApps,
+    //       ownedAppInsts: ownedAppInsts,
+    //       appInstRunTimes: appInstRunTimes,
+    //     ),
+    //     EventStatus.success,
+    //     msg: resp.error,
+    //   ));
+    //   add(GeburaApplyLibraryFilterEvent());
+    // }, transformer: droppable());
 
     on<GeburaRefreshLibraryListEvent>((event, emit) async {
-      var listItems = <LibraryListItem>[];
-      if (state.localTrackedApps != null) {
-        listItems = state.localTrackedApps!.values.map((e) {
-          return LibraryListItem(
-            uuid: const Uuid().v1(),
-            name: e.name,
-            localAppUUID: e.uuid,
-            iconImageUrl: e.iconImageUrl ?? '',
-            coverImageUrl: e.coverImageUrl ?? '',
-            backgroundImageUrl: e.backgroundImageUrl ?? '',
-          );
-        }).toList();
+      try {
+        final apps = await _repo.loadLocalApps();
+        emit(GeburaRefreshLibraryState(
+          state.copyWith(
+            libraryApps: Map.fromEntries(apps.map((e) => MapEntry(e.uuid, e))),
+          ),
+          EventStatus.success,
+        ));
+        add(GeburaApplyLibraryFilterEvent(usePreviousSettings: true));
+      } catch (e) {
+        emit(GeburaRefreshLibraryState(state, EventStatus.failed,
+            msg: S.current.unknownErrorOccurred));
       }
-      listItems.sort((a, b) => a.name.compareTo(b.name));
-      emit(state.copyWith(libraryListItems: listItems));
-      add(GeburaApplyLibraryFilterEvent(usePreviousSettings: true));
     }, transformer: droppable());
 
     on<GeburaApplyLibraryFilterEvent>((event, emit) async {
@@ -177,43 +154,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         );
       }
       // prepare library items
-      // Map<Int64, AppInfoMixed> libraryItemMap = Map.fromEntries(
-      //   (state.purchasedAppInfos ?? []).map((e) => MapEntry(e.id.id, e)),
-      // );
-      // final appInfoMap = state.appInfoMap ?? {};
-      // for (final App app in state.ownedApps ?? []) {
-      //   if (app.hasAssignedAppInfoId() && app.assignedAppInfoId.id > 0) {
-      //     if (libraryItemMap[app.assignedAppInfoId.id] != null) {
-      //       if (libraryItemMap[app.assignedAppInfoId.id]!.name.isEmpty) {
-      //         libraryItemMap[app.assignedAppInfoId.id]!.name = app.name;
-      //       }
-      //       continue;
-      //     } else if (appInfoMap[app.assignedAppInfoId.id] != null) {
-      //       libraryItemMap[app.assignedAppInfoId.id] =
-      //           appInfoToMixed(mixAppInfo(
-      //         appInfoMap[app.assignedAppInfoId.id]!,
-      //       ));
-      //     } else {
-      //       add(GeburaFetchBoundAppInfosEvent(
-      //         app.assignedAppInfoId,
-      //         refreshAfterSuccess: true,
-      //       ));
-      //     }
-      //   } else {
-      //     libraryItemMap[app.id.id] = AppInfoMixed(
-      //       id: app.id,
-      //       name: app.name,
-      //       shortDescription: app.description,
-      //     );
-      //   }
-      // }
-      var newListItems = state.libraryListItems ?? [];
-      // reset filter flag
-      newListItems = newListItems.map((e) {
-        return e.copyWith(
-          filtered: false,
-        );
-      }).toList();
+      var newListItems = state.libraryApps.values
+              .map((e) => LibraryListItem(
+                    uuid: e.uuid,
+                    name: e.name,
+                    iconImagePath: e.iconImagePath,
+                    coverImagePath: e.coverImagePath,
+                    backgroundImagePath: e.backgroundImagePath,
+                    filtered: false,
+                  ))
+              .toList() ??
+          [];
       // apply filter
       if (settings.filter != null) {
         final filter = settings.filter!;
@@ -228,8 +179,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         }
       }
       // sort by name
-      // libraryItemMap = Map.fromEntries(libraryItemMap.entries.toList()
-      //   ..sort((a, b) => a.value.name.compareTo(b.value.name)));
+      newListItems.sort((a, b) => a.name.compareTo(b.name));
       // emit
       emit(state.copyWith(
         libraryListItems: newListItems,
@@ -237,177 +187,228 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       ));
     });
 
-    on<GeburaSaveLocalCommonAppFolderSettingEvent>((event, emit) async {
-      final setting = event.setting;
-      await _repo.setTrackedCommonAppFolder(setting);
-      emit(state.copyWith(
-        localCommonLibraryFolders: {
-          ...state.localCommonLibraryFolders ?? {},
-          setting.basePath: setting,
-        },
-      ));
-      add(GeburaScanLocalLibraryEvent(
-        refreshCommon: [setting.basePath],
-      ));
+    on<GeburaLoadAppInstsEvent>((event, emit) async {
+      try {
+        final appInsts = await _repo.loadLocalAppInsts();
+        final appInstsMap =
+            Map.fromEntries(appInsts.map((e) => MapEntry(e.uuid, e)));
+        appInstsMap.addAll(state.libraryAppInsts);
+        emit(GeburaLoadAppInstsState(
+          state.copyWith(
+            libraryAppInsts: appInstsMap,
+          ),
+          EventStatus.success,
+        ));
+      } catch (e) {
+        emit(GeburaLoadAppInstsState(state, EventStatus.failed,
+            msg: S.current.unknownErrorOccurred));
+      }
     }, transformer: droppable());
 
-    on<GeburaSearchAppInfosEvent>((event, emit) async {
-      emit(GeburaSearchAppInfosState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.searchAppInfos,
-        SearchAppInfosRequest(
-          paging: PagingRequest(
-            pageSize: Int64(10),
-            pageNum: Int64(1),
+    on<GeburaLoadAppInstLaunchersEvent>((event, emit) async {
+      try {
+        final launchers = await _repo.loadLocalAppInstLaunchers();
+        final launchersMap =
+            Map.fromEntries(launchers.map((e) => MapEntry(e.uuid, e)));
+        launchersMap.addAll(state.libraryAppInstLaunchers);
+        emit(GeburaLoadAppInstLaunchersState(
+          state.copyWith(
+            libraryAppInstLaunchers: launchersMap,
           ),
-          query: event.query,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaSearchAppInfosState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+          EventStatus.success,
+        ));
+      } catch (e) {
+        emit(GeburaLoadAppInstLaunchersState(state, EventStatus.failed,
+            msg: S.current.unknownErrorOccurred));
       }
-      emit(GeburaSearchAppInfosState(
-        state,
-        EventStatus.success,
-        msg: resp.error,
-        apps: resp.getData().appInfos,
-      ));
     }, transformer: droppable());
 
-    on<GeburaPurchaseEvent>((event, emit) async {
-      emit(GeburaPurchaseState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.purchaseAppInfo,
-        PurchaseAppInfoRequest(
-          appInfoId: AppInfoID(
-            internal: true,
-            sourceAppId: event.id.id.toString(),
-          ),
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaPurchaseState(state, EventStatus.failed, msg: resp.error));
-        return;
-      }
-      emit(GeburaPurchaseState(state, EventStatus.success, msg: resp.error));
-      add(GeburaRefreshLibraryEvent());
-    }, transformer: droppable());
+    // on<GeburaSearchAppInfosEvent>((event, emit) async {
+    //   emit(GeburaSearchAppInfosState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.searchAppInfos,
+    //     SearchAppInfosRequest(
+    //       paging: PagingRequest(
+    //         pageSize: Int64(10),
+    //         pageNum: Int64(1),
+    //       ),
+    //       query: event.query,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaSearchAppInfosState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaSearchAppInfosState(
+    //     state,
+    //     EventStatus.success,
+    //     msg: resp.error,
+    //     apps: resp.getData().appInfos,
+    //   ));
+    // }, transformer: droppable());
+
+    // on<GeburaPurchaseEvent>((event, emit) async {
+    //   emit(GeburaPurchaseState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.purchaseAppInfo,
+    //     PurchaseAppInfoRequest(
+    //       appInfoId: AppInfoID(
+    //         internal: true,
+    //         sourceAppId: event.id.id.toString(),
+    //       ),
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaPurchaseState(state, EventStatus.failed, msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaPurchaseState(state, EventStatus.success, msg: resp.error));
+    //   add(GeburaRefreshLibraryEvent());
+    // }, transformer: droppable());
 
     on<GeburaSaveLocalAppInstLaunchSettingEvent>((event, emit) async {
       debugPrint(event.commonSetting.toString());
-      var appInst = state.localTrackedAppInsts?[event.uuid];
-      if (appInst == null) {
+      var launcher = state.libraryAppInstLaunchers[event.launcherUUID];
+      if (launcher == null) {
         emit(GeburaSaveLocalAppInstLaunchSettingState(state, EventStatus.failed,
             msg: S.current.unknownErrorOccurred));
         return;
       }
-      appInst = appInst.copyWith(
-        commonLaunchSetting: event.commonSetting,
-        steamLaunchSetting: event.steamSetting,
+      launcher = launcher.copyWith(
+        common: event.commonSetting,
+        steam: event.steamSetting,
       );
-      await _repo.setTrackedAppInst(appInst);
-      final localTrackedAppInsts = state.localTrackedAppInsts ?? {};
-      localTrackedAppInsts[event.uuid] = appInst;
+      await _repo.updateLocalAppInstLauncher(launcher);
       emit(GeburaSaveLocalAppInstLaunchSettingState(
-        state.copyWith(localTrackedAppInsts: localTrackedAppInsts),
+        state.copyWith(
+          libraryAppInstLaunchers:
+              state.libraryAppInstLaunchers.map((key, value) {
+            if (key == event.launcherUUID) {
+              return MapEntry(key, launcher!);
+            }
+            return MapEntry(key, value);
+          }),
+        ),
         EventStatus.success,
       ));
     }, transformer: droppable());
 
-    on<GeburaAddAppInfoEvent>((event, emit) async {
-      emit(GeburaAddAppState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.createAppInfo,
-        CreateAppInfoRequest(
-          appInfo: event.appInfo,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaAddAppState(state, EventStatus.failed, msg: resp.error));
-        return;
-      }
-      emit(GeburaAddAppState(state, EventStatus.success, msg: resp.error));
-    }, transformer: droppable());
+    // on<GeburaAddAppInfoEvent>((event, emit) async {
+    //   emit(GeburaAddAppState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.createAppInfo,
+    //     CreateAppInfoRequest(
+    //       appInfo: event.appInfo,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaAddAppState(state, EventStatus.failed, msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaAddAppState(state, EventStatus.success, msg: resp.error));
+    // }, transformer: droppable());
 
-    on<GeburaEditAppInfoEvent>((event, emit) async {
-      emit(GeburaEditAppState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.updateAppInfo,
-        UpdateAppInfoRequest(
-          appInfo: event.appInfo,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaEditAppState(state, EventStatus.failed, msg: resp.error));
-        return;
-      }
-      emit(GeburaEditAppState(state, EventStatus.success, msg: resp.error));
-    }, transformer: droppable());
+    // on<GeburaEditAppInfoEvent>((event, emit) async {
+    //   emit(GeburaEditAppState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.updateAppInfo,
+    //     UpdateAppInfoRequest(
+    //       appInfo: event.appInfo,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaEditAppState(state, EventStatus.failed, msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaEditAppState(state, EventStatus.success, msg: resp.error));
+    // }, transformer: droppable());
 
-    on<GeburaAddAppEvent>((event, emit) async {
-      emit(GeburaAddAppPackageState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.createApp,
-        CreateAppRequest(
-          app: event.app,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaAddAppPackageState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaAddAppPackageState(state, EventStatus.success,
-          msg: resp.error));
-    }, transformer: droppable());
+    // on<GeburaAddAppEvent>((event, emit) async {
+    //   emit(GeburaAddAppPackageState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.createApp,
+    //     CreateAppRequest(
+    //       app: event.app,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaAddAppPackageState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaAddAppPackageState(state, EventStatus.success,
+    //       msg: resp.error));
+    // }, transformer: droppable());
 
-    on<GeburaEditAppEvent>((event, emit) async {
-      emit(GeburaEditAppPackageState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.updateApp,
-        UpdateAppRequest(
-          app: event.app,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaEditAppPackageState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaEditAppPackageState(state, EventStatus.success,
-          msg: resp.error));
-    }, transformer: droppable());
+    // on<GeburaEditAppEvent>((event, emit) async {
+    //   emit(GeburaEditAppPackageState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.updateApp,
+    //     UpdateAppRequest(
+    //       app: event.app,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaEditAppPackageState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaEditAppPackageState(state, EventStatus.success,
+    //       msg: resp.error));
+    // }, transformer: droppable());
 
-    on<GeburaAssignAppEvent>((event, emit) async {
-      emit(GeburaAssignAppPackageState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.assignApp,
-        AssignAppRequest(
-          appInfoId: event.appInfoID,
-          appId: event.appID,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaAssignAppPackageState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaAssignAppPackageState(state, EventStatus.success,
-          msg: resp.error));
-    }, transformer: droppable());
+    // on<GeburaAssignAppEvent>((event, emit) async {
+    //   emit(GeburaAssignAppPackageState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.assignApp,
+    //     AssignAppRequest(
+    //       appInfoId: event.appInfoID,
+    //       appId: event.appID,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaAssignAppPackageState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   emit(GeburaAssignAppPackageState(state, EventStatus.success,
+    //       msg: resp.error));
+    // }, transformer: droppable());
 
     on<GeburaSaveLastLaunchAppInstEvent>((event, emit) async {
-      final appInst = state.localTrackedAppInsts?[event.uuid];
-      if (appInst != null) {
-        final app = state.localTrackedApps?[appInst.appUUID];
-        if (app != null) {
-          state.localTrackedApps![appInst.appUUID] = app.copyWith(
-            lastLaunchedInstUUID: appInst.uuid,
-          );
-          emit(GeburaSaveLastLaunchAppInstState(state, EventStatus.success));
-          return;
+      final launcher = state.libraryAppInstLaunchers[event.launcherUUID];
+      if (launcher != null) {
+        final appInst = state.libraryAppInsts[launcher.appInstUUID];
+        if (appInst != null) {
+          final app = state.libraryApps[appInst.appUUID];
+          if (app != null) {
+            emit(GeburaSaveLastLaunchAppInstState(
+                state.copyWith(
+                  libraryApps: state.libraryApps.map((key, value) {
+                    if (key == app.uuid) {
+                      return MapEntry(
+                          key,
+                          app.copyWith(
+                            lastLaunchedInstUUID: appInst.uuid,
+                          ));
+                    }
+                    return MapEntry(key, value);
+                  }),
+                  libraryAppInsts: state.libraryAppInsts.map((key, value) {
+                    if (key == appInst.uuid) {
+                      return MapEntry(
+                          key,
+                          appInst.copyWith(
+                            lastLaunchedLauncherUUID: event.launcherUUID,
+                          ));
+                    }
+                    return MapEntry(key, value);
+                  }),
+                ),
+                EventStatus.success));
+            return;
+          }
         }
       }
       emit(GeburaSaveLastLaunchAppInstState(state, EventStatus.failed,
@@ -415,112 +416,134 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     });
 
     on<GeburaLaunchLocalAppEvent>((event, emit) async {
-      final appInst = state.localTrackedAppInsts?[event.uuid];
-      if (appInst == null) {
-        emit(GeburaLaunchLocalAppInstState(
-            state, event.uuid, EventStatus.failed,
+      late String appUUID;
+      late LocalAppInstLauncher? launcher;
+      if (event.launcherUUID != null) {
+        final launcherTmp = state.libraryAppInstLaunchers[event.launcherUUID];
+        if (launcherTmp != null) {
+          final appInst = state.libraryAppInsts[launcherTmp.appInstUUID];
+          if (appInst != null) {
+            final app = state.libraryApps[appInst.appUUID];
+            if (app != null) {
+              state.libraryApps[app.uuid] = app.copyWith(
+                lastLaunchedInstUUID: appInst.uuid,
+              );
+              state.libraryAppInsts[appInst.uuid] = appInst.copyWith(
+                lastLaunchedLauncherUUID: launcherTmp.uuid,
+              );
+              appUUID = app.uuid;
+              launcher = launcherTmp;
+            }
+          }
+        }
+      } else {
+        final app = state.libraryApps[event.appUUID];
+        if (app != null) {
+          final appInst = state.libraryAppInsts[app.lastLaunchedInstUUID];
+          if (appInst != null) {
+            final launcherTmp =
+                state.libraryAppInstLaunchers[appInst.lastLaunchedLauncherUUID];
+            if (launcherTmp != null) {
+              appUUID = app.uuid;
+              launcher = launcherTmp;
+            }
+          }
+        }
+      }
+      if (launcher == null) {
+        emit(GeburaLaunchLocalAppInstState(state, appUUID, EventStatus.failed,
             msg: S.current.unknownErrorOccurred));
         return;
       }
-      final app = state.localTrackedApps?[appInst.appUUID];
-      if (app != null) {
-        state.localTrackedApps?[appInst.appUUID] ??= app.copyWith(
-          lastLaunchedInstUUID: appInst.uuid,
-        );
-      }
-      switch (appInst.type) {
-        case LocalAppInstType.steam:
-          if (appInst.steamLaunchSetting == null) {
+      switch (launcher.launcherType) {
+        case LocalAppInstLauncherType.steam:
+          if (launcher.steam == null) {
             emit(GeburaLaunchLocalAppInstState(
-                state, event.uuid, EventStatus.failed,
+                state, appUUID, EventStatus.failed,
                 msg: S.current.pleaseSetupApplicationPath));
             return;
           }
-          final steamAppID = appInst.steamLaunchSetting!.steamAppID;
+          final steamAppID = launcher.steam!.steamAppID;
           await launchUrlString('steam://nav/games/details/$steamAppID');
           await launchUrlString('steam://run/$steamAppID');
           emit(GeburaLaunchLocalAppInstState(
-              state, event.uuid, EventStatus.success));
-        case LocalAppInstType.common:
-          if (appInst.commonLaunchSetting == null) {
+              state, appUUID, EventStatus.success));
+        case LocalAppInstLauncherType.common:
+          if (launcher.common == null) {
             emit(GeburaLaunchLocalAppInstState(
-                state, event.uuid, EventStatus.failed,
+                state, appUUID, EventStatus.failed,
                 msg: S.current.pleaseSetupApplicationPath));
             return;
           }
-          add(GeburaLaunchLocalCommonAppInstEvent(event.uuid));
-      }
-    });
-
-    on<GeburaLaunchLocalCommonAppInstEvent>((event, emit) async {
-      final appInst = state.localTrackedAppInsts?[event.uuid];
-      if (appInst == null || appInst.commonLaunchSetting == null) {
-        emit(GeburaLaunchLocalAppInstState(
-            state, event.uuid, EventStatus.failed,
-            msg: S.current.unknownErrorOccurred));
-        return;
-      }
-      emit(GeburaLaunchLocalAppInstState(
-          state, event.uuid, EventStatus.processing));
-      final setting = appInst.commonLaunchSetting;
-      if (setting == null || setting.path.isEmpty) {
-        emit(GeburaLaunchLocalAppInstState(
-            state, event.uuid, EventStatus.failed,
-            msg: S.current.pleaseSetupApplicationPath));
-        return;
-      }
-      final runningInsts = state.runningInsts ?? {};
-      if (runningInsts[event.uuid] != null) {
-        emit(GeburaLaunchLocalAppInstState(
-            state, event.uuid, EventStatus.failed,
-            msg: S.current.pleaseDontReRunApplication));
-        return;
-      }
-      runningInsts[event.uuid] = LocalAppInstRunRecord(
-        uuid: event.uuid,
-        startTime: null,
-        endTime: null,
-      );
-      emit(GeburaLaunchLocalAppInstState(
-          state, event.uuid, EventStatus.processing));
-      try {
-        final (start, end, suceess) = await processRunner(
-            mode: setting.advancedTracing ? TraceMode.byName : TraceMode.simple,
-            name: setting.processName,
-            executePath: setting.path,
-            monitorPath: setting.realPath,
-            workingDir: dirname(setting.path),
-            sleepCount: setting.sleepTime,
-            sleepMillis: BigInt.from(1000));
-        if (!suceess) {
-          runningInsts.remove(event.uuid);
           emit(GeburaLaunchLocalAppInstState(
-              state, event.uuid, EventStatus.failed,
-              msg: S.current.applicationExitAbnormally));
-          return;
-        }
-        final record = LocalAppInstRunRecord(
-          uuid: event.uuid,
-          startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
-          endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
-        );
-        runningInsts.remove(event.uuid);
-        // add(GeburaReportAppRunTimeEvent(
-        //   event.appInstID,
-        //   record.startTime!,
-        //   record.endTime!,
-        // ));
-        emit(GeburaLaunchLocalAppInstState(
-          state,
-          event.uuid,
-          EventStatus.success,
-        ));
-      } catch (e) {
-        runningInsts.remove(event.uuid);
-        emit(GeburaLaunchLocalAppInstState(
-            state, event.uuid, EventStatus.failed,
-            msg: '${S.current.launcherError} $e'));
-        return;
+              state, appUUID, EventStatus.processing));
+          final setting = launcher.common!;
+          if (setting.launcherPath.isEmpty) {
+            emit(GeburaLaunchLocalAppInstState(
+                state, appUUID, EventStatus.failed,
+                msg: S.current.pleaseSetupApplicationPath));
+            return;
+          }
+          if (state.runningInsts[appUUID] != null) {
+            emit(GeburaLaunchLocalAppInstState(
+                state, appUUID, EventStatus.failed,
+                msg: S.current.pleaseDontReRunApplication));
+            return;
+          }
+          final Map<String, LocalAppInstRunRecord> runningInsts = {};
+          runningInsts.addAll(state.runningInsts);
+          runningInsts[appUUID] = LocalAppInstRunRecord(
+            uuid: appUUID,
+            startTime: null,
+            endTime: null,
+          );
+          emit(GeburaLaunchLocalAppInstState(
+              state.copyWith(
+                runningInsts: runningInsts,
+              ),
+              appUUID,
+              EventStatus.processing));
+          try {
+            final (start, end, suceess) = await processRunner(
+                mode: setting.advancedTracing
+                    ? TraceMode.byName
+                    : TraceMode.simple,
+                name: setting.processName ?? '',
+                executePath: setting.launcherPath ?? '',
+                monitorPath: setting.processPath ?? '',
+                workingDir: setting.workingDir ?? dirname(setting.launcherPath),
+                sleepCount: setting.sleepCount ?? 1,
+                sleepMillis: BigInt.from(1000));
+            if (!suceess) {
+              runningInsts.remove(appUUID);
+              emit(GeburaLaunchLocalAppInstState(
+                  state, appUUID, EventStatus.failed,
+                  msg: S.current.applicationExitAbnormally));
+              return;
+            }
+            // final record = LocalAppInstRunRecord(
+            //   uuid: appUUID,
+            //   startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
+            //   endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
+            // );
+            runningInsts.remove(appUUID);
+            // add(GeburaReportAppRunTimeEvent(
+            //   event.appInstID,
+            //   record.startTime!,
+            //   record.endTime!,
+            // ));
+            emit(GeburaLaunchLocalAppInstState(
+              state,
+              appUUID,
+              EventStatus.success,
+            ));
+          } catch (e) {
+            runningInsts.remove(appUUID);
+            emit(GeburaLaunchLocalAppInstState(
+                state, appUUID, EventStatus.failed,
+                msg: '${S.current.launcherError} $e'));
+            return;
+          }
       }
     });
 
@@ -529,326 +552,572 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         return;
       }
       emit(GeburaScanLocalLibraryState(state, EventStatus.processing));
-      final appInsts = state.localInstalledCommonAppInsts ?? {};
-      final folders = state.localCommonLibraryFolders ?? {};
-      Map<String, List<InstalledSteamApps>> installed =
-          state.localInstalledSteamAppInsts ?? {};
-      SteamScanResult result =
-          state.localSteamScanResult ?? SteamScanResult.unknownError;
-      for (final folder in folders.values) {
-        if (event.refreshCommon == null ||
-            event.refreshCommon!.contains(folder.basePath)) {
-          final result = await scanCommonApps(folder);
-          appInsts[folder.basePath] = result.installedApps;
+      final Map<String, LocalLibraryScanResult> results = {};
+      try {
+        final commonFolders = await _repo.loadLocalCommonLibraryFolders();
+        final refreshCommon = event.doAutoRefresh
+            ? commonFolders
+                .where((e) => e.enableAutoScan)
+                .map((e) => e.uuid)
+                .toList()
+            : event.refreshCommon;
+        final steamFolders = await _repo.loadLocalSteamLibraryFolders();
+        final refreshSteam = event.doAutoRefresh
+            ? steamFolders
+                .where((e) => e.enableAutoScan)
+                .map((e) => e.uuid)
+                .toList()
+            : event.refreshSteam;
+        // Do scan
+        if (refreshCommon != null) {
+          for (final folder in commonFolders) {
+            if (refreshCommon.isEmpty || refreshCommon.contains(folder.uuid)) {
+              final result =
+                  await scanCommonApps(_fromDaoCommonAppScan(folder));
+              await _repo.saveLocalCommonLibraryScanResults(result.installedApps
+                  .map((e) => LocalCommonAppScanResult(
+                        uuid: const Uuid().v1(),
+                        scanUUID: folder.uuid,
+                        name: e.name,
+                        version: e.version,
+                        installPath: e.installPath,
+                        launcherPaths: e.launcherPaths,
+                      ))
+                  .toList());
+            }
+          }
         }
+        if (refreshSteam != null) {
+          for (final folder in steamFolders) {
+            if (refreshSteam.isEmpty || refreshSteam.contains(folder.uuid)) {
+              final result = await scanSteamLibraryFolder(folder.libraryPath);
+              await _repo.saveLocalSteamLibraryScanResults(result
+                  .map((e) => LocalSteamAppScanResult(
+                        uuid: const Uuid().v1(),
+                        scanUUID: folder.uuid,
+                        steamAppID: e.appId,
+                        name: e.name,
+                        installPath: e.installPath,
+                        launcherPath: e.launcherPath,
+                        sizeOnDisk: e.sizeOnDisk,
+                      ))
+                  .toList());
+            }
+          }
+        }
+        // Generate state
+        final localInsts = await _repo.loadLocalAppInsts();
+        for (final folder in commonFolders) {
+          final scanResults = await _repo.loadLocalCommonLibraryScanResults(
+              scanUUID: folder.uuid);
+          final details = scanResults
+              .map((e) => LocalLibraryScanResultDetail(
+                    uuid: e.uuid,
+                    name: e.name ?? e.installPath,
+                    path: e.installPath,
+                    tracked:
+                        localInsts.any((inst) => inst.path == e.installPath),
+                  ))
+              .toList();
+          results[folder.uuid] = LocalLibraryScanResult(
+            uuid: folder.uuid,
+            type: LocalLibraryScanResultType.common,
+            path: folder.basePath,
+            installedCount: details.length,
+            trackedCount: details.where((e) => e.tracked).length,
+            details: details,
+          );
+        }
+        for (final folder in steamFolders) {
+          final scanResults = await _repo.loadLocalSteamLibraryScanResults(
+              scanUUID: folder.uuid);
+          final details = scanResults
+              .map((e) => LocalLibraryScanResultDetail(
+                    uuid: e.uuid,
+                    name: e.name,
+                    path: e.installPath,
+                    tracked:
+                        localInsts.any((inst) => inst.path == e.installPath),
+                  ))
+              .toList();
+          results[folder.uuid] = LocalLibraryScanResult(
+            uuid: folder.uuid,
+            type: LocalLibraryScanResultType.steam,
+            path: folder.libraryPath,
+            installedCount: details.length,
+            trackedCount: details.where((e) => e.tracked).length,
+            details: details,
+          );
+        }
+        emit(GeburaScanLocalLibraryState(
+          state.copyWith(
+            localLibraryScanResults: results,
+          ),
+          EventStatus.success,
+        ));
+      } catch (e) {
+        emit(GeburaScanLocalLibraryState(state, EventStatus.failed,
+            msg: '${S.current.unknownErrorOccurred} $e'));
       }
-      if (event.refreshSteam) {
-        (installed, result) = await scanSteamLibrary();
-      }
-      emit(state.copyWith(
-        localInstalledCommonAppInsts: appInsts,
-        localSteamScanResult: result,
-        localInstalledSteamAppInsts: installed,
-      ));
-      emit(GeburaScanLocalLibraryState(state, EventStatus.success));
     }, transformer: droppable());
 
-    on<GeburaTrackSteamAppsEvent>((event, emit) async {
-      final localTrackedApps = state.localTrackedApps ?? {};
-      final localTrackedAppInsts = state.localTrackedAppInsts ?? {};
+    on<GeburaTrackCommonAppsEvent>((event, emit) async {
       var processCount = 0;
       var failedCount = 0;
-      for (final id in event.steamAppIDs) {
-        processCount += 1;
-        final steamApp = state.localInstalledSteamAppInsts?.values
-            .expand((e) => e)
-            .firstWhereOrNull((e) => e.appId == id);
-        if (steamApp == null) {
+      for (final uuid in event.uuids) {
+        try {
+          final commonApp =
+              (await _repo.loadLocalCommonLibraryScanResults(uuid: uuid)).first;
+          final app = LocalApp(
+            uuid: const Uuid().v1(),
+            name: commonApp.name ?? basename(commonApp.installPath),
+          );
+          final appInst = LocalAppInst(
+            uuid: const Uuid().v1(),
+            appUUID: app.uuid,
+            name: app.name,
+            path: commonApp.installPath,
+          );
+          await _repo.addLocalAppInst(appInst, app: app);
+          add(GeburaRefreshAppInfoEvent(app.uuid));
+          for (final launcherPath in commonApp.launcherPaths) {
+            final appInstLaunch = LocalAppInstLauncher(
+                uuid: const Uuid().v1(),
+                appInstUUID: appInst.uuid,
+                launcherType: LocalAppInstLauncherType.common,
+                common: LocalAppInstLaunchCommon(
+                  launcherPath: launcherPath,
+                ));
+            await _repo.addLocalAppInstLauncher(appInstLaunch);
+          }
+          final msg =
+              '${S.current.importingCommonApplications} $processCount ( $failedCount ) / ${event.uuids.length}';
+          emit(GeburaTrackCommonAppsState(
+            state,
+            EventStatus.processing,
+            msg: msg,
+          ));
+          processCount += 1;
+        } catch (e) {
           failedCount += 1;
-          continue;
         }
-        final app = LocalTrackedApp(
-          uuid: const Uuid().v1(),
-          name: steamApp.name,
-        );
-        final appInst = LocalTrackedAppInst(
-          uuid: const Uuid().v1(),
-          appUUID: app.uuid,
-          type: LocalAppInstType.steam,
-          name: app.name,
-          path: steamApp.installPath,
-          steamLaunchSetting: LocalSteamAppInstLaunchSetting(
-            steamAppID: steamApp.appId,
-            launchOptions: '',
-          ),
-        );
-        localTrackedApps[app.uuid] = app;
-        localTrackedAppInsts[appInst.uuid] = appInst;
-        await _repo.setTrackedApp(app);
-        await _repo.setTrackedAppInst(appInst);
-        final msg =
-            '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.steamAppIDs.length}';
-        emit(GeburaTrackSteamAppsState(
-          state.copyWith(
-            localTrackedApps: localTrackedApps,
-            localTrackedAppInsts: localTrackedAppInsts,
-          ),
-          EventStatus.processing,
-          msg: msg,
-        ));
       }
-      add(GeburaRefreshLibraryListEvent());
+      if (processCount > 0) {
+        add(GeburaScanLocalLibraryEvent());
+        add(GeburaRefreshLibraryListEvent());
+        add(GeburaLoadAppInstsEvent());
+        add(GeburaLoadAppInstLaunchersEvent());
+      }
       final msg =
-          S.current.importSteamApplicationFinished(processCount, failedCount);
-      emit(GeburaTrackSteamAppsState(
-        state.copyWith(
-          localTrackedApps: localTrackedApps,
-          localTrackedAppInsts: localTrackedAppInsts,
-        ),
+          S.current.importCommonApplicationFinished(processCount, failedCount);
+      emit(GeburaTrackCommonAppsState(
+        state,
         EventStatus.success,
         msg: msg,
       ));
     }, transformer: droppable());
 
-    on<GeburaFetchBoundAppInfosEvent>((event, emit) async {
-      emit(GeburaFetchBoundAppsState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.getBoundAppInfos,
-        GetBoundAppInfosRequest(
-          appInfoId: event.appID,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaFetchBoundAppsState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+    on<GeburaTrackSteamAppsEvent>((event, emit) async {
+      var processCount = 0;
+      var failedCount = 0;
+      for (final uuid in event.uuids) {
+        try {
+          final steamApp =
+              (await _repo.loadLocalSteamLibraryScanResults(uuid: uuid)).first;
+          final app = LocalApp(
+            uuid: const Uuid().v1(),
+            name: steamApp.name,
+          );
+          final appInst = LocalAppInst(
+            uuid: const Uuid().v1(),
+            appUUID: app.uuid,
+            name: app.name,
+            path: steamApp.installPath,
+          );
+          await _repo.addLocalAppInst(appInst, app: app);
+          add(GeburaRefreshAppInfoEvent(app.uuid));
+          final appInstLaunch = LocalAppInstLauncher(
+              uuid: const Uuid().v1(),
+              appInstUUID: appInst.uuid,
+              launcherType: LocalAppInstLauncherType.steam,
+              steam: LocalAppInstLaunchSteam(
+                steamAppID: steamApp.steamAppID,
+              ));
+          await _repo.addLocalAppInstLauncher(appInstLaunch);
+          final msg =
+              '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.uuids.length}';
+          emit(GeburaTrackSteamAppsState(
+            state,
+            EventStatus.processing,
+            msg: msg,
+          ));
+          processCount += 1;
+        } catch (e) {
+          failedCount += 1;
+        }
       }
-      final appInfoMap = state.appInfoMap ?? {};
-      appInfoMap[event.appID.id] = resp.getData().appInfos;
-      emit(GeburaFetchBoundAppsState(
-        state.copyWith(appInfoMap: appInfoMap),
+      if (processCount > 0) {
+        add(GeburaScanLocalLibraryEvent());
+        add(GeburaRefreshLibraryListEvent());
+        add(GeburaLoadAppInstsEvent());
+        add(GeburaLoadAppInstLaunchersEvent());
+      }
+      final msg =
+          S.current.importSteamApplicationFinished(processCount, failedCount);
+      emit(GeburaTrackSteamAppsState(
+        state,
         EventStatus.success,
-        msg: resp.error,
+        msg: msg,
       ));
-      if (event.refreshAfterSuccess ?? false) {
-        add(GeburaApplyLibraryFilterEvent());
-      }
-    });
+    }, transformer: droppable());
 
     on<GeburaRefreshAppInfoEvent>((event, emit) async {
       emit(GeburaRefreshAppInfoState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.syncAppInfos,
-        SyncAppInfosRequest(
-          appInfoIds: event.appInfoID,
-          waitData: true,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
+      try {
+        final app = await _repo.fetchLocalAppInfo(event.uuid);
+        await _repo.updateLocalApp(app);
+        emit(GeburaRefreshAppInfoState(
+          state.copyWith(
+            libraryApps: state.libraryApps.map((key, value) {
+              if (key == app.uuid) {
+                return MapEntry(key, app);
+              }
+              return MapEntry(key, value);
+            }),
+            libraryListItems: state.libraryListItems?.map((e) {
+              if (e.uuid == app.uuid) {
+                return e.copyWith(
+                  iconImagePath: app.iconImagePath,
+                  coverImagePath: app.coverImagePath,
+                  backgroundImagePath: app.backgroundImagePath,
+                );
+              }
+              return e;
+            }).toList(),
+          ),
+          EventStatus.success,
+        ));
+      } catch (e) {
         emit(GeburaRefreshAppInfoState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+            msg: S.current.unknownErrorOccurred));
       }
-      emit(GeburaRefreshAppInfoState(
-        state,
-        EventStatus.success,
-        msg: resp.error,
-      ));
-      add(GeburaRefreshLibraryEvent());
     });
 
-    on<GeburaSearchNewAppInfoEvent>((event, emit) async {
-      emit(GeburaSearchNewAppInfoState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.searchNewAppInfos,
-        SearchNewAppInfosRequest(
-          paging: PagingRequest(
-            pageSize: Int64(10),
-            pageNum: Int64(1),
-          ),
-          name: event.query,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaSearchNewAppInfoState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaSearchNewAppInfoState(
-        state,
-        EventStatus.success,
-        msg: resp.error,
-        infos: resp.getData().appInfos,
-      ));
-    }, transformer: droppable());
+    // on<GeburaFetchBoundAppInfosEvent>((event, emit) async {
+    //   emit(GeburaFetchBoundAppsState(state, EventStatus.processing));
+    //   final resp = await _api.doRequest(
+    //     (client) => client.getBoundAppInfos,
+    //     GetBoundAppInfosRequest(
+    //       appInfoId: event.appID,
+    //     ),
+    //   );
+    //   if (resp.status != ApiStatus.success) {
+    //     emit(GeburaFetchBoundAppsState(state, EventStatus.failed,
+    //         msg: resp.error));
+    //     return;
+    //   }
+    //   final appInfoMap = state.appInfoMap ?? {};
+    //   appInfoMap[event.appID.id] = resp.getData().appInfos;
+    //   emit(GeburaFetchBoundAppsState(
+    //     state.copyWith(appInfoMap: appInfoMap),
+    //     EventStatus.success,
+    //     msg: resp.error,
+    //   ));
+    //   if (event.refreshAfterSuccess ?? false) {
+    //     add(GeburaApplyLibraryFilterEvent());
+    //   }
+    // });
 
-    on<GeburaAssignAppWithNewInfoEvent>((event, emit) async {
-      emit(GeburaAssignAppInfoState(state, EventStatus.processing));
-      final syncResp = await _api.doRequest(
-          (client) => client.syncAppInfos,
-          SyncAppInfosRequest(
-            appInfoIds: [
-              AppInfoID(
-                  internal: false,
-                  source: event.appInfoSource,
-                  sourceAppId: event.appInfoSourceID)
-            ],
-            waitData: false,
-          ));
-      if (syncResp.status != ApiStatus.success) {
-        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
-            msg: syncResp.error));
-        return;
-      }
-      final boundInfoResp = await _api.doRequest(
-          (client) => client.getBoundAppInfos,
-          GetBoundAppInfosRequest(
-            appInfoId: syncResp.getData().appInfos.first.id,
-          ));
-      if (boundInfoResp.status != ApiStatus.success) {
-        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
-            msg: boundInfoResp.error));
-        return;
-      }
-      if (!boundInfoResp
-          .getData()
-          .appInfos
-          .any((element) => element.internal)) {
-        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
-            msg: 'No internal app info found'));
-      }
-      final appInfoId = boundInfoResp
-          .getData()
-          .appInfos
-          .firstWhere((element) => element.internal)
-          .id;
-      final resp = await _api.doRequest(
-        (client) => client.assignApp,
-        AssignAppRequest(
-          appInfoId: appInfoId,
-          appId: event.appID,
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaAssignAppInfoState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaAssignAppInfoState(state, EventStatus.success,
-          msg: resp.error));
-      add(GeburaRefreshLibraryEvent());
-    }, transformer: droppable());
-
-    on<GeburaReportAppRunTimeEvent>((event, emit) async {
-      emit(GeburaReportAppRunTimeState(state, EventStatus.processing));
-      final resp = await _api.doRequest(
-        (client) => client.addAppInstRunTime,
-        AddAppInstRunTimeRequest(
-          appInstId: event.appInstID,
-          timeRange: toPBTimeRange(
-            event.startTime,
-            event.endTime,
-          ),
-        ),
-      );
-      if (resp.status != ApiStatus.success) {
-        emit(GeburaReportAppRunTimeState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      emit(GeburaReportAppRunTimeState(
-        state,
-        EventStatus.success,
-        msg: resp.error,
-      ));
-      add(GeburaRefreshLibraryEvent());
-    });
+    //   on<GeburaSearchNewAppInfoEvent>((event, emit) async {
+    //     emit(GeburaSearchNewAppInfoState(state, EventStatus.processing));
+    //     final resp = await _api.doRequest(
+    //       (client) => client.searchNewAppInfos,
+    //       SearchNewAppInfosRequest(
+    //         paging: PagingRequest(
+    //           pageSize: Int64(10),
+    //           pageNum: Int64(1),
+    //         ),
+    //         name: event.query,
+    //       ),
+    //     );
+    //     if (resp.status != ApiStatus.success) {
+    //       emit(GeburaSearchNewAppInfoState(state, EventStatus.failed,
+    //           msg: resp.error));
+    //       return;
+    //     }
+    //     emit(GeburaSearchNewAppInfoState(
+    //       state,
+    //       EventStatus.success,
+    //       msg: resp.error,
+    //       infos: resp.getData().appInfos,
+    //     ));
+    //   }, transformer: droppable());
+    //
+    //   on<GeburaAssignAppWithNewInfoEvent>((event, emit) async {
+    //     emit(GeburaAssignAppInfoState(state, EventStatus.processing));
+    //     final syncResp = await _api.doRequest(
+    //         (client) => client.syncAppInfos,
+    //         SyncAppInfosRequest(
+    //           appInfoIds: [
+    //             AppInfoID(
+    //                 internal: false,
+    //                 source: event.appInfoSource,
+    //                 sourceAppId: event.appInfoSourceID)
+    //           ],
+    //           waitData: false,
+    //         ));
+    //     if (syncResp.status != ApiStatus.success) {
+    //       emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+    //           msg: syncResp.error));
+    //       return;
+    //     }
+    //     final boundInfoResp = await _api.doRequest(
+    //         (client) => client.getBoundAppInfos,
+    //         GetBoundAppInfosRequest(
+    //           appInfoId: syncResp.getData().appInfos.first.id,
+    //         ));
+    //     if (boundInfoResp.status != ApiStatus.success) {
+    //       emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+    //           msg: boundInfoResp.error));
+    //       return;
+    //     }
+    //     if (!boundInfoResp
+    //         .getData()
+    //         .appInfos
+    //         .any((element) => element.internal)) {
+    //       emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+    //           msg: 'No internal app info found'));
+    //     }
+    //     final appInfoId = boundInfoResp
+    //         .getData()
+    //         .appInfos
+    //         .firstWhere((element) => element.internal)
+    //         .id;
+    //     final resp = await _api.doRequest(
+    //       (client) => client.assignApp,
+    //       AssignAppRequest(
+    //         appInfoId: appInfoId,
+    //         appId: event.appID,
+    //       ),
+    //     );
+    //     if (resp.status != ApiStatus.success) {
+    //       emit(GeburaAssignAppInfoState(state, EventStatus.failed,
+    //           msg: resp.error));
+    //       return;
+    //     }
+    //     emit(GeburaAssignAppInfoState(state, EventStatus.success,
+    //         msg: resp.error));
+    //     add(GeburaRefreshLibraryEvent());
+    //   }, transformer: droppable());
+    //
+    //   on<GeburaReportAppRunTimeEvent>((event, emit) async {
+    //     emit(GeburaReportAppRunTimeState(state, EventStatus.processing));
+    //     final resp = await _api.doRequest(
+    //       (client) => client.addAppInstRunTime,
+    //       AddAppInstRunTimeRequest(
+    //         appInstId: event.appInstID,
+    //         timeRange: toPBTimeRange(
+    //           event.startTime,
+    //           event.endTime,
+    //         ),
+    //       ),
+    //     );
+    //     if (resp.status != ApiStatus.success) {
+    //       emit(GeburaReportAppRunTimeState(state, EventStatus.failed,
+    //           msg: resp.error));
+    //       return;
+    //     }
+    //     emit(GeburaReportAppRunTimeState(
+    //       state,
+    //       EventStatus.success,
+    //       msg: resp.error,
+    //     ));
+    //     add(GeburaRefreshLibraryEvent());
+    //   });
   }
-
-  Future<ListAppInfosResponse> listAppInfos(
-      int pageSize, int pageNum, List<String> sourceFilter) async {
-    final resp = await _api.doRequest(
-      (client) => client.listAppInfos,
-      ListAppInfosRequest(
-        paging:
-            PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
-        sourceFilter: sourceFilter,
-      ),
-    );
-    return resp.getData();
-  }
-
-  Future<ListAppsResponse> listApps(int pageSize, int pageNum) async {
-    final resp = await _api.doRequest(
-      (client) => client.listApps,
-      ListAppsRequest(
-        paging:
-            PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
-      ),
-    );
-    return resp.getData();
-  }
-
+  //
+  // Future<ListAppInfosResponse> listAppInfos(
+  //     int pageSize, int pageNum, List<String> sourceFilter) async {
+  //   final resp = await _api.doRequest(
+  //     (client) => client.listAppInfos,
+  //     ListAppInfosRequest(
+  //       paging:
+  //           PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
+  //       sourceFilter: sourceFilter,
+  //     ),
+  //   );
+  //   return resp.getData();
+  // }
+  //
+  // Future<ListAppsResponse> listApps(int pageSize, int pageNum) async {
+  //   final resp = await _api.doRequest(
+  //     (client) => client.listApps,
+  //     ListAppsRequest(
+  //       paging:
+  //           PagingRequest(pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
+  //     ),
+  //   );
+  //   return resp.getData();
+  // }
+  //
   Future<void> showSteamAppDetails(String steamAppID) async {
     await launchUrlString('steam://nav/games/details/$steamAppID');
   }
+
+  Future<bool> saveLocalCommonAppLibraryFolder(CommonAppScan setting) async {
+    try {
+      await _repo.addLocalCommonLibraryFolder(_toDaoCommonAppScan(setting));
+      add(GeburaScanLocalLibraryEvent(refreshCommon: [setting.uuid]));
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<CommonAppScan?> getLocalCommonAppLibraryFolder(String uuid) async {
+    try {
+      final setting = await _repo.getLocalCommonLibraryFolder(uuid);
+      return _fromDaoCommonAppScan(setting);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<(List<String>, SteamScanResult)> getLocalSteamLibraryFolders() async {
+    final (folders, result) = await getSteamLibraryFolders();
+    if (result == SteamScanResult.fullyScanned) {
+      try {
+        await _repo.saveLocalSteamLibraryFolders(folders);
+        add(GeburaScanLocalLibraryEvent(refreshSteam: const []));
+      } catch (e) {
+        return (List<String>.empty(), SteamScanResult.unknownError);
+      }
+    }
+    return (folders, result);
+  }
 }
 
-AppInfo mixAppInfo(List<AppInfo> apps) {
-  var mixedApp = AppInfo();
-  if (apps.isEmpty) {
-    return mixedApp;
-  }
-  mixedApp = apps.where((element) => element.internal).isNotEmpty
-      ? apps.firstWhere((element) => element.internal)
-      : AppInfo();
-  for (final app in apps.where((element) => !element.internal)) {
-    mixedApp.name = app.name.isNotEmpty ? app.name : mixedApp.name;
-    mixedApp.shortDescription = app.shortDescription.isNotEmpty
-        ? app.shortDescription
-        : mixedApp.shortDescription;
-    mixedApp.iconImageUrl =
-        app.iconImageUrl.isNotEmpty ? app.iconImageUrl : mixedApp.iconImageUrl;
-    mixedApp.backgroundImageUrl = app.backgroundImageUrl.isNotEmpty
-        ? app.backgroundImageUrl
-        : mixedApp.backgroundImageUrl;
-    mixedApp.coverImageUrl = app.coverImageUrl.isNotEmpty
-        ? app.coverImageUrl
-        : mixedApp.coverImageUrl;
-    mixedApp.tags.addAll(app.tags);
-    mixedApp.altNames.addAll(app.altNames);
+// AppInfo mixAppInfo(List<AppInfo> apps) {
+//   var mixedApp = AppInfo();
+//   if (apps.isEmpty) {
+//     return mixedApp;
+//   }
+//   mixedApp = apps.where((element) => element.internal).isNotEmpty
+//       ? apps.firstWhere((element) => element.internal)
+//       : AppInfo();
+//   for (final app in apps.where((element) => !element.internal)) {
+//     mixedApp.name = app.name.isNotEmpty ? app.name : mixedApp.name;
+//     mixedApp.shortDescription = app.shortDescription.isNotEmpty
+//         ? app.shortDescription
+//         : mixedApp.shortDescription;
+//     mixedApp.iconImageUrl =
+//         app.iconImageUrl.isNotEmpty ? app.iconImageUrl : mixedApp.iconImageUrl;
+//     mixedApp.backgroundImageUrl = app.backgroundImageUrl.isNotEmpty
+//         ? app.backgroundImageUrl
+//         : mixedApp.backgroundImageUrl;
+//     mixedApp.coverImageUrl = app.coverImageUrl.isNotEmpty
+//         ? app.coverImageUrl
+//         : mixedApp.coverImageUrl;
+//     mixedApp.tags.addAll(app.tags);
+//     mixedApp.altNames.addAll(app.altNames);
+//
+//     mixedApp.details.description = app.details.description.isNotEmpty
+//         ? app.details.description
+//         : mixedApp.details.description;
+//     mixedApp.details.releaseDate = app.details.releaseDate.isNotEmpty
+//         ? app.details.releaseDate
+//         : mixedApp.details.releaseDate;
+//     mixedApp.details.developer = app.details.developer.isNotEmpty
+//         ? app.details.developer
+//         : mixedApp.details.developer;
+//     mixedApp.details.publisher = app.details.publisher.isNotEmpty
+//         ? app.details.publisher
+//         : mixedApp.details.publisher;
+//     mixedApp.details.version = app.details.version.isNotEmpty
+//         ? app.details.version
+//         : mixedApp.details.version;
+//     mixedApp.details.imageUrls.addAll(app.details.imageUrls);
+//   }
+//   return mixedApp;
+// }
 
-    mixedApp.details.description = app.details.description.isNotEmpty
-        ? app.details.description
-        : mixedApp.details.description;
-    mixedApp.details.releaseDate = app.details.releaseDate.isNotEmpty
-        ? app.details.releaseDate
-        : mixedApp.details.releaseDate;
-    mixedApp.details.developer = app.details.developer.isNotEmpty
-        ? app.details.developer
-        : mixedApp.details.developer;
-    mixedApp.details.publisher = app.details.publisher.isNotEmpty
-        ? app.details.publisher
-        : mixedApp.details.publisher;
-    mixedApp.details.version = app.details.version.isNotEmpty
-        ? app.details.version
-        : mixedApp.details.version;
-    mixedApp.details.imageUrls.addAll(app.details.imageUrls);
-  }
-  return mixedApp;
+// AppInfoMixed appInfoToMixed(AppInfo appInfo) {
+//   return AppInfoMixed(
+//     id: appInfo.id,
+//     name: appInfo.name,
+//     type: appInfo.type,
+//     shortDescription: appInfo.shortDescription,
+//     iconImageUrl: appInfo.iconImageUrl,
+//     backgroundImageUrl: appInfo.backgroundImageUrl,
+//     coverImageUrl: appInfo.coverImageUrl,
+//     tags: appInfo.tags,
+//     altNames: appInfo.altNames,
+//     details: appInfo.details,
+//   );
+// }
+
+LocalCommonAppScan _toDaoCommonAppScan(CommonAppScan setting) {
+  return LocalCommonAppScan(
+    uuid: setting.uuid,
+    basePath: setting.basePath,
+    enableAutoScan: setting.enableAutoScan,
+    excludeDirectoryMatchers: setting.excludeDirectoryMatchers,
+    minInstallDirDepth: setting.minInstallDirDepth,
+    maxInstallDirDepth: setting.maxInstallDirDepth,
+    pathFieldMatcher: setting.pathFieldMatcher.map((e) {
+      switch (e) {
+        case CommonAppScanPathFieldMatcher.ignore:
+          return LocalCommonAppScanPathFieldMatcher.ignore;
+        case CommonAppScanPathFieldMatcher.name:
+          return LocalCommonAppScanPathFieldMatcher.name;
+        case CommonAppScanPathFieldMatcher.version:
+          return LocalCommonAppScanPathFieldMatcher.version;
+      }
+    }).toList(),
+    pathFieldMatcherAlignment: (() {
+      switch (setting.pathFieldMatcherAlignment) {
+        case CommonAppScanPathFieldMatcherAlignment.left:
+          return LocalCommonAppScanPathFieldMatcherAlignment.left;
+        case CommonAppScanPathFieldMatcherAlignment.right:
+          return LocalCommonAppScanPathFieldMatcherAlignment.right;
+      }
+    })(),
+    includeExecutableMatchers: setting.includeExecutableMatchers,
+    excludeExecutableMatchers: setting.excludeExecutableMatchers,
+    minExecutableDepth: setting.minExecutableDepth,
+    maxExecutableDepth: setting.maxExecutableDepth,
+  );
 }
 
-AppInfoMixed appInfoToMixed(AppInfo appInfo) {
-  return AppInfoMixed(
-    id: appInfo.id,
-    name: appInfo.name,
-    type: appInfo.type,
-    shortDescription: appInfo.shortDescription,
-    iconImageUrl: appInfo.iconImageUrl,
-    backgroundImageUrl: appInfo.backgroundImageUrl,
-    coverImageUrl: appInfo.coverImageUrl,
-    tags: appInfo.tags,
-    altNames: appInfo.altNames,
-    details: appInfo.details,
+CommonAppScan _fromDaoCommonAppScan(LocalCommonAppScan setting) {
+  return CommonAppScan(
+    uuid: setting.uuid,
+    basePath: setting.basePath,
+    enableAutoScan: setting.enableAutoScan,
+    excludeDirectoryMatchers: setting.excludeDirectoryMatchers,
+    minInstallDirDepth: setting.minInstallDirDepth,
+    maxInstallDirDepth: setting.maxInstallDirDepth,
+    pathFieldMatcher: setting.pathFieldMatcher.map((e) {
+      switch (e) {
+        case LocalCommonAppScanPathFieldMatcher.ignore:
+          return CommonAppScanPathFieldMatcher.ignore;
+        case LocalCommonAppScanPathFieldMatcher.name:
+          return CommonAppScanPathFieldMatcher.name;
+        case LocalCommonAppScanPathFieldMatcher.version:
+          return CommonAppScanPathFieldMatcher.version;
+      }
+    }).toList(),
+    pathFieldMatcherAlignment: (() {
+      switch (setting.pathFieldMatcherAlignment) {
+        case LocalCommonAppScanPathFieldMatcherAlignment.left:
+          return CommonAppScanPathFieldMatcherAlignment.left;
+        case LocalCommonAppScanPathFieldMatcherAlignment.right:
+          return CommonAppScanPathFieldMatcherAlignment.right;
+      }
+    })(),
+    includeExecutableMatchers: setting.includeExecutableMatchers,
+    excludeExecutableMatchers: setting.excludeExecutableMatchers,
+    minExecutableDepth: setting.minExecutableDepth,
+    maxExecutableDepth: setting.maxExecutableDepth,
   );
 }

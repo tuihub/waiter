@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../../bloc/main_bloc.dart';
 import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
@@ -124,29 +123,30 @@ class AppTableSource extends AsyncDataTableSource {
 
   @override
   Future<AsyncRowsResponse> getRows(int startIndex, int count) async {
-    final data = await context
-        .read<GeburaBloc>()
-        .listAppInfos(pageSize, startIndex ~/ pageSize + 1, sourceFilter);
-    return AsyncRowsResponse(
-      data.paging.totalSize.toInt(),
-      data.appInfos.map(
-        (app) {
-          return DataRow2(
-              cells: [
-                DataCell(Text(app.id.id.toHexString())),
-                DataCell(Text(app.name)),
-                DataCell(Text(appSourceString(app.source))),
-                DataCell(Text(appTypeString(app.type))),
-              ],
-              onTap: () {
-                const SettingsFunctionRoute(SettingsFunctions.app,
-                        action: SettingsActions.appEdit)
-                    .go(context);
-                ModuleFramePage.of(context)?.openDrawer();
-              });
-        },
-      ).toList(),
-    );
+    return AsyncRowsResponse(0, []);
+    // final data = await context
+    //     .read<GeburaBloc>()
+    //     .listAppInfos(pageSize, startIndex ~/ pageSize + 1, sourceFilter);
+    // return AsyncRowsResponse(
+    //   data.paging.totalSize.toInt(),
+    //   data.appInfos.map(
+    //     (app) {
+    //       return DataRow2(
+    //           cells: [
+    //             DataCell(Text(app.id.id.toHexString())),
+    //             DataCell(Text(app.name)),
+    //             DataCell(Text(appSourceString(app.source))),
+    //             DataCell(Text(appTypeString(app.type))),
+    //           ],
+    //           onTap: () {
+    //             const SettingsFunctionRoute(SettingsFunctions.app,
+    //                     action: SettingsActions.appEdit)
+    //                 .go(context);
+    //             ModuleFramePage.of(context)?.openDrawer();
+    //           });
+    //     },
+    //   ).toList(),
+    // );
   }
 
   @override

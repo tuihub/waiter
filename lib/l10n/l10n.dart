@@ -780,6 +780,26 @@ class S {
     );
   }
 
+  /// `正在导入应用程序`
+  String get importingCommonApplications {
+    return Intl.message(
+      '正在导入应用程序',
+      name: 'importingCommonApplications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `导入应用程序完成，成功 {success} 个，失败 {failed} 个。`
+  String importCommonApplicationFinished(Object success, Object failed) {
+    return Intl.message(
+      '导入应用程序完成，成功 $success 个，失败 $failed 个。',
+      name: 'importCommonApplicationFinished',
+      desc: '',
+      args: [success, failed],
+    );
+  }
+
   /// `正在导入Steam应用程序`
   String get importingSteamApplications {
     return Intl.message(

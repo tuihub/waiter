@@ -10,6 +10,7 @@ class UniversalTextFormField extends StatelessWidget {
     this.labelText,
     this.hintText,
     this.controller,
+    this.initialValue,
     this.onSaved,
     this.onChanged,
     this.prefixIcon,
@@ -26,6 +27,7 @@ class UniversalTextFormField extends StatelessWidget {
   final String? labelText;
   final String? hintText;
   final TextEditingController? controller;
+  final String? initialValue;
   final FormFieldSetter<String>? onSaved;
   final ValueChanged<String>? onChanged;
   final Widget? prefixIcon;
@@ -46,6 +48,7 @@ class UniversalTextFormField extends StatelessWidget {
       case UIDesign.material:
         return material.TextFormField(
           controller: controller,
+          initialValue: initialValue,
           onSaved: onSaved,
           onChanged: onChanged,
           validator: validator,
@@ -66,6 +69,7 @@ class UniversalTextFormField extends StatelessWidget {
         final textBox = fluent.TextFormBox(
           placeholder: hintText,
           controller: controller,
+          initialValue: initialValue,
           onSaved: onSaved,
           onChanged: onChanged,
           prefix: prefixIcon,

@@ -6,7 +6,6 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
-import '../../helper/url.dart';
 import '../../universal/button.dart';
 import 'gebura_common.dart';
 
@@ -124,7 +123,7 @@ class _GeburaLibraryOverviewItemState
 
   @override
   Widget build(BuildContext context) {
-    if (!UrlHelper.isValidUrl(widget.item.coverImageUrl)) {
+    if (widget.item.coverImagePath == null) {
       noCoverImage = true;
     }
     final name = widget.item.name.isNotEmpty
@@ -153,7 +152,7 @@ class _GeburaLibraryOverviewItemState
             Center(
               child: LocalHero(
                 tag: widget.item.uuid,
-                child: GeburaAppCoverImage(item: widget.item),
+                child: GeburaAppCoverImage(path: widget.item.coverImagePath),
               ),
             ),
           ],

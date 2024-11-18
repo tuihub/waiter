@@ -56,69 +56,59 @@ enum SteamScanResult {
   fullyScanned,
 }
 
-Future<(Map<String, List<InstalledSteamApps>>, SteamScanResult)>
-    scanSteamLibrary() async {
-  final Map<String, List<InstalledSteamApps>> appInsts = {};
+Future<(List<String>, SteamScanResult)> getSteamLibraryFolders() async {
+  final List<String> folders = [];
   try {
     if (!PlatformHelper.isWindowsApp()) {
-      return (appInsts, SteamScanResult.unavailable);
+      return (folders, SteamScanResult.unavailable);
     }
     final steamInstallPath = getSteamInstallPath();
     if (steamInstallPath == null) {
-      return (appInsts, SteamScanResult.steamInstallationNotFound);
+      return (folders, SteamScanResult.steamInstallationNotFound);
     }
-    final folders = _getLibraryFolders(
+    final libraryFolders = _getLibraryFolders(
         p.join(steamInstallPath, 'config', 'libraryfolders.vdf'));
-    if (folders.isEmpty) {
-      return (appInsts, SteamScanResult.libraryFoldersNotFound);
+    if (libraryFolders.isEmpty) {
+      return (folders, SteamScanResult.libraryFoldersNotFound);
     }
-    for (final folder in folders) {
-      final files = io.Directory(p.join(folder, 'steamapps'))
-          .listSync()
-          .whereType<io.File>()
-          .where((file) {
-        return p.basename(file.path).startsWith('appmanifest_') &&
-            p.basename(file.path).endsWith('.acf');
-      }).toList();
-      final apps = <InstalledSteamApps>[];
-      for (final file in files) {
-        final appInfo = _getAppInfo(file.path);
-        if (appInfo != null) {
-          apps.add(appInfo);
-        }
-      }
-      for (var i = 0; i < apps.length; i += 1) {
-        apps[i] = apps[i].copyWith(
-          iconFilePath: getAppIconFilePath(apps[i].appId),
-        );
-      }
-      appInsts[folder] = apps;
-    }
+    folders.addAll(libraryFolders);
   } catch (e) {
-    return (appInsts, SteamScanResult.unknownError);
+    return (folders, SteamScanResult.unknownError);
   }
-  if (appInsts.isEmpty) {
-    return (appInsts, SteamScanResult.libraryEmpty);
+  if (folders.isEmpty) {
+    return (folders, SteamScanResult.libraryEmpty);
   }
-  return (appInsts, SteamScanResult.fullyScanned);
+  return (folders, SteamScanResult.fullyScanned);
 }
 
-Future<List<String>> getSteamLibraryFolders() async {
-  List<String> folders = [];
+Future<List<InstalledSteamApps>> scanSteamLibraryFolder(String path) async {
+  final List<InstalledSteamApps> apps = [];
   try {
     if (!PlatformHelper.isWindowsApp()) {
-      return folders;
+      return apps;
     }
-    final steamInstallPath = getSteamInstallPath();
-    if (steamInstallPath == null) {
-      return folders;
+    final files = io.Directory(p.join(path, 'steamapps'))
+        .listSync()
+        .whereType<io.File>()
+        .where((file) {
+      return p.basename(file.path).startsWith('appmanifest_') &&
+          p.basename(file.path).endsWith('.acf');
+    }).toList();
+    for (final file in files) {
+      final appInfo = _getAppInfo(file.path);
+      if (appInfo != null) {
+        apps.add(appInfo);
+      }
     }
-    folders = _getLibraryFolders(
-        p.join(steamInstallPath, 'config', 'libraryfolders.vdf'));
+    for (var i = 0; i < apps.length; i += 1) {
+      apps[i] = apps[i].copyWith(
+        iconFilePath: getAppIconFilePath(apps[i].appId),
+      );
+    }
   } catch (e) {
     debugPrint(e.toString());
   }
-  return folders;
+  return apps;
 }
 
 List<String> _getLibraryFolders(String path) {

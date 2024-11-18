@@ -4,61 +4,44 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_io/io.dart' as io;
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../../common/steam/steam.dart';
-import '../../../model/gebura_model.dart';
-import '../../helper/url.dart';
 import '../../universal/universal.dart';
-
-String? _getSteamAppID(BuildContext context, LibraryListItem item) {
-  final state = context.read<GeburaBloc>().state;
-  if (item.localAppUUID != null && state.localTrackedAppInsts != null) {
-    for (final inst in state.localTrackedAppInsts!.values) {
-      if (inst.appUUID == item.localAppUUID &&
-          inst.steamLaunchSetting != null) {
-        return inst.steamLaunchSetting!.steamAppID;
-      }
-    }
-  }
-  return null;
-}
 
 class GeburaAppCoverImage extends StatelessWidget {
   const GeburaAppCoverImage({
-    required this.item,
+    this.url,
+    this.path,
     super.key,
   });
 
-  final LibraryListItem item;
+  final String? url;
+  final String? path;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        final steamAppID = _getSteamAppID(context, item);
-        if (steamAppID != null) {
-          final path = getAppCoverFilePath(steamAppID);
-          if (path != null) {
-            return ExtendedImage.file(
-              io.File(path),
-            );
-          }
+        if (path != null) {
+          return ExtendedImage.file(
+            io.File(path!),
+          );
+        } else if (url != null) {
+          return ExtendedImage.network(
+            url!,
+            height: 200,
+            loadStateChanged: (ExtendedImageState state) {
+              if (state.extendedImageLoadState == LoadState.failed) {
+                return ExtendedImage.asset(
+                  'assets/images/gebura_library_cover_placeholder.png',
+                );
+              }
+              return null;
+            },
+          );
+        } else {
+          return ExtendedImage.asset(
+            'assets/images/gebura_library_cover_placeholder.png',
+          );
         }
-        final placeholder = ExtendedImage.asset(
-          'assets/images/gebura_library_cover_placeholder.png',
-        );
-        if (!UrlHelper.isValidUrl(item.coverImageUrl)) {
-          return placeholder;
-        }
-        return ExtendedImage.network(
-          item.coverImageUrl,
-          height: 200,
-          loadStateChanged: (ExtendedImageState state) {
-            if (state.extendedImageLoadState == LoadState.failed) {
-              return placeholder;
-            }
-            return null;
-          },
-        );
       },
     );
   }
@@ -66,21 +49,28 @@ class GeburaAppCoverImage extends StatelessWidget {
 
 class GeburaAppIconImage extends StatelessWidget {
   const GeburaAppIconImage({
-    required this.item,
+    this.url,
+    this.path,
     super.key,
   });
 
-  final LibraryListItem item;
+  final String? url;
+  final String? path;
 
-  ImageProvider _buildImageProvider(BuildContext context) {
-    final steamAppID = _getSteamAppID(context, item);
-    if (steamAppID != null) {
-      final path = getAppIconFilePath(steamAppID);
-      if (path != null) {
-        return ExtendedFileImageProvider(io.File(path));
-      }
+  DecorationImage? _buildImage(BuildContext context) {
+    if (path != null) {
+      return DecorationImage(
+        image: ExtendedFileImageProvider(io.File(path!)),
+        fit: BoxFit.scaleDown,
+      );
+    } else if (url != null) {
+      return DecorationImage(
+        image: ExtendedNetworkImageProvider(url!),
+        fit: BoxFit.scaleDown,
+      );
+    } else {
+      return null;
     }
-    return ExtendedNetworkImageProvider(item.iconImageUrl);
   }
 
   @override
@@ -90,13 +80,10 @@ class GeburaAppIconImage extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            image: DecorationImage(
-              image: _buildImageProvider(context),
-              fit: BoxFit.scaleDown,
-            ),
+            image: _buildImage(context),
           ),
-          height: 24,
-          width: 24,
+          height: 20,
+          width: 20,
         );
       },
     );
@@ -105,21 +92,28 @@ class GeburaAppIconImage extends StatelessWidget {
 
 class GeburaAppBackgroundImage extends StatelessWidget {
   const GeburaAppBackgroundImage({
-    required this.item,
+    this.url,
+    this.path,
     super.key,
   });
 
-  final LibraryListItem item;
+  final String? url;
+  final String? path;
 
-  ImageProvider _buildImageProvider(BuildContext context) {
-    final steamAppID = _getSteamAppID(context, item);
-    if (steamAppID != null) {
-      final path = getAppBackgroundFilePath(steamAppID);
-      if (path != null) {
-        return ExtendedFileImageProvider(io.File(path));
-      }
+  DecorationImage? _buildImage(BuildContext context) {
+    if (path != null) {
+      return DecorationImage(
+        image: ExtendedFileImageProvider(io.File(path!)),
+        fit: BoxFit.cover,
+      );
+    } else if (url != null) {
+      return DecorationImage(
+        image: ExtendedNetworkImageProvider(url!),
+        fit: BoxFit.cover,
+      );
+    } else {
+      return null;
     }
-    return ExtendedNetworkImageProvider(item.backgroundImageUrl);
   }
 
   @override
@@ -129,10 +123,7 @@ class GeburaAppBackgroundImage extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: UniversalUI.of(context).defaultBorderRadius,
-            image: DecorationImage(
-              image: _buildImageProvider(context),
-              fit: BoxFit.cover,
-            ),
+            image: _buildImage(context),
           ),
           height: 400,
         );

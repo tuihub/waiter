@@ -54,7 +54,7 @@ class ListManagePageState extends State<ListManagePage> {
                 primaryItems: [
                   if (widget.onAdd != null)
                     UniversalToolBarItem(
-                      icon: Icons.add,
+                      icon: UniversalUI.of(context).icons.add,
                       onPressed: widget.onAdd,
                       label: Text(S.of(context).add),
                     ),
@@ -62,13 +62,13 @@ class ListManagePageState extends State<ListManagePage> {
                 secondaryItems: [
                   if (widget.onAdd != null)
                     UniversalToolBarItem(
-                      icon: Icons.add,
+                      icon: UniversalUI.of(context).icons.add,
                       onPressed: widget.onAdd,
                       label: Text(S.of(context).add),
                     ),
                   if (widget.popupMenuItems != null) ...widget.popupMenuItems!,
                   UniversalToolBarItem(
-                    icon: Icons.refresh,
+                    icon: UniversalUI.of(context).icons.refresh,
                     onPressed: widget.onRefresh,
                     label: Text(S.of(context).refresh),
                   ),
@@ -83,8 +83,8 @@ class ListManagePageState extends State<ListManagePage> {
             if (widget.processing)
               const Center(
                 child: CircularProgressIndicator(),
-              ),
-            if (widget.msg != null && widget.msg!.isNotEmpty)
+              )
+            else if (widget.msg != null && widget.msg!.isNotEmpty)
               Center(
                 child: Text(widget.msg!),
               )
@@ -92,7 +92,7 @@ class ListManagePageState extends State<ListManagePage> {
               Center(
                 child: UniversalElevatedButton.icon(
                   onPressed: widget.onAdd,
-                  icon: const Icon(Icons.add),
+                  icon: Icon(UniversalUI.of(context).icons.add),
                   label: Text(S.of(context).add),
                 ),
               )

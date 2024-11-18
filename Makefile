@@ -12,3 +12,8 @@ format:
 
 generate_dart:
 	dart run build_runner build
+
+generate: generate_rust_bridge generate_dart
+
+watch:
+	dart run build_runner watch

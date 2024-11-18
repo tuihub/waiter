@@ -5,8 +5,7 @@ import 'package:universal_io/io.dart';
 import '../../rust/api/app_scan.dart' as rust;
 import 'model.dart';
 
-Future<CommonAppFolderScanResult> scanCommonApps(
-    CommonAppFolderScanSetting setting) async {
+Future<CommonAppFolderScanResult> scanCommonApps(CommonAppScan setting) async {
   try {
     final scannedEntries = await rust.scanCommonApps(
         setting: rust.CommonAppScanSetting(
@@ -73,7 +72,7 @@ Future<CommonAppFolderScanResult> scanCommonApps(
 
 (List<InstalledCommonApps>, List<CommonAppFolderScanResultDetail>)
     _buildAppList(
-  CommonAppFolderScanSetting setting,
+  CommonAppScan setting,
   List<CommonAppFolderScanResultDetail> entries,
 ) {
   entries.sort((a, b) => a.path.length.compareTo(b.path.length));
@@ -146,9 +145,9 @@ Future<CommonAppFolderScanResult> scanCommonApps(
     var version = app.version;
     late int indexOffset;
     switch (setting.pathFieldMatcherAlignment) {
-      case CommonAppFolderScanPathFieldMatcherAlignment.left:
+      case CommonAppScanPathFieldMatcherAlignment.left:
         indexOffset = 0;
-      case CommonAppFolderScanPathFieldMatcherAlignment.right:
+      case CommonAppScanPathFieldMatcherAlignment.right:
         indexOffset = max(pathFields.length, setting.pathFieldMatcher.length) -
             pathFields.length;
     }
@@ -162,27 +161,27 @@ Future<CommonAppFolderScanResult> scanCommonApps(
         pathFields.sublist(0, i + 1).join(Platform.pathSeparator),
       ].join();
       switch (setting.pathFieldMatcher[i + indexOffset]) {
-        case CommonAppFolderScanPathFieldMatcher.name:
+        case CommonAppScanPathFieldMatcher.name:
           name = fieldValue;
           if (entryMap[currentPath] != null) {
             entryMap[currentPath] = entryMap[currentPath]!.copyWith(
               usedMatchers: [
                 ...entryMap[currentPath]!.usedMatchers,
-                CommonAppFolderScanPathFieldMatcher.name
+                CommonAppScanPathFieldMatcher.name
               ],
             );
           }
-        case CommonAppFolderScanPathFieldMatcher.version:
+        case CommonAppScanPathFieldMatcher.version:
           version = fieldValue;
           if (entryMap[currentPath] != null) {
             entryMap[currentPath] = entryMap[currentPath]!.copyWith(
               usedMatchers: [
                 ...entryMap[currentPath]!.usedMatchers,
-                CommonAppFolderScanPathFieldMatcher.version
+                CommonAppScanPathFieldMatcher.version
               ],
             );
           }
-        case CommonAppFolderScanPathFieldMatcher.ignore:
+        case CommonAppScanPathFieldMatcher.ignore:
           continue;
       }
     }

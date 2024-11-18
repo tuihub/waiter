@@ -1,201 +1,9 @@
 part of 'gebura_library_settings.dart';
 
-class GeburaCommonAppScanResultPanel extends StatelessWidget {
-  const GeburaCommonAppScanResultPanel({super.key, required this.folder});
-
-  final String folder;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final (
-        tracked,
-        untracked,
-      ) = state.analyzeCommonAppInsts(folder);
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(folder),
-          shape: UniversalUI.of(context).defaultShape,
-          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
-          leading: AppBarHelper.defaultRightLeading(context),
-          actions: [
-            UniversalOutlinedButton.icon(
-              onPressed: () {
-                context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(
-                      refreshSteam: false,
-                    ));
-              },
-              icon: Icon(UniversalUI.of(context).icons.refresh),
-              label: const Text('刷新'),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: EdgeInsets.zero,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).dividerColor,
-              ),
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: _CommonGameList(
-              untracked: untracked,
-              tracked: tracked,
-            ),
-          ),
-        ),
-      );
-    });
-  }
-}
-
-class _CommonGameList extends StatefulWidget {
-  const _CommonGameList({
-    required this.untracked,
-    required this.tracked,
-  });
-
-  final List<InstalledCommonApps> untracked;
-  final List<InstalledCommonApps> tracked;
-
-  @override
-  State<_CommonGameList> createState() => _CommonGameListState();
-}
-
-class _CommonGameListState extends State<_CommonGameList> {
-  @override
-  void initState() {
-    super.initState();
-    selectedIndex = List.generate(widget.untracked.length, (index) => false);
-  }
-
-  late List<bool> selectedIndex;
-
-  DataRow _buildRow(InstalledCommonApps app, bool tracked) {
-    return DataRow(
-      selected: tracked || selectedIndex[widget.untracked.indexOf(app)],
-      onSelectChanged: tracked
-          ? null
-          : (isSelected) {
-              setState(() {
-                selectedIndex[widget.untracked.indexOf(app)] =
-                    isSelected ?? false;
-              });
-            },
-      cells: [
-        DataCell(
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(
-                flex: 1,
-                child: SizedBox(),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  app.name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: tracked ? Theme.of(context).disabledColor : null,
-                      ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: AutoSizeText(
-                  app.installPath,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: tracked ? Theme.of(context).disabledColor : null,
-                      ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-            ],
-          ),
-        ),
-        DataCell(
-          Align(
-              alignment: Alignment.centerRight,
-              child: UniversalOutlinedButton.icon(
-                onPressed: () async {
-                  await OpenFile.open(app.installPath);
-                },
-                icon: Icon(UniversalUI.of(context).icons.folder, size: 16),
-                label: const Text('查看'),
-              )),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DataTable2(
-      onSelectAll: (isSelectedAll) {
-        if (isSelectedAll ?? false) {
-          setState(() {
-            selectedIndex =
-                List.generate(widget.untracked.length, (index) => true);
-          });
-        } else {
-          setState(() {
-            selectedIndex =
-                List.generate(widget.untracked.length, (index) => false);
-          });
-        }
-      },
-      columns: [
-        DataColumn2(
-          label: Text(
-            '游戏列表${selectedIndex.contains(true) ? '（已选${selectedIndex.where((element) => element).length}个）' : ''}',
-            overflow: TextOverflow.ellipsis,
-          ),
-          size: ColumnSize.L,
-        ),
-        DataColumn2(
-          label: Align(
-            alignment: Alignment.centerRight,
-            child: UniversalElevatedButton(
-              onPressed: selectedIndex.contains(true)
-                  ? () {
-                      // context.read<GeburaBloc>().add(
-                      //       GeburaTrackCommonAppsEvent(
-                      //         widget.apps
-                      //             .where((element) => selectedIndex[
-                      //                 widget.apps.indexOf(element)])
-                      //             .map((e) => e.installPath)
-                      //             .toList(),
-                      //       ),
-                      //     );
-                      for (var i = 0; i < selectedIndex.length; i++) {
-                        selectedIndex[i] = false;
-                      }
-                    }
-                  : null,
-              child: const Text('导入选中'),
-            ),
-          ),
-          fixedWidth: 150,
-        ),
-      ],
-      rows: [
-        ...widget.untracked.map((e) => _buildRow(e, false)),
-        ...widget.tracked.map((e) => _buildRow(e, true)),
-      ],
-    );
-  }
-}
-
 class _CommonAppFolderScanSettingPage extends StatefulWidget {
   const _CommonAppFolderScanSettingPage({this.initialValue});
 
-  final CommonAppFolderScanSetting? initialValue;
+  final CommonAppScan? initialValue;
 
   @override
   State<_CommonAppFolderScanSettingPage> createState() =>
@@ -207,8 +15,11 @@ class _CommonAppFolderScanSettingPageState
   @override
   void initState() {
     super.initState();
-    final initialValue =
-        widget.initialValue ?? CommonAppFolderScanSetting.empty();
+    final initialValue = widget.initialValue ??
+        CommonAppScan(
+          uuid: const Uuid().v1(),
+          basePath: '',
+        );
 
     basePath = initialValue.basePath;
     excludeDirectoryMatchers = initialValue.excludeDirectoryMatchers;
@@ -231,21 +42,24 @@ class _CommonAppFolderScanSettingPageState
         initialValue.excludeExecutableMatchers.join('\n');
   }
 
-  void _saveAndExit(BuildContext context) {
+  Future<void> _saveAndExit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      context.read<GeburaBloc>().add(
-            GeburaSaveLocalCommonAppFolderSettingEvent(setting),
-          );
-      Navigator.of(context).pop();
+      final success = await context
+          .read<GeburaBloc>()
+          .saveLocalCommonAppLibraryFolder(setting);
+      if (success) {
+        Navigator.of(context).pop();
+      } else {
+        Toast(title: '', message: '保存失败').show(context);
+      }
     }
   }
 
   void _constructPathFieldMatcher() {
     final length = maxInstallDirDepth - minInstallDirDepth + 1;
     pathFieldMatcher = List.generate(length, (index) {
-      return pathFieldMatcherMap[index] ??
-          CommonAppFolderScanPathFieldMatcher.ignore;
+      return pathFieldMatcherMap[index] ?? CommonAppScanPathFieldMatcher.ignore;
     });
   }
 
@@ -256,9 +70,9 @@ class _CommonAppFolderScanSettingPageState
     }
   }
 
-  CommonAppFolderScanSetting get setting {
+  CommonAppScan get setting {
     _constructPathFieldMatcher();
-    return CommonAppFolderScanSetting(
+    return CommonAppScan(
       basePath: basePath,
       excludeDirectoryMatchers: excludeDirectoryMatchers,
       minInstallDirDepth: minInstallDirDepth,
@@ -269,6 +83,7 @@ class _CommonAppFolderScanSettingPageState
       excludeExecutableMatchers: excludeExecutableMatchers,
       minExecutableDepth: minExecutableDepth,
       maxExecutableDepth: maxExecutableDepth,
+      uuid: '',
     );
   }
 
@@ -276,9 +91,9 @@ class _CommonAppFolderScanSettingPageState
   late List<String> excludeDirectoryMatchers;
   late int minInstallDirDepth;
   late int maxInstallDirDepth;
-  late List<CommonAppFolderScanPathFieldMatcher> pathFieldMatcher;
-  late Map<int, CommonAppFolderScanPathFieldMatcher> pathFieldMatcherMap;
-  late CommonAppFolderScanPathFieldMatcherAlignment pathFieldMatcherAlignment;
+  late List<CommonAppScanPathFieldMatcher> pathFieldMatcher;
+  late Map<int, CommonAppScanPathFieldMatcher> pathFieldMatcherMap;
+  late CommonAppScanPathFieldMatcherAlignment pathFieldMatcherAlignment;
   late List<String> includeExecutableMatchers;
   late List<String> excludeExecutableMatchers;
   late int minExecutableDepth;
@@ -399,19 +214,18 @@ class _CommonAppFolderScanSettingPageState
 
   @override
   Widget build(BuildContext context) {
-    return PopAlert(
-      title: '保存更改？',
-      content: '是否保存更改再退出',
-      onConfirm: () {
-        _saveAndExit(context);
-      },
-      onDeny: () {},
-      onCancel: () {},
-      child: Scaffold(
+    return PopAlert(onConfirm: () async {
+      await _saveAndExit(context);
+    }, builder: (context, triggerPop) {
+      return Scaffold(
         appBar: AppBar(
           title: const Text('文件夹扫描设置'),
           shape: UniversalUI.of(context).defaultShape,
           backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
+          leading: IconButton(
+            icon: Icon(UniversalUI.of(context).icons.arrowBack),
+            onPressed: triggerPop,
+          ),
           actions: [
             UniversalTextButton.icon(
               label: const Text('保存并退出'),
@@ -600,7 +414,7 @@ class _CommonAppFolderScanSettingPageState
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 2),
                                         child: UniversalDropdownButtonFormField<
-                                            CommonAppFolderScanPathFieldMatcher>(
+                                            CommonAppScanPathFieldMatcher>(
                                           value: pathFieldMatcherMap[i],
                                           isExpanded: true,
                                           onChanged: (value) {
@@ -608,10 +422,9 @@ class _CommonAppFolderScanSettingPageState
                                               pathFieldMatcherMap[i] = value!;
                                             });
                                           },
-                                          items:
-                                              CommonAppFolderScanPathFieldMatcher
-                                                  .values
-                                                  .map((e) {
+                                          items: CommonAppScanPathFieldMatcher
+                                              .values
+                                              .map((e) {
                                             return UniversalDropdownMenuItem(
                                               value: e,
                                               child: Text(
@@ -634,19 +447,19 @@ class _CommonAppFolderScanSettingPageState
                                   ),
                                   UniversalSwitchFormField(
                                     title: Text(pathFieldMatcherAlignment ==
-                                            CommonAppFolderScanPathFieldMatcherAlignment
+                                            CommonAppScanPathFieldMatcherAlignment
                                                 .right
                                         ? '右对齐'
                                         : '左对齐'),
                                     initialValue: pathFieldMatcherAlignment ==
-                                        CommonAppFolderScanPathFieldMatcherAlignment
+                                        CommonAppScanPathFieldMatcherAlignment
                                             .right,
                                     onChanged: (value) {
                                       setState(() {
                                         pathFieldMatcherAlignment = value
-                                            ? CommonAppFolderScanPathFieldMatcherAlignment
+                                            ? CommonAppScanPathFieldMatcherAlignment
                                                 .right
-                                            : CommonAppFolderScanPathFieldMatcherAlignment
+                                            : CommonAppScanPathFieldMatcherAlignment
                                                 .left;
                                       });
                                     },
@@ -836,7 +649,7 @@ class _CommonAppFolderScanSettingPageState
                       builder: (context, node) {
                         List<Widget> chips = [];
                         final usedMatchersCount =
-                            <CommonAppFolderScanPathFieldMatcher, int>{};
+                            <CommonAppScanPathFieldMatcher, int>{};
                         if (node.data != null) {
                           for (final matcher in node.data!.usedMatchers) {
                             usedMatchersCount.update(
@@ -903,7 +716,7 @@ class _CommonAppFolderScanSettingPageState
             ),
           ),
         ]),
-      ),
-    );
+      );
+    });
   }
 }

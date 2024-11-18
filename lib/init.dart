@@ -44,7 +44,7 @@ Future<MyApp> init() async {
   final common = await ClientCommonRepo.init();
 
   // api
-  final api = ApiHelper();
+  final api = ApiHelper.local();
 
   // system tray
   await _initSystemTray();

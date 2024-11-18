@@ -77,6 +77,8 @@
   "launcherError": "启动器错误",
   "scanningLocalFiles": "正在扫描本地文件",
   "newApplicationFound": "发现 {number} 个新应用",
+  "importingCommonApplications": "正在导入应用程序",
+  "importCommonApplicationFinished": "导入应用程序完成，成功 {success} 个，失败 {failed} 个。",
   "importingSteamApplications": "正在导入Steam应用程序",
   "importSteamApplicationFinished": "导入Steam应用程序完成，成功 {success} 个，失败 {failed} 个。",
   "noAppInLibrary": "库中没有应用",

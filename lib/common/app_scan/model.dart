@@ -1,14 +1,13 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-part 'model.freezed.dart';
-part 'model.g.dart';
+part 'model.mapper.dart';
 
-const defaultCommonAppFolderScanTargetFileMatchers = <String>[
+const defaultCommonAppScanTargetFileMatchers = <String>[
   '*.exe',
   '*.bat',
 ];
 
-const defaultCommonAppFolderScanExcludeFileMatchers = <String>[
+const defaultCommonAppScanExcludeFileMatchers = <String>[
   'UnityCrashHandler64.exe',
   'UnityCrashHandler32.exe',
   'UnityCrashHandler.exe',
@@ -41,7 +40,7 @@ const defaultCommonAppFolderScanExcludeFileMatchers = <String>[
   'setup.exe',
 ];
 
-const defaultCommonAppFolderScanExcludeDirectoryMatchers = <String>[
+const defaultCommonAppScanExcludeDirectoryMatchers = <String>[
   '.*',
 ];
 
@@ -50,13 +49,109 @@ const allowedMaxInstallDirDepth = 20;
 const allowedMinExecutableDepth = 1;
 const allowedMaxExecutableDepth = 20;
 
-enum CommonAppFolderScanPathFieldMatcher {
+@MappableClass()
+class CommonAppScan with CommonAppScanMappable {
+  final String uuid;
+  // base
+  final String basePath;
+  final bool enableAutoScan;
+  // install dir matcher
+  final List<String> excludeDirectoryMatchers; // walk
+  final int minInstallDirDepth; // build
+  final int maxInstallDirDepth; // build
+  final List<CommonAppScanPathFieldMatcher> pathFieldMatcher; // build
+  final CommonAppScanPathFieldMatcherAlignment
+      pathFieldMatcherAlignment; // build
+  final List<String> includeExecutableMatchers; // walk
+  final List<String> excludeExecutableMatchers; // walk
+  // extra executable file matcher
+  final int minExecutableDepth; // build
+  final int maxExecutableDepth; // build
+
+  const CommonAppScan({
+    required this.uuid,
+    required this.basePath,
+    this.enableAutoScan = true,
+    this.excludeDirectoryMatchers =
+        defaultCommonAppScanExcludeDirectoryMatchers,
+    this.minInstallDirDepth = 1,
+    this.maxInstallDirDepth = 1,
+    this.pathFieldMatcher = const [
+      CommonAppScanPathFieldMatcher.name,
+      CommonAppScanPathFieldMatcher.ignore,
+    ],
+    this.pathFieldMatcherAlignment =
+        CommonAppScanPathFieldMatcherAlignment.left,
+    this.includeExecutableMatchers = defaultCommonAppScanTargetFileMatchers,
+    this.excludeExecutableMatchers = defaultCommonAppScanExcludeFileMatchers,
+    this.minExecutableDepth = 1,
+    this.maxExecutableDepth = 2,
+  });
+
+  static const fromMap = CommonAppScanMapper.fromMap;
+  static const fromJson = CommonAppScanMapper.fromJson;
+}
+
+@MappableClass()
+class CommonAppFolderScanResult with CommonAppFolderScanResultMappable {
+  final List<InstalledCommonApps> installedApps;
+  final List<CommonAppFolderScanResultDetail> details;
+  final CommonAppFolderScanResultCode code;
+  final String? msg;
+
+  const CommonAppFolderScanResult({
+    required this.installedApps,
+    required this.details,
+    required this.code,
+    this.msg,
+  });
+}
+
+enum CommonAppFolderScanResultCode {
+  unavailable,
+  unknownError,
+  baseFolderNotFound,
+  success,
+}
+
+@MappableClass()
+class CommonAppFolderScanResultDetail
+    with CommonAppFolderScanResultDetailMappable {
+  final String path;
+  final CommonAppFolderScanEntryType type;
+  final CommonAppFolderScanEntryStatus status;
+  final List<CommonAppScanPathFieldMatcher> usedMatchers;
+
+  CommonAppFolderScanResultDetail({
+    required this.path,
+    required this.type,
+    required this.status,
+    this.usedMatchers = const [],
+  });
+}
+
+@MappableClass()
+class InstalledCommonApps with InstalledCommonAppsMappable {
+  final String name;
+  final String version;
+  final String installPath;
+  final List<String> launcherPaths;
+
+  const InstalledCommonApps({
+    required this.name,
+    required this.version,
+    required this.installPath,
+    required this.launcherPaths,
+  });
+}
+
+enum CommonAppScanPathFieldMatcher {
   ignore,
   name,
   version,
 }
 
-enum CommonAppFolderScanPathFieldMatcherAlignment {
+enum CommonAppScanPathFieldMatcherAlignment {
   left,
   right,
 }
@@ -72,94 +167,4 @@ enum CommonAppFolderScanEntryStatus {
   skipped,
   accessed,
   hit,
-}
-
-@freezed
-class CommonAppFolderScanSetting with _$CommonAppFolderScanSetting {
-  const factory CommonAppFolderScanSetting({
-    // base path
-    required String basePath,
-    // install dir matcher
-    required List<String> excludeDirectoryMatchers, // walk
-    required int minInstallDirDepth, // build
-    required int maxInstallDirDepth, // build
-    required List<CommonAppFolderScanPathFieldMatcher>
-        pathFieldMatcher, // build
-    required CommonAppFolderScanPathFieldMatcherAlignment
-        pathFieldMatcherAlignment, // build
-    required List<String> includeExecutableMatchers, // walk
-    required List<String> excludeExecutableMatchers, // walk
-    // extra executable file matcher
-    required int minExecutableDepth, // build
-    required int maxExecutableDepth, // build
-  }) = _CommonAppFolderScanSetting;
-
-  factory CommonAppFolderScanSetting.empty() =>
-      const CommonAppFolderScanSetting(
-        basePath: '',
-        excludeDirectoryMatchers:
-            defaultCommonAppFolderScanExcludeDirectoryMatchers,
-        minInstallDirDepth: 1,
-        maxInstallDirDepth: 1,
-        pathFieldMatcher: [
-          CommonAppFolderScanPathFieldMatcher.name,
-          CommonAppFolderScanPathFieldMatcher.ignore,
-        ],
-        pathFieldMatcherAlignment:
-            CommonAppFolderScanPathFieldMatcherAlignment.left,
-        includeExecutableMatchers: defaultCommonAppFolderScanTargetFileMatchers,
-        excludeExecutableMatchers:
-            defaultCommonAppFolderScanExcludeFileMatchers,
-        minExecutableDepth: 1,
-        maxExecutableDepth: 2,
-      );
-
-  factory CommonAppFolderScanSetting.fromJson(Map<String, Object?> json) =>
-      _$CommonAppFolderScanSettingFromJson(json);
-}
-
-@freezed
-class CommonAppFolderScanResult with _$CommonAppFolderScanResult {
-  const factory CommonAppFolderScanResult({
-    required List<InstalledCommonApps> installedApps,
-    required List<CommonAppFolderScanResultDetail> details,
-    required CommonAppFolderScanResultCode code,
-    String? msg,
-  }) = _CommonAppFolderScanResult;
-
-  factory CommonAppFolderScanResult.fromJson(Map<String, Object?> json) =>
-      _$CommonAppFolderScanResultFromJson(json);
-}
-
-enum CommonAppFolderScanResultCode {
-  unavailable,
-  unknownError,
-  baseFolderNotFound,
-  success,
-}
-
-@freezed
-class CommonAppFolderScanResultDetail with _$CommonAppFolderScanResultDetail {
-  const factory CommonAppFolderScanResultDetail({
-    required String path,
-    required CommonAppFolderScanEntryType type,
-    required CommonAppFolderScanEntryStatus status,
-    @Default([]) List<CommonAppFolderScanPathFieldMatcher> usedMatchers,
-  }) = _CommonAppFolderScanResultDetail;
-
-  factory CommonAppFolderScanResultDetail.fromJson(Map<String, Object?> json) =>
-      _$CommonAppFolderScanResultDetailFromJson(json);
-}
-
-@Freezed(makeCollectionsUnmodifiable: false)
-class InstalledCommonApps with _$InstalledCommonApps {
-  const factory InstalledCommonApps({
-    required String name,
-    required String version,
-    required String installPath,
-    required List<String> launcherPaths,
-  }) = _InstalledCommonApps;
-
-  factory InstalledCommonApps.fromJson(Map<String, Object?> json) =>
-      _$InstalledCommonAppsFromJson(json);
 }

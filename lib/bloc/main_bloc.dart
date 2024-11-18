@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:dao/dao.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -20,10 +22,10 @@ import '../consts.dart';
 import '../l10n/l10n.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
+import '../repo/gebura/gebura_repo.dart';
 import '../repo/grpc/api_helper.dart';
 import '../repo/grpc/client.dart';
 import '../repo/local/common.dart';
-import '../repo/local/gebura.dart';
 import '../repo/local/yesod.dart';
 import 'chesed/chesed_bloc.dart';
 import 'client_setting/client_setting_bloc.dart';
@@ -72,11 +74,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             state.currentUser!.id.id.toHexString(),
           )
         : '';
-    final geburaRepo = await GeburaRepo.init(_basePath, repoPath);
+    GetIt.I.registerSingleton(GeburaDao(AppDatabase(repoPath)));
+    GetIt.I.registerSingleton(GeburaRepo());
     final yesodRepo = await YesodRepo.init(repoPath);
 
     _tipherethBloc = TipherethBloc(_api);
-    _geburaBloc = GeburaBloc(_api, geburaRepo, state.currentDeviceId);
+    _geburaBloc = GeburaBloc();
     _yesodBloc = YesodBloc(_api, yesodRepo);
     _chesedBloc = ChesedBloc(_api);
     _netzachBloc = NetzachBloc(_api);
@@ -102,11 +105,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
     on<MainEnterLocalModeEvent>((event, emit) async {
       _pruneChild();
-      final client = await clientFactory(
-        config: const ServerConfig('localhost', 10000, false),
-      );
       final servers = repo.servers ?? {};
-      _api.init(client, '', '');
+      GetIt.I.registerSingleton(ApiHelper.local());
       await _repo.set(repo.copyWith(lastServerId: '', servers: servers));
       final newState = MainAutoLoginState(
         state.copyWith(
@@ -172,7 +172,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             servers[config.id] = config;
             await _repo
                 .set(repo.copyWith(lastServerId: config.id, servers: servers));
-            _api.init(client, resp.accessToken, resp.refreshToken);
+            GetIt.I.registerSingleton(
+                ApiHelper.grpc(client, resp.accessToken, resp.refreshToken));
             final newState = MainAutoLoginState(
               state.copyWith(
                 currentServer: config,
@@ -318,7 +319,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         servers[config.id] = config;
         await _repo
             .set(repo.copyWith(lastServerId: config.id, servers: servers));
-        _api.init(client, accessToken, refreshToken);
+        GetIt.I.registerSingleton(
+            ApiHelper.grpc(client, accessToken, refreshToken));
         final newState = MainManualLoginState(
           state.copyWith(
             currentServer: config,

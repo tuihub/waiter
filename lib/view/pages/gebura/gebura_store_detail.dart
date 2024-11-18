@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,9 +23,10 @@ class GeburaStoreDetail extends StatelessWidget {
         msg = state.msg ?? msg;
       }
     }, builder: (context, state) {
-      final apps =
-          state.appInfoMap != null ? state.appInfoMap![appID.id] : null;
-      final app = apps != null ? mixAppInfo(apps) : null;
+      // final apps =
+      //     state.appInfoMap != null ? state.appInfoMap![appID.id] : null;
+      // final app = apps != null ? mixAppInfo(apps) : null;
+      const AppInfoMixed? app = null;
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [
@@ -109,29 +108,29 @@ class GeburaStoreDetail extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
-                                  if (state.purchasedAppInfos?.contains(app) ??
-                                      false)
-                                    const UniversalElevatedButton(
-                                      onPressed: null,
-                                      child: Text('已在库中'),
-                                    )
-                                  else
-                                    UniversalElevatedButton(
-                                      onPressed: () {
-                                        unawaited(showDialog<void>(
-                                          context: context,
-                                          builder: (_) {
-                                            return BlocProvider.value(
-                                              value: context.read<GeburaBloc>(),
-                                              child: PurchaseAppDialog(
-                                                app: app,
-                                              ),
-                                            );
-                                          },
-                                        ));
-                                      },
-                                      child: const Text('添加至游戏库'),
-                                    ),
+                                  // if (state.purchasedAppInfos?.contains(app) ??
+                                  //     false)
+                                  //   const UniversalElevatedButton(
+                                  //     onPressed: null,
+                                  //     child: Text('已在库中'),
+                                  //   )
+                                  // else
+                                  //   UniversalElevatedButton(
+                                  //     onPressed: () {
+                                  //       unawaited(showDialog<void>(
+                                  //         context: context,
+                                  //         builder: (_) {
+                                  //           return BlocProvider.value(
+                                  //             value: context.read<GeburaBloc>(),
+                                  //             child: PurchaseAppDialog(
+                                  //               app: app,
+                                  //             ),
+                                  //           );
+                                  //         },
+                                  //       ));
+                                  //     },
+                                  //     child: const Text('添加至游戏库'),
+                                  //   ),
                                   const SizedBox(
                                     width: 24,
                                   ),

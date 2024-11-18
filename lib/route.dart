@@ -443,13 +443,13 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
       GeburaLibrarySettingsActions.commonAppScanResult:
-          GeburaCommonAppScanResultPanel(
-        folder: $extra is String ? $extra! as String : '',
+          GeburaAppScanResultPanel(
+        uuid: $extra is String ? $extra! as String : '',
       ),
-      GeburaLibrarySettingsActions.steamAppScanResult:
-          GeburaSteamAppScanResultPanel(
-        folder: $extra is String ? $extra! as String : '',
-      ),
+      // GeburaLibrarySettingsActions.steamAppScanResult:
+      //     GeburaSteamAppScanResultPanel(
+      //   folder: $extra is String ? $extra! as String : '',
+      // ),
     };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(

@@ -31,3 +31,37 @@ class UniversalSwitch extends StatelessWidget {
     }
   }
 }
+
+class UniversalRadio<T> extends StatelessWidget {
+  const UniversalRadio({
+    super.key,
+    required this.value,
+    this.groupValue,
+    this.onChanged,
+  });
+
+  final T value;
+  final T? groupValue;
+  final ValueChanged<T?>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final design = UniversalUI.of(context).design;
+
+    switch (design) {
+      case UIDesign.material:
+        return material.Radio<T>(
+          value: value,
+          groupValue: groupValue,
+          onChanged: onChanged,
+        );
+      case UIDesign.fluent:
+        return fluent.RadioButton(
+          onChanged: (v) {
+            onChanged?.call(value);
+          },
+          checked: value == groupValue,
+        );
+    }
+  }
+}

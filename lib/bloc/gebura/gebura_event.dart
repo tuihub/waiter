@@ -5,8 +5,6 @@ sealed class GeburaEvent {}
 
 final class GeburaInitEvent extends GeburaEvent {}
 
-// Events handle ui data.
-
 final class GeburaRefreshLibraryListEvent extends GeburaEvent {}
 
 final class GeburaApplyLibraryFilterEvent extends GeburaEvent {
@@ -19,58 +17,73 @@ final class GeburaApplyLibraryFilterEvent extends GeburaEvent {
   });
 }
 
-// Events handle local data.
-
 final class GeburaScanLocalLibraryEvent extends GeburaEvent {
-  final bool refreshSteam;
+  final bool doAutoRefresh;
+  final List<String>? refreshSteam;
   final List<String>? refreshCommon;
 
   GeburaScanLocalLibraryEvent({
-    this.refreshSteam = true,
+    this.doAutoRefresh = false,
+    this.refreshSteam,
     this.refreshCommon,
   });
 }
 
-final class GeburaTrackSteamAppsEvent extends GeburaEvent {
-  final List<String> steamAppIDs;
+final class GeburaTrackCommonAppsEvent extends GeburaEvent {
+  final List<String> uuids;
 
-  GeburaTrackSteamAppsEvent(this.steamAppIDs);
+  GeburaTrackCommonAppsEvent(this.uuids);
+}
+
+final class GeburaTrackSteamAppsEvent extends GeburaEvent {
+  final List<String> uuids;
+
+  GeburaTrackSteamAppsEvent(this.uuids);
+}
+
+final class GeburaRefreshAppInfoEvent extends GeburaEvent {
+  final String uuid;
+
+  GeburaRefreshAppInfoEvent(this.uuid);
 }
 
 final class GeburaSaveLocalAppInstLaunchSettingEvent extends GeburaEvent {
-  final String uuid;
-  final LocalCommonAppInstLaunchSetting? commonSetting;
-  final LocalSteamAppInstLaunchSetting? steamSetting;
+  final String launcherUUID;
+  final LocalAppInstLaunchCommon? commonSetting;
+  final LocalAppInstLaunchSteam? steamSetting;
 
   GeburaSaveLocalAppInstLaunchSettingEvent(
-    this.uuid, {
+    this.launcherUUID, {
     this.commonSetting,
     this.steamSetting,
   });
 }
 
 final class GeburaSaveLastLaunchAppInstEvent extends GeburaEvent {
-  final String uuid;
+  final String launcherUUID;
 
-  GeburaSaveLastLaunchAppInstEvent(this.uuid);
+  GeburaSaveLastLaunchAppInstEvent(this.launcherUUID);
 }
 
 final class GeburaLaunchLocalAppEvent extends GeburaEvent {
-  final String uuid;
+  final String? appUUID;
+  final String? launcherUUID;
 
-  GeburaLaunchLocalAppEvent(this.uuid);
-}
-
-final class GeburaLaunchLocalCommonAppInstEvent extends GeburaEvent {
-  final String uuid;
-
-  GeburaLaunchLocalCommonAppInstEvent(this.uuid);
+  GeburaLaunchLocalAppEvent({this.appUUID, this.launcherUUID});
 }
 
 final class GeburaSaveLocalCommonAppFolderSettingEvent extends GeburaEvent {
-  final CommonAppFolderScanSetting setting;
+  final CommonAppScan setting;
 
   GeburaSaveLocalCommonAppFolderSettingEvent(this.setting);
+}
+
+final class GeburaLoadAppInstsEvent extends GeburaEvent {
+  GeburaLoadAppInstsEvent();
+}
+
+final class GeburaLoadAppInstLaunchersEvent extends GeburaEvent {
+  GeburaLoadAppInstLaunchersEvent();
 }
 
 // Events handle server data.
@@ -147,12 +160,6 @@ final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {
   final bool? refreshAfterSuccess;
 
   GeburaFetchBoundAppInfosEvent(this.appID, {this.refreshAfterSuccess});
-}
-
-final class GeburaRefreshAppInfoEvent extends GeburaEvent {
-  final List<AppInfoID> appInfoID;
-
-  GeburaRefreshAppInfoEvent(this.appInfoID);
 }
 
 final class GeburaAssignAppWithNewInfoEvent extends GeburaEvent {

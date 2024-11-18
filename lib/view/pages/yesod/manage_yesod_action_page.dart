@@ -13,7 +13,6 @@ import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../components/pop_alert.dart';
 import '../../components/toast.dart';
-import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
@@ -125,7 +124,7 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
               subtitle: OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
+                    UniversalPageRoute(
                       builder: (context) => _YesodActionConfigurePage(
                         features: features,
                         actions: actions,
@@ -252,7 +251,7 @@ class _YesodActionManageEditPanelState
               subtitle: OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
+                    UniversalPageRoute(
                       builder: (context) => _YesodActionConfigurePage(
                         features: features,
                         actions: actions,
@@ -340,135 +339,134 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
   @override
   Widget build(BuildContext context) {
     return PopAlert(
-      title: '确定退出',
-      content: '是否保存更改再退出',
       onConfirm: () {
         widget.onSave(widget.actions);
         const Toast(title: '', message: '已保存更改').show(context);
       },
-      onDeny: () {},
-      onCancel: () {},
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('编辑规则'),
-          shape: UniversalUI.of(context).defaultShape,
-          backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
-          leading: AppBarHelper.defaultMainLeading(context, onPressed: () {
-            Navigator.of(context).pop();
-          }),
-          actions: [
-            UniversalIconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                widget.onSave(widget.actions);
-                const Toast(title: '', message: '已保存更改').show(context);
-                Navigator.of(context).pop();
-              },
+      builder: (context, triggerPop) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('编辑规则'),
+            shape: UniversalUI.of(context).defaultShape,
+            backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
+            leading: IconButton(
+              icon: Icon(UniversalUI.of(context).icons.arrowBack),
+              onPressed: triggerPop,
             ),
-          ],
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [
-              for (var i = 0; i < actions.length; i++)
-                Tab(
-                  icon: CircleAvatar(
-                    child: Text((i + 1).toString()),
+            actions: [
+              UniversalIconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  widget.onSave(widget.actions);
+                  const Toast(title: '', message: '已保存更改').show(context);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                for (var i = 0; i < actions.length; i++)
+                  Tab(
+                    icon: CircleAvatar(
+                      child: Text((i + 1).toString()),
+                    ),
+                    text: widget.features
+                        .firstWhere((element) => element.id == actions[i].id)
+                        .name,
                   ),
-                  text: widget.features
-                      .firstWhere((element) => element.id == actions[i].id)
-                      .name,
+                const Tab(
+                  icon: Icon(Icons.add),
+                  text: '添加',
                 ),
-              const Tab(
-                icon: Icon(Icons.add),
-                text: '添加',
+              ],
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              for (var i = 0; i < actions.length; i++)
+                Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          UniversalElevatedButton.icon(
+                            onPressed: i > 0
+                                ? () {
+                                    setState(() {
+                                      final temp = actions[i - 1];
+                                      actions[i - 1] = actions[i];
+                                      actions[i] = temp;
+                                    });
+                                    _tabController.animateTo(i - 1);
+                                  }
+                                : null,
+                            icon: const Icon(Icons.keyboard_arrow_left),
+                            label: const Text('前移'),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: UniversalElevatedButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  actions.removeAt(i);
+                                  _tabController = TabController(
+                                      length: actions.length + 1, vsync: this);
+                                });
+                              },
+                              icon: const Icon(Icons.delete),
+                              label: const Text('删除'),
+                            ),
+                          ),
+                          UniversalElevatedButton.icon(
+                            onPressed: i < actions.length - 1
+                                ? () {
+                                    setState(() {
+                                      final temp = actions[i + 1];
+                                      actions[i + 1] = actions[i];
+                                      actions[i] = temp;
+                                    });
+                                    _tabController.animateTo(i + 1);
+                                  }
+                                : null,
+                            icon: const Icon(Icons.keyboard_arrow_right),
+                            label: const Text('后移'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _YesodActionConfigureItem(
+                        key: Key(actions[i].toString()),
+                        features: widget.features,
+                        action: actions[i],
+                        onSave: (action) {
+                          setState(() {
+                            actions[i] = action;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              _YesodActionConfigureItem(
+                features: widget.features,
+                action: FeatureRequest(),
+                onSave: (action) {
+                  setState(() {
+                    actions.add(action);
+                    _tabController =
+                        TabController(length: actions.length + 1, vsync: this);
+                  });
+                },
               ),
             ],
           ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            for (var i = 0; i < actions.length; i++)
-              Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        UniversalElevatedButton.icon(
-                          onPressed: i > 0
-                              ? () {
-                                  setState(() {
-                                    final temp = actions[i - 1];
-                                    actions[i - 1] = actions[i];
-                                    actions[i] = temp;
-                                  });
-                                  _tabController.animateTo(i - 1);
-                                }
-                              : null,
-                          icon: const Icon(Icons.keyboard_arrow_left),
-                          label: const Text('前移'),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: UniversalElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                actions.removeAt(i);
-                                _tabController = TabController(
-                                    length: actions.length + 1, vsync: this);
-                              });
-                            },
-                            icon: const Icon(Icons.delete),
-                            label: const Text('删除'),
-                          ),
-                        ),
-                        UniversalElevatedButton.icon(
-                          onPressed: i < actions.length - 1
-                              ? () {
-                                  setState(() {
-                                    final temp = actions[i + 1];
-                                    actions[i + 1] = actions[i];
-                                    actions[i] = temp;
-                                  });
-                                  _tabController.animateTo(i + 1);
-                                }
-                              : null,
-                          icon: const Icon(Icons.keyboard_arrow_right),
-                          label: const Text('后移'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: _YesodActionConfigureItem(
-                      key: Key(actions[i].toString()),
-                      features: widget.features,
-                      action: actions[i],
-                      onSave: (action) {
-                        setState(() {
-                          actions[i] = action;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            _YesodActionConfigureItem(
-              features: widget.features,
-              action: FeatureRequest(),
-              onSave: (action) {
-                setState(() {
-                  actions.add(action);
-                  _tabController =
-                      TabController(length: actions.length + 1, vsync: this);
-                });
-              },
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 }

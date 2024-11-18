@@ -140,10 +140,13 @@ class GeburaNav extends StatelessWidget {
                                 OverlappingPanels.of(context)
                                     ?.reveal(RevealSide.main);
                               },
-                              leading: GeburaAppIconImage(item: item),
+                              leading:
+                                  GeburaAppIconImage(path: item.iconImagePath),
                               title: AutoSizeText(
                                 item.name.isEmpty ? item.uuid : item.name,
                                 maxLines: 1,
+                                minFontSize: 12,
+                                maxFontSize: 14,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               contentPadding:

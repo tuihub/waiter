@@ -34,6 +34,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(number) => "${number} 年前";
 
+  static String m13(success, failed) =>
+      "导入应用程序完成，成功 ${success} 个，失败 ${failed} 个。";
+
   static String m7(success, failed) =>
       "导入Steam应用程序完成，成功 ${success} 个，失败 ${failed} 个。";
 
@@ -45,7 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(number) => "发现 ${number} 个新应用";
 
-  static String m13(working, enabled, total) =>
+  static String m14(working, enabled, total) =>
       "${working}/${enabled} (${total}) 个正在工作";
 
   static String m12(server) => "注册到 ${server}";
@@ -188,7 +191,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),
         "hide": MessageLookupByLibrary.simpleMessage("隐藏"),
         "id": MessageLookupByLibrary.simpleMessage("ID"),
+        "importCommonApplicationFinished": m13,
         "importSteamApplicationFinished": m7,
+        "importingCommonApplications":
+            MessageLookupByLibrary.simpleMessage("正在导入应用程序"),
         "importingSteamApplications":
             MessageLookupByLibrary.simpleMessage("正在导入Steam应用程序"),
         "lastLogin": MessageLookupByLibrary.simpleMessage("上次登录"),
@@ -226,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请设置应用程序路径"),
         "pluginContextManage": MessageLookupByLibrary.simpleMessage("插件环境管理"),
         "pluginManage": MessageLookupByLibrary.simpleMessage("插件管理"),
-        "pluginWorkingProportion": m13,
+        "pluginWorkingProportion": m14,
         "port": MessageLookupByLibrary.simpleMessage("端口"),
         "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
         "refreshCaptcha": MessageLookupByLibrary.simpleMessage("刷新验证码"),

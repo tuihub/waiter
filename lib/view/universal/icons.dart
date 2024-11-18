@@ -319,4 +319,22 @@ class UniversalIcon {
         return FluentIcons.warning_24_regular;
     }
   }
+
+  IconData get arrowBack {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.arrow_back;
+      case UIDesign.fluent:
+        return FluentIcons.arrow_left_24_regular;
+    }
+  }
+
+  IconData get automated {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.auto_awesome;
+      case UIDesign.fluent:
+        return FluentIcons.bot_24_regular;
+    }
+  }
 }

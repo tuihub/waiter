@@ -114,7 +114,7 @@ class ChesedHome extends StatelessWidget {
                             onTap: () {
                               unawaited(Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                UniversalPageRoute(
                                     builder: (context) =>
                                         ChesedImageViewWidget(imageUrl: item)),
                               ));
