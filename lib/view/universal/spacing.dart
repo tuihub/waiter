@@ -32,9 +32,9 @@ class _DefaultDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
-      height: 10,
-      indent: 20,
-      endIndent: 20,
+      height: 8,
+      indent: 10,
+      endIndent: 10,
       thickness: 2,
       color: Theme.of(context).brightness == Brightness.dark
           ? Theme.of(context).colorScheme.outline

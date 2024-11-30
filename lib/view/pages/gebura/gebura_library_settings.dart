@@ -34,8 +34,8 @@ import '../frame_page.dart';
 part 'gebura_library_settings_common.dart';
 part 'gebura_library_settings_steam.dart';
 
-class GeburaLibrarySettings extends StatelessWidget {
-  const GeburaLibrarySettings({super.key});
+class GeburaLibrarySettingsPage extends StatelessWidget {
+  const GeburaLibrarySettingsPage({super.key});
 
   Widget _buildCommonItem(
     BuildContext context,
@@ -64,8 +64,7 @@ class GeburaLibrarySettings extends StatelessWidget {
               label: const Text('详情'),
               onPressed: () {
                 GeburaLibrarySettingsRoute(
-                        action:
-                            GeburaLibrarySettingsActions.commonAppScanResult,
+                        action: GeburaLibrarySettingsActions.appScanResult,
                         $extra: item.uuid)
                     .go(context);
                 ModuleFramePage.of(context)?.openDrawer();
@@ -100,6 +99,10 @@ class GeburaLibrarySettings extends StatelessWidget {
                 await OpenFile.open(item.path);
               },
             ),
+            UniversalToolBarItem(
+              icon: UniversalUI.of(context).icons.delete,
+              label: const Text('删除'),
+            )
           ],
         ),
       ),

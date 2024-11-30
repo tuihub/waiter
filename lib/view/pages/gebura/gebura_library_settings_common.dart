@@ -21,6 +21,7 @@ class _CommonAppFolderScanSettingPageState
           basePath: '',
         );
 
+    uuid = initialValue.uuid;
     basePath = initialValue.basePath;
     excludeDirectoryMatchers = initialValue.excludeDirectoryMatchers;
     minInstallDirDepth = initialValue.minInstallDirDepth;
@@ -45,13 +46,13 @@ class _CommonAppFolderScanSettingPageState
   Future<void> _saveAndExit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final success = await context
+      final msg = await context
           .read<GeburaBloc>()
           .saveLocalCommonAppLibraryFolder(setting);
-      if (success) {
+      if (msg == null) {
         Navigator.of(context).pop();
       } else {
-        Toast(title: '', message: '保存失败').show(context);
+        Toast(title: '', message: '保存失败 $msg').show(context);
       }
     }
   }
@@ -73,6 +74,7 @@ class _CommonAppFolderScanSettingPageState
   CommonAppScan get setting {
     _constructPathFieldMatcher();
     return CommonAppScan(
+      uuid: uuid,
       basePath: basePath,
       excludeDirectoryMatchers: excludeDirectoryMatchers,
       minInstallDirDepth: minInstallDirDepth,
@@ -83,10 +85,10 @@ class _CommonAppFolderScanSettingPageState
       excludeExecutableMatchers: excludeExecutableMatchers,
       minExecutableDepth: minExecutableDepth,
       maxExecutableDepth: maxExecutableDepth,
-      uuid: '',
     );
   }
 
+  late String uuid;
   late String basePath;
   late List<String> excludeDirectoryMatchers;
   late int minInstallDirDepth;
@@ -619,6 +621,7 @@ class _CommonAppFolderScanSettingPageState
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                       }
+                      await _saveAndExit(context);
                     },
                     label: const Text('提交'),
                     icon: Icon(UniversalUI.of(context).icons.check),

@@ -192,7 +192,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         final appInsts = await _repo.loadLocalAppInsts();
         final appInstsMap =
             Map.fromEntries(appInsts.map((e) => MapEntry(e.uuid, e)));
-        appInstsMap.addAll(state.libraryAppInsts);
         emit(GeburaLoadAppInstsState(
           state.copyWith(
             libraryAppInsts: appInstsMap,
@@ -210,7 +209,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         final launchers = await _repo.loadLocalAppInstLaunchers();
         final launchersMap =
             Map.fromEntries(launchers.map((e) => MapEntry(e.uuid, e)));
-        launchersMap.addAll(state.libraryAppInstLaunchers);
         emit(GeburaLoadAppInstLaunchersState(
           state.copyWith(
             libraryAppInstLaunchers: launchersMap,
@@ -960,18 +958,70 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   //   return resp.getData();
   // }
   //
+  Future<String?> updateLocalApp(LocalApp app) async {
+    try {
+      await _repo.updateLocalApp(app);
+      add(GeburaRefreshLibraryListEvent());
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> addLocalAppInst(LocalAppInst appInst) async {
+    try {
+      await _repo.addLocalAppInst(appInst);
+      add(GeburaLoadAppInstsEvent());
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> updateLocalAppInst(LocalAppInst appInst) async {
+    try {
+      await _repo.updateLocalAppInst(appInst);
+      add(GeburaLoadAppInstsEvent());
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> addLocalAppInstLauncher(
+      LocalAppInstLauncher appInstLauncher) async {
+    try {
+      await _repo.addLocalAppInstLauncher(appInstLauncher);
+      add(GeburaLoadAppInstLaunchersEvent());
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String?> updateLocalAppInstLauncher(
+      LocalAppInstLauncher appInstLauncher) async {
+    try {
+      await _repo.updateLocalAppInstLauncher(appInstLauncher);
+      add(GeburaLoadAppInstLaunchersEvent());
+      return null;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
   Future<void> showSteamAppDetails(String steamAppID) async {
     await launchUrlString('steam://nav/games/details/$steamAppID');
   }
 
-  Future<bool> saveLocalCommonAppLibraryFolder(CommonAppScan setting) async {
+  Future<String?> saveLocalCommonAppLibraryFolder(CommonAppScan setting) async {
     try {
       await _repo.addLocalCommonLibraryFolder(_toDaoCommonAppScan(setting));
       add(GeburaScanLocalLibraryEvent(refreshCommon: [setting.uuid]));
     } catch (e) {
-      return false;
+      return e.toString();
     }
-    return true;
+    return null;
   }
 
   Future<CommonAppScan?> getLocalCommonAppLibraryFolder(String uuid) async {

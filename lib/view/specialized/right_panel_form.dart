@@ -122,7 +122,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
                       }
                     },
                     child: widget.submitting ?? false
-                        ? const CircularProgressIndicator()
+                        ? const UniversalCircularProgressIndicator()
                         : Text(S.of(context).submit),
                   ),
                 UniversalElevatedButton(
@@ -237,24 +237,22 @@ class TextReadOnlyFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return UniversalTextFormField(
       initialValue: value,
       readOnly: true,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: UniversalIconButton(
-            icon: Icon(UniversalUI.of(context).icons.lock),
-            onPressed: () {
-              const Toast(title: '', message: '该项目无法修改').show(context);
-            }),
-        suffixIcon: UniversalIconButton(
-          icon: Icon(UniversalUI.of(context).icons.copy),
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: value)).then((value) {
-              const Toast(title: '', message: '已复制').show(context);
-            });
-          },
-        ),
+      labelText: label,
+      prefixIcon: UniversalIconButton(
+          icon: Icon(UniversalUI.of(context).icons.lock),
+          onPressed: () {
+            const Toast(title: '', message: '该项目无法修改').show(context);
+          }),
+      suffixIcon: UniversalIconButton(
+        icon: Icon(UniversalUI.of(context).icons.copy),
+        onPressed: () async {
+          await Clipboard.setData(ClipboardData(text: value)).then((value) {
+            const Toast(title: '', message: '已复制').show(context);
+          });
+        },
       ),
     );
   }

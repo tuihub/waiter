@@ -1,7 +1,7 @@
-import 'dart:async';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dao/dao.dart';
+import 'package:file_picker/file_picker.dart' as file_picker;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,18 +10,28 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_io/io.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
 import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
+import '../../components/input_formatters.dart';
+import '../../components/pop_alert.dart';
 import '../../components/toast.dart';
+import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
+import '../../specialized/right_panel_form.dart';
 import '../../universal/universal.dart';
-import 'gebura_app_launcher_setting_dialog.dart';
+import '../frame_page.dart';
 import 'gebura_common.dart';
+
+part 'gebura_library_detail_app_inst_launcher_panel.dart';
+part 'gebura_library_detail_app_inst_panel.dart';
+part 'gebura_library_detail_app_panel.dart';
+part 'gebura_library_detail_launcher_setting_dialog.dart';
 
 class GeburaLibraryDetailPage extends StatelessWidget {
   const GeburaLibraryDetailPage({super.key, required this.uuid});
@@ -194,6 +204,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             SpacingHelper.listSpacing(width: 24, children: [
                           if (PlatformHelper.isWindowsApp())
                             UniversalElevatedButton.icon(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               onPressed: (launcherUUID == null)
                                   ? null
                                   : () async {
@@ -205,8 +217,22 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                 launcherType == LocalAppInstLauncherType.steam
                                     ? FontAwesomeIcons.steam
                                     : UniversalUI.of(context).icons.play,
+                                size: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.fontSize ??
+                                    22,
                               ),
-                              label: const Text('启动'),
+                              label: Text(
+                                '启动',
+                                style: TextStyle(
+                                  fontSize: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.fontSize ??
+                                      16,
+                                ),
+                              ),
                             ),
                           if (PlatformHelper.isWindowsApp())
                             digestItem(
@@ -222,6 +248,9 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                     ),
                   ),
                   _GeburaLibraryDetailInstList(item: item),
+                  const SizedBox(
+                    height: 16,
+                  ),
                 ],
               ),
             );
@@ -232,10 +261,20 @@ class GeburaLibraryDetailPage extends StatelessWidget {
   }
 }
 
-class _GeburaLibraryDetailInstList extends StatelessWidget {
+class _GeburaLibraryDetailInstList extends StatefulWidget {
   const _GeburaLibraryDetailInstList({required this.item});
 
   final LocalApp item;
+
+  @override
+  State<_GeburaLibraryDetailInstList> createState() =>
+      _GeburaLibraryDetailInstListState();
+}
+
+class _GeburaLibraryDetailInstListState
+    extends State<_GeburaLibraryDetailInstList> {
+  LocalApp get item => widget.item;
+  bool _onlyShowFavorites = true;
 
   Widget _activeRadio(BuildContext context, LocalAppInstLauncher launcher,
       bool triggerActivation) {
@@ -268,17 +307,35 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
     return UniversalListTile(
       leading: _activeRadio(context, launcher, triggerActivation),
       title: const Text('由Steam管理'),
-      trailing: launcher.steam != null
-          ? UniversalElevatedButton.icon(
-              onPressed: () async {
-                await context
-                    .read<GeburaBloc>()
-                    .showSteamAppDetails(launcher.steam!.steamAppID);
-              },
-              icon: const Icon(FontAwesomeIcons.steam, size: 16),
-              label: const Text('查看'),
-            )
-          : null,
+      trailing: Wrap(
+        spacing: 8,
+        children: [
+          UniversalIconButton(
+            icon: Icon(launcher.favorite ?? false
+                ? UniversalUI.of(context).icons.favorite
+                : UniversalUI.of(context).icons.favoriteBorder),
+            onPressed: () async {
+              final msg = await context
+                  .read<GeburaBloc>()
+                  .updateLocalAppInstLauncher(launcher.copyWith(
+                    favorite: !(launcher.favorite ?? false),
+                  ));
+              if (msg != null) {
+                Toast(title: '', message: msg).show(context);
+              }
+            },
+          ),
+          UniversalElevatedButton.icon(
+            onPressed: () async {
+              await context
+                  .read<GeburaBloc>()
+                  .showSteamAppDetails(launcher.steam!.steamAppID);
+            },
+            icon: const Icon(FontAwesomeIcons.steam, size: 16),
+            label: const Text('查看'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -316,19 +373,37 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             )
           : null,
-      trailing: UniversalElevatedButton.icon(
-        onPressed: () async {
-          unawaited(showDialog<void>(
-            context: context,
-            builder: (_) => BlocProvider.value(
-              value: context.read<GeburaBloc>(),
-              child: GeburaAppLauncherSettingDialog(
-                  launcher, Navigator.of(context)),
-            ),
-          ));
-        },
-        icon: Icon(UniversalUI.of(context).icons.settings, size: 16),
-        label: const Text('设置'),
+      trailing: Wrap(
+        spacing: 8,
+        children: [
+          UniversalIconButton(
+            icon: Icon(launcher.favorite ?? false
+                ? UniversalUI.of(context).icons.favorite
+                : UniversalUI.of(context).icons.favoriteBorder),
+            onPressed: () async {
+              final msg = await context
+                  .read<GeburaBloc>()
+                  .updateLocalAppInstLauncher(launcher.copyWith(
+                    favorite: !(launcher.favorite ?? false),
+                  ));
+              if (msg != null) {
+                Toast(title: '', message: msg).show(context);
+              }
+            },
+          ),
+          UniversalElevatedButton.icon(
+            onPressed: () async {
+              GeburaLibraryDetailRoute(
+                widget.item.uuid,
+                action: GeburaLibraryDetailActions.appInstLauncherEdit,
+                $extra: launcher,
+              ).go(context);
+              ModuleFramePage.of(context)?.openDrawer();
+            },
+            icon: Icon(UniversalUI.of(context).icons.settings, size: 16),
+            label: const Text('设置'),
+          ),
+        ],
       ),
     );
   }
@@ -336,7 +411,8 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
-      final List<Widget> listTiles = [];
+      final List<Widget> favoriteTiles = [];
+      final List<Widget> instTiles = [];
 
       final appInsts =
           state.libraryAppInsts.values.where((e) => e.appUUID == item.uuid);
@@ -344,26 +420,56 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
         final launchers = state.libraryAppInstLaunchers.values
             .where((e) => e.appInstUUID == inst.uuid)
             .toList();
-        final msg = '${launchers.length} 个启动项';
+        final subtitle = inst.path;
+
+        final children = <Widget>[];
+        for (final launcher in launchers) {
+          late Widget child;
+          switch (launcher.launcherType) {
+            case LocalAppInstLauncherType.steam:
+              child = _steamItem(context, launcher,
+                  launcher.steam != null && launchers.length == 1);
+            case LocalAppInstLauncherType.common:
+              child = _localItem(context, inst, launcher, false);
+          }
+          children.add(child);
+          if (launcher.favorite ?? false) {
+            favoriteTiles.add(child);
+          }
+        }
 
         final listTile = UniversalExpansionTile(
           initiallyExpanded: true,
-          title: Text(msg),
+          title: AutoSizeText(inst.name ?? inst.path),
+          subtitle: Text(subtitle),
+          trailing: Wrap(
+            children: [
+              UniversalIconButton(
+                icon: Icon(UniversalUI.of(context).icons.add),
+                onPressed: () {
+                  GeburaLibraryDetailRoute(
+                    widget.item.uuid,
+                    action: GeburaLibraryDetailActions.appInstLauncherAdd,
+                    $extra: inst.uuid,
+                  ).go(context);
+                  ModuleFramePage.of(context)?.openDrawer();
+                },
+              ),
+              UniversalIconButton(
+                icon: Icon(UniversalUI.of(context).icons.settings),
+                onPressed: () {
+                  GeburaLibraryDetailRoute(
+                    widget.item.uuid,
+                    action: GeburaLibraryDetailActions.appInstEdit,
+                    $extra: inst,
+                  ).go(context);
+                  ModuleFramePage.of(context)?.openDrawer();
+                },
+              ),
+            ],
+          ),
           children: [
-            for (final launcher in launchers)
-              switch (launcher.launcherType) {
-                LocalAppInstLauncherType.steam => _steamItem(
-                    context,
-                    launcher,
-                    launcher.steam != null && launchers.length == 1,
-                  ),
-                LocalAppInstLauncherType.common => _localItem(
-                    context,
-                    inst,
-                    launcher,
-                    launcher.common != null && launchers.length == 1,
-                  ),
-              },
+            ...children,
             // if (launchers.isEmpty)
             //   ListTile(
             //     title: ElevatedButton(
@@ -393,70 +499,64 @@ class _GeburaLibraryDetailInstList extends StatelessWidget {
           ],
         );
 
-        listTiles.add(listTile);
+        instTiles.add(listTile);
       }
 
-      // if (state.ownedApps!
-      //     .any((element) => element.assignedAppInfoId.id == item.id.id)) {
-      //   listTiles.add(
-      //     ListTile(
-      //       title: ElevatedButton(
-      //         onPressed: () async {
-      //           unawaited(
-      //             showDialog(
-      //               context: context,
-      //               builder: (_) {
-      //                 return BlocProvider.value(
-      //                   value: context.read<GeburaBloc>(),
-      //                   child: NewLocalAppInstDialog(
-      //                     app: state.ownedApps!.firstWhere(
-      //                       (element) =>
-      //                           element.assignedAppInfoId.id == item.id.id,
-      //                     ),
-      //                     newAppWithSameInfo: true,
-      //                   ),
-      //                 );
-      //               },
-      //             ),
-      //           );
-      //         },
-      //         child: const Text('添加应用版本'),
-      //       ),
-      //     ),
-      //   );
-      // } else if (state.purchasedAppInfos!
-      //     .any((element) => element.id.id == item.id.id)) {
-      //   listTiles.add(
-      //     ListTile(
-      //       title: ElevatedButton(
-      //         onPressed: () async {
-      //           unawaited(
-      //             showDialog(
-      //               context: context,
-      //               builder: (_) {
-      //                 return BlocProvider.value(
-      //                   value: context.read<GeburaBloc>(),
-      //                   child: NewLocalAppInstDialog(
-      //                     app: App(
-      //                       name: item.name,
-      //                       assignedAppInfoId: item.id,
-      //                     ),
-      //                     newAppWithSameInfo: true,
-      //                   ),
-      //                 );
-      //               },
-      //             ),
-      //           );
-      //         },
-      //         child: const Text('添加应用版本'),
-      //       ),
-      //     ),
-      //   );
-      // }
-
-      return ListView(
-        shrinkWrap: true,
-        children: listTiles,
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SpacingHelper.defaultDivider,
+          UniversalListTile(
+            title: const Text('本地文件'),
+            subtitle: Text(_onlyShowFavorites ? '${favoriteTiles.length} 个收藏' : '${appInsts.length} 个安装位置'),
+            leading: Icon(UniversalUI.of(context).icons.folder),
+            trailing: Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(_onlyShowFavorites ? '只看收藏' : '显示全部'),
+                UniversalSwitch(
+                  value: _onlyShowFavorites,
+                  onChanged: (value) {
+                    setState(() {
+                      _onlyShowFavorites = value;
+                    });
+                  },
+                ),
+                UniversalIconButton(
+                  icon: Icon(UniversalUI.of(context).icons.add),
+                  onPressed: () {
+                    GeburaLibraryDetailRoute(
+                      widget.item.uuid,
+                      action: GeburaLibraryDetailActions.appInstAdd,
+                    ).go(context);
+                    ModuleFramePage.of(context)?.openDrawer();
+                  },
+                ),
+              ],
+            ),
+          ),
+          if (_onlyShowFavorites)
+            ...favoriteTiles
+          else if (instTiles.length == 1)
+            instTiles.first
+          else
+            BootstrapContainer(
+              useWrap: true,
+              alignment: Alignment.topLeft,
+              fill: BootstrapSteps.xxl,
+              children: [
+                ...instTiles.map(
+                  (e) => BootstrapColumn(
+                    fill: BootstrapSteps.md,
+                    xxs: 12,
+                    md: 6,
+                    child: e,
+                  ),
+                ),
+              ],
+            ),
+        ],
       );
     });
   }
@@ -499,16 +599,17 @@ class _GeburaLibraryDetailAppSettingsState
         mainAxisAlignment: MainAxisAlignment.end,
         primaryItems: const [],
         secondaryItems: [
-          // UniversalToolBarItem(
-          //   label: const Text('编辑应用信息'),
-          //   icon: UniversalUI.of(context).icons.settings,
-          //   onPressed: () {
-          //     // GeburaLibraryDetailRoute(
-          //     //   action: GeburaLibraryDetailActions.assignApp,
-          //     //   uuid: widget.item.uuid,
-          //     // ).go(context);
-          //   },
-          // ),
+          UniversalToolBarItem(
+            label: const Text('编辑应用信息'),
+            icon: UniversalUI.of(context).icons.edit,
+            onPressed: () {
+              GeburaLibraryDetailRoute(
+                widget.item.uuid,
+                action: GeburaLibraryDetailActions.appEdit,
+              ).go(context);
+              ModuleFramePage.of(context)?.openDrawer();
+            },
+          ),
           UniversalToolBarItem(
             label: const Text('自动获取应用信息'),
             icon: UniversalUI.of(context).icons.automated,

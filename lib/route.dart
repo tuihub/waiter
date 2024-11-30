@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dao/dao.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -429,8 +430,7 @@ class GeburaLibraryRoute extends GoRouteData {
 }
 
 enum GeburaLibrarySettingsActions {
-  commonAppScanResult,
-  steamAppScanResult,
+  appScanResult,
 }
 
 class GeburaLibrarySettingsRoute extends GoRouteData {
@@ -442,14 +442,9 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
-      GeburaLibrarySettingsActions.commonAppScanResult:
-          GeburaAppScanResultPanel(
+      GeburaLibrarySettingsActions.appScanResult: GeburaAppScanResultPanel(
         uuid: $extra is String ? $extra! as String : '',
       ),
-      // GeburaLibrarySettingsActions.steamAppScanResult:
-      //     GeburaSteamAppScanResultPanel(
-      //   folder: $extra is String ? $extra! as String : '',
-      // ),
     };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
@@ -457,7 +452,7 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
           leftPart: const GeburaNav(
             function: GeburaFunctions.librarySettings,
           ),
-          middlePart: const GeburaLibrarySettings(),
+          middlePart: const GeburaLibrarySettingsPage(),
           rightPart: actions[action] ?? Container(),
         ),
       ),
@@ -465,28 +460,57 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
   }
 }
 
-enum GeburaLibraryDetailActions { assignApp }
+enum GeburaLibraryDetailActions {
+  assignApp,
+  appEdit,
+  appInstAdd,
+  appInstEdit,
+  appInstLauncherAdd,
+  appInstLauncherEdit,
+}
 
 class GeburaLibraryDetailRoute extends GoRouteData {
-  const GeburaLibraryDetailRoute(this.uuid, {this.action});
+  const GeburaLibraryDetailRoute(this.uuid, {this.action, this.$extra});
 
   final GeburaLibraryDetailActions? action;
   final String uuid;
+  final dynamic $extra;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     final actions = {
       GeburaLibraryDetailActions.assignApp: const GeburaAssignAppPanel(),
+      GeburaLibraryDetailActions.appEdit: GeburaLibraryDetailAppPanel(
+        uuid: uuid,
+      ),
+      GeburaLibraryDetailActions.appInstAdd: GeburaLibraryDetailAppInstAddPanel(
+        uuid: uuid,
+      ),
+      GeburaLibraryDetailActions.appInstEdit:
+          GeburaLibraryDetailAppInstEditPanel(
+        initialValue: $extra is LocalAppInst ? $extra! as LocalAppInst : null,
+      ),
+      GeburaLibraryDetailActions.appInstLauncherAdd:
+          GeburaLibraryDetailAppInstLauncherAddPanel(
+        uuid: uuid,
+        inst: $extra is LocalAppInst ? $extra! as LocalAppInst : null,
+      ),
+      GeburaLibraryDetailActions.appInstLauncherEdit:
+          GeburaLibraryDetailAppInstLauncherEditPanel(
+        launcher: $extra is LocalAppInstLauncher
+            ? $extra! as LocalAppInstLauncher
+            : null,
+      ),
     };
     return NoTransitionPage(
       child: GeburaRoute.rootWidget(
         child: ModuleFramePage(
           leftPart: GeburaNav(
             function: GeburaFunctions.library,
-            selectedItem: uuid ?? '',
+            selectedItem: uuid,
           ),
-          middlePart: GeburaLibraryDetailPage(uuid: uuid ?? ''),
-          rightPart: actions[action],
+          middlePart: GeburaLibraryDetailPage(uuid: uuid),
+          rightPart: actions[action] ?? Container(),
         ),
       ),
     );

@@ -6,7 +6,7 @@ import 'common.dart';
 class UniversalOutlinedButton extends StatelessWidget {
   const UniversalOutlinedButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     this.onLongPress,
     this.focusNode,
     this.autofocus = false,
@@ -14,7 +14,7 @@ class UniversalOutlinedButton extends StatelessWidget {
     required this.child,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -41,14 +41,23 @@ class UniversalOutlinedButton extends StatelessWidget {
           onLongPress: onLongPress,
           focusNode: focusNode,
           autofocus: autofocus,
-          child: child,
+          child: icon != null
+              ? Wrap(
+                  spacing: 8,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    icon!,
+                    child,
+                  ],
+                )
+              : child,
         );
     }
   }
 
   factory UniversalOutlinedButton.icon({
     Key? key,
-    required VoidCallback? onPressed,
+    VoidCallback? onPressed,
     VoidCallback? onLongPress,
     FocusNode? focusNode,
     bool? autofocus,
@@ -57,7 +66,7 @@ class UniversalOutlinedButton extends StatelessWidget {
   }) {
     return UniversalOutlinedButton(
       key: key,
-      onPressed: onPressed!,
+      onPressed: onPressed,
       onLongPress: onLongPress,
       focusNode: focusNode,
       autofocus: autofocus ?? false,
@@ -76,6 +85,7 @@ class UniversalElevatedButton extends StatelessWidget {
     this.autofocus = false,
     this.icon,
     this.backgroundColor,
+    this.padding,
     required this.child,
   });
 
@@ -86,6 +96,7 @@ class UniversalElevatedButton extends StatelessWidget {
   final Widget? icon;
   final Widget child;
   final Color? backgroundColor;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +113,10 @@ class UniversalElevatedButton extends StatelessWidget {
           style: material.ElevatedButton.styleFrom(
             backgroundColor: backgroundColor,
           ),
-          label: child,
+          label: Container(
+            padding: padding,
+            child: child,
+          ),
         );
       case UIDesign.fluent:
         return fluent.FilledButton(
@@ -114,7 +128,19 @@ class UniversalElevatedButton extends StatelessWidget {
                 backgroundColor:
                     fluent.WidgetStateProperty.all(backgroundColor),
               ),
-          child: child,
+          child: Container(
+            padding: padding,
+            child: icon != null
+                ? Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      icon!,
+                      child,
+                    ],
+                  )
+                : child,
+          ),
         );
     }
   }
@@ -126,6 +152,7 @@ class UniversalElevatedButton extends StatelessWidget {
     FocusNode? focusNode,
     bool? autofocus,
     Widget? icon,
+    EdgeInsetsGeometry? padding,
     required Widget label,
   }) {
     return UniversalElevatedButton(
@@ -135,6 +162,7 @@ class UniversalElevatedButton extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus ?? false,
       icon: icon,
+      padding: padding,
       child: label,
     );
   }
@@ -185,7 +213,7 @@ class UniversalTextButton extends StatelessWidget {
 
   factory UniversalTextButton.icon({
     Key? key,
-    required VoidCallback? onPressed,
+    VoidCallback? onPressed,
     VoidCallback? onLongPress,
     FocusNode? focusNode,
     bool? autofocus,

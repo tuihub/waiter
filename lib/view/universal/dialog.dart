@@ -15,6 +15,22 @@ class UniversalDialog extends StatelessWidget {
   final Widget? content;
   final List<UniversalDialogAction>? actions;
 
+  Future<void> show(BuildContext context) async {
+    final design = UniversalUI.of(context).design;
+    switch (design) {
+      case UIDesign.material:
+        await material.showDialog<void>(
+          context: context,
+          builder: (context) => this,
+        );
+      case UIDesign.fluent:
+        await fluent.showDialog(
+          context: context,
+          builder: (context) => this,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final design = UniversalUI.of(context).design;

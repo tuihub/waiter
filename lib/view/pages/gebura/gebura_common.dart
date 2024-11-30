@@ -20,11 +20,11 @@ class GeburaAppCoverImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        if (path != null) {
+        if (path != null && path!.isNotEmpty) {
           return ExtendedImage.file(
             io.File(path!),
           );
-        } else if (url != null) {
+        } else if (url != null && url!.isNotEmpty) {
           return ExtendedImage.network(
             url!,
             height: 200,
@@ -58,12 +58,12 @@ class GeburaAppIconImage extends StatelessWidget {
   final String? path;
 
   DecorationImage? _buildImage(BuildContext context) {
-    if (path != null) {
+    if (path != null && path!.isNotEmpty) {
       return DecorationImage(
         image: ExtendedFileImageProvider(io.File(path!)),
         fit: BoxFit.scaleDown,
       );
-    } else if (url != null) {
+    } else if (url != null && url!.isNotEmpty) {
       return DecorationImage(
         image: ExtendedNetworkImageProvider(url!),
         fit: BoxFit.scaleDown,
@@ -101,12 +101,12 @@ class GeburaAppBackgroundImage extends StatelessWidget {
   final String? path;
 
   DecorationImage? _buildImage(BuildContext context) {
-    if (path != null) {
+    if (path != null && path!.isNotEmpty) {
       return DecorationImage(
         image: ExtendedFileImageProvider(io.File(path!)),
         fit: BoxFit.cover,
       );
-    } else if (url != null) {
+    } else if (url != null && url!.isNotEmpty) {
       return DecorationImage(
         image: ExtendedNetworkImageProvider(url!),
         fit: BoxFit.cover,

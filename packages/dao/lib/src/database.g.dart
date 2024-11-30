@@ -1247,6 +1247,15 @@ class $LocalAppInstLauncherTableTable extends LocalAppInstLauncherTable
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<LocalAppInstLauncherType>(
               $LocalAppInstLauncherTableTable.$converterlauncherType);
+  static const VerificationMeta _favoriteMeta =
+      const VerificationMeta('favorite');
+  @override
+  late final GeneratedColumn<bool> favorite = GeneratedColumn<bool>(
+      'favorite', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("favorite" IN (0, 1))'));
   static const VerificationMeta _commonMeta = const VerificationMeta('common');
   @override
   late final GeneratedColumnWithTypeConverter<LocalAppInstLaunchCommon?, String>
@@ -1263,7 +1272,7 @@ class $LocalAppInstLauncherTableTable extends LocalAppInstLauncherTable
               $LocalAppInstLauncherTableTable.$convertersteamn);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, uuid, appInstUUID, launcherType, common, steam];
+      [id, uuid, appInstUUID, launcherType, favorite, common, steam];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1293,6 +1302,10 @@ class $LocalAppInstLauncherTableTable extends LocalAppInstLauncherTable
       context.missing(_appInstUUIDMeta);
     }
     context.handle(_launcherTypeMeta, const VerificationResult.success());
+    if (data.containsKey('favorite')) {
+      context.handle(_favoriteMeta,
+          favorite.isAcceptableOrUnknown(data['favorite']!, _favoriteMeta));
+    }
     context.handle(_commonMeta, const VerificationResult.success());
     context.handle(_steamMeta, const VerificationResult.success());
     return context;
@@ -1311,6 +1324,8 @@ class $LocalAppInstLauncherTableTable extends LocalAppInstLauncherTable
       launcherType: $LocalAppInstLauncherTableTable.$converterlauncherType
           .fromSql(attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}launcher_type'])!),
+      favorite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}favorite']),
       common: $LocalAppInstLauncherTableTable.$convertercommonn.fromSql(
           attachedDatabase.typeMapping
               .read(DriftSqlType.string, data['${effectivePrefix}common'])),
@@ -1345,6 +1360,7 @@ class LocalAppInstLauncherTableCompanion
   final Value<String> uuid;
   final Value<String> appInstUUID;
   final Value<LocalAppInstLauncherType> launcherType;
+  final Value<bool?> favorite;
   final Value<LocalAppInstLaunchCommon?> common;
   final Value<LocalAppInstLaunchSteam?> steam;
   const LocalAppInstLauncherTableCompanion({
@@ -1352,6 +1368,7 @@ class LocalAppInstLauncherTableCompanion
     this.uuid = const Value.absent(),
     this.appInstUUID = const Value.absent(),
     this.launcherType = const Value.absent(),
+    this.favorite = const Value.absent(),
     this.common = const Value.absent(),
     this.steam = const Value.absent(),
   });
@@ -1360,6 +1377,7 @@ class LocalAppInstLauncherTableCompanion
     required String uuid,
     required String appInstUUID,
     required LocalAppInstLauncherType launcherType,
+    this.favorite = const Value.absent(),
     this.common = const Value.absent(),
     this.steam = const Value.absent(),
   })  : uuid = Value(uuid),
@@ -1370,6 +1388,7 @@ class LocalAppInstLauncherTableCompanion
     Expression<String>? uuid,
     Expression<String>? appInstUUID,
     Expression<int>? launcherType,
+    Expression<bool>? favorite,
     Expression<String>? common,
     Expression<String>? steam,
   }) {
@@ -1378,6 +1397,7 @@ class LocalAppInstLauncherTableCompanion
       if (uuid != null) 'uuid': uuid,
       if (appInstUUID != null) 'app_inst_u_u_i_d': appInstUUID,
       if (launcherType != null) 'launcher_type': launcherType,
+      if (favorite != null) 'favorite': favorite,
       if (common != null) 'common': common,
       if (steam != null) 'steam': steam,
     });
@@ -1388,6 +1408,7 @@ class LocalAppInstLauncherTableCompanion
       Value<String>? uuid,
       Value<String>? appInstUUID,
       Value<LocalAppInstLauncherType>? launcherType,
+      Value<bool?>? favorite,
       Value<LocalAppInstLaunchCommon?>? common,
       Value<LocalAppInstLaunchSteam?>? steam}) {
     return LocalAppInstLauncherTableCompanion(
@@ -1395,6 +1416,7 @@ class LocalAppInstLauncherTableCompanion
       uuid: uuid ?? this.uuid,
       appInstUUID: appInstUUID ?? this.appInstUUID,
       launcherType: launcherType ?? this.launcherType,
+      favorite: favorite ?? this.favorite,
       common: common ?? this.common,
       steam: steam ?? this.steam,
     );
@@ -1417,6 +1439,9 @@ class LocalAppInstLauncherTableCompanion
           .$converterlauncherType
           .toSql(launcherType.value));
     }
+    if (favorite.present) {
+      map['favorite'] = Variable<bool>(favorite.value);
+    }
     if (common.present) {
       map['common'] = Variable<String>($LocalAppInstLauncherTableTable
           .$convertercommonn
@@ -1436,6 +1461,7 @@ class LocalAppInstLauncherTableCompanion
           ..write('uuid: $uuid, ')
           ..write('appInstUUID: $appInstUUID, ')
           ..write('launcherType: $launcherType, ')
+          ..write('favorite: $favorite, ')
           ..write('common: $common, ')
           ..write('steam: $steam')
           ..write(')'))
@@ -3530,6 +3556,7 @@ typedef $$LocalAppInstLauncherTableTableCreateCompanionBuilder
   required String uuid,
   required String appInstUUID,
   required LocalAppInstLauncherType launcherType,
+  Value<bool?> favorite,
   Value<LocalAppInstLaunchCommon?> common,
   Value<LocalAppInstLaunchSteam?> steam,
 });
@@ -3539,6 +3566,7 @@ typedef $$LocalAppInstLauncherTableTableUpdateCompanionBuilder
   Value<String> uuid,
   Value<String> appInstUUID,
   Value<LocalAppInstLauncherType> launcherType,
+  Value<bool?> favorite,
   Value<LocalAppInstLaunchCommon?> common,
   Value<LocalAppInstLaunchSteam?> steam,
 });
@@ -3566,6 +3594,9 @@ class $$LocalAppInstLauncherTableTableFilterComposer
       get launcherType => $composableBuilder(
           column: $table.launcherType,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get favorite => $composableBuilder(
+      column: $table.favorite, builder: (column) => ColumnFilters(column));
 
   ColumnWithTypeConverterFilters<LocalAppInstLaunchCommon?,
           LocalAppInstLaunchCommon, String>
@@ -3602,6 +3633,9 @@ class $$LocalAppInstLauncherTableTableOrderingComposer
       column: $table.launcherType,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get favorite => $composableBuilder(
+      column: $table.favorite, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get common => $composableBuilder(
       column: $table.common, builder: (column) => ColumnOrderings(column));
 
@@ -3630,6 +3664,9 @@ class $$LocalAppInstLauncherTableTableAnnotationComposer
   GeneratedColumnWithTypeConverter<LocalAppInstLauncherType, int>
       get launcherType => $composableBuilder(
           column: $table.launcherType, builder: (column) => column);
+
+  GeneratedColumn<bool> get favorite =>
+      $composableBuilder(column: $table.favorite, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<LocalAppInstLaunchCommon?, String>
       get common => $composableBuilder(
@@ -3675,6 +3712,7 @@ class $$LocalAppInstLauncherTableTableTableManager extends RootTableManager<
             Value<String> uuid = const Value.absent(),
             Value<String> appInstUUID = const Value.absent(),
             Value<LocalAppInstLauncherType> launcherType = const Value.absent(),
+            Value<bool?> favorite = const Value.absent(),
             Value<LocalAppInstLaunchCommon?> common = const Value.absent(),
             Value<LocalAppInstLaunchSteam?> steam = const Value.absent(),
           }) =>
@@ -3683,6 +3721,7 @@ class $$LocalAppInstLauncherTableTableTableManager extends RootTableManager<
             uuid: uuid,
             appInstUUID: appInstUUID,
             launcherType: launcherType,
+            favorite: favorite,
             common: common,
             steam: steam,
           ),
@@ -3691,6 +3730,7 @@ class $$LocalAppInstLauncherTableTableTableManager extends RootTableManager<
             required String uuid,
             required String appInstUUID,
             required LocalAppInstLauncherType launcherType,
+            Value<bool?> favorite = const Value.absent(),
             Value<LocalAppInstLaunchCommon?> common = const Value.absent(),
             Value<LocalAppInstLaunchSteam?> steam = const Value.absent(),
           }) =>
@@ -3699,6 +3739,7 @@ class $$LocalAppInstLauncherTableTableTableManager extends RootTableManager<
             uuid: uuid,
             appInstUUID: appInstUUID,
             launcherType: launcherType,
+            favorite: favorite,
             common: common,
             steam: steam,
           ),

@@ -337,4 +337,22 @@ class UniversalIcon {
         return FluentIcons.bot_24_regular;
     }
   }
+
+  IconData get favorite {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.favorite;
+      case UIDesign.fluent:
+        return FluentIcons.star_24_filled;
+    }
+  }
+
+  IconData get favoriteBorder {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.favorite_border;
+      case UIDesign.fluent:
+        return FluentIcons.star_24_regular;
+    }
+  }
 }

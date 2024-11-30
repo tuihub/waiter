@@ -8,11 +8,13 @@ class BootstrapContainer extends StatelessWidget {
     required this.children,
     this.alignment = Alignment.center,
     this.fill = BootstrapSteps.undefined,
+    this.useWrap = false,
   });
 
   final List<Widget> children;
   final AlignmentGeometry alignment;
   final BootstrapSteps fill;
+  final bool useWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +76,14 @@ class BootstrapContainer extends StatelessWidget {
               maxWidth: maxWidth,
             ),
             width: maxWidth,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: children,
-            ),
+            child: useWrap
+                ? Wrap(
+                    children: children,
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: children,
+                  ),
           ),
         ),
       );

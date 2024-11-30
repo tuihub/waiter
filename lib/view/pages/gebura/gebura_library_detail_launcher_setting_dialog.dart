@@ -1,117 +1,9 @@
-import 'package:dao/dao.dart';
-import 'package:file_picker/file_picker.dart' as file_picker;
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../components/input_formatters.dart';
-import '../../components/pop_alert.dart';
-import '../../components/toast.dart';
-import '../../layout/bootstrap_container.dart';
-import '../../universal/universal.dart';
-
-class GeburaAppLauncherSettingDialog extends StatefulWidget {
-  const GeburaAppLauncherSettingDialog(this.launcher, this.navigator,
-      {super.key});
-
-  final NavigatorState navigator;
-  final LocalAppInstLauncher launcher;
-
-  @override
-  State<GeburaAppLauncherSettingDialog> createState() =>
-      GeburaAppLauncherSettingDialogState();
-}
-
-class GeburaAppLauncherSettingDialogState
-    extends State<GeburaAppLauncherSettingDialog> {
-  LocalAppInstLaunchCommon? newSetting;
-  final heroTag = UniqueKey();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<GeburaBloc, GeburaState>(
-      listener: (context, state) {
-        if (state is GeburaSaveLocalAppInstLaunchSettingState &&
-            state.success) {
-          Navigator.of(context).pop();
-        }
-      },
-      builder: (context, state) {
-        return UniversalDialog(
-          title: const Text('本地设置'),
-          content: SizedBox(
-            width: 600,
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _GeburaAppLauncherSettingForm(
-                      widget.launcher.uuid,
-                      newSetting ?? widget.launcher.common,
-                      onChanged: (setting) {
-                        setState(() {
-                          newSetting = setting;
-                        });
-                      },
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 16),
-                      child: UniversalElevatedButton(
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                          await widget.navigator.push(
-                            UniversalPageRoute(builder: (context) {
-                              return _GeburaAppLauncherSettingTestPage(
-                                widget.launcher.copyWith(
-                                  common: newSetting ?? widget.launcher.common,
-                                ),
-                                heroTag,
-                              );
-                            }),
-                          );
-                        },
-                        child: const Text('遇到问题？打开调试窗口'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          actions: [
-            UniversalDialogAction(
-              onPressed: newSetting != null
-                  ? () {
-                      context.read<GeburaBloc>().add(
-                            GeburaSaveLocalAppInstLaunchSettingEvent(
-                                widget.launcher.uuid,
-                                commonSetting: newSetting),
-                          );
-                    }
-                  : null,
-              isPrimary: true,
-              child: const Text('保存'),
-            ),
-            UniversalDialogAction(
-              onPressed: () {
-                Navigator.pop(context); //close Dialog
-              },
-              child: const Text('取消'),
-            )
-          ],
-        );
-      },
-    );
-  }
-}
+part of 'gebura_library_detail.dart';
 
 class _GeburaAppLauncherSettingTestPage extends StatefulWidget {
-  const _GeburaAppLauncherSettingTestPage(this.launcher, this.heroTag);
+  const _GeburaAppLauncherSettingTestPage(this.launcher);
 
   final LocalAppInstLauncher launcher;
-  final UniqueKey heroTag;
 
   @override
   State<_GeburaAppLauncherSettingTestPage> createState() =>
@@ -441,7 +333,7 @@ class _GeburaAppLauncherSettingFormState
               title: const Text('高级模式'),
               initialValue: advancedTracing,
             ),
-            if (advancedTracing)
+            if (advancedTracing) ...[
               UniversalTextFormField(
                 initialValue: processName,
                 labelText: '进程名',
@@ -449,7 +341,6 @@ class _GeburaAppLauncherSettingFormState
                 maxLines: null,
                 onChanged: (_) => onChanged,
               ),
-            if (advancedTracing)
               UniversalTextFormField(
                 controller: processPathController,
                 suffixIcon: UniversalTextButton(
@@ -467,7 +358,6 @@ class _GeburaAppLauncherSettingFormState
                 maxLines: null,
                 onChanged: (_) => onChanged,
               ),
-            if (advancedTracing)
               UniversalTextFormField(
                 initialValue: sleepCount.toString(),
                 labelText: '等待时间（秒）',
@@ -484,6 +374,7 @@ class _GeburaAppLauncherSettingFormState
                 },
                 maxLines: null,
               ),
+            ],
           ],
         ),
       ),

@@ -32,6 +32,9 @@ class LocalAppInstLauncherMapper extends ClassMapperBase<LocalAppInstLauncher> {
       v.launcherType;
   static const Field<LocalAppInstLauncher, LocalAppInstLauncherType>
       _f$launcherType = Field('launcherType', _$launcherType);
+  static bool? _$favorite(LocalAppInstLauncher v) => v.favorite;
+  static const Field<LocalAppInstLauncher, bool> _f$favorite =
+      Field('favorite', _$favorite, opt: true);
   static LocalAppInstLaunchCommon? _$common(LocalAppInstLauncher v) => v.common;
   static const Field<LocalAppInstLauncher, LocalAppInstLaunchCommon> _f$common =
       Field('common', _$common, opt: true);
@@ -44,6 +47,7 @@ class LocalAppInstLauncherMapper extends ClassMapperBase<LocalAppInstLauncher> {
     #uuid: _f$uuid,
     #appInstUUID: _f$appInstUUID,
     #launcherType: _f$launcherType,
+    #favorite: _f$favorite,
     #common: _f$common,
     #steam: _f$steam,
   };
@@ -53,6 +57,7 @@ class LocalAppInstLauncherMapper extends ClassMapperBase<LocalAppInstLauncher> {
         uuid: data.dec(_f$uuid),
         appInstUUID: data.dec(_f$appInstUUID),
         launcherType: data.dec(_f$launcherType),
+        favorite: data.dec(_f$favorite),
         common: data.dec(_f$common),
         steam: data.dec(_f$steam));
   }
@@ -122,6 +127,7 @@ abstract class LocalAppInstLauncherCopyWith<
       {String? uuid,
       String? appInstUUID,
       LocalAppInstLauncherType? launcherType,
+      bool? favorite,
       LocalAppInstLaunchCommon? common,
       LocalAppInstLaunchSteam? steam});
   LocalAppInstLauncherCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -149,12 +155,14 @@ class _LocalAppInstLauncherCopyWithImpl<$R, $Out>
           {String? uuid,
           String? appInstUUID,
           LocalAppInstLauncherType? launcherType,
+          Object? favorite = $none,
           Object? common = $none,
           Object? steam = $none}) =>
       $apply(FieldCopyWithData({
         if (uuid != null) #uuid: uuid,
         if (appInstUUID != null) #appInstUUID: appInstUUID,
         if (launcherType != null) #launcherType: launcherType,
+        if (favorite != $none) #favorite: favorite,
         if (common != $none) #common: common,
         if (steam != $none) #steam: steam
       }));
@@ -163,6 +171,7 @@ class _LocalAppInstLauncherCopyWithImpl<$R, $Out>
       uuid: data.get(#uuid, or: $value.uuid),
       appInstUUID: data.get(#appInstUUID, or: $value.appInstUUID),
       launcherType: data.get(#launcherType, or: $value.launcherType),
+      favorite: data.get(#favorite, or: $value.favorite),
       common: data.get(#common, or: $value.common),
       steam: data.get(#steam, or: $value.steam));
 

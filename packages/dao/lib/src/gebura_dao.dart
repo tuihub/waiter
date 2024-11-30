@@ -159,6 +159,7 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
       uuid: Value(data.uuid),
       appInstUUID: Value(data.appInstUUID),
       launcherType: Value(data.launcherType),
+      favorite: Value(data.favorite),
       common: Value(data.common),
       steam: Value(data.steam),
     ));
@@ -190,6 +191,7 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
       uuid: Value(data.uuid),
       appInstUUID: Value(data.appInstUUID),
       launcherType: Value(data.launcherType),
+      favorite: Value(data.favorite),
       common: Value(data.common),
       steam: Value(data.steam),
     ));

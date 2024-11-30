@@ -71,6 +71,10 @@ class GeburaRepo {
     return _dao.addLocalAppInst(inst);
   }
 
+  Future<void> updateLocalAppInst(LocalAppInst inst) async {
+    await _dao.updateLocalAppInst(inst);
+  }
+
   Future<List<LocalAppInst>> loadLocalAppInsts({String? appUUID}) async {
     return _dao.loadLocalAppInsts(appUUID: appUUID);
   }

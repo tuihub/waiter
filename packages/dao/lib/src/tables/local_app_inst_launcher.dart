@@ -8,6 +8,7 @@ class LocalAppInstLauncher with LocalAppInstLauncherMappable {
   final String uuid;
   final String appInstUUID;
   final LocalAppInstLauncherType launcherType;
+  final bool? favorite;
   final LocalAppInstLaunchCommon? common;
   final LocalAppInstLaunchSteam? steam;
 
@@ -15,6 +16,7 @@ class LocalAppInstLauncher with LocalAppInstLauncherMappable {
     required this.uuid,
     required this.appInstUUID,
     required this.launcherType,
+    this.favorite,
     this.common,
     this.steam,
   });
@@ -107,6 +109,7 @@ class LocalAppInstLauncherTable extends Table {
   TextColumn get uuid => text().unique()();
   TextColumn get appInstUUID => text()();
   IntColumn get launcherType => intEnum<LocalAppInstLauncherType>()();
+  BoolColumn get favorite => boolean().nullable()();
   TextColumn get common =>
       text().nullable().map(const LocalAppInstLaunchCommonConverter())();
   TextColumn get steam =>

@@ -341,8 +341,7 @@ extension $GeburaLibrarySettingsRouteExtension on GeburaLibrarySettingsRoute {
 }
 
 const _$GeburaLibrarySettingsActionsEnumMap = {
-  GeburaLibrarySettingsActions.commonAppScanResult: 'common-app-scan-result',
-  GeburaLibrarySettingsActions.steamAppScanResult: 'steam-app-scan-result',
+  GeburaLibrarySettingsActions.appScanResult: 'app-scan-result',
 };
 
 extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
@@ -351,6 +350,7 @@ extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
         state.pathParameters['uuid']!,
         action: _$convertMapValue('action', state.uri.queryParameters,
             _$GeburaLibraryDetailActionsEnumMap._$fromName),
+        $extra: state.extra as dynamic,
       );
 
   String get location => GoRouteData.$location(
@@ -361,18 +361,25 @@ extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
         },
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
 const _$GeburaLibraryDetailActionsEnumMap = {
   GeburaLibraryDetailActions.assignApp: 'assign-app',
+  GeburaLibraryDetailActions.appEdit: 'app-edit',
+  GeburaLibraryDetailActions.appInstAdd: 'app-inst-add',
+  GeburaLibraryDetailActions.appInstEdit: 'app-inst-edit',
+  GeburaLibraryDetailActions.appInstLauncherAdd: 'app-inst-launcher-add',
+  GeburaLibraryDetailActions.appInstLauncherEdit: 'app-inst-launcher-edit',
 };
 
 extension $ChesedRootRouteExtension on ChesedRootRoute {
