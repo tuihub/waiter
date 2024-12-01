@@ -39,6 +39,8 @@ dependencies:
   # built in package
   dao:
     path: packages/dao
+  bangumi_api:
+    path: packages/bangumi_api
 
   # state management
   bloc: ^8.1.4
