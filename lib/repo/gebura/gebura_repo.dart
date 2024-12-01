@@ -1,8 +1,11 @@
 import 'package:dao/dao.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:universal_io/io.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../common/steam/steam.dart';
+import '../../rust/api/win_icon.dart';
 import '../grpc/api_helper.dart';
 
 class GeburaRepo {
@@ -21,23 +24,39 @@ class GeburaRepo {
       final launchers =
           await _dao.loadLocalAppInstLaunchers(appInstUUID: inst.uuid);
       for (final launcher in launchers) {
-        if (launcher.steam != null) {
-          final steamAppID = launcher.steam!.steamAppID;
-          if (app.iconImagePath == null) {
-            app = app.copyWith(
-              iconImagePath: getAppIconFilePath(steamAppID),
-            );
-          }
-          if (app.coverImagePath == null) {
-            app = app.copyWith(
-              coverImagePath: getAppCoverFilePath(steamAppID),
-            );
-          }
-          if (app.backgroundImagePath == null) {
-            app = app.copyWith(
-              backgroundImagePath: getAppBackgroundFilePath(steamAppID),
-            );
-          }
+        switch (launcher.launcherType) {
+          case LocalAppInstLauncherType.common:
+            try {
+              final tmpDir = await getTemporaryDirectory();
+              final iconImagePath =
+                  '${tmpDir.path}${Platform.pathSeparator}${launcher.uuid}.png';
+              await getImagesFromExe(
+                executablePath: launcher.common!.launcherPath,
+                imagePath: iconImagePath,
+              );
+              app = app.copyWith(
+                iconImagePath: iconImagePath,
+              );
+            } catch (_) {
+              // pass
+            }
+          case LocalAppInstLauncherType.steam:
+            final steamAppID = launcher.steam!.steamAppID;
+            if (app.iconImagePath == null) {
+              app = app.copyWith(
+                iconImagePath: getAppIconFilePath(steamAppID),
+              );
+            }
+            if (app.coverImagePath == null) {
+              app = app.copyWith(
+                coverImagePath: getAppCoverFilePath(steamAppID),
+              );
+            }
+            if (app.backgroundImagePath == null) {
+              app = app.copyWith(
+                backgroundImagePath: getAppBackgroundFilePath(steamAppID),
+              );
+            }
         }
       }
     }

@@ -10,11 +10,17 @@ crate-type = ["cdylib", "staticlib"]
 anyhow = "1.0"
 flutter_rust_bridge = "=2.5.0"
 glob = "0.3.1"
+image = "0.25.5"
+itertools = "0.12.1"
 log = "0.4.14"
-strum = "0.25.0"
-strum_macros = "0.25.3"
+strum = "0.26.3"
+strum_macros = "0.26.4"
 sysinfo = "0.29.0"
 sysproxy = "0.3.0"
 time = "0.3.21"
-walkdir = "2"
-winapi = { version = "0.3.9", features = ["processthreadsapi"] }
+widestring = "1.1.0"
+winapi = { version = "0.3.9", features = ["processthreadsapi", "libloaderapi", "winuser", "wingdi", "fileapi", "synchapi", "winbase"] }
+
+[dependencies.windows]
+version = "0.58.0"
+features = ["Data_Xml_Dom", "Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging", "Win32_Graphics", "Win32_Graphics_Gdi", "Win32_UI_Shell"]

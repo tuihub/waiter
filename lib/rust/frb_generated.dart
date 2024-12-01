@@ -10,6 +10,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'api/app_scan.dart';
 import 'api/simple.dart';
+import 'api/win_icon.dart';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
@@ -69,7 +70,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.5.0';
 
   @override
-  int get rustContentHash => 515802758;
+  int get rustContentHash => 112849851;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -93,6 +94,9 @@ abstract class RustLibApi extends BaseApi {
       required String workingDir,
       required int sleepCount,
       required BigInt sleepMillis});
+
+  Future<void> crateApiWinIconGetImagesFromExe(
+      {required String executablePath, required String imagePath});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -205,6 +209,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           'sleepCount',
           'sleepMillis'
         ],
+      );
+
+  @override
+  Future<void> crateApiWinIconGetImagesFromExe(
+      {required String executablePath, required String imagePath}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(executablePath, serializer);
+        sse_encode_String(imagePath, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 4, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateApiWinIconGetImagesFromExeConstMeta,
+      argValues: [executablePath, imagePath],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateApiWinIconGetImagesFromExeConstMeta =>
+      const TaskConstMeta(
+        debugName: 'get_images_from_exe',
+        argNames: ['executablePath', 'imagePath'],
       );
 
   @protected
@@ -368,6 +399,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int dco_decode_u_8(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
+  }
+
+  @protected
+  void dco_decode_unit(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return;
   }
 
   @protected
@@ -550,6 +587,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_decode_unit(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
   void sse_encode_AnyhowException(
       AnyhowException self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -702,5 +744,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_u_8(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self);
+  }
+
+  @protected
+  void sse_encode_unit(void self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 }

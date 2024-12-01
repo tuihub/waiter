@@ -508,7 +508,9 @@ class _GeburaLibraryDetailInstListState
           SpacingHelper.defaultDivider,
           UniversalListTile(
             title: const Text('本地文件'),
-            subtitle: Text(_onlyShowFavorites ? '${favoriteTiles.length} 个收藏' : '${appInsts.length} 个安装位置'),
+            subtitle: Text(_onlyShowFavorites
+                ? '${favoriteTiles.length} 个收藏'
+                : '${appInsts.length} 个安装位置'),
             leading: Icon(UniversalUI.of(context).icons.folder),
             trailing: Wrap(
               spacing: 8,
