@@ -6,6 +6,7 @@ import 'kv.dart';
 import 'tables/local_app.dart';
 import 'tables/local_app_inst.dart';
 import 'tables/local_app_inst_launcher.dart';
+import 'tables/local_app_run_record.dart';
 import 'tables/local_common_app_scan.dart';
 import 'tables/local_common_app_scan_result.dart';
 import 'tables/local_steam_app_scan.dart';
@@ -22,6 +23,7 @@ part 'database.g.dart';
     LocalAppTable,
     LocalAppInstTable,
     LocalAppInstLauncherTable,
+    LocalAppRunRecordTable,
     LocalCommonAppScanTable,
     LocalCommonAppScanResultTable,
     LocalSteamAppScanTable,

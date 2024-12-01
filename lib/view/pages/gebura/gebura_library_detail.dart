@@ -93,22 +93,6 @@ class GeburaLibraryDetailPage extends StatelessWidget {
           launcherUUID = null;
           launcherType = null;
         }
-        // final runTime = state.getRunTime(Int64(item.appID ?? 0));
-        late String runTimeStr;
-        // if (runTime != null) {
-        //   if (runTime.inSeconds == 0) {
-        //     runTimeStr = '';
-        //   } else if (runTime.inSeconds < 100) {
-        //     runTimeStr = '${runTime.inSeconds} 秒';
-        //   } else if (runTime.inMinutes < 100) {
-        //     runTimeStr = '${runTime.inMinutes} 分钟';
-        //   } else {
-        //     runTimeStr =
-        //         '${((runTime.inSeconds.toDouble()) / 3600).toStringAsFixed(1)} 小时';
-        //   }
-        // } else {
-        //   runTimeStr = '错误';
-        // }
         final runState = state.runningInsts[item.uuid];
         return Scaffold(
           backgroundColor: Colors.transparent,
@@ -206,13 +190,14 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             UniversalElevatedButton.icon(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
-                              onPressed: (launcherUUID == null)
-                                  ? null
-                                  : () async {
-                                      context.read<GeburaBloc>().add(
-                                          GeburaLaunchLocalAppEvent(
-                                              launcherUUID: launcherUUID));
-                                    },
+                              onPressed:
+                                  (launcherUUID != null && runState == null)
+                                      ? () async {
+                                          context.read<GeburaBloc>().add(
+                                              GeburaLaunchLocalAppEvent(
+                                                  launcherUUID: launcherUUID));
+                                        }
+                                      : null,
                               icon: Icon(
                                 launcherType == LocalAppInstLauncherType.steam
                                     ? FontAwesomeIcons.steam
@@ -224,7 +209,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                     22,
                               ),
                               label: Text(
-                                '启动',
+                                runState == null ? '启动' : '运行中',
                                 style: TextStyle(
                                   fontSize: Theme.of(context)
                                           .textTheme
@@ -236,10 +221,46 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                             ),
                           if (PlatformHelper.isWindowsApp())
                             digestItem(
-                                context, Icons.cloud_off, '云同步', '已离线', null),
-                          // if (runTimeStr.isNotEmpty)
-                          //   digestItem(
-                          //       context, Icons.timer, '运行时间', runTimeStr, null),
+                                context, Icons.cloud_off, '云同步', '离线', null),
+                          FutureBuilder(
+                            future: context
+                                .read<GeburaBloc>()
+                                .sumLocalAppRunTime(item.uuid),
+                            builder: (context, snapshot) {
+                              String runTimeStr = '统计中';
+                              if (snapshot.hasData) {
+                                final (runTime, msg) = snapshot.data!;
+                                if (runTime != null) {
+                                  if (runTime.inSeconds == 0) {
+                                    runTimeStr = '0 秒';
+                                  } else if (runTime.inSeconds < 100) {
+                                    runTimeStr = '${runTime.inSeconds} 秒';
+                                  } else if (runTime.inMinutes < 100) {
+                                    runTimeStr = '${runTime.inMinutes} 分钟';
+                                  } else {
+                                    runTimeStr =
+                                        '${((runTime.inSeconds.toDouble()) / 3600).toStringAsFixed(1)} 小时';
+                                  }
+                                } else if (msg != null) {
+                                  runTimeStr = '错误';
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    Toast(title: '', message: msg)
+                                        .show(context);
+                                  });
+                                } else {
+                                  runTimeStr = '错误';
+                                }
+                              }
+                              return digestItem(
+                                context,
+                                UniversalUI.of(context).icons.timer,
+                                '运行时间',
+                                runTimeStr,
+                                null,
+                              );
+                            },
+                          ),
                           Expanded(
                               child:
                                   _GeburaLibraryDetailAppSettings(item: item)),

@@ -9,6 +9,8 @@ mixin _$GeburaDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.localAppInstTable;
   $LocalAppInstLauncherTableTable get localAppInstLauncherTable =>
       attachedDatabase.localAppInstLauncherTable;
+  $LocalAppRunRecordTableTable get localAppRunRecordTable =>
+      attachedDatabase.localAppRunRecordTable;
   $LocalCommonAppScanTableTable get localCommonAppScanTable =>
       attachedDatabase.localCommonAppScanTable;
   $LocalCommonAppScanResultTableTable get localCommonAppScanResultTable =>

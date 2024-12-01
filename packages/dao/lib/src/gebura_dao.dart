@@ -4,6 +4,7 @@ import 'database.dart';
 import 'tables/local_app.dart';
 import 'tables/local_app_inst.dart';
 import 'tables/local_app_inst_launcher.dart';
+import 'tables/local_app_run_record.dart';
 import 'tables/local_common_app_scan.dart';
 import 'tables/local_common_app_scan_result.dart';
 import 'tables/local_steam_app_scan.dart';
@@ -15,6 +16,7 @@ part 'gebura_dao.g.dart';
   LocalAppTable,
   LocalAppInstTable,
   LocalAppInstLauncherTable,
+  LocalAppRunRecordTable,
   LocalCommonAppScanTable,
   LocalCommonAppScanResultTable,
   LocalSteamAppScanTable,
@@ -401,5 +403,40 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
       query.where((t) => t.scanUUID.equals(scanUUID));
     }
     return query.get();
+  }
+
+  Future<int> addLocalAppRunRecord(LocalAppRunRecord data) async {
+    return into(localAppRunRecordTable).insert(LocalAppRunRecordTableCompanion(
+      uuid: Value(data.uuid),
+      appUUID: Value(data.appUUID),
+      instUUID: Value(data.instUUID),
+      launcherUUID: Value(data.launcherUUID),
+      startTime: Value(data.startTime),
+      endTime: Value(data.endTime),
+    ));
+  }
+
+  Future<LocalAppRunRecord> getLocalAppRunRecord(String uuid) async {
+    final query = select(localAppRunRecordTable)
+      ..where((t) => t.uuid.equals(uuid));
+    return query.getSingle();
+  }
+
+  Future<Duration> sumLocalAppRunRecord(String appUUID) async {
+    final query = customSelect(
+      '''
+SELECT 
+  SUM(end_time - start_time) AS total_run_time 
+FROM local_app_run_record_table
+WHERE 
+  app_u_u_i_d = ?
+  AND end_time IS NOT NULL
+          ''',
+      variables: [Variable.withString(appUUID)],
+      readsFrom: {localAppRunRecordTable},
+    );
+
+    final result = await query.getSingle();
+    return Duration(seconds: result.data['total_run_time'] as int? ?? 0);
   }
 }

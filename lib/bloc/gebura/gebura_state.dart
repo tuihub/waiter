@@ -8,7 +8,7 @@ class GeburaState with GeburaStateMappable {
   Map<String, LocalApp> libraryApps;
   Map<String, LocalAppInst> libraryAppInsts;
   Map<String, LocalAppInstLauncher> libraryAppInstLaunchers;
-  Map<String, LocalAppInstRunRecord> runningInsts;
+  Map<String, LocalAppRunRecord> runningInsts;
   Map<String, LocalLibraryScanResult> localLibraryScanResults;
 
   GeburaState({

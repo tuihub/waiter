@@ -1469,6 +1469,252 @@ class LocalAppInstLauncherTableCompanion
   }
 }
 
+class $LocalAppRunRecordTableTable extends LocalAppRunRecordTable
+    with TableInfo<$LocalAppRunRecordTableTable, LocalAppRunRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalAppRunRecordTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  static const VerificationMeta _appUUIDMeta =
+      const VerificationMeta('appUUID');
+  @override
+  late final GeneratedColumn<String> appUUID = GeneratedColumn<String>(
+      'app_u_u_i_d', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _instUUIDMeta =
+      const VerificationMeta('instUUID');
+  @override
+  late final GeneratedColumn<String> instUUID = GeneratedColumn<String>(
+      'inst_u_u_i_d', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _launcherUUIDMeta =
+      const VerificationMeta('launcherUUID');
+  @override
+  late final GeneratedColumn<String> launcherUUID = GeneratedColumn<String>(
+      'launcher_u_u_i_d', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _startTimeMeta =
+      const VerificationMeta('startTime');
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+      'start_time', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _endTimeMeta =
+      const VerificationMeta('endTime');
+  @override
+  late final GeneratedColumn<DateTime> endTime = GeneratedColumn<DateTime>(
+      'end_time', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, uuid, appUUID, instUUID, launcherUUID, startTime, endTime];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_app_run_record_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<LocalAppRunRecord> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('app_u_u_i_d')) {
+      context.handle(_appUUIDMeta,
+          appUUID.isAcceptableOrUnknown(data['app_u_u_i_d']!, _appUUIDMeta));
+    } else if (isInserting) {
+      context.missing(_appUUIDMeta);
+    }
+    if (data.containsKey('inst_u_u_i_d')) {
+      context.handle(_instUUIDMeta,
+          instUUID.isAcceptableOrUnknown(data['inst_u_u_i_d']!, _instUUIDMeta));
+    } else if (isInserting) {
+      context.missing(_instUUIDMeta);
+    }
+    if (data.containsKey('launcher_u_u_i_d')) {
+      context.handle(
+          _launcherUUIDMeta,
+          launcherUUID.isAcceptableOrUnknown(
+              data['launcher_u_u_i_d']!, _launcherUUIDMeta));
+    } else if (isInserting) {
+      context.missing(_launcherUUIDMeta);
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(_startTimeMeta,
+          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+    } else if (isInserting) {
+      context.missing(_startTimeMeta);
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(_endTimeMeta,
+          endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalAppRunRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalAppRunRecord(
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid'])!,
+      appUUID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}app_u_u_i_d'])!,
+      instUUID: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}inst_u_u_i_d'])!,
+      launcherUUID: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}launcher_u_u_i_d'])!,
+      startTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_time'])!,
+      endTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_time']),
+    );
+  }
+
+  @override
+  $LocalAppRunRecordTableTable createAlias(String alias) {
+    return $LocalAppRunRecordTableTable(attachedDatabase, alias);
+  }
+}
+
+class LocalAppRunRecordTableCompanion
+    extends UpdateCompanion<LocalAppRunRecord> {
+  final Value<int> id;
+  final Value<String> uuid;
+  final Value<String> appUUID;
+  final Value<String> instUUID;
+  final Value<String> launcherUUID;
+  final Value<DateTime> startTime;
+  final Value<DateTime?> endTime;
+  const LocalAppRunRecordTableCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.appUUID = const Value.absent(),
+    this.instUUID = const Value.absent(),
+    this.launcherUUID = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+  });
+  LocalAppRunRecordTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String uuid,
+    required String appUUID,
+    required String instUUID,
+    required String launcherUUID,
+    required DateTime startTime,
+    this.endTime = const Value.absent(),
+  })  : uuid = Value(uuid),
+        appUUID = Value(appUUID),
+        instUUID = Value(instUUID),
+        launcherUUID = Value(launcherUUID),
+        startTime = Value(startTime);
+  static Insertable<LocalAppRunRecord> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<String>? appUUID,
+    Expression<String>? instUUID,
+    Expression<String>? launcherUUID,
+    Expression<DateTime>? startTime,
+    Expression<DateTime>? endTime,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (appUUID != null) 'app_u_u_i_d': appUUID,
+      if (instUUID != null) 'inst_u_u_i_d': instUUID,
+      if (launcherUUID != null) 'launcher_u_u_i_d': launcherUUID,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+    });
+  }
+
+  LocalAppRunRecordTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? uuid,
+      Value<String>? appUUID,
+      Value<String>? instUUID,
+      Value<String>? launcherUUID,
+      Value<DateTime>? startTime,
+      Value<DateTime?>? endTime}) {
+    return LocalAppRunRecordTableCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      appUUID: appUUID ?? this.appUUID,
+      instUUID: instUUID ?? this.instUUID,
+      launcherUUID: launcherUUID ?? this.launcherUUID,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (appUUID.present) {
+      map['app_u_u_i_d'] = Variable<String>(appUUID.value);
+    }
+    if (instUUID.present) {
+      map['inst_u_u_i_d'] = Variable<String>(instUUID.value);
+    }
+    if (launcherUUID.present) {
+      map['launcher_u_u_i_d'] = Variable<String>(launcherUUID.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<DateTime>(endTime.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalAppRunRecordTableCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('appUUID: $appUUID, ')
+          ..write('instUUID: $instUUID, ')
+          ..write('launcherUUID: $launcherUUID, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $LocalCommonAppScanTableTable extends LocalCommonAppScanTable
     with TableInfo<$LocalCommonAppScanTableTable, LocalCommonAppScan> {
   @override
@@ -2667,6 +2913,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LocalAppInstTableTable(this);
   late final $LocalAppInstLauncherTableTable localAppInstLauncherTable =
       $LocalAppInstLauncherTableTable(this);
+  late final $LocalAppRunRecordTableTable localAppRunRecordTable =
+      $LocalAppRunRecordTableTable(this);
   late final $LocalCommonAppScanTableTable localCommonAppScanTable =
       $LocalCommonAppScanTableTable(this);
   late final $LocalCommonAppScanResultTableTable localCommonAppScanResultTable =
@@ -2687,6 +2935,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index localAppInstLauncherAppInstUuid = Index(
       'local_app_inst_launcher_app_inst_uuid',
       'CREATE INDEX local_app_inst_launcher_app_inst_uuid ON local_app_inst_launcher_table (app_inst_u_u_i_d)');
+  late final Index localAppRunRecordUuid = Index('local_app_run_record_uuid',
+      'CREATE INDEX local_app_run_record_uuid ON local_app_run_record_table (uuid)');
+  late final Index localAppRunRecordAppUuid = Index(
+      'local_app_run_record_app_uuid',
+      'CREATE INDEX local_app_run_record_app_uuid ON local_app_run_record_table (app_u_u_i_d, inst_u_u_i_d, launcher_u_u_i_d)');
   late final Index localCommonAppScanUuid = Index('local_common_app_scan_uuid',
       'CREATE INDEX local_common_app_scan_uuid ON local_common_app_scan_table (uuid)');
   late final Index localCommonAppScanBasePath = Index(
@@ -2713,6 +2966,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         localAppTable,
         localAppInstTable,
         localAppInstLauncherTable,
+        localAppRunRecordTable,
         localCommonAppScanTable,
         localCommonAppScanResultTable,
         localSteamAppScanTable,
@@ -2722,6 +2976,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         localAppInstAppUuid,
         localAppInstLauncherUuid,
         localAppInstLauncherAppInstUuid,
+        localAppRunRecordUuid,
+        localAppRunRecordAppUuid,
         localCommonAppScanUuid,
         localCommonAppScanBasePath,
         localCommonAppScanResultUuid,
@@ -3767,6 +4023,211 @@ typedef $$LocalAppInstLauncherTableTableProcessedTableManager
         ),
         LocalAppInstLauncher,
         PrefetchHooks Function()>;
+typedef $$LocalAppRunRecordTableTableCreateCompanionBuilder
+    = LocalAppRunRecordTableCompanion Function({
+  Value<int> id,
+  required String uuid,
+  required String appUUID,
+  required String instUUID,
+  required String launcherUUID,
+  required DateTime startTime,
+  Value<DateTime?> endTime,
+});
+typedef $$LocalAppRunRecordTableTableUpdateCompanionBuilder
+    = LocalAppRunRecordTableCompanion Function({
+  Value<int> id,
+  Value<String> uuid,
+  Value<String> appUUID,
+  Value<String> instUUID,
+  Value<String> launcherUUID,
+  Value<DateTime> startTime,
+  Value<DateTime?> endTime,
+});
+
+class $$LocalAppRunRecordTableTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalAppRunRecordTableTable> {
+  $$LocalAppRunRecordTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+      column: $table.uuid, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get appUUID => $composableBuilder(
+      column: $table.appUUID, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get instUUID => $composableBuilder(
+      column: $table.instUUID, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get launcherUUID => $composableBuilder(
+      column: $table.launcherUUID, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+      column: $table.startTime, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endTime => $composableBuilder(
+      column: $table.endTime, builder: (column) => ColumnFilters(column));
+}
+
+class $$LocalAppRunRecordTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalAppRunRecordTableTable> {
+  $$LocalAppRunRecordTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+      column: $table.uuid, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get appUUID => $composableBuilder(
+      column: $table.appUUID, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get instUUID => $composableBuilder(
+      column: $table.instUUID, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get launcherUUID => $composableBuilder(
+      column: $table.launcherUUID,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+      column: $table.startTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endTime => $composableBuilder(
+      column: $table.endTime, builder: (column) => ColumnOrderings(column));
+}
+
+class $$LocalAppRunRecordTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalAppRunRecordTableTable> {
+  $$LocalAppRunRecordTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<String> get appUUID =>
+      $composableBuilder(column: $table.appUUID, builder: (column) => column);
+
+  GeneratedColumn<String> get instUUID =>
+      $composableBuilder(column: $table.instUUID, builder: (column) => column);
+
+  GeneratedColumn<String> get launcherUUID => $composableBuilder(
+      column: $table.launcherUUID, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+}
+
+class $$LocalAppRunRecordTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $LocalAppRunRecordTableTable,
+    LocalAppRunRecord,
+    $$LocalAppRunRecordTableTableFilterComposer,
+    $$LocalAppRunRecordTableTableOrderingComposer,
+    $$LocalAppRunRecordTableTableAnnotationComposer,
+    $$LocalAppRunRecordTableTableCreateCompanionBuilder,
+    $$LocalAppRunRecordTableTableUpdateCompanionBuilder,
+    (
+      LocalAppRunRecord,
+      BaseReferences<_$AppDatabase, $LocalAppRunRecordTableTable,
+          LocalAppRunRecord>
+    ),
+    LocalAppRunRecord,
+    PrefetchHooks Function()> {
+  $$LocalAppRunRecordTableTableTableManager(
+      _$AppDatabase db, $LocalAppRunRecordTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalAppRunRecordTableTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalAppRunRecordTableTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalAppRunRecordTableTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> uuid = const Value.absent(),
+            Value<String> appUUID = const Value.absent(),
+            Value<String> instUUID = const Value.absent(),
+            Value<String> launcherUUID = const Value.absent(),
+            Value<DateTime> startTime = const Value.absent(),
+            Value<DateTime?> endTime = const Value.absent(),
+          }) =>
+              LocalAppRunRecordTableCompanion(
+            id: id,
+            uuid: uuid,
+            appUUID: appUUID,
+            instUUID: instUUID,
+            launcherUUID: launcherUUID,
+            startTime: startTime,
+            endTime: endTime,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String uuid,
+            required String appUUID,
+            required String instUUID,
+            required String launcherUUID,
+            required DateTime startTime,
+            Value<DateTime?> endTime = const Value.absent(),
+          }) =>
+              LocalAppRunRecordTableCompanion.insert(
+            id: id,
+            uuid: uuid,
+            appUUID: appUUID,
+            instUUID: instUUID,
+            launcherUUID: launcherUUID,
+            startTime: startTime,
+            endTime: endTime,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$LocalAppRunRecordTableTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $LocalAppRunRecordTableTable,
+        LocalAppRunRecord,
+        $$LocalAppRunRecordTableTableFilterComposer,
+        $$LocalAppRunRecordTableTableOrderingComposer,
+        $$LocalAppRunRecordTableTableAnnotationComposer,
+        $$LocalAppRunRecordTableTableCreateCompanionBuilder,
+        $$LocalAppRunRecordTableTableUpdateCompanionBuilder,
+        (
+          LocalAppRunRecord,
+          BaseReferences<_$AppDatabase, $LocalAppRunRecordTableTable,
+              LocalAppRunRecord>
+        ),
+        LocalAppRunRecord,
+        PrefetchHooks Function()>;
 typedef $$LocalCommonAppScanTableTableCreateCompanionBuilder
     = LocalCommonAppScanTableCompanion Function({
   Value<int> id,
@@ -4708,6 +5169,9 @@ class $AppDatabaseManager {
   $$LocalAppInstLauncherTableTableTableManager get localAppInstLauncherTable =>
       $$LocalAppInstLauncherTableTableTableManager(
           _db, _db.localAppInstLauncherTable);
+  $$LocalAppRunRecordTableTableTableManager get localAppRunRecordTable =>
+      $$LocalAppRunRecordTableTableTableManager(
+          _db, _db.localAppRunRecordTable);
   $$LocalCommonAppScanTableTableTableManager get localCommonAppScanTable =>
       $$LocalCommonAppScanTableTableTableManager(
           _db, _db.localCommonAppScanTable);

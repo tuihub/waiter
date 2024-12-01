@@ -355,4 +355,13 @@ class UniversalIcon {
         return FluentIcons.star_24_regular;
     }
   }
+
+  IconData get timer {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.timer;
+      case UIDesign.fluent:
+        return FluentIcons.timer_24_regular;
+    }
+  }
 }

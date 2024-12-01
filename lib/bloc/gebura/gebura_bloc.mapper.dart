@@ -14,7 +14,7 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = GeburaStateMapper._());
       LibraryListItemMapper.ensureInitialized();
-      LocalAppInstRunRecordMapper.ensureInitialized();
+      LocalAppRunRecordMapper.ensureInitialized();
       LocalLibraryScanResultMapper.ensureInitialized();
       LibrarySettingsMapper.ensureInitialized();
       LocalAppMapper.ensureInitialized();
@@ -34,9 +34,9 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
       v.libraryListItems;
   static const Field<GeburaState, List<LibraryListItem>> _f$libraryListItems =
       Field('libraryListItems', _$libraryListItems, opt: true);
-  static Map<String, LocalAppInstRunRecord> _$runningInsts(GeburaState v) =>
+  static Map<String, LocalAppRunRecord> _$runningInsts(GeburaState v) =>
       v.runningInsts;
-  static const Field<GeburaState, Map<String, LocalAppInstRunRecord>>
+  static const Field<GeburaState, Map<String, LocalAppRunRecord>>
       _f$runningInsts =
       Field('runningInsts', _$runningInsts, opt: true, def: const {});
   static Map<String, LocalLibraryScanResult> _$localLibraryScanResults(
@@ -109,12 +109,9 @@ abstract class GeburaStateCopyWith<$R, $In extends GeburaState, $Out>
   ListCopyWith<$R, LibraryListItem,
           LibraryListItemCopyWith<$R, LibraryListItem, LibraryListItem>>?
       get libraryListItems;
-  MapCopyWith<
-      $R,
-      String,
-      LocalAppInstRunRecord,
-      LocalAppInstRunRecordCopyWith<$R, LocalAppInstRunRecord,
-          LocalAppInstRunRecord>> get runningInsts;
+  MapCopyWith<$R, String, LocalAppRunRecord,
+          LocalAppRunRecordCopyWith<$R, LocalAppRunRecord, LocalAppRunRecord>>
+      get runningInsts;
   MapCopyWith<
       $R,
       String,
@@ -136,7 +133,7 @@ abstract class GeburaStateCopyWith<$R, $In extends GeburaState, $Out>
   $R call(
       {bool? initialized,
       List<LibraryListItem>? libraryListItems,
-      Map<String, LocalAppInstRunRecord>? runningInsts,
+      Map<String, LocalAppRunRecord>? runningInsts,
       Map<String, LocalLibraryScanResult>? localLibraryScanResults,
       LibrarySettings? librarySettings,
       Map<String, LocalApp>? libraryApps,
@@ -161,15 +158,10 @@ class _GeburaStateCopyWithImpl<$R, $Out>
               (v, t) => v.copyWith.$chain(t), (v) => call(libraryListItems: v))
           : null;
   @override
-  MapCopyWith<
-      $R,
-      String,
-      LocalAppInstRunRecord,
-      LocalAppInstRunRecordCopyWith<$R, LocalAppInstRunRecord,
-          LocalAppInstRunRecord>> get runningInsts => MapCopyWith(
-      $value.runningInsts,
-      (v, t) => v.copyWith.$chain(t),
-      (v) => call(runningInsts: v));
+  MapCopyWith<$R, String, LocalAppRunRecord,
+          LocalAppRunRecordCopyWith<$R, LocalAppRunRecord, LocalAppRunRecord>>
+      get runningInsts => MapCopyWith($value.runningInsts,
+          (v, t) => v.copyWith.$chain(t), (v) => call(runningInsts: v));
   @override
   MapCopyWith<
       $R,
@@ -207,7 +199,7 @@ class _GeburaStateCopyWithImpl<$R, $Out>
   $R call(
           {bool? initialized,
           Object? libraryListItems = $none,
-          Map<String, LocalAppInstRunRecord>? runningInsts,
+          Map<String, LocalAppRunRecord>? runningInsts,
           Map<String, LocalLibraryScanResult>? localLibraryScanResults,
           Object? librarySettings = $none,
           Map<String, LocalApp>? libraryApps,

@@ -473,8 +473,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 msg: S.current.pleaseSetupApplicationPath));
             return;
           }
-          emit(GeburaLaunchLocalAppInstState(
-              state, appUUID, EventStatus.processing));
           final setting = launcher.common!;
           if (setting.launcherPath.isEmpty) {
             emit(GeburaLaunchLocalAppInstState(
@@ -488,13 +486,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 msg: S.current.pleaseDontReRunApplication));
             return;
           }
-          final Map<String, LocalAppInstRunRecord> runningInsts = {};
+          Map<String, LocalAppRunRecord> runningInsts = {};
           runningInsts.addAll(state.runningInsts);
-          runningInsts[appUUID] = LocalAppInstRunRecord(
-            uuid: appUUID,
-            startTime: null,
+          LocalAppRunRecord record = LocalAppRunRecord(
+            uuid: const Uuid().v1(),
+            appUUID: appUUID,
+            instUUID: launcher.appInstUUID,
+            launcherUUID: launcher.uuid,
+            startTime: DateTime.now(),
             endTime: null,
           );
+          runningInsts[appUUID] = record;
           emit(GeburaLaunchLocalAppInstState(
               state.copyWith(
                 runningInsts: runningInsts,
@@ -512,33 +514,40 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 workingDir: setting.workingDir ?? dirname(setting.launcherPath),
                 sleepCount: setting.sleepCount ?? 1,
                 sleepMillis: BigInt.from(1000));
+            runningInsts = state.runningInsts;
+            runningInsts.remove(appUUID);
             if (!suceess) {
-              runningInsts.remove(appUUID);
               emit(GeburaLaunchLocalAppInstState(
-                  state, appUUID, EventStatus.failed,
+                  state.copyWith(
+                    runningInsts: runningInsts,
+                  ),
+                  appUUID,
+                  EventStatus.failed,
                   msg: S.current.applicationExitAbnormally));
               return;
+            } else {
+              record = record.copyWith(
+                startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
+                endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
+              );
+              await _repo.addLocalAppRunRecord(record);
+              emit(GeburaLaunchLocalAppInstState(
+                state.copyWith(
+                  runningInsts: runningInsts,
+                ),
+                appUUID,
+                EventStatus.success,
+              ));
             }
-            // final record = LocalAppInstRunRecord(
-            //   uuid: appUUID,
-            //   startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
-            //   endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
-            // );
-            runningInsts.remove(appUUID);
-            // add(GeburaReportAppRunTimeEvent(
-            //   event.appInstID,
-            //   record.startTime!,
-            //   record.endTime!,
-            // ));
-            emit(GeburaLaunchLocalAppInstState(
-              state,
-              appUUID,
-              EventStatus.success,
-            ));
           } catch (e) {
+            runningInsts = state.runningInsts;
             runningInsts.remove(appUUID);
             emit(GeburaLaunchLocalAppInstState(
-                state, appUUID, EventStatus.failed,
+                state.copyWith(
+                  runningInsts: runningInsts,
+                ),
+                appUUID,
+                EventStatus.failed,
                 msg: '${S.current.launcherError} $e'));
             return;
           }
@@ -1044,6 +1053,23 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       }
     }
     return (folders, result);
+  }
+
+  Future<LocalAppRunRecord?> getLocalAppRunRecord(String recordUUID) async {
+    try {
+      return await _repo.getLocalAppRunRecord(recordUUID);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<(Duration?, String?)> sumLocalAppRunTime(String appUUID) async {
+    try {
+      final res = await _repo.sumLocalAppRunRecord(appUUID);
+      return (res, null);
+    } catch (e) {
+      return (null, e.toString());
+    }
   }
 }
 

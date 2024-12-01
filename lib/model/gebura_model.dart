@@ -94,19 +94,3 @@ class LocalLibraryScanResultDetail with LocalLibraryScanResultDetailMappable {
   static const fromMap = LocalLibraryScanResultDetailMapper.fromMap;
   static const fromJson = LocalLibraryScanResultDetailMapper.fromJson;
 }
-
-@MappableClass()
-class LocalAppInstRunRecord with LocalAppInstRunRecordMappable {
-  final String uuid;
-  final DateTime? startTime;
-  final DateTime? endTime;
-
-  const LocalAppInstRunRecord({
-    required this.uuid,
-    this.startTime,
-    this.endTime,
-  });
-
-  static const fromMap = LocalAppInstRunRecordMapper.fromMap;
-  static const fromJson = LocalAppInstRunRecordMapper.fromJson;
-}

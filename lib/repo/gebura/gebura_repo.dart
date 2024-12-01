@@ -160,4 +160,16 @@ class GeburaRepo {
       {String? scanUUID, String? uuid}) async {
     return _dao.loadLocalSteamAppScanResults(uuid: uuid, scanUUID: scanUUID);
   }
+
+  Future<void> addLocalAppRunRecord(LocalAppRunRecord record) async {
+    await _dao.addLocalAppRunRecord(record);
+  }
+
+  Future<LocalAppRunRecord> getLocalAppRunRecord(String uuid) async {
+    return _dao.getLocalAppRunRecord(uuid);
+  }
+
+  Future<Duration> sumLocalAppRunRecord(String appUUID) async {
+    return _dao.sumLocalAppRunRecord(appUUID);
+  }
 }
