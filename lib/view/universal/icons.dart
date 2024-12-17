@@ -364,4 +364,31 @@ class UniversalIcon {
         return FluentIcons.timer_24_regular;
     }
   }
+
+  IconData get hide {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.visibility_off;
+      case UIDesign.fluent:
+        return FluentIcons.eye_off_24_regular;
+    }
+  }
+
+  IconData get arrowLeft {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.arrow_left;
+      case UIDesign.fluent:
+        return FluentIcons.arrow_left_24_regular;
+    }
+  }
+
+  IconData get arrowRight {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.arrow_right;
+      case UIDesign.fluent:
+        return FluentIcons.arrow_right_24_regular;
+    }
+  }
 }

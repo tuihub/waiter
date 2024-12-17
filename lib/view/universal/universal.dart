@@ -8,4 +8,5 @@ export 'list_tile.dart';
 export 'page.dart';
 export 'progress.dart';
 export 'spacing.dart';
+export 'toggle_switch.dart';
 export 'tool_bar.dart';

@@ -169,7 +169,8 @@ class GeburaRepo {
     return _dao.getLocalAppRunRecord(uuid);
   }
 
-  Future<Duration> sumLocalAppRunRecord(String appUUID) async {
-    return _dao.sumLocalAppRunRecord(appUUID);
+  Future<Duration> sumLocalAppRunRecord(String appUUID,
+      {DateTime? start, Duration? duration}) async {
+    return _dao.sumLocalAppRunRecord(appUUID, start: start, duration: duration);
   }
 }

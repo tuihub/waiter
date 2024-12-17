@@ -1,21 +1,21 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dao/dao.dart';
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:file_picker/file_picker.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_io/io.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../../bloc/main_bloc.dart';
 import '../../../common/platform.dart';
-import '../../../repo/grpc/l10n.dart';
 import '../../../route.dart';
 import '../../components/input_formatters.dart';
 import '../../components/pop_alert.dart';
@@ -268,7 +268,10 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SpacingHelper.defaultDivider,
                   _GeburaLibraryDetailInstList(item: item),
+                  SpacingHelper.defaultDivider,
+                  _GeburaLibraryDetailRunRecordChart(item: item),
                   const SizedBox(
                     height: 16,
                   ),
@@ -526,7 +529,6 @@ class _GeburaLibraryDetailInstListState
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SpacingHelper.defaultDivider,
           UniversalListTile(
             title: const Text('本地文件'),
             subtitle: Text(_onlyShowFavorites
@@ -648,76 +650,402 @@ class _GeburaLibraryDetailAppSettingsState
   }
 }
 
-class _GeburaLibraryDetailChangeAppInfoDialog extends StatefulWidget {
-  const _GeburaLibraryDetailChangeAppInfoDialog({
-    required this.item,
-  });
+class _GeburaLibraryDetailRunRecordChart extends StatefulWidget {
+  const _GeburaLibraryDetailRunRecordChart({required this.item});
 
-  final App item;
+  final LocalApp item;
 
   @override
-  State<_GeburaLibraryDetailChangeAppInfoDialog> createState() =>
-      _GeburaLibraryDetailChangeAppInfoDialogState();
+  State<_GeburaLibraryDetailRunRecordChart> createState() =>
+      _GeburaLibraryDetailRunRecordChartState();
 }
 
-class _GeburaLibraryDetailChangeAppInfoDialogState
-    extends State<_GeburaLibraryDetailChangeAppInfoDialog> {
-  String? source;
-  String? sourceAppID;
+class _GeburaLibraryDetailRunRecordChartState
+    extends State<_GeburaLibraryDetailRunRecordChart> {
+  _GeburaLibraryDetailRunRecordChartType current =
+      _GeburaLibraryDetailRunRecordChartType.closed;
+  DateTime _startDate = DateTime.now();
+  final List<(DateTime, DateTime, bool)> _timeSplit = [];
+  final Map<(DateTime, DateTime), Duration> _runTime = {};
+
+  void _updateChartType(_GeburaLibraryDetailRunRecordChartType type) {
+    current = type;
+    // round startDate
+    switch (current) {
+      case _GeburaLibraryDetailRunRecordChartType.day:
+        _startDate =
+            DateTime(_startDate.year, _startDate.month, _startDate.day);
+      case _GeburaLibraryDetailRunRecordChartType.week:
+        final month = _startDate.month;
+        _startDate = DateTime(_startDate.year, _startDate.month,
+            _startDate.day - _startDate.weekday + 1);
+        _startDate = DateTime(_startDate.year, _startDate.month,
+            _startDate.day - _startDate.weekday + 1);
+        if (_startDate.month != month) {
+          _startDate = _startDate.add(const Duration(days: 7));
+        }
+      case _GeburaLibraryDetailRunRecordChartType.month:
+        _startDate = DateTime(_startDate.year, _startDate.month, 1);
+      default:
+    }
+    _updateTimeSplit();
+  }
+
+  void _nextPeriod() {
+    switch (current) {
+      case _GeburaLibraryDetailRunRecordChartType.day:
+        setState(() {
+          _startDate = _startDate.add(const Duration(days: 1));
+        });
+      case _GeburaLibraryDetailRunRecordChartType.week:
+        setState(() {
+          _startDate = _startDate.add(const Duration(days: 7));
+        });
+      case _GeburaLibraryDetailRunRecordChartType.month:
+        setState(() {
+          _startDate = DateTime(_startDate.year, _startDate.month + 1, 1);
+        });
+      default:
+    }
+    _updateTimeSplit();
+  }
+
+  void _prevPeriod() {
+    switch (current) {
+      case _GeburaLibraryDetailRunRecordChartType.day:
+        setState(() {
+          _startDate = _startDate.subtract(const Duration(days: 1));
+        });
+      case _GeburaLibraryDetailRunRecordChartType.week:
+        setState(() {
+          _startDate = _startDate.subtract(const Duration(days: 7));
+        });
+      case _GeburaLibraryDetailRunRecordChartType.month:
+        setState(() {
+          _startDate = DateTime(_startDate.year, _startDate.month - 1, 1);
+        });
+      default:
+    }
+    _updateTimeSplit();
+  }
+
+  void _updateTimeSplit() {
+    _timeSplit.clear();
+    switch (current) {
+      case _GeburaLibraryDetailRunRecordChartType.day:
+        // round startDate to the day
+        final start =
+            DateTime(_startDate.year, _startDate.month, _startDate.day);
+        final end = start.add(const Duration(days: 1));
+        // split to 24 hours
+        for (var i = 0; i < 24; i++) {
+          _timeSplit.add((
+            start.add(Duration(hours: i)),
+            start.add(Duration(hours: i + 1)),
+            false,
+          ));
+        }
+      case _GeburaLibraryDetailRunRecordChartType.week:
+        // round startDate to the week
+        final start = DateTime(_startDate.year, _startDate.month,
+            _startDate.day - _startDate.weekday + 1);
+        final end = start.add(const Duration(days: 7));
+        // split to 7 days, set weekend to true
+        for (var i = start;
+            i.isBefore(end);
+            i = i.add(const Duration(days: 1))) {
+          _timeSplit.add((i, i.add(const Duration(days: 1)), i.weekday > 5));
+        }
+      case _GeburaLibraryDetailRunRecordChartType.month:
+        // round startDate to the month
+        final start = DateTime(_startDate.year, _startDate.month, 1);
+        final end = DateTime(_startDate.year, _startDate.month + 1, 1);
+        // split to each day, set weekend to true
+        for (var i = start;
+            i.isBefore(end);
+            i = i.add(const Duration(days: 1))) {
+          _timeSplit.add((i, i.add(const Duration(days: 1)), i.weekday > 5));
+        }
+      default:
+    }
+    unawaited(_loadRunTime());
+  }
+
+  Future<void> _loadRunTime() async {
+    for (final (start, end, _) in _timeSplit) {
+      final (dur, msg) = await context.read<GeburaBloc>().sumLocalAppRunTime(
+            widget.item.uuid,
+            start: start,
+            duration: end.difference(start),
+          );
+      if (dur != null) {
+        _runTime[(start, end)] = dur;
+      } else if (msg != null) {
+        // TODO
+        debugPrint(msg);
+      }
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final sources =
-        context.read<MainBloc>().state.serverFeatureSummary?.appInfoSources ??
-            [];
-    return UniversalDialog(
-      title: const Text('设置应用信息'),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (sources.isEmpty)
-              Container(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: const Text('服务端没有可用的应用信息来源'),
-              ),
-            DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  labelText: '应用信息来源',
+    return Column(
+      children: [
+        UniversalListTile(
+          title: const Text('运行记录'),
+          leading: Icon(UniversalUI.of(context).icons.timer),
+          trailing:
+              UniversalToggleSwitch<_GeburaLibraryDetailRunRecordChartType>(
+            current: current,
+            values: _GeburaLibraryDetailRunRecordChartType.values,
+            iconBuilder: (i) {
+              switch (i) {
+                case _GeburaLibraryDetailRunRecordChartType.closed:
+                  return Icon(UniversalUI.of(context).icons.hide);
+                case _GeburaLibraryDetailRunRecordChartType.day:
+                  return const Text('日');
+                case _GeburaLibraryDetailRunRecordChartType.week:
+                  return const Text('周');
+                case _GeburaLibraryDetailRunRecordChartType.month:
+                  return const Text('月');
+              }
+            },
+            onChanged: (i) {
+              _updateChartType(i);
+            },
+          ),
+        ),
+        if (current != _GeburaLibraryDetailRunRecordChartType.closed)
+          UniversalCard(
+            child: Column(
+              children: [
+                UniversalToolBar(
+                  primaryItems: [
+                    UniversalToolBarItem(
+                      label: UniversalDatePicker(
+                          selectedDate: _startDate,
+                          showDay: current !=
+                              _GeburaLibraryDetailRunRecordChartType.month,
+                          onChanged: (date) {
+                            _startDate = date;
+                            _updateChartType(current);
+                          }),
+                      onPressed: () async {
+                        _prevPeriod();
+                      },
+                    ),
+                    UniversalToolBarItem(
+                      label: const Text('今天'),
+                      icon: UniversalUI.of(context).icons.refresh,
+                      onPressed: () async {
+                        _startDate = DateTime.now();
+                        _updateChartType(current);
+                      },
+                    ),
+                    UniversalToolBarItem(
+                      icon: UniversalUI.of(context).icons.arrowLeft,
+                      onPressed: () async {
+                        _prevPeriod();
+                      },
+                    ),
+                    UniversalToolBarItem(
+                      icon: UniversalUI.of(context).icons.arrowRight,
+                      onPressed: () async {
+                        _nextPeriod();
+                      },
+                    ),
+                  ],
+                  secondaryItems: [
+                    UniversalToolBarItem(
+                      label: const Text('清除缓存'),
+                      icon: UniversalUI.of(context).icons.clear,
+                      onPressed: () async {
+                        setState(_runTime.clear);
+                        unawaited(_loadRunTime());
+                      },
+                    ),
+                  ],
                 ),
-                items: [
-                  for (final s in sources)
-                    DropdownMenuItem(
-                        value: s, child: Text(appSourceString(s.id)))
-                ],
-                onChanged: (FeatureFlag? value) {
-                  setState(() {
-                    source = value?.id;
-                  });
-                }),
-            const SizedBox(
-              height: 16,
+                AspectRatio(
+                  aspectRatio: 1.70,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 18,
+                      left: 12,
+                      top: 24,
+                      bottom: 12,
+                    ),
+                    child: LineChart(
+                      mainData(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: '应用ID',
-              ),
-              onSaved: (String? value) {
-                setState(() {
-                  sourceAppID = value;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        UniversalDialogAction(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('取消'),
-        ),
+          ),
       ],
     );
   }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    Widget text;
+    switch (current) {
+      case _GeburaLibraryDetailRunRecordChartType.day:
+        text = Text('${value.toInt()}:00');
+      case _GeburaLibraryDetailRunRecordChartType.week:
+        text = Text(_weekDayName(value.toInt()));
+      case _GeburaLibraryDetailRunRecordChartType.month:
+        text = Text(_monthDayName(value.toInt()));
+      default:
+        return Container();
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
+  }
+
+  // Widget leftTitleWidgets(double value, TitleMeta meta) {
+  //   const style = TextStyle(
+  //     fontWeight: FontWeight.bold,
+  //     fontSize: 15,
+  //   );
+  //   String text;
+  //   switch (value.toInt()) {
+  //     case 1:
+  //       text = '10K';
+  //     case 3:
+  //       text = '30k';
+  //     case 5:
+  //       text = '50k';
+  //     default:
+  //       return Container();
+  //   }
+  //
+  //   return Text(text, style: style, textAlign: TextAlign.left);
+  // }
+
+  LineChartData mainData() {
+    double maxY = 0;
+    for (var i = 0; i < _timeSplit.length; i++) {
+      final (start, end, _) = _timeSplit[i];
+      final value = _runTime[(start, end)];
+      if (value != null) {
+        maxY = max(maxY, value.inMinutes.toDouble());
+      }
+    }
+    maxY = _roundDouble((maxY + 1) / 60, 2);
+    final double xAdder =
+        current == _GeburaLibraryDetailRunRecordChartType.day ? 0 : 1;
+    return LineChartData(
+        gridData: const FlGridData(
+          horizontalInterval: 1,
+          verticalInterval: 1,
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 28,
+            minIncluded: false,
+            maxIncluded: false,
+            interval: (() {
+              switch (current) {
+                case _GeburaLibraryDetailRunRecordChartType.day:
+                  return 3.0;
+                case _GeburaLibraryDetailRunRecordChartType.week:
+                  return 1.0;
+                case _GeburaLibraryDetailRunRecordChartType.month:
+                  return 7.0;
+                default:
+                  return 1.0;
+              }
+            })(),
+            getTitlesWidget: bottomTitleWidgets,
+          )),
+        ),
+        minX: xAdder - 0.5,
+        maxX: _timeSplit.length.toDouble() + xAdder - 0.5,
+        minY: 0,
+        maxY: maxY,
+        lineBarsData: [
+          LineChartBarData(
+            isCurved: true,
+            preventCurveOverShooting: true,
+            spots: List.generate(_timeSplit.length, (index) {
+              final runMinutes =
+                  _runTime[(_timeSplit[index].$1, _timeSplit[index].$2)]
+                          ?.inMinutes
+                          .toDouble() ??
+                      0;
+              final y = _roundDouble(runMinutes / 60, 2);
+              return FlSpot(index.toDouble() + xAdder, y);
+            }),
+            barWidth: 5,
+            isStrokeCapRound: true,
+            dotData: const FlDotData(
+              show: true,
+            ),
+          ),
+        ],
+        rangeAnnotations: RangeAnnotations(verticalRangeAnnotations: [
+          ...List.generate(_timeSplit.length, (index) {
+            final (_, __, weekend) = _timeSplit[index];
+            if (weekend) {
+              return VerticalRangeAnnotation(
+                x1: index.toDouble() + xAdder - 0.5,
+                x2: index.toDouble() + 1 + xAdder - 0.5,
+                color: Colors.grey.withOpacity(0.3),
+              );
+            }
+            return null;
+          }).where((e) => e != null).cast<VerticalRangeAnnotation>(),
+        ]));
+  }
+
+  double _roundDouble(double value, int places) {
+    final num mod = pow(10.0, places);
+    return (value * mod).round().toDouble() / mod;
+  }
+
+  String _weekDayName(int weekday) {
+    switch (weekday) {
+      case 1:
+        return '周一';
+      case 2:
+        return '周二';
+      case 3:
+        return '周三';
+      case 4:
+        return '周四';
+      case 5:
+        return '周五';
+      case 6:
+        return '周六';
+      case 7:
+        return '周日';
+      default:
+        return '';
+    }
+  }
+
+  String _monthDayName(int day) {
+    return '$day 日';
+  }
+}
+
+enum _GeburaLibraryDetailRunRecordChartType {
+  closed,
+  day,
+  week,
+  month,
 }

@@ -61,7 +61,7 @@ class UniversalToolBarItem extends StatelessWidget {
 
   fluent.CommandBarItem buildFluentItem() {
     return fluent.CommandBarButton(
-      icon: fluent.Icon(icon),
+      icon: icon != null ? fluent.Icon(icon) : null,
       onPressed: onPressed,
       label: label,
     );
@@ -77,7 +77,7 @@ class UniversalToolBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return material.TextButton.icon(
-      icon: material.Icon(icon),
+      icon: icon != null ? material.Icon(icon) : null,
       onPressed: onPressed,
       label: label ?? const SizedBox(),
     );

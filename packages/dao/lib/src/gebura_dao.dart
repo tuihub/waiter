@@ -422,19 +422,77 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
     return query.getSingle();
   }
 
-  Future<Duration> sumLocalAppRunRecord(String appUUID) async {
-    final query = customSelect(
-      '''
-SELECT 
-  SUM(end_time - start_time) AS total_run_time 
+  Future<Duration> sumLocalAppRunRecord(
+    String appUUID, {
+    DateTime? start,
+    Duration? duration,
+  }) async {
+    final end = start != null && duration != null ? start.add(duration) : null;
+
+    late Selectable<QueryRow> query;
+    if (start != null && end != null) {
+      query = customSelect(
+        '''
+SELECT
+  SUM(
+    CASE
+      WHEN start_time >= ? AND end_time <= ? THEN end_time - start_time
+      WHEN start_time < ? AND end_time > ? THEN ? - ?
+      WHEN start_time < ? AND end_time > ? THEN end_time - ?
+      WHEN start_time < ? AND end_time > ? THEN ? - start_time
+      ELSE 0
+    END
+  ) AS total_run_time
+FROM local_app_run_record_table
+WHERE
+  app_u_u_i_d = ?
+  AND end_time IS NOT NULL
+  AND start_time < ?
+  AND end_time > ?;
+        ''',
+        variables: [
+          // case 1
+          Variable.withDateTime(start),
+          Variable.withDateTime(end),
+          // case 2
+          Variable.withDateTime(start),
+          Variable.withDateTime(end),
+          Variable.withDateTime(end),
+          Variable.withDateTime(start),
+          // case 3
+          Variable.withDateTime(start),
+          Variable.withDateTime(start),
+          Variable.withDateTime(start),
+          // case 4
+          Variable.withDateTime(end),
+          Variable.withDateTime(end),
+          Variable.withDateTime(end),
+          // where
+          Variable.withString(appUUID),
+          Variable.withDateTime(end),
+          Variable.withDateTime(start),
+        ],
+      );
+    } else {
+      query = customSelect(
+        '''
+SELECT
+  SUM(end_time - start_time) AS total_run_time
 FROM local_app_run_record_table
 WHERE 
   app_u_u_i_d = ?
   AND end_time IS NOT NULL
-          ''',
-      variables: [Variable.withString(appUUID)],
-      readsFrom: {localAppRunRecordTable},
-    );
+  ${start != null ? 'AND start_time >= ?' : ''}
+  ${end != null ? 'AND start_time <= ?' : ''}
+      ''',
+        variables: [
+          Variable.withString(appUUID),
+          if (start != null) Variable.withDateTime(start),
+          if (end != null) Variable.withDateTime(end),
+        ],
+        readsFrom: {localAppRunRecordTable},
+      );
+    }
 
     final result = await query.getSingle();
     return Duration(seconds: result.data['total_run_time'] as int? ?? 0);

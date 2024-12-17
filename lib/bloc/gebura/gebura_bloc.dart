@@ -381,6 +381,18 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         if (appInst != null) {
           final app = state.libraryApps[appInst.appUUID];
           if (app != null) {
+            try {
+              await _repo.updateLocalAppInst(appInst.copyWith(
+                lastLaunchedLauncherUUID: event.launcherUUID,
+              ));
+              await _repo.updateLocalApp(app.copyWith(
+                lastLaunchedInstUUID: appInst.uuid,
+              ));
+            } catch (e) {
+              emit(GeburaSaveLastLaunchAppInstState(state, EventStatus.failed,
+                  msg: '${S.current.unknownErrorOccurred} $e'));
+              return;
+            }
             emit(GeburaSaveLastLaunchAppInstState(
                 state.copyWith(
                   libraryApps: state.libraryApps.map((key, value) {
@@ -1063,9 +1075,17 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     }
   }
 
-  Future<(Duration?, String?)> sumLocalAppRunTime(String appUUID) async {
+  Future<(Duration?, String?)> sumLocalAppRunTime(
+    String appUUID, {
+    DateTime? start,
+    Duration? duration,
+  }) async {
     try {
-      final res = await _repo.sumLocalAppRunRecord(appUUID);
+      final res = await _repo.sumLocalAppRunRecord(
+        appUUID,
+        start: start,
+        duration: duration,
+      );
       return (res, null);
     } catch (e) {
       return (null, e.toString());

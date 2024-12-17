@@ -65,3 +65,67 @@ class UniversalRadio<T> extends StatelessWidget {
     }
   }
 }
+
+class UniversalDatePicker extends StatefulWidget {
+  const UniversalDatePicker({
+    super.key,
+    required this.selectedDate,
+    required this.onChanged,
+    this.showMonth = true,
+    this.showDay = true,
+  });
+
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onChanged;
+  final bool showMonth;
+  final bool showDay;
+
+  @override
+  State<UniversalDatePicker> createState() => _UniversalDatePickerState();
+}
+
+class _UniversalDatePickerState extends State<UniversalDatePicker> {
+  DateTime get selectedDate => widget.selectedDate;
+  ValueChanged<DateTime> get onChanged => widget.onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final design = UniversalUI.of(context).design;
+
+    switch (design) {
+      case UIDesign.material:
+        return material.TextButton.icon(
+          onPressed: () async {
+            final date = await material.showDatePicker(
+                context: context,
+                initialDate: selectedDate,
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+                selectableDayPredicate: (date) {
+                  // if disable showMonth, only select first day of year
+                  if (!widget.showMonth) {
+                    return date.month == 1 && date.day == 1;
+                  }
+                  // if disable showDay, only select first day of month
+                  if (!widget.showDay) {
+                    return date.day == 1;
+                  }
+                  return true;
+                });
+            if (date != null) {
+              onChanged(date);
+            }
+          },
+          icon: const material.Icon(material.Icons.calendar_today),
+          label: const material.Text('Select date'),
+        );
+      case UIDesign.fluent:
+        return fluent.DatePicker(
+          selected: selectedDate,
+          onChanged: onChanged,
+          showMonth: widget.showMonth,
+          showDay: widget.showDay,
+        );
+    }
+  }
+}
