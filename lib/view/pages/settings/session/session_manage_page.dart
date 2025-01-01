@@ -5,6 +5,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/main_bloc.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../../common/platform.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
@@ -20,8 +21,10 @@ class SessionManagePage extends StatelessWidget {
     return BlocBuilder<TipherethBloc, TipherethState>(
         builder: (context, state) {
       final listData = state.sessions ?? [];
-      final deviceInfo = context.read<MainBloc>().state.deviceInfo ??
-          const ClientDeviceInfo('', '');
+      final deviceInfo =
+          PlatformHelper.clientDeviceInfo() ?? const ClientDeviceInfo('', '');
+      final currentDeviceId =
+          context.read<MainBloc>().state.serverConfig?.deviceId;
       return Scaffold(
         body: Stack(children: [
           if (state is TipherethLoadSessionsState && state.processing)
@@ -83,8 +86,7 @@ class SessionManagePage extends StatelessWidget {
                     ModuleFramePage.of(context)?.openDrawer();
                   }
 
-                  if (item.deviceInfo.deviceId ==
-                      context.read<MainBloc>().state.currentDeviceId) {
+                  if (item.deviceInfo.deviceId.id.toInt() == currentDeviceId) {
                     return const SizedBox();
                   }
 

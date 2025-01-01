@@ -3,7 +3,6 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -25,9 +24,9 @@ part 'gebura_state.dart';
 part 'gebura_bloc.mapper.dart';
 
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
-  GeburaRepo get _repo => GetIt.I.get<GeburaRepo>();
+  final GeburaRepo _repo;
 
-  GeburaBloc() : super(GeburaState()) {
+  GeburaBloc(this._repo) : super(GeburaState()) {
     on<GeburaInitEvent>((event, emit) async {
       if (!state.initialized) {
         add(GeburaScanLocalLibraryEvent());

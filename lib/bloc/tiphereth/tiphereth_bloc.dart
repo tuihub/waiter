@@ -6,13 +6,13 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
-import '../../repo/grpc/api_helper.dart';
+import '../../service/librarian_service.dart';
 
 part 'tiphereth_event.dart';
 part 'tiphereth_state.dart';
 
 class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
-  final ApiHelper _api;
+  final LibrarianService _api;
 
   TipherethBloc(this._api) : super(TipherethState()) {
     on<TipherethAddUserEvent>((event, emit) async {
@@ -21,11 +21,11 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.createUser,
         CreateUserRequest(user: event.user),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethAddUserState(state, EventStatus.failed, msg: resp.error));
         return;
       }
-      emit(TipherethAddUserState(state, EventStatus.success, msg: resp.error));
+      emit(TipherethAddUserState(state, EventStatus.success));
     }, transformer: droppable());
 
     on<TipherethEditUserEvent>((event, emit) async {
@@ -34,12 +34,12 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.updateUser,
         UpdateUserRequest(user: event.user, password: event.password),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(
             TipherethEditUserState(state, EventStatus.failed, msg: resp.error));
         return;
       }
-      emit(TipherethEditUserState(state, EventStatus.success, msg: resp.error));
+      emit(TipherethEditUserState(state, EventStatus.success));
     }, transformer: droppable());
 
     on<TipherethGetAccountsEvent>((event, emit) async {
@@ -48,15 +48,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.listLinkAccounts,
         ListLinkAccountsRequest(),
       );
-      if (resp.status != ApiStatus.success) {
-        emit(TipherethGetAccountsState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+      switch (resp) {
+        case Err():
+          emit(TipherethGetAccountsState(state, EventStatus.failed,
+              msg: resp.error));
+        case Ok():
+          emit(TipherethGetAccountsState(
+            state.copyWith(accounts: resp.v.accounts),
+            EventStatus.success,
+          ));
       }
-      emit(TipherethGetAccountsState(
-          state.copyWith(accounts: resp.getData().accounts),
-          EventStatus.success,
-          msg: resp.error));
     }, transformer: droppable());
 
     on<TipherethLinkAccountEvent>((event, emit) async {
@@ -70,14 +71,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethLinkAccountState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethGetAccountsEvent());
-      emit(TipherethLinkAccountState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethLinkAccountState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethUnLinkAccountEvent>((event, emit) async {
@@ -91,14 +94,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethUnLinkAccountState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethGetAccountsEvent());
-      emit(TipherethUnLinkAccountState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethUnLinkAccountState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethLoadPortersEvent>((event, emit) async {
@@ -112,14 +117,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
-        emit(TipherethLoadPortersState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+      switch (resp) {
+        case Err():
+          emit(TipherethLoadPortersState(state, EventStatus.failed,
+              msg: resp.error));
+        case Ok():
+          emit(TipherethLoadPortersState(
+            state.copyWith(porters: resp.v.porters),
+            EventStatus.success,
+          ));
       }
-      emit(TipherethLoadPortersState(
-          state.copyWith(porters: resp.getData().porters), EventStatus.success,
-          msg: resp.error));
     }, transformer: droppable());
 
     on<TipherethSetPorterEditIndexEvent>((event, emit) async {
@@ -137,14 +144,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           status: event.status,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethEditPorterState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethLoadPortersEvent());
-      emit(TipherethEditPorterState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethEditPorterState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethAddPorterContextEvent>((event, emit) async {
@@ -153,14 +162,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.createPorterContext,
         CreatePorterContextRequest(context: event.porterContext),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethAddPorterContextState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethLoadPorterContextsEvent());
-      emit(TipherethAddPorterContextState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethAddPorterContextState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethEditPorterContextEvent>((event, emit) async {
@@ -169,14 +180,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.updatePorterContext,
         UpdatePorterContextRequest(context: event.porterContext),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethEditPorterContextState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethLoadPorterContextsEvent());
-      emit(TipherethEditPorterContextState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethEditPorterContextState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethLoadPorterContextsEvent>((event, emit) async {
@@ -190,7 +203,7 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethLoadPorterContextsState(state, EventStatus.failed,
             msg: resp.error));
         return;
@@ -204,18 +217,18 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           ),
         ),
       );
-      if (resp2.status != ApiStatus.success) {
+      if (resp2 case Err()) {
         emit(TipherethLoadPorterContextsState(state, EventStatus.failed,
             msg: resp2.error));
         return;
       }
       emit(TipherethLoadPorterContextsState(
-          state.copyWith(
-            porterContexts: resp.getData().contexts,
-            porterGroups: resp2.getData().porterGroups,
-          ),
-          EventStatus.success,
-          msg: resp.error));
+        state.copyWith(
+          porterContexts: resp.unwrap().contexts,
+          porterGroups: resp2.unwrap().porterGroups,
+        ),
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethLoadSessionsEvent>((event, emit) async {
@@ -224,15 +237,15 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         (client) => client.listUserSessions,
         ListUserSessionsRequest(),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethLoadSessionsState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       emit(TipherethLoadSessionsState(
-          state.copyWith(sessions: resp.getData().sessions),
-          EventStatus.success,
-          msg: resp.error));
+        state.copyWith(sessions: resp.unwrap().sessions),
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     on<TipherethSetSessionEditIndexEvent>((event, emit) async {
@@ -249,14 +262,16 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
           sessionId: event.sessionID,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(TipherethEditSessionState(state, EventStatus.failed,
             msg: resp.error));
         return;
       }
       add(TipherethLoadSessionsEvent());
-      emit(TipherethEditSessionState(state, EventStatus.success,
-          msg: resp.error));
+      emit(TipherethEditSessionState(
+        state,
+        EventStatus.success,
+      ));
     }, transformer: droppable());
 
     add(TipherethLoadPorterContextsEvent());
@@ -277,6 +292,6 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         statusFilter: statusFilter,
       ),
     );
-    return resp.getData();
+    return resp.unwrap(); // TODO: handle error
   }
 }

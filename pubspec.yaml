@@ -47,7 +47,6 @@ dependencies:
   bloc_concurrency: ^0.2.5
   flutter_bloc: ^8.1.5
   go_router: ^14.3.0
-  get_it: ^8.0.2
 
   # database
   hive_flutter: ^1.1.0
@@ -150,6 +149,7 @@ dependencies:
   opml: ^0.4.0
   uuid: ^3.0.7
   glob: ^2.1.2
+  option_result: ^3.2.1
 
 dev_dependencies:
   flutter_test:

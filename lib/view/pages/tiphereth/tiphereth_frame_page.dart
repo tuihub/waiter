@@ -11,7 +11,7 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../consts.dart';
-import '../../../repo/grpc/l10n.dart';
+import '../../../l10n/librarian.dart';
 import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';

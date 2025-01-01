@@ -1,50 +1,26 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-part 'common_model.freezed.dart';
-part 'common_model.g.dart';
+part 'common_model.mapper.dart';
 
-@freezed
-class ServerConfig with _$ServerConfig {
-  const factory ServerConfig(
-    String host,
-    int port,
-    bool tls, {
-    String? serverName,
-    String? username,
-    String? refreshToken,
-    int? deviceId,
-  }) = _ServerConfig;
-  const ServerConfig._();
-
-  factory ServerConfig.fromJson(Map<String, Object?> json) =>
-      _$ServerConfigFromJson(json);
-
-  String get id => '$host#$port';
-  factory ServerConfig.empty() => const ServerConfig('', 0, false);
+enum ConnectionStatus {
+  connecting, // connecting to server, wait for connection established
+  unauthenticated, // connected but not authenticated, login required
+  authenticating, // authenticating with server, logging
+  connected, // connected and authenticated
+  disconnected, // disconnected from server, can't establish connection
+  local,
 }
 
-@freezed
-class ClientCommonData with _$ClientCommonData {
-  const factory ClientCommonData({
-    String? lastServerId,
-    String? themeName,
-    int? themeMode,
-    Map<String, ServerConfig>? servers,
-    bool? useSystemProxy,
-    bool? useFluentUI,
-  }) = _ClientCommonData;
+@MappableClass()
+class ClientDeviceInfo with ClientDeviceInfoMappable {
+  final String deviceName;
+  final String systemVersion;
 
-  factory ClientCommonData.fromJson(Map<String, Object?> json) =>
-      _$ClientCommonDataFromJson(json);
-}
+  const ClientDeviceInfo(
+    this.deviceName,
+    this.systemVersion,
+  );
 
-@freezed
-class ClientDeviceInfo with _$ClientDeviceInfo {
-  const factory ClientDeviceInfo(
-    String deviceName,
-    String systemVersion,
-  ) = _ClientDeviceInfo;
-
-  factory ClientDeviceInfo.fromJson(Map<String, Object?> json) =>
-      _$ClientDeviceInfoFromJson(json);
+  static const fromMap = ClientDeviceInfoMapper.fromMap;
+  static const fromJson = ClientDeviceInfoMapper.fromJson;
 }

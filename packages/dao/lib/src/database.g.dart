@@ -230,6 +230,252 @@ class KVTableCompanion extends UpdateCompanion<KVTableData> {
   }
 }
 
+class $ServerConfigTableTable extends ServerConfigTable
+    with TableInfo<$ServerConfigTableTable, ServerConfig> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ServerConfigTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _hostMeta = const VerificationMeta('host');
+  @override
+  late final GeneratedColumn<String> host = GeneratedColumn<String>(
+      'host', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _portMeta = const VerificationMeta('port');
+  @override
+  late final GeneratedColumn<int> port = GeneratedColumn<int>(
+      'port', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _enableTLSMeta =
+      const VerificationMeta('enableTLS');
+  @override
+  late final GeneratedColumn<bool> enableTLS = GeneratedColumn<bool>(
+      'enable_t_l_s', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("enable_t_l_s" IN (0, 1))'));
+  static const VerificationMeta _usernameMeta =
+      const VerificationMeta('username');
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+      'username', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _refreshTokenMeta =
+      const VerificationMeta('refreshToken');
+  @override
+  late final GeneratedColumn<String> refreshToken = GeneratedColumn<String>(
+      'refresh_token', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _deviceIdMeta =
+      const VerificationMeta('deviceId');
+  @override
+  late final GeneratedColumn<int> deviceId = GeneratedColumn<int>(
+      'device_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, host, port, enableTLS, username, refreshToken, deviceId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'server_config_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ServerConfig> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('host')) {
+      context.handle(
+          _hostMeta, host.isAcceptableOrUnknown(data['host']!, _hostMeta));
+    } else if (isInserting) {
+      context.missing(_hostMeta);
+    }
+    if (data.containsKey('port')) {
+      context.handle(
+          _portMeta, port.isAcceptableOrUnknown(data['port']!, _portMeta));
+    } else if (isInserting) {
+      context.missing(_portMeta);
+    }
+    if (data.containsKey('enable_t_l_s')) {
+      context.handle(
+          _enableTLSMeta,
+          enableTLS.isAcceptableOrUnknown(
+              data['enable_t_l_s']!, _enableTLSMeta));
+    } else if (isInserting) {
+      context.missing(_enableTLSMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(_usernameMeta,
+          username.isAcceptableOrUnknown(data['username']!, _usernameMeta));
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('refresh_token')) {
+      context.handle(
+          _refreshTokenMeta,
+          refreshToken.isAcceptableOrUnknown(
+              data['refresh_token']!, _refreshTokenMeta));
+    }
+    if (data.containsKey('device_id')) {
+      context.handle(_deviceIdMeta,
+          deviceId.isAcceptableOrUnknown(data['device_id']!, _deviceIdMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ServerConfig map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ServerConfig(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      host: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}host'])!,
+      port: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}port'])!,
+      enableTLS: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}enable_t_l_s'])!,
+      username: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}username'])!,
+      refreshToken: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}refresh_token']),
+      deviceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}device_id']),
+    );
+  }
+
+  @override
+  $ServerConfigTableTable createAlias(String alias) {
+    return $ServerConfigTableTable(attachedDatabase, alias);
+  }
+}
+
+class ServerConfigTableCompanion extends UpdateCompanion<ServerConfig> {
+  final Value<int> id;
+  final Value<String> host;
+  final Value<int> port;
+  final Value<bool> enableTLS;
+  final Value<String> username;
+  final Value<String?> refreshToken;
+  final Value<int?> deviceId;
+  const ServerConfigTableCompanion({
+    this.id = const Value.absent(),
+    this.host = const Value.absent(),
+    this.port = const Value.absent(),
+    this.enableTLS = const Value.absent(),
+    this.username = const Value.absent(),
+    this.refreshToken = const Value.absent(),
+    this.deviceId = const Value.absent(),
+  });
+  ServerConfigTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String host,
+    required int port,
+    required bool enableTLS,
+    required String username,
+    this.refreshToken = const Value.absent(),
+    this.deviceId = const Value.absent(),
+  })  : host = Value(host),
+        port = Value(port),
+        enableTLS = Value(enableTLS),
+        username = Value(username);
+  static Insertable<ServerConfig> custom({
+    Expression<int>? id,
+    Expression<String>? host,
+    Expression<int>? port,
+    Expression<bool>? enableTLS,
+    Expression<String>? username,
+    Expression<String>? refreshToken,
+    Expression<int>? deviceId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (host != null) 'host': host,
+      if (port != null) 'port': port,
+      if (enableTLS != null) 'enable_t_l_s': enableTLS,
+      if (username != null) 'username': username,
+      if (refreshToken != null) 'refresh_token': refreshToken,
+      if (deviceId != null) 'device_id': deviceId,
+    });
+  }
+
+  ServerConfigTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? host,
+      Value<int>? port,
+      Value<bool>? enableTLS,
+      Value<String>? username,
+      Value<String?>? refreshToken,
+      Value<int?>? deviceId}) {
+    return ServerConfigTableCompanion(
+      id: id ?? this.id,
+      host: host ?? this.host,
+      port: port ?? this.port,
+      enableTLS: enableTLS ?? this.enableTLS,
+      username: username ?? this.username,
+      refreshToken: refreshToken ?? this.refreshToken,
+      deviceId: deviceId ?? this.deviceId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (host.present) {
+      map['host'] = Variable<String>(host.value);
+    }
+    if (port.present) {
+      map['port'] = Variable<int>(port.value);
+    }
+    if (enableTLS.present) {
+      map['enable_t_l_s'] = Variable<bool>(enableTLS.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (refreshToken.present) {
+      map['refresh_token'] = Variable<String>(refreshToken.value);
+    }
+    if (deviceId.present) {
+      map['device_id'] = Variable<int>(deviceId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ServerConfigTableCompanion(')
+          ..write('id: $id, ')
+          ..write('host: $host, ')
+          ..write('port: $port, ')
+          ..write('enableTLS: $enableTLS, ')
+          ..write('username: $username, ')
+          ..write('refreshToken: $refreshToken, ')
+          ..write('deviceId: $deviceId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $FeedConfigTableTable extends FeedConfigTable
     with TableInfo<$FeedConfigTableTable, FeedConfigTableData> {
   @override
@@ -2906,6 +3152,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $KVTableTable kVTable = $KVTableTable(this);
+  late final $ServerConfigTableTable serverConfigTable =
+      $ServerConfigTableTable(this);
   late final $FeedConfigTableTable feedConfigTable =
       $FeedConfigTableTable(this);
   late final $LocalAppTableTable localAppTable = $LocalAppTableTable(this);
@@ -2923,6 +3171,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LocalSteamAppScanTableTable(this);
   late final $LocalSteamAppScanResultTableTable localSteamAppScanResultTable =
       $LocalSteamAppScanResultTableTable(this);
+  late final Index server = Index('server',
+      'CREATE INDEX server ON server_config_table (host, port, username)');
   late final Index localAppUuid = Index('local_app_uuid',
       'CREATE INDEX local_app_uuid ON local_app_table (uuid)');
   late final Index localAppInstUuid = Index('local_app_inst_uuid',
@@ -2962,6 +3212,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         kVTable,
+        serverConfigTable,
         feedConfigTable,
         localAppTable,
         localAppInstTable,
@@ -2971,6 +3222,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         localCommonAppScanResultTable,
         localSteamAppScanTable,
         localSteamAppScanResultTable,
+        server,
         localAppUuid,
         localAppInstUuid,
         localAppInstAppUuid,
@@ -3121,6 +3373,206 @@ typedef $$KVTableTableProcessedTableManager = ProcessedTableManager<
     $$KVTableTableUpdateCompanionBuilder,
     (KVTableData, BaseReferences<_$AppDatabase, $KVTableTable, KVTableData>),
     KVTableData,
+    PrefetchHooks Function()>;
+typedef $$ServerConfigTableTableCreateCompanionBuilder
+    = ServerConfigTableCompanion Function({
+  Value<int> id,
+  required String host,
+  required int port,
+  required bool enableTLS,
+  required String username,
+  Value<String?> refreshToken,
+  Value<int?> deviceId,
+});
+typedef $$ServerConfigTableTableUpdateCompanionBuilder
+    = ServerConfigTableCompanion Function({
+  Value<int> id,
+  Value<String> host,
+  Value<int> port,
+  Value<bool> enableTLS,
+  Value<String> username,
+  Value<String?> refreshToken,
+  Value<int?> deviceId,
+});
+
+class $$ServerConfigTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ServerConfigTableTable> {
+  $$ServerConfigTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get host => $composableBuilder(
+      column: $table.host, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get port => $composableBuilder(
+      column: $table.port, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get enableTLS => $composableBuilder(
+      column: $table.enableTLS, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get username => $composableBuilder(
+      column: $table.username, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get deviceId => $composableBuilder(
+      column: $table.deviceId, builder: (column) => ColumnFilters(column));
+}
+
+class $$ServerConfigTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ServerConfigTableTable> {
+  $$ServerConfigTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get host => $composableBuilder(
+      column: $table.host, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get port => $composableBuilder(
+      column: $table.port, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get enableTLS => $composableBuilder(
+      column: $table.enableTLS, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get username => $composableBuilder(
+      column: $table.username, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get deviceId => $composableBuilder(
+      column: $table.deviceId, builder: (column) => ColumnOrderings(column));
+}
+
+class $$ServerConfigTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ServerConfigTableTable> {
+  $$ServerConfigTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get host =>
+      $composableBuilder(column: $table.host, builder: (column) => column);
+
+  GeneratedColumn<int> get port =>
+      $composableBuilder(column: $table.port, builder: (column) => column);
+
+  GeneratedColumn<bool> get enableTLS =>
+      $composableBuilder(column: $table.enableTLS, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken, builder: (column) => column);
+
+  GeneratedColumn<int> get deviceId =>
+      $composableBuilder(column: $table.deviceId, builder: (column) => column);
+}
+
+class $$ServerConfigTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ServerConfigTableTable,
+    ServerConfig,
+    $$ServerConfigTableTableFilterComposer,
+    $$ServerConfigTableTableOrderingComposer,
+    $$ServerConfigTableTableAnnotationComposer,
+    $$ServerConfigTableTableCreateCompanionBuilder,
+    $$ServerConfigTableTableUpdateCompanionBuilder,
+    (
+      ServerConfig,
+      BaseReferences<_$AppDatabase, $ServerConfigTableTable, ServerConfig>
+    ),
+    ServerConfig,
+    PrefetchHooks Function()> {
+  $$ServerConfigTableTableTableManager(
+      _$AppDatabase db, $ServerConfigTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ServerConfigTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ServerConfigTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ServerConfigTableTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> host = const Value.absent(),
+            Value<int> port = const Value.absent(),
+            Value<bool> enableTLS = const Value.absent(),
+            Value<String> username = const Value.absent(),
+            Value<String?> refreshToken = const Value.absent(),
+            Value<int?> deviceId = const Value.absent(),
+          }) =>
+              ServerConfigTableCompanion(
+            id: id,
+            host: host,
+            port: port,
+            enableTLS: enableTLS,
+            username: username,
+            refreshToken: refreshToken,
+            deviceId: deviceId,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String host,
+            required int port,
+            required bool enableTLS,
+            required String username,
+            Value<String?> refreshToken = const Value.absent(),
+            Value<int?> deviceId = const Value.absent(),
+          }) =>
+              ServerConfigTableCompanion.insert(
+            id: id,
+            host: host,
+            port: port,
+            enableTLS: enableTLS,
+            username: username,
+            refreshToken: refreshToken,
+            deviceId: deviceId,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$ServerConfigTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ServerConfigTableTable,
+    ServerConfig,
+    $$ServerConfigTableTableFilterComposer,
+    $$ServerConfigTableTableOrderingComposer,
+    $$ServerConfigTableTableAnnotationComposer,
+    $$ServerConfigTableTableCreateCompanionBuilder,
+    $$ServerConfigTableTableUpdateCompanionBuilder,
+    (
+      ServerConfig,
+      BaseReferences<_$AppDatabase, $ServerConfigTableTable, ServerConfig>
+    ),
+    ServerConfig,
     PrefetchHooks Function()>;
 typedef $$FeedConfigTableTableCreateCompanionBuilder = FeedConfigTableCompanion
     Function({
@@ -5160,6 +5612,8 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$KVTableTableTableManager get kVTable =>
       $$KVTableTableTableManager(_db, _db.kVTable);
+  $$ServerConfigTableTableTableManager get serverConfigTable =>
+      $$ServerConfigTableTableTableManager(_db, _db.serverConfigTable);
   $$FeedConfigTableTableTableManager get feedConfigTable =>
       $$FeedConfigTableTableTableManager(_db, _db.feedConfigTable);
   $$LocalAppTableTableTableManager get localAppTable =>

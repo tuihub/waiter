@@ -18,7 +18,6 @@ import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'main_window.dart';
-import 'repo/grpc/api_helper.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_assign_app_panel.dart';
@@ -243,21 +242,12 @@ class ModuleRoute extends StatefulShellRouteData {
   ) {
     return NoTransitionPage(child: BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
-        if (state.currentUser != null ||
-            context.read<MainBloc>().tipherethBloc != null) {
-          return MainWindow(
-            key: mainWindowKey,
-            child: AppFramePage(
-              key: appFrameKey,
-              navigationShell: navigationShell,
-              child: navigationShell,
-            ),
-          );
-        }
         return MainWindow(
           key: mainWindowKey,
-          child: const Center(
-            child: CircularProgressIndicator(),
+          child: AppFramePage(
+            key: appFrameKey,
+            navigationShell: navigationShell,
+            child: navigationShell,
           ),
         );
       },
@@ -646,7 +636,7 @@ class SettingsFunctionRoute extends GoRouteData {
   }
 }
 
-GoRouter getRouter(MainBloc mainBloc, ApiHelper apiHelper) {
+GoRouter getRouter() {
   return GoRouter(
     initialLocation: const InitRoute().location,
     observers: [

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:bloc/bloc.dart';
+import 'package:dao/dao.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -49,7 +50,7 @@ class DeepLinkBloc extends Bloc<DeepLinkEvent, DeepLinkState> {
               final tls = uri.queryParameters['tls'] != 'false';
               debugPrint('connect: $host:$port, tls: $tls');
               emit(DeepLinkConnectState(
-                ServerConfig(host, port, tls),
+                ServerConfig(host: host, port: port, enableTLS: tls),
               ));
             }
           }

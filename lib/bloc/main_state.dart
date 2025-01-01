@@ -1,87 +1,46 @@
 part of 'main_bloc.dart';
 
-class MainState {
-  late ServerConfig? currentServer;
-  late ServerConfig? nextServer;
-  late User? currentUser;
-  late ServerInformation? serverInfo;
-  late FeatureSummary? serverFeatureSummary;
-  late InternalID? currentDeviceId;
-  late ClientDeviceInfo? deviceInfo;
-  late List<ServerConfig>? knownServers;
-  late Map<String, ServerInstanceSummary>? knownServerInstanceSummary;
-  late DateTime? lastRefreshServerInfo;
+@MappableClass(generateMethods: GenerateMethods.copy)
+class MainState with MainStateMappable {
+  String? currentServer;
+  User? currentUser;
+  Map<String, ServerConfig> knownServers;
+  Map<String, ServerInformation> knownServerInfos;
+  Map<String, FeatureSummary> knownServerFeatureSummaries;
+  Map<String, ServerInstanceSummary> knownServerInstanceSummaries;
+
+  ServerConfig? get serverConfig =>
+      currentServer != null ? knownServers[currentServer!] : null;
+  ServerInformation? get serverInfo =>
+      currentServer != null ? knownServerInfos[currentServer!] : null;
+  FeatureSummary? get serverFeatureSummary => currentServer != null
+      ? knownServerFeatureSummaries[currentServer!]
+      : null;
+  ServerInstanceSummary? get serverInstanceSummary => currentServer != null
+      ? knownServerInstanceSummaries[currentServer!]
+      : null;
 
   MainState({
     this.currentServer,
-    this.nextServer,
     this.currentUser,
-    this.serverInfo,
-    this.serverFeatureSummary,
-    this.currentDeviceId,
-    this.deviceInfo,
-    this.knownServers,
-    this.knownServerInstanceSummary,
-    this.lastRefreshServerInfo,
+    this.knownServers = const {},
+    this.knownServerInfos = const {},
+    this.knownServerFeatureSummaries = const {},
+    this.knownServerInstanceSummaries = const {},
   });
-
-  MainState copyWith({
-    ServerConfig? currentServer,
-    ServerConfig? nextServer,
-    String? accessToken,
-    User? currentUser,
-    ServerInformation? serverInfo,
-    FeatureSummary? serverFeatureSummary,
-    InternalID? currentDeviceId,
-    ClientDeviceInfo? deviceInfo,
-    List<ServerConfig>? knownServers,
-    Map<String, ServerInstanceSummary>? knownServerInstanceSummary,
-    DateTime? lastRefreshServerInfo,
-  }) {
-    return MainState(
-      currentServer: currentServer ?? this.currentServer,
-      nextServer: nextServer ?? this.nextServer,
-      currentUser: currentUser ?? this.currentUser,
-      serverInfo: serverInfo ?? this.serverInfo,
-      serverFeatureSummary: serverFeatureSummary ?? this.serverFeatureSummary,
-      currentDeviceId: currentDeviceId ?? this.currentDeviceId,
-      deviceInfo: deviceInfo ?? this.deviceInfo,
-      knownServers: knownServers ?? this.knownServers,
-      knownServerInstanceSummary:
-          knownServerInstanceSummary ?? this.knownServerInstanceSummary,
-      lastRefreshServerInfo:
-          lastRefreshServerInfo ?? this.lastRefreshServerInfo,
-    );
-  }
 
   void _from(MainState other) {
     currentServer = other.currentServer;
-    nextServer = other.nextServer;
     currentUser = other.currentUser;
-    serverInfo = other.serverInfo;
-    serverFeatureSummary = other.serverFeatureSummary;
-    currentDeviceId = other.currentDeviceId;
-    deviceInfo = other.deviceInfo;
     knownServers = other.knownServers;
-    knownServerInstanceSummary = other.knownServerInstanceSummary;
-    lastRefreshServerInfo = other.lastRefreshServerInfo;
+    knownServerInfos = other.knownServerInfos;
+    knownServerFeatureSummaries = other.knownServerFeatureSummaries;
+    knownServerInstanceSummaries = other.knownServerInstanceSummaries;
   }
 }
 
-class MainEnterLocalModeState extends MainState with EventStatusMixin {
-  MainEnterLocalModeState(MainState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
-}
-
-class MainAutoLoginState extends MainState with EventStatusMixin {
-  MainAutoLoginState(MainState state, this.statusCode, {this.msg}) : super() {
+class MainInitState extends MainState with EventStatusMixin {
+  MainInitState(MainState state, this.statusCode, {this.msg}) : super() {
     _from(state);
   }
 

@@ -6,13 +6,13 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/netzach_model.dart';
-import '../../repo/grpc/api_helper.dart';
+import '../../service/librarian_service.dart';
 
 part 'netzach_event.dart';
 part 'netzach_state.dart';
 
 class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
-  final ApiHelper _api;
+  final LibrarianService _api;
 
   NetzachBloc(this._api) : super(NetzachState()) {
     on<NetzachInitEvent>((event, emit) async {
@@ -32,14 +32,17 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
               pageNum: Int64(1),
             ),
           ));
-      if (resp.status != ApiStatus.success) {
-        emit(
-            NetzachTargetLoadState(state, EventStatus.failed, msg: resp.error));
-        return;
+      late ListNotifyTargetsResponse data;
+      switch(resp) {
+        case Ok():
+          data = resp.v;
+        case Err():
+          emit(NetzachTargetLoadState(state, EventStatus.failed, msg: resp.error));
+          return;
       }
 
       final List<NotifyTarget> targets = [];
-      final totalSize = resp.getData().paging.totalSize.toInt();
+      final totalSize = data.paging.totalSize.toInt();
       const pageSize = 100;
       var failCount = 0;
 
@@ -53,10 +56,11 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ),
         );
-        if (resp.status == ApiStatus.success) {
-          targets.addAll(resp.getData().targets);
-        } else {
-          failCount++;
+        switch(resp) {
+          case Ok():
+            data = resp.v;
+          case Err():
+            failCount++;
         }
       }
 
@@ -73,7 +77,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           CreateNotifyTargetRequest(
             target: event.target,
           ));
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(NetzachTargetAddState(state, EventStatus.failed, msg: resp.error));
         return;
       }
@@ -93,7 +97,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           UpdateNotifyTargetRequest(
             target: event.target,
           ));
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(
             NetzachTargetEditState(state, EventStatus.failed, msg: resp.error));
         return;
@@ -116,13 +120,17 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
               pageNum: Int64(1),
             ),
           ));
-      if (resp.status != ApiStatus.success) {
-        emit(NetzachFlowLoadState(state, EventStatus.failed, msg: resp.error));
-        return;
+      late ListNotifyFlowsResponse data;
+      switch(resp) {
+        case Ok():
+          data = resp.v;
+        case Err():
+          emit(NetzachFlowLoadState(state, EventStatus.failed, msg: resp.error));
+          return;
       }
 
       final List<NotifyFlow> flows = [];
-      final totalSize = resp.getData().paging.totalSize.toInt();
+      final totalSize = data.paging.totalSize.toInt();
       const pageSize = 100;
       var failCount = 0;
 
@@ -136,10 +144,11 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ),
         );
-        if (resp.status == ApiStatus.success) {
-          flows.addAll(resp.getData().flows);
-        } else {
-          failCount++;
+        switch (resp) {
+          case Ok(value: final ListNotifyFlowsResponse d):
+            flows.addAll(d.flows);
+          case Err(value: final String _):
+            failCount++;
         }
       }
 
@@ -160,7 +169,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           CreateNotifyFlowRequest(
             flow: event.flow,
           ));
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(NetzachFlowAddState(state, EventStatus.failed, msg: resp.error));
         return;
       }
@@ -179,7 +188,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
           UpdateNotifyFlowRequest(
             flow: event.flow,
           ));
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(NetzachFlowEditState(state, EventStatus.failed, msg: resp.error));
         return;
       }
@@ -205,16 +214,15 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             typeFilter: state.systemNotificationFilter?.typeFilter,
             levelFilter: state.systemNotificationFilter?.levelFilter,
           ));
-      if (resp.status != ApiStatus.success) {
-        emit(NetzachSystemNotificationLoadState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
+      switch (resp) {
+        case Ok():
+          emit(NetzachSystemNotificationLoadState(
+            state.copyWith(systemNotifications: resp.v.notifications),
+            EventStatus.success,
+          ));
+        case Err():
+          emit(NetzachSystemNotificationLoadState(state, EventStatus.failed, msg: resp.error));
       }
-
-      emit(NetzachSystemNotificationLoadState(
-        state.copyWith(systemNotifications: resp.getData().notifications),
-        EventStatus.success,
-      ));
     });
 
     on<NetzachSystemNotificationFilterSetEvent>((event, emit) async {

@@ -77,7 +77,6 @@ class AppFramePageState extends State<AppFramePage> {
 
   void _onSelectedNav(int index) {
     final moduleIndex = _deConvNavIndex(index);
-    ServerSelectOverlay.of(context)?.hide();
     widget.navigationShell.goBranch(
       moduleIndex,
       initialLocation: moduleIndex == widget.navigationShell.currentIndex,

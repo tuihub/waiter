@@ -5,7 +5,7 @@ class ChoreSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final basePath = context.read<MainBloc>().basePath;
+    final basePath = DIService.instance.dataPath;
     return BlocBuilder<ClientSettingBloc, ClientSettingState>(
         builder: (context, state) {
       return UniversalExpansionTile(
@@ -37,7 +37,7 @@ class ChoreSetting extends StatelessWidget {
                 },
               ),
             ),
-          if (basePath != null && PlatformHelper.isWindowsApp())
+          if (PlatformHelper.isWindowsApp())
             UniversalListTile(
               title: const Text('数据目录'),
               subtitle: Text(basePath),

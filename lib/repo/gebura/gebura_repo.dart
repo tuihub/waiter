@@ -1,21 +1,20 @@
 import 'package:dao/dao.dart';
-import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:universal_io/io.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../common/steam/steam.dart';
 import '../../rust/api/win_icon.dart';
-import '../grpc/api_helper.dart';
+import '../../service/librarian_service.dart';
 
 class GeburaRepo {
-  ApiHelper get _api => GetIt.I.get<ApiHelper>();
-  GeburaDao get _dao => GetIt.I.get<GeburaDao>();
-  KVDao get _kvDao => GetIt.I.get<KVDao>();
+  final LibrarianService _api ;
+  final GeburaDao _dao;
+  final KVDao _kvDao;
 
   static const _kvBucket = 'gebura';
 
-  GeburaRepo();
+  GeburaRepo(this._api, this._dao, this._kvDao);
 
   Future<LocalApp> fetchLocalAppInfo(String uuid) async {
     LocalApp app = await _dao.getLocalApp(uuid);

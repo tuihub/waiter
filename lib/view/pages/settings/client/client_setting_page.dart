@@ -11,6 +11,7 @@ import '../../../../bloc/main_bloc.dart';
 import '../../../../common/platform.dart';
 import '../../../../consts.dart';
 import '../../../../l10n/l10n.dart';
+import '../../../../service/di_service.dart';
 import '../../../helper/app_bar.dart';
 import '../../../specialized/theme_presentation.dart';
 import '../../../universal/universal.dart';

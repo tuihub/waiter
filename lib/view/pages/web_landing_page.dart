@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dao/dao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -177,17 +178,17 @@ class WebLandingPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         SpacingHelper.defaultDivider,
                         const SizedBox(height: 16),
-                        OutlinedButton(
-                          onPressed: () {
-                            const TipherethRootRoute().go(context);
-                            context.read<MainBloc>().add(
-                                  MainSetNextServerConfigEvent(
-                                    ServerConfig.empty(),
-                                  ),
-                                );
-                          },
-                          child: Text(S.of(context).continueInWebVersion),
-                        ),
+                        // OutlinedButton(
+                        //   onPressed: () {
+                        //     const TipherethRootRoute().go(context);
+                        //     context.read<MainBloc>().add(
+                        //           MainSetNextServerConfigEvent(
+                        //             ServerConfig.empty(),
+                        //           ),
+                        //         );
+                        //   },
+                        //   child: Text(S.of(context).continueInWebVersion),
+                        // ),
                       ],
                     ),
                   ),

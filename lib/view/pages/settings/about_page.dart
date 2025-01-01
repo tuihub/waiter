@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../bloc/main_bloc.dart';
+import '../../../service/di_service.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
 import '../../universal/universal.dart';
@@ -14,7 +15,7 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final packageInfo = context.read<MainBloc>().packageInfo;
+    final packageInfo = DIService.instance.packageInfo;
     final serverInfo = context.read<MainBloc>().state.serverInfo;
     final logoHeight = MediaQuery.sizeOf(context).height / 3;
     final textStyle = TextStyle(

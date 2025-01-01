@@ -1,3 +1,4 @@
+import 'package:dao/src/tables/server_config.dart';
 import 'package:drift/drift.dart';
 
 import 'connection/shared.dart';
@@ -19,6 +20,7 @@ part 'database.g.dart';
 @DriftDatabase(
   tables: [
     KVTable,
+    ServerConfigTable,
     FeedConfigTable,
     LocalAppTable,
     LocalAppInstTable,

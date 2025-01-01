@@ -3,7 +3,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pbenum.dart';
 
-import '../../l10n/l10n.dart';
+import 'l10n.dart';
 
 String userTypeString(UserType type) {
   switch (type) {

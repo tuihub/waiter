@@ -7,8 +7,8 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
-import '../../../../repo/grpc/l10n.dart';
 import '../../../../route.dart';
+import '../../../../l10n/librarian.dart';
 import '../../../universal/universal.dart';
 import '../../frame_page.dart';
 

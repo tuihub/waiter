@@ -23,7 +23,7 @@ class _InitPageState extends State<InitPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MainBloc>().add(MainAutoLoginEvent());
+    context.read<MainBloc>().add(MainInitEvent());
   }
 
   @override
@@ -35,23 +35,20 @@ class _InitPageState extends State<InitPage> {
       ),
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
-          if (state is MainAutoLoginState && state.success) {
+          if (state is MainInitState && state.success) {
             const TipherethRootRoute().go(context);
-            ServerSelectOverlay.of(context)?.minimize();
             Toast(title: '', message: S.of(context).welcomeBack).show(context);
-          } else if (state is MainAutoLoginState && state.failed) {
+          } else if (state is MainInitState && state.failed) {
             if (PlatformHelper.isWeb() &&
                 (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
                     DotEnvValue.winClientDownloadUrl.isNotEmpty)) {
-              ServerSelectOverlay.of(context)?.hide();
               const WebLandingRoute().go(context);
             } else {
-              context.read<MainBloc>().add(MainEnterLocalModeEvent());
+              const TipherethRootRoute().go(context);
+              if (state.msg != null) {
+                Toast(title: '', message: state.msg!).show(context);
+              }
             }
-          }
-          if (state is MainEnterLocalModeState && state.success) {
-            const TipherethRootRoute().go(context);
-            ServerSelectOverlay.of(context)?.hide();
           }
         },
         builder: (context, state) {
@@ -134,7 +131,7 @@ class InitWidget extends StatelessWidget {
             UniversalTextButton(
                 child: Text(S.of(context).skipLoading),
                 onPressed: () {
-                  context.read<MainBloc>().add(MainEnterLocalModeEvent());
+                  const TipherethRootRoute().go(context);
                 }),
           ],
         ),

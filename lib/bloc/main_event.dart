@@ -3,13 +3,7 @@ part of 'main_bloc.dart';
 @immutable
 sealed class MainEvent {}
 
-class MainEnterLocalModeEvent extends MainEvent {}
-
-class MainAutoLoginEvent extends MainEvent {
-  final ServerConfig? config;
-
-  MainAutoLoginEvent({this.config});
-}
+class MainInitEvent extends MainEvent {}
 
 class MainSetNextServerConfigEvent extends MainEvent {
   final ServerConfig config;
@@ -26,7 +20,11 @@ class MainManualLoginEvent extends MainEvent {
   MainManualLoginEvent(this.username, this.password);
 }
 
-class MainRefreshServerInfoEvent extends MainEvent {}
+class MainRefreshServerInfoEvent extends MainEvent {
+  final String? server;
+
+  MainRefreshServerInfoEvent({this.server});
+}
 
 class MainLogoutEvent extends MainEvent {}
 
@@ -38,10 +36,4 @@ class MainRegisterEvent extends MainEvent {
 
   MainRegisterEvent(this.username, this.password,
       {this.captchaID, this.captchaAns});
-}
-
-class MainGetServerInstanceInfoEvent extends MainEvent {
-  final ServerConfig config;
-
-  MainGetServerInstanceInfoEvent(this.config);
 }

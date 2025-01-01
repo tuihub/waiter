@@ -7,14 +7,14 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/yesod_model.dart';
-import '../../repo/grpc/api_helper.dart';
 import '../../repo/local/yesod.dart';
+import '../../service/librarian_service.dart';
 
 part 'yesod_event.dart';
 part 'yesod_state.dart';
 
 class YesodBloc extends Bloc<YesodEvent, YesodState> {
-  final ApiHelper _api;
+  final LibrarianService _api;
   final YesodRepo _repo;
 
   YesodBloc(this._api, this._repo) : super(YesodState()) {
@@ -51,7 +51,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedConfigLoadState(
             state.copyWith(
               feedConfigs: configs,
@@ -61,7 +61,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
 
-      final totalSize = resp.getData().paging.totalSize.toInt();
+      final totalSize = resp.unwrap().paging.totalSize.toInt();
       const pageSize = 100;
       var failCount = 0;
 
@@ -75,8 +75,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             ),
           ),
         );
-        if (resp.status == ApiStatus.success) {
-          configs.addAll(resp.getData().feedsWithConfig);
+        if (resp case Ok()) {
+          configs.addAll(resp.v.feedsWithConfig);
         } else {
           failCount++;
         }
@@ -99,7 +99,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           config: event.config,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedConfigAddState(
           state,
           EventStatus.failed,
@@ -109,7 +109,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
       final configs = [
         ListFeedConfigsResponse_FeedWithConfig(
-          config: event.config..id = resp.getData().id,
+          config: event.config..id = resp.unwrap().id,
           feed: null,
         )
       ];
@@ -133,7 +133,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           config: event.config,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedConfigEditState(
           state,
           EventStatus.failed,
@@ -164,7 +164,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           ),
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedActionSetLoadState(
           state,
           EventStatus.failed,
@@ -173,7 +173,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
 
-      final totalSize = resp.getData().paging.totalSize.toInt();
+      final totalSize = resp.unwrap().paging.totalSize.toInt();
       const pageSize = 100;
       var failCount = 0;
 
@@ -188,8 +188,8 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             ),
           ),
         );
-        if (resp.status == ApiStatus.success) {
-          sets.addAll(resp.getData().actionSets);
+        if (resp case Ok()) {
+          sets.addAll(resp.v.actionSets);
         } else {
           failCount++;
         }
@@ -211,7 +211,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           actionSet: event.set,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedActionSetAddState(
           state,
           EventStatus.failed,
@@ -241,7 +241,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           actionSet: event.set,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedActionSetEditState(
           state,
           EventStatus.failed,
@@ -279,7 +279,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           categoryFilter: listConfig.categoryFilter,
         ),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedItemDigestLoadState(
           state,
           EventStatus.failed,
@@ -289,13 +289,13 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
       }
       final List<FeedItemDigest> digests =
           refresh ? [] : state.feedItemDigests ?? [];
-      digests.addAll(resp.getData().items);
+      digests.addAll(resp.unwrap().items);
       emit(YesodFeedItemDigestLoadState(
         state.copyWith(feedItemDigests: digests),
         EventStatus.success,
         currentPage: pageNum,
         maxPage:
-            ((resp.getData().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
+            ((resp.unwrap().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
       ));
     }, transformer: droppable());
 
@@ -312,7 +312,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
             id: event.id,
           ),
         );
-        if (resp.status != ApiStatus.success) {
+        if (resp case Err()) {
           emit(YesodFeedItemLoadState(
             state,
             EventStatus.failed,
@@ -320,7 +320,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           ));
           return;
         } else {
-          item = resp.getData().item;
+          item = resp.unwrap().item;
           await _repo.setFeedItem(event.id, item);
         }
       }
@@ -336,7 +336,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         (client) => client.listFeedCategories,
         ListFeedCategoriesRequest(),
       );
-      if (resp.status != ApiStatus.success) {
+      if (resp case Err()) {
         emit(YesodFeedCategoriesLoadState(
           state,
           EventStatus.failed,
@@ -345,7 +345,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       emit(YesodFeedCategoriesLoadState(
-        state.copyWith(feedCategories: resp.getData().categories),
+        state.copyWith(feedCategories: resp.unwrap().categories),
         EventStatus.success,
       ));
     }, transformer: droppable());

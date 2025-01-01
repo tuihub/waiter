@@ -40,12 +40,6 @@ Future<MyApp> init() async {
   // dao
   await SentryHive.initFlutter(dataPath);
 
-  // repo
-  final common = await ClientCommonRepo.init();
-
-  // api
-  final api = ApiHelper.local();
-
   // system tray
   await _initSystemTray();
 
@@ -58,15 +52,15 @@ Future<MyApp> init() async {
   if (kDebugMode) {
     Bloc.observer = SimpleBlocObserver();
   }
-  final clientSettingBloc = ClientSettingBloc(common);
-  final deepLinkBloc = DeepLinkBloc(null);
-  final mainBloc = MainBloc(
-      api, common, clientSettingBloc, deepLinkBloc, packageInfo, dataPath);
+  final diService = await DIService.init(
+    dataPath: dataPath,
+    packageInfo: packageInfo,
+  );
 
   // router
-  final router = getRouter(mainBloc, api);
+  final router = getRouter();
 
-  return MyApp(router, mainBloc);
+  return MyApp(router, diService);
 }
 
 Future<void> _initSystemTray() async {

@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
 
 import '../../bloc/netzach/netzach_bloc.dart';
 import '../../model/netzach_model.dart';
-import '../../repo/grpc/l10n.dart';
+import '../../l10n/librarian.dart';
 import '../helper/duration_format.dart';
 import '../universal/universal.dart';
 

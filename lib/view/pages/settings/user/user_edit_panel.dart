@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
-import '../../../../repo/grpc/l10n.dart';
+import '../../../../l10n/librarian.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
 import '../../../universal/universal.dart';

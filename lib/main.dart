@@ -34,11 +34,10 @@ import 'common/deeplink/deeplink.dart';
 import 'common/platform.dart';
 import 'consts.dart';
 import 'l10n/l10n.dart';
-import 'repo/grpc/api_helper.dart';
-import 'repo/grpc/client.dart';
-import 'repo/local/common.dart';
 import 'route.dart';
 import 'rust/frb_generated.dart';
+import 'service/di_service.dart';
+import 'service/librarian_service/client.dart';
 
 part 'init.dart';
 
@@ -92,10 +91,10 @@ void main(List<String> args) async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.router, this.mainBloc, {super.key});
+  const MyApp(this.router, this.diService, {super.key});
 
   final GoRouter router;
-  final MainBloc mainBloc;
+  final DIService diService;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -115,29 +114,31 @@ class _MyAppState extends State<MyApp> {
   List<BlocProvider> genProviders(BuildContext context) {
     final List<BlocProvider> newProviders = [
       BlocProvider<ClientSettingBloc>(
-          create: (context) => widget.mainBloc.clientSettingBloc),
-      BlocProvider<DeepLinkBloc>(
-          create: (context) => widget.mainBloc.deepLinkBloc),
+          create: (context) => ClientSettingBloc()),
     ];
-    if (widget.mainBloc.tipherethBloc != null) {
+    if (widget.diService.deepLinkBloc != null) {
+      newProviders.add(BlocProvider<DeepLinkBloc>(
+          create: (context) => widget.diService.deepLinkBloc!));
+    }
+    if (widget.diService.tipherethBloc != null) {
       newProviders.add(BlocProvider<TipherethBloc>(
-          create: (context) => widget.mainBloc.tipherethBloc!));
+          create: (context) => widget.diService.tipherethBloc!));
     }
-    if (widget.mainBloc.geburaBloc != null) {
+    if (widget.diService.geburaBloc != null) {
       newProviders.add(BlocProvider<GeburaBloc>(
-          create: (context) => widget.mainBloc.geburaBloc!));
+          create: (context) => widget.diService.geburaBloc!));
     }
-    if (widget.mainBloc.yesodBloc != null) {
+    if (widget.diService.yesodBloc != null) {
       newProviders.add(BlocProvider<YesodBloc>(
-          create: (context) => widget.mainBloc.yesodBloc!));
+          create: (context) => widget.diService.yesodBloc!));
     }
-    if (widget.mainBloc.chesedBloc != null) {
+    if (widget.diService.chesedBloc != null) {
       newProviders.add(BlocProvider<ChesedBloc>(
-          create: (context) => widget.mainBloc.chesedBloc!));
+          create: (context) => widget.diService.chesedBloc!));
     }
-    if (widget.mainBloc.netzachBloc != null) {
+    if (widget.diService.netzachBloc != null) {
       newProviders.add(BlocProvider<NetzachBloc>(
-          create: (context) => widget.mainBloc.netzachBloc!));
+          create: (context) => widget.diService.netzachBloc!));
     }
     return newProviders;
   }
@@ -145,20 +146,18 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => widget.mainBloc,
-      child: BlocConsumer<MainBloc, MainState>(
+      create: (context) => widget.diService.mainBloc!,
+      child: BlocListener<MainBloc, MainState>(
         listener: (context, state) {
           final newProviders = genProviders(context);
           setState(() {
             providers = newProviders;
           });
         },
-        builder: (context, state) {
-          return MultiBlocProvider(
-            providers: providers,
-            child: _MyAppWidget(widget.router),
-          );
-        },
+        child:MultiBlocProvider(
+          providers: providers,
+          child: _MyAppWidget(widget.router),
+        ),
       ),
     );
   }

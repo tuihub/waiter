@@ -9,7 +9,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
-import '../../../repo/grpc/l10n.dart';
+import '../../../l10n/librarian.dart';
 import '../../components/toast.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
