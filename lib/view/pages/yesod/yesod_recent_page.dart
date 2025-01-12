@@ -9,6 +9,7 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../common/bloc_event_status_mixin.dart';
@@ -20,7 +21,6 @@ import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/universal.dart';
 import '../frame_page.dart';
 import 'yesod_detail_page.dart';
 import 'yesod_preview_card.dart';

@@ -11,7 +11,7 @@ import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'gebura_common.dart';
 
 class GeburaNav extends StatelessWidget {

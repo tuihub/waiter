@@ -19,6 +19,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../common/bloc_event_status_mixin.dart';
 import '../common/platform.dart';
@@ -31,7 +32,6 @@ import '../repo/local/yesod.dart';
 import '../repo/main/main_repo.dart';
 import '../service/di_service.dart';
 import '../service/librarian_service.dart';
-import '../view/universal/universal.dart';
 import 'chesed/chesed_bloc.dart';
 import 'deeplink_bloc.dart';
 import 'gebura/gebura_bloc.dart';

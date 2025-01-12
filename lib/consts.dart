@@ -1,9 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import 'route.dart';
-import 'view/universal/universal.dart';
 
 const clientSourceCodeUrl = 'github.com/tuihub/waiter';
 

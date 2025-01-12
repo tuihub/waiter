@@ -15,9 +15,7 @@ class ThemeSetting extends StatelessWidget {
                 title: Text(S.of(context).theme),
                 trailing: UniversalIconButton(
                   onPressed: () {
-                    context
-                        .read<MainBloc>()
-                        .add(ToggleThemeModeEvent());
+                    context.read<MainBloc>().add(ToggleThemeModeEvent());
                   },
                   icon: AnimatedSwitcher(
                     duration: Duration.zero,

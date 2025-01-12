@@ -10,7 +10,7 @@ import '../../../../l10n/librarian.dart';
 import '../../../components/toast.dart';
 import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class PorterManagePage extends StatelessWidget {

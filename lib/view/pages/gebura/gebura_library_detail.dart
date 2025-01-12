@@ -24,7 +24,7 @@ import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import '../../specialized/right_panel_form.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../frame_page.dart';
 import 'gebura_common.dart';
 

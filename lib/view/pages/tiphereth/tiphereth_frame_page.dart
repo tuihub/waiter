@@ -16,7 +16,7 @@ import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 part 'account_dialog.dart';
 part 'my_accounts_card.dart';

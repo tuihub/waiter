@@ -1,7 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class ChesedImageViewWidget extends StatelessWidget {
   final String imageUrl;

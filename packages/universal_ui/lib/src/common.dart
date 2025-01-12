@@ -40,7 +40,8 @@ class UniversalUI {
 
   static UniversalUI of(BuildContext context) {
     try {
-      return UniversalUI(UIDesignProvider.of(context), material.Theme.of(context));
+      return UniversalUI(
+          UIDesignProvider.of(context), material.Theme.of(context));
     } catch (e) {
       return UniversalUI(UIDesign.material, material.Theme.of(context));
     }

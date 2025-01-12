@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../components/toast.dart';
-import '../../universal/universal.dart';
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../l10n/l10n.dart';
 import '../helper/app_bar.dart';
-import '../universal/universal.dart';
 
 class ListManagePage extends StatefulWidget {
   const ListManagePage({

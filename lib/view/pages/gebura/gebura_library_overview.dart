@@ -6,7 +6,7 @@ import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
-import '../../universal/button.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'gebura_common.dart';
 
 class GeburaLibraryOverview extends StatelessWidget {

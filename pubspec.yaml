@@ -41,6 +41,8 @@ dependencies:
     path: packages/dao
   bangumi_api:
     path: packages/bangumi_api
+  universal_ui:
+    path: packages/universal_ui
 
   # state management
   bloc: ^8.1.4
@@ -103,7 +105,6 @@ dependencies:
       ref: main
   animated_tree_view: ^2.1.0
   input_quantity: ^2.4.1
-  fluentui_system_icons: ^1.1.263
 
   # rust bridge
   flutter_rust_bridge: 2.5.0 # use fixed version

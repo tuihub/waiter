@@ -6,7 +6,7 @@ import 'package:system_tray/system_tray.dart';
 
 import '../../common/platform.dart';
 import '../../l10n/l10n.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});

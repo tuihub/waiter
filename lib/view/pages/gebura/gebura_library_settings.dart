@@ -28,7 +28,7 @@ import '../../components/toast.dart';
 import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../frame_page.dart';
 
 part 'gebura_library_settings_common.dart';

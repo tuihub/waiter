@@ -1,4 +1,4 @@
-name: dao
+name: universal_ui
 description: "A new Flutter package project."
 version: 0.0.1
 publish_to: none
@@ -9,14 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dart_mappable: ^4.3.0
-  drift: ^2.21.0
-  drift_flutter: ^0.2.1
+  fluent_ui: ^4.9.2
+  fluentui_system_icons: ^1.1.263
+  animated_toggle_switch: ^0.8.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   build_runner: ^2.4.13
-  dart_mappable_builder: ^4.3.0
-  drift_dev: ^2.21.2

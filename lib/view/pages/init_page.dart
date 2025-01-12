@@ -9,7 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'server_select_overlay.dart';
 
 class InitPage extends StatefulWidget {

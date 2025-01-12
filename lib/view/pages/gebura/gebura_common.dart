@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_io/io.dart' as io;
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class GeburaAppCoverImage extends StatelessWidget {
   const GeburaAppCoverImage({

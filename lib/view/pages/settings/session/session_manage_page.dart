@@ -10,7 +10,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../model/common_model.dart';
 import '../../../../route.dart';
 import '../../../helper/duration_format.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class SessionManagePage extends StatelessWidget {

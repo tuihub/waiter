@@ -6,8 +6,7 @@ class ChoreSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basePath = DIService.instance.dataPath;
-    return BlocBuilder<MainBloc, MainState>(
-        builder: (context, state) {
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       return UniversalExpansionTile(
         leading: Icon(UniversalUI.of(context).icons.warning),
         title: const Text('高级'),
@@ -31,9 +30,8 @@ class ChoreSetting extends StatelessWidget {
               trailing: UniversalSwitch(
                 value: state.uiDesign == UIDesign.fluent,
                 onChanged: (value) {
-                  context
-                      .read<MainBloc>()
-                      .add(ChangeUIDesignEvent(value ? UIDesign.fluent : UIDesign.material));
+                  context.read<MainBloc>().add(ChangeUIDesignEvent(
+                      value ? UIDesign.fluent : UIDesign.material));
                 },
               ),
             ),

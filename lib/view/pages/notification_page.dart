@@ -9,7 +9,7 @@ import '../../bloc/netzach/netzach_bloc.dart';
 import '../../model/netzach_model.dart';
 import '../../l10n/librarian.dart';
 import '../helper/duration_format.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});

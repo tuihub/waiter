@@ -9,7 +9,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../route.dart';
 import '../../../../l10n/librarian.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class UserManagePage extends StatefulWidget {

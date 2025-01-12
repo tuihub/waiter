@@ -8,7 +8,7 @@ import '../../../bloc/main_bloc.dart';
 import '../../../service/di_service.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
-import '../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

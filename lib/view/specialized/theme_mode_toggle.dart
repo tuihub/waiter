@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/main_bloc.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class ThemeModeToggle extends StatelessWidget {
   const ThemeModeToggle({super.key});

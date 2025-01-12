@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_io/io.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
 import '../../../common/platform.dart';
-import '../../universal/universal.dart';
 
 class ChesedUpload extends StatefulWidget {
   final void Function() callback;

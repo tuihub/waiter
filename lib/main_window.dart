@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import 'bloc/deeplink_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'common/platform.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
-import 'view/universal/common.dart';
 
 // MainWindow is the top-level widget of the app
 class MainWindow extends StatelessWidget {

@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../components/toast.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
   const AppPackageAssignDialog(

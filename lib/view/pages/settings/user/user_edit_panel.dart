@@ -6,7 +6,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/librarian.dart';
 import '../../../components/toast.dart';
 import '../../../specialized/right_panel_form.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class UserEditPanel extends StatefulWidget {

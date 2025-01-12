@@ -10,7 +10,7 @@ import '../helper/connection.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/title_bar.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'server_select_overlay.dart';
 
 const double restWidth = 36;
@@ -86,8 +86,7 @@ class AppFramePageState extends State<AppFramePage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
-      buildWhen: (previous, current) =>
-          previous.uiDesign != current.uiDesign,
+      buildWhen: (previous, current) => previous.uiDesign != current.uiDesign,
       builder: (context, state) {
         return LayoutBuilder(
           builder: (context, constraints) {

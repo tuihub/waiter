@@ -4,7 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../route.dart';
-import '../../../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class AppPackageManagePage extends StatefulWidget {

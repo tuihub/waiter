@@ -18,7 +18,7 @@ import '../layout/bootstrap_container.dart';
 import '../specialized/backdrop_blur.dart';
 import '../specialized/connectivity.dart';
 import '../specialized/nav_rail.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'settings/client/client_setting_page.dart';
 
 // class ServerSelectOverlay extends StatefulWidget {

@@ -13,7 +13,7 @@ import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class WebLandingPage extends StatelessWidget {
   const WebLandingPage({super.key});

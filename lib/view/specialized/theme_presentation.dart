@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../universal/universal.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 class ThemePresent extends StatelessWidget {
   final String title;
