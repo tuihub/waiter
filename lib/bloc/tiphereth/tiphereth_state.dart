@@ -63,7 +63,7 @@ class TipherethState {
       selectedPorterEditIndex:
           selectedPorterEditIndex ?? this.selectedPorterEditIndex,
       selectedSessionEditIndex:
-          selectedSessionDeleteIndex ?? this.selectedSessionEditIndex,
+          selectedSessionDeleteIndex ?? selectedSessionEditIndex,
     );
   }
 

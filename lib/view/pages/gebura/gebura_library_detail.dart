@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_io/io.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -24,7 +25,6 @@ import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
 import '../../specialized/right_panel_form.dart';
-import 'package:universal_ui/universal_ui.dart';
 import '../frame_page.dart';
 import 'gebura_common.dart';
 

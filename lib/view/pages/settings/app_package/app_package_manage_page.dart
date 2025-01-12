@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../route.dart';
-import 'package:universal_ui/universal_ui.dart';
 import '../../frame_page.dart';
 
 class AppPackageManagePage extends StatefulWidget {

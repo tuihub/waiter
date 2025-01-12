@@ -5,6 +5,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_file/open_file.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/main_bloc.dart';
 import '../../../../common/platform.dart';
@@ -13,7 +14,6 @@ import '../../../../l10n/l10n.dart';
 import '../../../../service/di_service.dart';
 import '../../../helper/app_bar.dart';
 import '../../../specialized/theme_presentation.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 part 'cache_setting.dart';
 part 'chore_setting.dart';

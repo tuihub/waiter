@@ -1,10 +1,11 @@
 import 'dart:ui' as ui;
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
-import 'package:universal_ui/universal_ui.dart';
 import '../image_viewer.dart';
 
 class YesodPreviewCard extends StatelessWidget {

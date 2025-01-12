@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../service/di_service.dart';
 import '../../helper/app_bar.dart';
 import '../../helper/connection.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

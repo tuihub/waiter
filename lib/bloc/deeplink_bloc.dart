@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../common/platform.dart';
-import '../model/common_model.dart';
 
 part 'deeplink_bloc.g.dart';
 

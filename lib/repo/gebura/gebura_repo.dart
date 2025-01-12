@@ -8,7 +8,7 @@ import '../../rust/api/win_icon.dart';
 import '../../service/librarian_service.dart';
 
 class GeburaRepo {
-  final LibrarianService _api ;
+  final LibrarianService _api;
   final GeburaDao _dao;
   final KVDao _kvDao;
 

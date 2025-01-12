@@ -1,19 +1,17 @@
 import 'dart:async';
 
-import 'package:dao/dao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
 import '../../l10n/l10n.dart';
-import '../../model/common_model.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class WebLandingPage extends StatelessWidget {
   const WebLandingPage({super.key});

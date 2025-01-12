@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../specialized/right_panel_form.dart';
-import 'package:universal_ui/universal_ui.dart';
 import '../frame_page.dart';
 
 class GeburaAssignAppPanel extends StatefulWidget {

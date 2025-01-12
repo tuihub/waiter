@@ -13,6 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_file/open_file.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_io/io.dart';
+import 'package:universal_ui/universal_ui.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -28,7 +29,6 @@ import '../../components/toast.dart';
 import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
-import 'package:universal_ui/universal_ui.dart';
 import '../frame_page.dart';
 
 part 'gebura_library_settings_common.dart';

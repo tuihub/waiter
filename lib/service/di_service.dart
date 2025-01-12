@@ -35,7 +35,8 @@ class DIService {
 
   // Public
   static DIService get instance => _instance;
-  static Future<DIService> init({String? dataPath, required PackageInfo packageInfo}) async {
+  static Future<DIService> init(
+      {String? dataPath, required PackageInfo packageInfo}) async {
     _instance._dataPath = dataPath ?? '';
     _instance._packageInfo = packageInfo;
     await _instance.buildBlocs();
@@ -64,7 +65,7 @@ class DIService {
     final mainRepo = MainRepo(api, mainDao, kvDao);
     final geburaDao = GeburaDao(appDB);
     final geburaRepo = GeburaRepo(api, geburaDao, kvDao);
-    final yesodRepo = await YesodRepo.init(_dataPath);
+    final yesodRepo = await YesodRepo.init(_dataPath, appDB);
     _mainBloc = await MainBloc.init(api, mainRepo);
     _deepLinkBloc = DeepLinkBloc(null);
     _chesedBloc = ChesedBloc(api);

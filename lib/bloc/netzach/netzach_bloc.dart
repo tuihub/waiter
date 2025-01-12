@@ -33,11 +33,12 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ));
       late ListNotifyTargetsResponse data;
-      switch(resp) {
+      switch (resp) {
         case Ok():
           data = resp.v;
         case Err():
-          emit(NetzachTargetLoadState(state, EventStatus.failed, msg: resp.error));
+          emit(NetzachTargetLoadState(state, EventStatus.failed,
+              msg: resp.error));
           return;
       }
 
@@ -56,7 +57,7 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ),
         );
-        switch(resp) {
+        switch (resp) {
           case Ok():
             data = resp.v;
           case Err():
@@ -121,11 +122,12 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             ),
           ));
       late ListNotifyFlowsResponse data;
-      switch(resp) {
+      switch (resp) {
         case Ok():
           data = resp.v;
         case Err():
-          emit(NetzachFlowLoadState(state, EventStatus.failed, msg: resp.error));
+          emit(
+              NetzachFlowLoadState(state, EventStatus.failed, msg: resp.error));
           return;
       }
 
@@ -221,7 +223,8 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
             EventStatus.success,
           ));
         case Err():
-          emit(NetzachSystemNotificationLoadState(state, EventStatus.failed, msg: resp.error));
+          emit(NetzachSystemNotificationLoadState(state, EventStatus.failed,
+              msg: resp.error));
       }
     });
 

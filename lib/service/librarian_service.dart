@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dao/dao.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
@@ -32,7 +31,8 @@ class LibrarianService {
 
   ConnectionStatus get connectionStatus => _connectionStatus;
   String get connectionStatusMessage => _connectionStatusMessage;
-  Stream<ConnectionStatus> get connectionStatusStream => _connectionStatusController.stream;
+  Stream<ConnectionStatus> get connectionStatusStream =>
+      _connectionStatusController.stream;
 
   LibrarianService._({
     ServerConfig? config,
@@ -90,7 +90,7 @@ class LibrarianService {
   ) async {
     // Check if the connection is local or uninitialized
     if (_connectionStatus == ConnectionStatus.local || _client == null) {
-      return Err('Local mode');
+      return const Err('Local mode');
     }
 
     final requestFunc = requestBuilder(_client!);
@@ -150,9 +150,10 @@ class LibrarianService {
 
     try {
       debugPrint('refreshing token');
-      final resp = await _client!.refreshToken(RefreshTokenRequest(
-        deviceId: deviceId,
-      ),
+      final resp = await _client!.refreshToken(
+          RefreshTokenRequest(
+            deviceId: deviceId,
+          ),
           options: _newCallOptions(_config!.refreshToken!));
       _option = _newCallOptions(resp.accessToken);
       _config = _config!.copyWith(refreshToken: resp.refreshToken);

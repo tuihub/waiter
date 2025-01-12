@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
@@ -10,8 +11,6 @@ import '../helper/connection.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/title_bar.dart';
-import 'package:universal_ui/universal_ui.dart';
-import 'server_select_overlay.dart';
 
 const double restWidth = 36;
 const double gapWidth = 8;

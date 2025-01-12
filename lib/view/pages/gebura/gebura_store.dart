@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../layout/bootstrap_container.dart';
-import 'package:universal_ui/universal_ui.dart';
 import 'gebura_store_detail.dart';
 
 class GeburaStorePage extends StatelessWidget {
@@ -136,7 +136,7 @@ class StoreList extends StatelessWidget {
                           .add(GeburaFetchBoundAppInfosEvent(app.id));
                       return BlocProvider.value(
                         value: context.read<GeburaBloc>(),
-                        child: Container(
+                        child: ColoredBox(
                           color: Theme.of(context).scaffoldBackgroundColor,
                           child: GeburaStoreDetail(appID: app.id),
                         ),

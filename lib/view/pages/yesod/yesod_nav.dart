@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/yesod_model.dart';
 import '../../../route.dart';
 import '../../layout/overlapping_panels.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class YesodNav extends StatelessWidget {
   const YesodNav({super.key, required this.function});

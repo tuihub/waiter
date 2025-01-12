@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
@@ -16,7 +17,6 @@ import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 part 'account_dialog.dart';
 part 'my_accounts_card.dart';

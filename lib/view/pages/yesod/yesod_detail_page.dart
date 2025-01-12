@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class YesodDetailPage extends StatefulWidget {
   const YesodDetailPage({super.key, required this.itemId});

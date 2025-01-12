@@ -1,4 +1,3 @@
-import 'package:dao/src/tables/server_config.dart';
 import 'package:drift/drift.dart';
 
 import 'connection/shared.dart';
@@ -12,6 +11,7 @@ import 'tables/local_common_app_scan.dart';
 import 'tables/local_common_app_scan_result.dart';
 import 'tables/local_steam_app_scan.dart';
 import 'tables/local_steam_app_scan_result.dart';
+import 'tables/server_config.dart';
 import 'tables/utils.dart';
 
 part 'database.g.dart';

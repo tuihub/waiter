@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../components/toast.dart';
 import '../../layout/bootstrap_container.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class GeburaStoreDetail extends StatelessWidget {
   const GeburaStoreDetail({super.key, required this.appID});

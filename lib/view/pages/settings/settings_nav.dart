@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class SettingsNav extends StatelessWidget {
   const SettingsNav({super.key, required this.function});

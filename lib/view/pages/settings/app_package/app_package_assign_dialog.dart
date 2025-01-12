@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
 import '../../../components/toast.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
   const AppPackageAssignDialog(

@@ -1,7 +1,7 @@
-import 'package:dao/src/tables/server_config.dart';
 import 'package:drift/drift.dart';
 
 import 'database.dart';
+import 'tables/server_config.dart';
 
 part 'main_dao.g.dart';
 

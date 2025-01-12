@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../components/avatar.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class NavRail extends StatelessWidget {
   const NavRail(

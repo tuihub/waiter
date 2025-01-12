@@ -22,13 +22,10 @@ class YesodRepo {
     _db = db;
   }
 
-  static Future<YesodRepo> init(String path) async {
+  static Future<YesodRepo> init(String path, AppDatabase db) async {
     final feedItemCacheBox =
         await Hive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
-    return YesodRepo._init(
-      feedItemCacheBox,
-      AppDatabase(path),
-    );
+    return YesodRepo._init(feedItemCacheBox, db);
   }
 
   Future<void> dispose() async {

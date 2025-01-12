@@ -4,12 +4,12 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/netzach/netzach_bloc.dart';
-import '../../model/netzach_model.dart';
 import '../../l10n/librarian.dart';
+import '../../model/netzach_model.dart';
 import '../helper/duration_format.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});

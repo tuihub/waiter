@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../common/platform.dart';
 import '../../l10n/l10n.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, this.actions = const []});

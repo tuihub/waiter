@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/main_bloc.dart';
 import '../../common/platform.dart';
@@ -9,8 +10,6 @@ import '../../l10n/l10n.dart';
 import '../../route.dart';
 import '../components/toast.dart';
 import '../layout/bootstrap_container.dart';
-import 'package:universal_ui/universal_ui.dart';
-import 'server_select_overlay.dart';
 
 class InitPage extends StatefulWidget {
   const InitPage({super.key});

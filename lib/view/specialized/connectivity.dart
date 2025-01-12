@@ -2,7 +2,6 @@ import 'package:dao/dao.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
-import '../../model/common_model.dart';
 import '../../service/librarian_service/client.dart';
 
 class ServerConnectivityWidget extends StatefulWidget {

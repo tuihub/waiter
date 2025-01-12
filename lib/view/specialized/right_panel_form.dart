@@ -8,12 +8,12 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
 import '../components/toast.dart';
 import '../helper/app_bar.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 class RightPanelForm extends StatefulWidget {
   const RightPanelForm({

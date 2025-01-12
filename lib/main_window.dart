@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:universal_ui/universal_ui.dart';
 
 import 'bloc/deeplink_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -22,18 +21,16 @@ class MainWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return _AppRetainWidget(
       child: _DeepLinkWidget(
-        child: _UIWidget(
-          child: Scaffold(
-            body: SafeArea(
-              maintainBottomViewPadding: true,
-              child: Stack(
-                children: [
-                  child,
-                  const TitleBar(
-                    actions: [ThemeModeToggle()],
-                  ),
-                ],
-              ),
+        child: Scaffold(
+          body: SafeArea(
+            maintainBottomViewPadding: true,
+            child: Stack(
+              children: [
+                child,
+                const TitleBar(
+                  actions: [ThemeModeToggle()],
+                ),
+              ],
             ),
           ),
         ),
@@ -91,23 +88,6 @@ class _DeepLinkWidget extends StatelessWidget {
       },
       builder: (context, state) {
         return child;
-      },
-    );
-  }
-}
-
-class _UIWidget extends StatelessWidget {
-  const _UIWidget({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
-      buildWhen: (previous, current) =>
-          previous.uiDesign != current.uiDesign,
-      builder: (context, state) {
-        return UIDesignProvider(design: state.uiDesign, child: child);
       },
     );
   }

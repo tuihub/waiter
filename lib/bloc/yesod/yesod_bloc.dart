@@ -294,8 +294,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         state.copyWith(feedItemDigests: digests),
         EventStatus.success,
         currentPage: pageNum,
-        maxPage:
-            ((resp.unwrap().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
+        maxPage: ((resp.unwrap().paging.totalSize.toInt() - 1) ~/ pageSize) + 1,
       ));
     }, transformer: droppable());
 

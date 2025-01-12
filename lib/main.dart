@@ -18,6 +18,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:universal_io/io.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/deeplink_bloc.dart';
@@ -29,7 +30,6 @@ import 'bloc/yesod/yesod_bloc.dart';
 import 'common/bloc_observer.dart';
 import 'common/deeplink/deeplink.dart';
 import 'common/platform.dart';
-import 'consts.dart';
 import 'l10n/l10n.dart';
 import 'route.dart';
 import 'rust/frb_generated.dart';
@@ -129,7 +129,7 @@ class _MyAppState extends State<MyApp> {
             providers = newProviders;
           });
         },
-        child:MultiBlocProvider(
+        child: MultiBlocProvider(
           providers: providers,
           child: _MyAppWidget(widget.router),
         ),
@@ -194,22 +194,25 @@ class _MyAppWidget extends StatelessWidget {
             }
         }
 
-        return fluent.FluentTheme(
-          data: fluentTheme,
-          child: MaterialApp.router(
-            onGenerateTitle: (context) => S.of(context).title,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              fluent.FluentLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: state.themeMode,
-            routerConfig: router,
+        return UIDesignProvider(
+          design: state.uiDesign,
+          child: fluent.FluentTheme(
+            data: fluentTheme,
+            child: MaterialApp.router(
+              onGenerateTitle: (context) => S.of(context).title,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                fluent.FluentLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: state.themeMode,
+              routerConfig: router,
+            ),
           ),
         );
       },
