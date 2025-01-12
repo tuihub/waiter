@@ -140,7 +140,6 @@ class DotEnvValue {
   static String host = dotenv.env['HOST'] ?? '';
   static String port = dotenv.env['PORT'] ?? '';
   static String tls = dotenv.env['TLS'] ?? '';
-  static String enableSentry = dotenv.env['ENABLE_SENTRY'] ?? '';
 }
 
 const wellKnownAccountPlatforms = ['steam'];

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dao/dao.dart';
 import 'package:hive/hive.dart';
-import 'package:sentry_hive/sentry_hive.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
@@ -25,7 +24,7 @@ class YesodRepo {
 
   static Future<YesodRepo> init(String path) async {
     final feedItemCacheBox =
-        await SentryHive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
+        await Hive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
     return YesodRepo._init(
       feedItemCacheBox,
       AppDatabase(path),

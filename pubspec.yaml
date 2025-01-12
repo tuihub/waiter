@@ -32,8 +32,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  sentry_flutter: ^8.2.0
-  sentry_hive: ^8.2.0
   collection: ^1.18.0
 
   # built in package

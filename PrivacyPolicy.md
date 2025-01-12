@@ -18,9 +18,3 @@ Especially, your password only stored in memory and is never written to disk.
 Your data is only transferred to the server specified by you. We do not collect any data from you by default.   
 
 Note that the server provider may share your data with third parties. Please refer to the privacy policy of the server provider.
-
-## Sentry SDK
-
-We use Sentry SDK to collect crash reports and usage statistics. Sentry SDK is disabled by default. Please refer to the [Sentry Privacy Policy](https://sentry.io/privacy/) for more information.
-
-Please note that for `dev` and `alpha` builds (versions that contain these words in the version number), Sentry SDK is force enabled. These builds are primarily used by our developers and testers for debugging and feature testing. If you are using these builds, please be aware that crash reports and usage statistics will be collected automatically.

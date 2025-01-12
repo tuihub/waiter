@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_hero/local_hero.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -641,7 +640,6 @@ GoRouter getRouter() {
     initialLocation: const InitRoute().location,
     observers: [
       HeroController(),
-      SentryNavigatorObserver(),
     ],
     debugLogDiagnostics: kDebugMode,
     routes: $appRoutes,

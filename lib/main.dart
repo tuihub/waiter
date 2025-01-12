@@ -16,8 +16,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:sentry_hive/sentry_hive.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:universal_io/io.dart';
 
@@ -43,30 +41,11 @@ part 'init.dart';
 // main function is the entry point of the app
 void main(List<String> args) async {
   // Required for Android App
-  await SentryHive.initFlutter();
+  await Hive.initFlutter();
 
   final app = await init();
 
-  if (DotEnvValue.enableSentry.isNotEmpty &&
-      DotEnvValue.enableSentry == true.toString()) {
-    await SentryFlutter.init(
-      (options) {
-        options.dsn =
-            'https://f982c2e3ab1d2a1abfc601baa1d565cf@sentry.tuihub.org/4506634145628160';
-        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-        // We recommend adjusting this value in production.
-        options.tracesSampleRate = 1.0;
-      },
-      appRunner: () => runApp(
-        DefaultAssetBundle(
-          bundle: SentryAssetBundle(),
-          child: app,
-        ),
-      ),
-    );
-  } else {
-    runApp(app);
-  }
+  runApp(app);
 
   if (PlatformHelper.isWindowsApp()) {
     doWhenWindowReady(() {

@@ -17,28 +17,13 @@ Future<MyApp> init() async {
   }
 
   // dotenv
-  var enableSentry = false;
-  if ((!PlatformHelper.isWeb()) &&
-      File(path.join(dataPath ?? '', '.enable_sentry')).existsSync()) {
-    enableSentry = true;
-  }
-  if (packageInfo.version.contains('dev') ||
-      packageInfo.version.contains('alpha')) {
-    enableSentry = true;
-  }
-  if (enableSentry) {
-    await dotenv.load(mergeWith: {
-      'ENABLE_SENTRY': enableSentry.toString(),
-    });
-  } else {
-    await dotenv.load();
-  }
+  await dotenv.load();
 
   // proxy
   await applySystemProxy();
 
   // dao
-  await SentryHive.initFlutter(dataPath);
+  await Hive.initFlutter(dataPath);
 
   // system tray
   await _initSystemTray();

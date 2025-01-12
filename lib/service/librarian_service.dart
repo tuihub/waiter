@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:grpc/grpc.dart';
 import 'package:option_result/result.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as duration_pb;
 import 'package:tuihub_protos/google/protobuf/timestamp.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
@@ -102,7 +101,6 @@ class LibrarianService {
       final resp = await requestFunc(req, options: option);
       return Ok(resp);
     } catch (e) {
-      await Sentry.captureException(e);
       if (e is GrpcError &&
           e.code == StatusCode.unauthenticated &&
           await _doRefresh()) {
@@ -113,7 +111,6 @@ class LibrarianService {
           final resp = await requestFunc(req, options: option);
           return Ok(resp);
         } catch (e) {
-          await Sentry.captureException(e);
           if (e is GrpcError) {
             return Err(e.message ?? S.current.unknownErrorOccurred);
           }
