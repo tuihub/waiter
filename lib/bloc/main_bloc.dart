@@ -9,6 +9,7 @@ import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -30,8 +31,8 @@ import '../repo/local/yesod.dart';
 import '../repo/main/main_repo.dart';
 import '../service/di_service.dart';
 import '../service/librarian_service.dart';
+import '../view/universal/universal.dart';
 import 'chesed/chesed_bloc.dart';
-import 'client_setting/client_setting_bloc.dart';
 import 'deeplink_bloc.dart';
 import 'gebura/gebura_bloc.dart';
 import 'netzach/netzach_bloc.dart';
@@ -50,10 +51,21 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   bool get isLocal => _api.connectionStatus == ConnectionStatus.local;
 
-  MainBloc(
+  static Future<MainBloc> init(LibrarianService api, MainRepo repo) async {
+    final initialState = MainState().copyWith(
+      themeMode: await repo.getThemeMode(),
+      theme: await repo.getTheme(),
+      uiDesign: await repo.getUIDesign(),
+      useSystemProxy: await repo.getUseSystemProxy(),
+    );
+    return MainBloc._(initialState, api, repo);
+  }
+
+  MainBloc._(
+    MainState initialState,
     this._api,
     this._repo,
-  ) : super(MainState()) {
+  ) : super(initialState) {
     _api.connectionStatusStream.listen((event) {
       if (event == ConnectionStatus.connected) {
         add(MainRefreshServerInfoEvent());
@@ -64,22 +76,28 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       final lastServer = await _repo.getLastServer();
       final servers = await _repo.loadServers();
       debugPrint(servers.toString());
-      final serverMap = Map.fromEntries(servers.map((e) => MapEntry(e.uniqueKey, e)));
+      final serverMap =
+          Map.fromEntries(servers.map((e) => MapEntry(e.uniqueKey, e)));
       final ServerConfig? config = serverMap[lastServer];
       if (config != null) {
         await _api.newServerConfig(config);
         await DIService.instance.buildBlocs();
-        emit(MainInitState(state.copyWith(
-          currentServer: config.uniqueKey,
-          knownServers: serverMap,
-        ), EventStatus.success));
+        emit(MainInitState(
+          state.copyWith(
+            currentServer: config.uniqueKey,
+            knownServers: serverMap,
+          ),
+          EventStatus.success,
+        ));
       } else {
-        emit(MainInitState(state.copyWith(
-          knownServers: serverMap,
-        ), EventStatus.success));
+        emit(MainInitState(
+          state.copyWith(
+            knownServers: serverMap,
+          ),
+          EventStatus.success,
+        ));
       }
     }, transformer: droppable());
-
 
     on<MainSetNextServerConfigEvent>((event, emit) async {
       // debugPrint('set next server config ${event.config}');
@@ -236,9 +254,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           knownServerInstanceSummaries: knownServerInstanceSummaries,
         );
       }
-      final resp2 = await _api.doRequest(
-              (client) => client.getUser,
-          GetUserRequest());
+      final resp2 =
+          await _api.doRequest((client) => client.getUser, GetUserRequest());
       if (resp2 case Ok()) {
         final user = resp2.v;
         newState = newState.copyWith(currentUser: user.user);
@@ -305,6 +322,39 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       //   emit(MainRegisterState(state, EventStatus.failed, msg: e.toString()));
       // }
     }, transformer: droppable());
+
+    on<ChangeThemeEvent>((event, emit) async {
+      emit(state.copyWith(theme: event.theme));
+      await _repo.setTheme(event.theme);
+    });
+
+    on<ChangeBrightnessEvent>((event, emit) async {
+      emit(state.copyWith(themeMode: event.themeMode));
+      await _repo.setThemeMode(event.themeMode);
+    });
+
+    on<ToggleThemeModeEvent>((event, emit) async {
+      late ThemeMode newMode;
+      if (state.themeMode == ThemeMode.system) {
+        newMode = ThemeMode.dark;
+      } else if (state.themeMode == ThemeMode.dark) {
+        newMode = ThemeMode.light;
+      } else {
+        newMode = ThemeMode.system;
+      }
+      emit(state.copyWith(themeMode: newMode));
+      await _repo.setThemeMode(newMode);
+    });
+
+    on<ChangeUseSystemProxyEvent>((event, emit) async {
+      emit(state.copyWith(useSystemProxy: event.useSystemProxy));
+      await _repo.setUseSystemProxy(event.useSystemProxy);
+    });
+
+    on<ChangeUIDesignEvent>((event, emit) async {
+      emit(state.copyWith(uiDesign: event.design));
+      await _repo.setUIDesign(event.design);
+    });
   }
 
   int cacheSize() {

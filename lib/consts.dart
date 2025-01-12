@@ -64,13 +64,12 @@ class AppTheme {
 
   final String name;
   final FlexScheme scheme;
+
+  static const defaultTheme = AppTheme('default', FlexScheme.materialBaseline);
 }
 
 const themeData = [
-  AppTheme(
-    'default',
-    FlexScheme.materialBaseline,
-  ),
+  AppTheme.defaultTheme,
   AppTheme(
     'verdun hemlock',
     FlexScheme.verdunHemlock,

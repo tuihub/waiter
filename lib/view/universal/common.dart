@@ -1,15 +1,33 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../bloc/client_setting/client_setting_bloc.dart';
 
 part 'icons.dart';
 
 enum UIDesign {
   material,
   fluent,
+}
+
+class UIDesignProvider extends InheritedWidget {
+  const UIDesignProvider({
+    required this.design,
+    required super.child,
+    super.key,
+  });
+
+  final UIDesign design;
+
+  static UIDesign of(BuildContext context) {
+    final UIDesignProvider? provider =
+        context.dependOnInheritedWidgetOfExactType<UIDesignProvider>();
+    return provider?.design ?? UIDesign.material;
+  }
+
+  @override
+  bool updateShouldNotify(covariant UIDesignProvider oldWidget) {
+    return oldWidget.design != design;
+  }
 }
 
 class UniversalUI {
@@ -22,10 +40,7 @@ class UniversalUI {
 
   static UniversalUI of(BuildContext context) {
     try {
-      if (context.read<ClientSettingBloc>().state.useFluentUI ?? false) {
-        return UniversalUI(UIDesign.fluent, material.Theme.of(context));
-      }
-      return UniversalUI(UIDesign.material, material.Theme.of(context));
+      return UniversalUI(UIDesignProvider.of(context), material.Theme.of(context));
     } catch (e) {
       return UniversalUI(UIDesign.material, material.Theme.of(context));
     }

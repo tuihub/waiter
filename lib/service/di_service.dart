@@ -65,7 +65,7 @@ class DIService {
     final geburaDao = GeburaDao(appDB);
     final geburaRepo = GeburaRepo(api, geburaDao, kvDao);
     final yesodRepo = await YesodRepo.init(_dataPath);
-    _mainBloc = MainBloc(api, mainRepo);
+    _mainBloc = await MainBloc.init(api, mainRepo);
     _deepLinkBloc = DeepLinkBloc(null);
     _chesedBloc = ChesedBloc(api);
     _geburaBloc = GeburaBloc(geburaRepo);

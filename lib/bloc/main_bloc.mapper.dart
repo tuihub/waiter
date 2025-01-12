@@ -21,6 +21,18 @@ class MainStateMapper extends ClassMapperBase<MainState> {
   @override
   final String id = 'MainState';
 
+  static ThemeMode _$themeMode(MainState v) => v.themeMode;
+  static const Field<MainState, ThemeMode> _f$themeMode =
+      Field('themeMode', _$themeMode, opt: true, def: ThemeMode.system);
+  static AppTheme _$theme(MainState v) => v.theme;
+  static const Field<MainState, AppTheme> _f$theme =
+      Field('theme', _$theme, opt: true, def: AppTheme.defaultTheme);
+  static UIDesign _$uiDesign(MainState v) => v.uiDesign;
+  static const Field<MainState, UIDesign> _f$uiDesign =
+      Field('uiDesign', _$uiDesign, opt: true, def: UIDesign.material);
+  static bool _$useSystemProxy(MainState v) => v.useSystemProxy;
+  static const Field<MainState, bool> _f$useSystemProxy =
+      Field('useSystemProxy', _$useSystemProxy, opt: true, def: false);
   static String? _$currentServer(MainState v) => v.currentServer;
   static const Field<MainState, String> _f$currentServer =
       Field('currentServer', _$currentServer, opt: true);
@@ -53,6 +65,10 @@ class MainStateMapper extends ClassMapperBase<MainState> {
 
   @override
   final MappableFields<MainState> fields = const {
+    #themeMode: _f$themeMode,
+    #theme: _f$theme,
+    #uiDesign: _f$uiDesign,
+    #useSystemProxy: _f$useSystemProxy,
     #currentServer: _f$currentServer,
     #currentUser: _f$currentUser,
     #knownServers: _f$knownServers,
@@ -63,6 +79,10 @@ class MainStateMapper extends ClassMapperBase<MainState> {
 
   static MainState _instantiate(DecodingData data) {
     return MainState(
+        themeMode: data.dec(_f$themeMode),
+        theme: data.dec(_f$theme),
+        uiDesign: data.dec(_f$uiDesign),
+        useSystemProxy: data.dec(_f$useSystemProxy),
         currentServer: data.dec(_f$currentServer),
         currentUser: data.dec(_f$currentUser),
         knownServers: data.dec(_f$knownServers),
@@ -100,7 +120,11 @@ abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
           ObjectCopyWith<$R, ServerInstanceSummary, ServerInstanceSummary>>
       get knownServerInstanceSummaries;
   $R call(
-      {String? currentServer,
+      {ThemeMode? themeMode,
+      AppTheme? theme,
+      UIDesign? uiDesign,
+      bool? useSystemProxy,
+      String? currentServer,
       User? currentUser,
       Map<String, ServerConfig>? knownServers,
       Map<String, ServerInformation>? knownServerInfos,
@@ -145,13 +169,21 @@ class _MainStateCopyWithImpl<$R, $Out>
           (v) => call(knownServerInstanceSummaries: v));
   @override
   $R call(
-          {Object? currentServer = $none,
+          {ThemeMode? themeMode,
+          AppTheme? theme,
+          UIDesign? uiDesign,
+          bool? useSystemProxy,
+          Object? currentServer = $none,
           Object? currentUser = $none,
           Map<String, ServerConfig>? knownServers,
           Map<String, ServerInformation>? knownServerInfos,
           Map<String, FeatureSummary>? knownServerFeatureSummaries,
           Map<String, ServerInstanceSummary>? knownServerInstanceSummaries}) =>
       $apply(FieldCopyWithData({
+        if (themeMode != null) #themeMode: themeMode,
+        if (theme != null) #theme: theme,
+        if (uiDesign != null) #uiDesign: uiDesign,
+        if (useSystemProxy != null) #useSystemProxy: useSystemProxy,
         if (currentServer != $none) #currentServer: currentServer,
         if (currentUser != $none) #currentUser: currentUser,
         if (knownServers != null) #knownServers: knownServers,
@@ -163,6 +195,10 @@ class _MainStateCopyWithImpl<$R, $Out>
       }));
   @override
   MainState $make(CopyWithData data) => MainState(
+      themeMode: data.get(#themeMode, or: $value.themeMode),
+      theme: data.get(#theme, or: $value.theme),
+      uiDesign: data.get(#uiDesign, or: $value.uiDesign),
+      useSystemProxy: data.get(#useSystemProxy, or: $value.useSystemProxy),
       currentServer: data.get(#currentServer, or: $value.currentServer),
       currentUser: data.get(#currentUser, or: $value.currentUser),
       knownServers: data.get(#knownServers, or: $value.knownServers),

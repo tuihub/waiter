@@ -6,7 +6,7 @@ class ChoreSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basePath = DIService.instance.dataPath;
-    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+    return BlocBuilder<MainBloc, MainState>(
         builder: (context, state) {
       return UniversalExpansionTile(
         leading: Icon(UniversalUI.of(context).icons.warning),
@@ -17,23 +17,23 @@ class ChoreSetting extends StatelessWidget {
             UniversalListTile(
               title: const Text('使用系统代理（实验性）'),
               trailing: UniversalSwitch(
-                value: state.useSystemProxy ?? false,
+                value: state.useSystemProxy,
                 onChanged: (value) {
                   context
-                      .read<ClientSettingBloc>()
+                      .read<MainBloc>()
                       .add(ChangeUseSystemProxyEvent(value));
                 },
               ),
             ),
           if (PlatformHelper.isWindowsApp())
             UniversalListTile(
-              title: const Text('使用 Fluent UI（实验性）'),
+              title: const Text('使用 Fluent UI'),
               trailing: UniversalSwitch(
-                value: state.useFluentUI ?? false,
+                value: state.uiDesign == UIDesign.fluent,
                 onChanged: (value) {
                   context
-                      .read<ClientSettingBloc>()
-                      .add(ChangeUseFluentUIEvent(value));
+                      .read<MainBloc>()
+                      .add(ChangeUIDesignEvent(value ? UIDesign.fluent : UIDesign.material));
                 },
               ),
             ),

@@ -2,6 +2,13 @@ part of 'main_bloc.dart';
 
 @MappableClass(generateMethods: GenerateMethods.copy)
 class MainState with MainStateMappable {
+  // client setting
+  ThemeMode themeMode;
+  AppTheme theme;
+  UIDesign uiDesign;
+  bool useSystemProxy;
+
+  // server info
   String? currentServer;
   User? currentUser;
   Map<String, ServerConfig> knownServers;
@@ -21,6 +28,10 @@ class MainState with MainStateMappable {
       : null;
 
   MainState({
+    this.themeMode = ThemeMode.system,
+    this.theme = AppTheme.defaultTheme,
+    this.uiDesign = UIDesign.material,
+    this.useSystemProxy = false,
     this.currentServer,
     this.currentUser,
     this.knownServers = const {},
@@ -30,6 +41,10 @@ class MainState with MainStateMappable {
   });
 
   void _from(MainState other) {
+    themeMode = other.themeMode;
+    theme = other.theme;
+    uiDesign = other.uiDesign;
+    useSystemProxy = other.useSystemProxy;
     currentServer = other.currentServer;
     currentUser = other.currentUser;
     knownServers = other.knownServers;

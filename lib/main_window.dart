@@ -10,6 +10,7 @@ import 'bloc/main_bloc.dart';
 import 'common/platform.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
+import 'view/universal/common.dart';
 
 // MainWindow is the top-level widget of the app
 class MainWindow extends StatelessWidget {
@@ -21,16 +22,18 @@ class MainWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return _AppRetainWidget(
       child: _DeepLinkWidget(
-        child: Scaffold(
-          body: SafeArea(
-            maintainBottomViewPadding: true,
-            child: Stack(
-              children: [
-                child,
-                const TitleBar(
-                  actions: [ThemeModeToggle()],
-                ),
-              ],
+        child: _UIWidget(
+          child: Scaffold(
+            body: SafeArea(
+              maintainBottomViewPadding: true,
+              child: Stack(
+                children: [
+                  child,
+                  const TitleBar(
+                    actions: [ThemeModeToggle()],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -88,6 +91,23 @@ class _DeepLinkWidget extends StatelessWidget {
       },
       builder: (context, state) {
         return child;
+      },
+    );
+  }
+}
+
+class _UIWidget extends StatelessWidget {
+  const _UIWidget({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(
+      buildWhen: (previous, current) =>
+          previous.uiDesign != current.uiDesign,
+      builder: (context, state) {
+        return UIDesignProvider(design: state.uiDesign, child: child);
       },
     );
   }

@@ -22,7 +22,6 @@ import 'package:system_tray/system_tray.dart';
 import 'package:universal_io/io.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
-import 'bloc/client_setting/client_setting_bloc.dart';
 import 'bloc/deeplink_bloc.dart';
 import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -112,10 +111,7 @@ class _MyAppState extends State<MyApp> {
   late List<BlocProvider> providers;
 
   List<BlocProvider> genProviders(BuildContext context) {
-    final List<BlocProvider> newProviders = [
-      BlocProvider<ClientSettingBloc>(
-          create: (context) => ClientSettingBloc()),
-    ];
+    final List<BlocProvider> newProviders = [];
     if (widget.diService.deepLinkBloc != null) {
       newProviders.add(BlocProvider<DeepLinkBloc>(
           create: (context) => widget.diService.deepLinkBloc!));
@@ -170,12 +166,8 @@ class _MyAppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+    return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
-        if (state is DefaultAppState) {
-          context.read<ClientSettingBloc>().add(InitClientSettingEvent());
-        }
-
         final lightTheme = _customizeTheme(
             Brightness.light,
             FlexThemeData.light(

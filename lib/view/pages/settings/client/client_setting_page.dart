@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_file/open_file.dart';
 
-import '../../../../bloc/client_setting/client_setting_bloc.dart';
 import '../../../../bloc/main_bloc.dart';
 import '../../../../common/platform.dart';
 import '../../../../consts.dart';
@@ -35,7 +34,7 @@ class ClientSettingPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8),
-        child: BlocBuilder<ClientSettingBloc, ClientSettingState>(
+        child: BlocBuilder<MainBloc, MainState>(
           builder: (context, state) {
             return ListView(
               children: const [

@@ -5,7 +5,7 @@ class ThemeSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+    return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
         return UniversalCard(
           margin: EdgeInsets.zero,
@@ -16,7 +16,7 @@ class ThemeSetting extends StatelessWidget {
                 trailing: UniversalIconButton(
                   onPressed: () {
                     context
-                        .read<ClientSettingBloc>()
+                        .read<MainBloc>()
                         .add(ToggleThemeModeEvent());
                   },
                   icon: AnimatedSwitcher(
@@ -61,7 +61,7 @@ class ThemeSetting extends StatelessWidget {
                             onSelected: (selected) {
                               if (selected) {
                                 context
-                                    .read<ClientSettingBloc>()
+                                    .read<MainBloc>()
                                     .add(ChangeThemeEvent(theme));
                               }
                             },

@@ -37,3 +37,31 @@ class MainRegisterEvent extends MainEvent {
   MainRegisterEvent(this.username, this.password,
       {this.captchaID, this.captchaAns});
 }
+
+class ClientSettingEvent extends MainEvent {}
+
+class ToggleThemeModeEvent extends ClientSettingEvent {}
+
+class ChangeBrightnessEvent extends ClientSettingEvent {
+  final ThemeMode themeMode;
+
+  ChangeBrightnessEvent(this.themeMode);
+}
+
+class ChangeThemeEvent extends ClientSettingEvent {
+  final AppTheme theme;
+
+  ChangeThemeEvent(this.theme);
+}
+
+class ChangeUseSystemProxyEvent extends ClientSettingEvent {
+  final bool useSystemProxy;
+
+  ChangeUseSystemProxyEvent(this.useSystemProxy);
+}
+
+class ChangeUIDesignEvent extends ClientSettingEvent {
+  final UIDesign design;
+
+  ChangeUIDesignEvent(this.design);
+}

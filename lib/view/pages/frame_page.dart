@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../bloc/client_setting/client_setting_bloc.dart';
+import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
 import '../../route.dart';
 import '../helper/connection.dart';
@@ -85,9 +85,9 @@ class AppFramePageState extends State<AppFramePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClientSettingBloc, ClientSettingState>(
+    return BlocBuilder<MainBloc, MainState>(
       buildWhen: (previous, current) =>
-          previous.useFluentUI != current.useFluentUI,
+          previous.uiDesign != current.uiDesign,
       builder: (context, state) {
         return LayoutBuilder(
           builder: (context, constraints) {
