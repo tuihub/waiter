@@ -13,7 +13,7 @@ class MainDao extends DatabaseAccessor<AppDatabase> with _$MainDaoMixin {
     if (data.username.isEmpty) {
       throw Exception('Username is empty');
     }
-    return into(serverConfigTable).insert(ServerConfigTableCompanion(
+    return into(serverConfigTable).insertOnConflictUpdate(ServerConfigTableCompanion(
       host: Value(data.host),
       port: Value(data.port),
       enableTLS: Value(data.enableTLS),

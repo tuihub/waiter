@@ -13,6 +13,7 @@ import 'package:universal_ui/universal_ui.dart';
 
 import '../common/bloc_event_status_mixin.dart';
 import '../consts.dart';
+import '../l10n/l10n.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
 import '../repo/main/main_repo.dart';
@@ -60,8 +61,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           Map.fromEntries(servers.map((e) => MapEntry(e.uniqueKey, e)));
       final ServerConfig? config = serverMap[lastServer];
       if (config != null) {
-        await _api.newServerConfig(config);
-        await DIService.instance.buildBlocs();
+        await _api.newServerConfig(config, state.useSystemProxy);
         emit(MainInitState(
           state.copyWith(
             currentServer: config.uniqueKey,
@@ -79,123 +79,44 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     }, transformer: droppable());
 
-    on<MainSetNextServerConfigEvent>((event, emit) async {
-      // debugPrint('set next server config ${event.config}');
-      // add(MainGetServerInstanceInfoEvent(event.config));
-      // emit(MainNewServerSetState(state.copyWith(nextServer: event.config)));
-    });
+    on<MainLoginEvent>((event, emit) async {
+      emit(MainLoginState(state, EventStatus.processing));
 
-    on<MainClearNextServerConfigEvent>((event, emit) async {
-      // emit(MainNewServerSetState(
-      //     state.copyWith(nextServer: ServerConfig.empty())));
-    });
+      // Login to current server
+      if (event.serverConfig == null) {
+        final resp = await _api.doLogin(event.password);
+        if (resp != null) {
+          emit(MainLoginState(state, EventStatus.failed, msg: resp));
+        } else {
+          emit(MainLoginState(state, EventStatus.success));
+        }
+        return;
+      }
 
-    on<MainManualLoginEvent>((event, emit) async {
-      // if (state.nextServer == null) {
-      //   return;
-      // }
-      // emit(MainManualLoginState(state, EventStatus.processing));
-      //
-      // try {
-      //   var config = state.nextServer!;
-      //   final client = await clientFactory(
-      //       config: config, useSystemProxy: repo.useSystemProxy);
-      //   final deviceInfo = await _genClientDeviceInfo();
-      //   late InternalID deviceID;
-      //   late String accessToken;
-      //   late String refreshToken;
-      //   if (repo.servers != null && repo.servers![config.id] != null) {
-      //     config = repo.servers![config.id]!.copyWith(tls: config.tls);
-      //   }
-      //   if (config.deviceId == null) {
-      //     debugPrint('register device');
-      //     final token = await client.getToken(
-      //       GetTokenRequest(username: event.username, password: event.password),
-      //     );
-      //     final id = await client.registerDevice(
-      //         RegisterDeviceRequest(
-      //           deviceInfo: DeviceInfo(
-      //             deviceName: deviceInfo.deviceName,
-      //             systemType: PlatformHelper.getSystemType(),
-      //             systemVersion: deviceInfo.systemVersion,
-      //             clientName: _packageInfo.appName,
-      //             clientSourceCodeAddress: clientSourceCodeUrl,
-      //             clientVersion: _packageInfo.version,
-      //           ),
-      //         ),
-      //         options: withAuth(token.accessToken));
-      //     deviceID = id.deviceId;
-      //     config = config.copyWith(deviceId: id.deviceId.id.toInt());
-      //     final Map<String, ServerConfig> servers =
-      //         Map.fromEntries(repo.servers?.entries ?? []);
-      //     servers[config.id] = config;
-      //     await _repo.set(repo.copyWith(servers: servers));
-      //     final resp = await client.refreshToken(
-      //         RefreshTokenRequest(deviceId: id.deviceId),
-      //         options: withAuth(token.refreshToken));
-      //     accessToken = resp.accessToken;
-      //     refreshToken = resp.refreshToken;
-      //   } else {
-      //     deviceID = InternalID()..id = Int64(config.deviceId!);
-      //     final resp = await client.getToken(
-      //       GetTokenRequest(
-      //           username: event.username,
-      //           password: event.password,
-      //           deviceId: deviceID),
-      //     );
-      //     accessToken = resp.accessToken;
-      //     refreshToken = resp.refreshToken;
-      //   }
-      //   final user = await client.getUser(GetUserRequest(),
-      //       options: withAuth(accessToken));
-      //   final info = await client.getServerInformation(
-      //       GetServerInformationRequest(),
-      //       options: withAuth(accessToken));
-      //   config = config.copyWith(refreshToken: refreshToken);
-      //   final Map<String, ServerConfig> servers =
-      //       Map.fromEntries(repo.servers?.entries ?? []);
-      //   servers[config.id] = config;
-      //   await _repo
-      //       .set(repo.copyWith(lastServerId: config.id, servers: servers));
-      //   // GetIt.I.registerSingleton(
-      //   //     ApiHelper.librarian_service(client, accessToken, refreshToken));
-      //   final newState = MainManualLoginState(
-      //     state.copyWith(
-      //       currentServer: config,
-      //       nextServer: ServerConfig.empty(),
-      //       accessToken: accessToken,
-      //       currentUser: user.user,
-      //       serverInfo: ServerInformation(
-      //         sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
-      //         buildVersion: info.serverBinarySummary.buildVersion,
-      //         buildDate: info.serverBinarySummary.buildDate,
-      //         protocolVersion: info.protocolSummary.version,
-      //       ),
-      //       serverFeatureSummary: info.featureSummary,
-      //       currentDeviceId: deviceID,
-      //       deviceInfo: deviceInfo,
-      //       knownServers: servers.values.toList(),
-      //     ),
-      //     EventStatus.success,
-      //   );
-      //   await Sentry.configureScope(
-      //     (scope) => scope.setUser(SentryUser(
-      //         id: user.user.id.id.toString(),
-      //         username: user.user.username,
-      //         data: {
-      //           'host': config.host,
-      //           'port': config.port,
-      //           'deviceId': config.deviceId,
-      //         })),
-      //   );
-      //   await _initChild(newState);
-      //   add(MainGetServerInstanceInfoEvent(config));
-      //   emit(newState);
-      // } catch (e) {
-      //   debugPrint(e.toString());
-      //   emit(
-      //       MainManualLoginState(state, EventStatus.failed, msg: e.toString()));
-      // }
+      // Login to a new server
+      try {
+        final config = event.serverConfig!;
+        final api = await LibrarianService.grpc(
+          config,
+          state.useSystemProxy,
+        );
+        final resp = await api.doLogin(event.password);
+        if (resp != null) {
+          emit(MainLoginState(state, EventStatus.failed, msg: resp));
+        } else {
+          await _repo.addServer(config);
+          await _repo.setLastServer(config.uniqueKey);
+          await DIService.instance.buildBlocs(api: api);
+          emit(MainLoginState(state, EventStatus.success));
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(MainLoginState(
+          state,
+          EventStatus.failed,
+          msg: e.toString(),
+        ));
+      }
     }, transformer: droppable());
 
     on<MainRefreshServerInfoEvent>((event, emit) async {
@@ -243,64 +164,59 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       emit(newState);
     }, transformer: restartable());
 
-    on<MainLogoutEvent>((event, emit) async {
-      // _pruneChild();
-      // emit(MainState());
-    });
-
     on<MainRegisterEvent>((event, emit) async {
-      // if (state.nextServer == null) {
-      //   return;
-      // }
-      // emit(MainRegisterState(state, EventStatus.processing));
-      //
-      // try {
-      //   final config = state.nextServer!;
-      //   final client = await clientFactory(
-      //       config: config, useSystemProxy: repo.useSystemProxy);
-      //   final captcha = event.captchaID != null && event.captchaAns != null
-      //       ? RegisterUserRequest_Captcha(
-      //           id: event.captchaID, value: event.captchaAns)
-      //       : null;
-      //   final resp = await client.registerUser(RegisterUserRequest(
-      //     username: event.username,
-      //     password: event.password,
-      //     captcha: captcha,
-      //   ));
-      //   if (resp.hasRefreshToken()) {
-      //     emit(
-      //       MainRegisterState(
-      //           state.copyWith(
-      //             nextServer: state.nextServer!.copyWith(
-      //               refreshToken: resp.refreshToken,
-      //             ),
-      //           ),
-      //           EventStatus.success),
-      //     );
-      //   } else if (resp.hasCaptcha()) {
-      //     final image = Uint8List.fromList(resp.captcha.image);
-      //     emit(
-      //       MainRegisterState(
-      //         state,
-      //         EventStatus.failed,
-      //         captchaID: resp.captcha.id,
-      //         captchaImage: image,
-      //         msg: S.current.captchaRequired,
-      //       ),
-      //     );
-      //   } else {
-      //     emit(
-      //       MainRegisterState(
-      //         state,
-      //         EventStatus.failed,
-      //         msg: S.current.unknownErrorOccurred,
-      //       ),
-      //     );
-      //   }
-      // } catch (e) {
-      //   debugPrint(e.toString());
-      //   emit(MainRegisterState(state, EventStatus.failed, msg: e.toString()));
-      // }
+      emit(MainRegisterState(state, EventStatus.processing));
+
+      try {
+        final config = event.serverConfig;
+        final api =
+            await LibrarianService.grpc(config, state.useSystemProxy);
+        final captcha = event.captchaID != null && event.captchaAns != null
+            ? RegisterUserRequest_Captcha(
+                id: event.captchaID, value: event.captchaAns)
+            : null;
+        final resp = await api.doRequest(
+          (client) => client.registerUser,
+          RegisterUserRequest(
+            username: config.username,
+            password: event.password,
+            captcha: captcha,
+          ),
+        );
+        switch (resp) {
+          case Ok():
+            if (resp.v.hasRefreshToken()) {
+              emit(
+                MainRegisterState(state, EventStatus.success),
+              );
+            } else if (resp.v.hasCaptcha()) {
+              final image = Uint8List.fromList(resp.v.captcha.image);
+              emit(
+                MainRegisterState(
+                  state,
+                  EventStatus.failed,
+                  captchaID: resp.v.captcha.id,
+                  captchaImage: image,
+                  msg: S.current.captchaRequired,
+                ),
+              );
+            } else {
+              emit(
+                MainRegisterState(
+                  state,
+                  EventStatus.failed,
+                  msg: S.current.unknownErrorOccurred,
+                ),
+              );
+            }
+          case Err():
+            emit(MainRegisterState(state, EventStatus.failed,
+                msg: resp.e));
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(MainRegisterState(state, EventStatus.failed, msg: e.toString()));
+      }
     }, transformer: droppable());
 
     on<ChangeThemeEvent>((event, emit) async {

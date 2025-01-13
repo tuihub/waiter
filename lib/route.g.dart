@@ -175,10 +175,16 @@ extension $ModuleRouteExtension on ModuleRoute {
 
 extension $TipherethRootRouteExtension on TipherethRootRoute {
   static TipherethRootRoute _fromState(GoRouterState state) =>
-      const TipherethRootRoute();
+      TipherethRootRoute(
+        action: _$convertMapValue('action', state.uri.queryParameters,
+            _$TipherethActionsEnumMap._$fromName),
+      );
 
   String get location => GoRouteData.$location(
         '/module/Tiphereth',
+        queryParams: {
+          if (action != null) 'action': _$TipherethActionsEnumMap[action!],
+        },
       );
 
   void go(BuildContext context) => context.go(location);
@@ -190,6 +196,10 @@ extension $TipherethRootRouteExtension on TipherethRootRoute {
 
   void replace(BuildContext context) => context.replace(location);
 }
+
+const _$TipherethActionsEnumMap = {
+  TipherethActions.serverList: 'server-list',
+};
 
 extension $YesodRootRouteExtension on YesodRootRoute {
   static YesodRootRoute _fromState(GoRouterState state) =>

@@ -81,9 +81,7 @@ class _DeepLinkWidget extends StatelessWidget {
     return BlocConsumer<DeepLinkBloc, DeepLinkState>(
       listener: (context, state) {
         if (state is DeepLinkConnectState) {
-          context
-              .read<MainBloc>()
-              .add(MainSetNextServerConfigEvent(state.serverConfig));
+          // TODO: Implement deep link handling
         }
       },
       builder: (context, state) {

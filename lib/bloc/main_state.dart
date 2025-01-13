@@ -65,8 +65,8 @@ class MainInitState extends MainState with EventStatusMixin {
   final String? msg;
 }
 
-class MainManualLoginState extends MainState with EventStatusMixin {
-  MainManualLoginState(MainState state, this.statusCode, {this.msg}) : super() {
+class MainLoginState extends MainState with EventStatusMixin {
+  MainLoginState(MainState state, this.statusCode, {this.msg}) : super() {
     _from(state);
   }
 

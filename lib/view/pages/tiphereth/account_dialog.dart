@@ -1,4 +1,4 @@
-part of 'tiphereth_frame_page.dart';
+part of 'tiphereth_nav.dart';
 
 class UnLinkAccountDialog extends StatelessWidget {
   const UnLinkAccountDialog({super.key, required this.account});

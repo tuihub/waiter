@@ -66,7 +66,7 @@ class SettingsNav extends StatelessWidget {
                                 function == SettingsFunctions.porterContext,
                           ),
                         if (ConnectionHelper.isNotLocal(context))
-                          if (state.currentUser!.type ==
+                          if (state.currentUser?.type ==
                               UserType.USER_TYPE_ADMIN)
                             UniversalExpansionTile(
                               title: const Text(

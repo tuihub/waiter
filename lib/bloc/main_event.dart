@@ -5,19 +5,11 @@ sealed class MainEvent {}
 
 class MainInitEvent extends MainEvent {}
 
-class MainSetNextServerConfigEvent extends MainEvent {
-  final ServerConfig config;
-
-  MainSetNextServerConfigEvent(this.config);
-}
-
-class MainClearNextServerConfigEvent extends MainEvent {}
-
-class MainManualLoginEvent extends MainEvent {
-  final String username;
+class MainLoginEvent extends MainEvent {
+  final ServerConfig? serverConfig;
   final String password;
 
-  MainManualLoginEvent(this.username, this.password);
+  MainLoginEvent(this.password, {this.serverConfig});
 }
 
 class MainRefreshServerInfoEvent extends MainEvent {
@@ -26,15 +18,13 @@ class MainRefreshServerInfoEvent extends MainEvent {
   MainRefreshServerInfoEvent({this.server});
 }
 
-class MainLogoutEvent extends MainEvent {}
-
 class MainRegisterEvent extends MainEvent {
-  final String username;
+  final ServerConfig serverConfig;
   final String password;
   final String? captchaID;
   final String? captchaAns;
 
-  MainRegisterEvent(this.username, this.password,
+  MainRegisterEvent(this.serverConfig, this.password,
       {this.captchaID, this.captchaAns});
 }
 

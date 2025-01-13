@@ -49,9 +49,13 @@ class LibrarianService {
   }
 
   static Future<LibrarianService> grpc(
-    ServerConfig config,
-  ) async {
-    final client = await clientFactory(config: config);
+    ServerConfig config, [
+    bool useSystemProxy = false,
+  ]) async {
+    final client = await clientFactory(
+      config: config,
+      useSystemProxy: useSystemProxy,
+    );
     final service = LibrarianService._(
       config: config,
       client: client,
@@ -75,9 +79,16 @@ class LibrarianService {
     if (oldStatus != status) _connectionStatusController.add(status);
   }
 
-  Future<void> newServerConfig(ServerConfig config) async {
+  Future<void> newServerConfig(
+    ServerConfig config, [
+    bool useSystemProxy = false,
+  ]) async {
     _config = config;
-    _client = await clientFactory(config: config);
+    _client = await clientFactory(
+      config: config,
+      useSystemProxy: useSystemProxy,
+    );
+    _updateConnectionStatus(ConnectionStatus.disconnected);
     await _doRefresh();
   }
 

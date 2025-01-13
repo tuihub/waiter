@@ -91,6 +91,10 @@ class _MyAppState extends State<MyApp> {
 
   List<BlocProvider> genProviders(BuildContext context) {
     final List<BlocProvider> newProviders = [];
+    if (widget.diService.mainBloc != null) {
+      newProviders.add(BlocProvider<MainBloc>(
+          create: (context) => widget.diService.mainBloc!));
+    }
     if (widget.diService.deepLinkBloc != null) {
       newProviders.add(BlocProvider<DeepLinkBloc>(
           create: (context) => widget.diService.deepLinkBloc!));
@@ -120,20 +124,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => widget.diService.mainBloc!,
-      child: BlocListener<MainBloc, MainState>(
-        listener: (context, state) {
-          final newProviders = genProviders(context);
-          setState(() {
-            providers = newProviders;
-          });
-        },
-        child: MultiBlocProvider(
-          providers: providers,
-          child: _MyAppWidget(widget.router),
-        ),
-      ),
+    return MultiBlocProvider(
+      key: Key(widget.diService.counter.toString()),
+      providers: providers,
+      child: _MyAppWidget(widget.router),
     );
   }
 }

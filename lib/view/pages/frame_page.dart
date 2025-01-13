@@ -35,6 +35,10 @@ class AppFramePageState extends State<AppFramePage> {
   @override
   void initState() {
     super.initState();
+    updateModules();
+  }
+
+  void updateModules() {
     if (ConnectionHelper.isLocal(context)) {
       _allowedModules = modules
           .where((e) => offlineAllowedModules.contains(e.name))
@@ -84,7 +88,10 @@ class AppFramePageState extends State<AppFramePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
+    return BlocConsumer<MainBloc, MainState>(
+      listener: (context, state) {
+        updateModules();
+      },
       buildWhen: (previous, current) => previous.uiDesign != current.uiDesign,
       builder: (context, state) {
         return LayoutBuilder(

@@ -178,13 +178,13 @@ class OverlappingPanelsState extends State<OverlappingPanels>
   }
 
   void _onTranslate(double delta) {
-    setState(() {
-      final translate = this.translate + delta;
-      if ((widget.gestureRight && translate < 0 && widget.right != null) ||
-          (widget.gestureLeft && translate > 0 && widget.left != null)) {
+    final translate = this.translate + delta;
+    if ((widget.gestureRight && translate < 0 && widget.right != null) ||
+        (widget.gestureLeft && translate > 0 && widget.left != null)) {
+      setState(() {
         this.translate = translate;
-      }
-    });
+      });
+    }
   }
 
   @override

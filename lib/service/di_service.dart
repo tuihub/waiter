@@ -21,8 +21,9 @@ class DIService {
   DIService._internal();
 
   // Basic variables
-  late String _dataPath;
+  String _dataPath = '';
   late PackageInfo _packageInfo;
+  AppDatabase? _appDB;
 
   // BLoC instances
   MainBloc? _mainBloc;
@@ -32,6 +33,8 @@ class DIService {
   NetzachBloc? _netzachBloc;
   TipherethBloc? _tipherethBloc;
   YesodBloc? _yesodBloc;
+
+  int _counter = 0;
 
   // Public
   static DIService get instance => _instance;
@@ -54,24 +57,31 @@ class DIService {
   TipherethBloc? get tipherethBloc => _tipherethBloc;
   YesodBloc? get yesodBloc => _yesodBloc;
 
-  Future<void> buildBlocs({String? dataPath}) async {
+  int get counter => _counter;
+
+  Future<void> buildBlocs({String? dataPath, LibrarianService? api}) async {
     if (dataPath != null) {
+      if (_dataPath != dataPath) {
+        _appDB = AppDatabase(_dataPath);
+      }
       _dataPath = dataPath;
     }
-    final api = LibrarianService.local();
-    final appDB = AppDatabase(_dataPath);
+    _appDB = _appDB ?? AppDatabase(_dataPath);
+    final appDB = _appDB!;
+    final apiService = api ?? LibrarianService.local();
     final kvDao = KVDao(appDB);
     final mainDao = MainDao(appDB);
-    final mainRepo = MainRepo(api, mainDao, kvDao);
+    final mainRepo = MainRepo(apiService, mainDao, kvDao);
     final geburaDao = GeburaDao(appDB);
-    final geburaRepo = GeburaRepo(api, geburaDao, kvDao);
+    final geburaRepo = GeburaRepo(apiService, geburaDao, kvDao);
     final yesodRepo = await YesodRepo.init(_dataPath, appDB);
-    _mainBloc = await MainBloc.init(api, mainRepo);
+    _mainBloc = await MainBloc.init(apiService, mainRepo);
     _deepLinkBloc = DeepLinkBloc(null);
-    _chesedBloc = ChesedBloc(api);
+    _chesedBloc = ChesedBloc(apiService);
     _geburaBloc = GeburaBloc(geburaRepo);
-    _netzachBloc = NetzachBloc(api);
-    _tipherethBloc = TipherethBloc(api);
-    _yesodBloc = YesodBloc(api, yesodRepo);
+    _netzachBloc = NetzachBloc(apiService);
+    _tipherethBloc = TipherethBloc(apiService);
+    _yesodBloc = YesodBloc(apiService, yesodRepo);
+    _counter++;
   }
 }

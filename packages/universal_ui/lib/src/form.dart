@@ -17,7 +17,7 @@ class UniversalTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.validator,
     this.keyboardType,
-    this.maxLines,
+    this.maxLines = 1,
     this.inputFormatters,
     this.readOnly = false,
     this.obscureText = false,

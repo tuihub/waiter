@@ -44,7 +44,8 @@ import 'view/pages/settings/settings_nav.dart';
 import 'view/pages/settings/user/user_add_panel.dart';
 import 'view/pages/settings/user/user_edit_panel.dart';
 import 'view/pages/settings/user/user_manage_page.dart';
-import 'view/pages/tiphereth/tiphereth_frame_page.dart';
+import 'view/pages/tiphereth/tiphereth_nav.dart';
+import 'view/pages/tiphereth/tiphereth_server_list_panel.dart';
 import 'view/pages/web_landing_page.dart';
 import 'view/pages/yesod/manage_notify_flow_page.dart';
 import 'view/pages/yesod/manage_notify_target_page.dart';
@@ -76,6 +77,10 @@ enum ModuleName {
 
   @override
   String toString() => name;
+}
+
+enum TipherethActions {
+  serverList,
 }
 
 enum YesodFunctions {
@@ -261,14 +266,20 @@ class TipherethRoute extends StatefulShellBranchData {
 }
 
 class TipherethRootRoute extends GoRouteData {
-  const TipherethRootRoute();
+  const TipherethRootRoute({this.action});
+
+  final TipherethActions? action;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
-    return const NoTransitionPage(
+    final tipherethActions = {
+      TipherethActions.serverList: const TipherethServerListPanel(),
+    };
+    return NoTransitionPage(
       child: ModuleFramePage(
-        leftPart: TipherethFramePage(),
+        leftPart: const TipherethNav(),
+        middlePart: Container(),
+        rightPart: tipherethActions[action] ?? Container(),
       ),
     );
   }
