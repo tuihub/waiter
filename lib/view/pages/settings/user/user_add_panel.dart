@@ -141,7 +141,7 @@ class _UserAddPanelState extends State<UserAddPanel> {
         errorMsg:
             state is TipherethAddUserState && state.failed ? state.msg : null,
         onSubmit: () {
-          context.read<TipherethBloc>().add(TipherethAddUserEvent(
+          context.read<TipherethBloc>().add(TipherethAddUserEvent(null,
                 User(
                   username: username,
                   password: password,

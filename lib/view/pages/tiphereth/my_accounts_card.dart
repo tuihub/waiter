@@ -49,7 +49,7 @@ class MyAccountsCard extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<TipherethBloc>()
-                          .add(TipherethGetAccountsEvent());
+                          .add(TipherethGetAccountsEvent(null));
                     },
                     icon: Icon(UniversalUI.of(context).icons.refresh),
                   ),
@@ -180,7 +180,7 @@ class _AccountCard extends StatelessWidget {
         child: LinkAccountForm(
           platform: platform,
           callback: () {
-            context.read<TipherethBloc>().add(TipherethGetAccountsEvent());
+            context.read<TipherethBloc>().add(TipherethGetAccountsEvent(null));
           },
         ),
       );
@@ -285,7 +285,7 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
                         context.read<TipherethBloc>().add(
-                            TipherethLinkAccountEvent(
+                            TipherethLinkAccountEvent(null,
                                 widget.platform, platformAccountID));
                       }
                     },

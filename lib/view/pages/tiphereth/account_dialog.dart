@@ -100,6 +100,7 @@ class UnLinkAccountDialog extends StatelessWidget {
           UniversalDialogAction(
             onPressed: () {
               context.read<TipherethBloc>().add(TipherethUnLinkAccountEvent(
+                null,
                     account.platform,
                     account.platformAccountId,
                   ));

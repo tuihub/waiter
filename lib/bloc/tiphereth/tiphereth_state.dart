@@ -1,6 +1,7 @@
 part of 'tiphereth_bloc.dart';
 
-class TipherethState {
+@MappableClass(generateMethods: GenerateMethods.copy)
+class TipherethState with TipherethStateMappable {
   late List<Account>? accounts;
   late List<Porter>? porters;
   late List<PorterGroup>? porterGroups;
@@ -19,6 +20,15 @@ class TipherethState {
     this.selectedPorterEditIndex,
     this.selectedSessionEditIndex,
   });
+
+  TipherethState.clone(TipherethState other)
+      : accounts = other.accounts,
+        porters = other.porters,
+        porterGroups = other.porterGroups,
+        porterContexts = other.porterContexts,
+        sessions = other.sessions,
+        selectedPorterEditIndex = other.selectedPorterEditIndex,
+        selectedSessionEditIndex = other.selectedSessionEditIndex;
 
   PorterGroup? getNotifyDestinationProvider(String id) {
     try {
@@ -44,45 +54,11 @@ class TipherethState {
       return [];
     }
   }
-
-  TipherethState copyWith({
-    List<Account>? accounts,
-    List<Porter>? porters,
-    List<PorterGroup>? porterGroups,
-    List<PorterContext>? porterContexts,
-    List<UserSession>? sessions,
-    int? selectedPorterEditIndex,
-    int? selectedSessionDeleteIndex,
-  }) {
-    return TipherethState(
-      accounts: accounts ?? this.accounts,
-      porters: porters ?? this.porters,
-      porterGroups: porterGroups ?? this.porterGroups,
-      porterContexts: porterContexts ?? this.porterContexts,
-      sessions: sessions ?? this.sessions,
-      selectedPorterEditIndex:
-          selectedPorterEditIndex ?? this.selectedPorterEditIndex,
-      selectedSessionEditIndex:
-          selectedSessionDeleteIndex ?? selectedSessionEditIndex,
-    );
-  }
-
-  void _from(TipherethState other) {
-    accounts = other.accounts;
-    porters = other.porters;
-    porterGroups = other.porterGroups;
-    porterContexts = other.porterContexts;
-    sessions = other.sessions;
-    selectedPorterEditIndex = other.selectedPorterEditIndex;
-    selectedSessionEditIndex = other.selectedSessionEditIndex;
-  }
 }
 
-class TipherethAddUserState extends TipherethState with EventStatusMixin {
-  TipherethAddUserState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class TipherethEventState extends TipherethState with EventStatusMixin {
+  TipherethEventState.clone(super.state, this.statusCode, {this.msg})
+      : super.clone();
 
   @override
   final EventStatus? statusCode;
@@ -90,140 +66,62 @@ class TipherethAddUserState extends TipherethState with EventStatusMixin {
   final String? msg;
 }
 
-class TipherethEditUserState extends TipherethState with EventStatusMixin {
-  TipherethEditUserState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethAddUserState extends TipherethEventState {
+  TipherethAddUserState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethGetAccountsState extends TipherethState with EventStatusMixin {
-  TipherethGetAccountsState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethEditUserState extends TipherethEventState {
+  TipherethEditUserState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethLinkAccountState extends TipherethState with EventStatusMixin {
-  TipherethLinkAccountState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethGetAccountsState extends TipherethEventState {
+  TipherethGetAccountsState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethUnLinkAccountState extends TipherethState with EventStatusMixin {
-  TipherethUnLinkAccountState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethLinkAccountState extends TipherethEventState {
+  TipherethLinkAccountState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethLoadPortersState extends TipherethState with EventStatusMixin {
-  TipherethLoadPortersState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethUnLinkAccountState extends TipherethEventState {
+  TipherethUnLinkAccountState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethEditPorterState extends TipherethState with EventStatusMixin {
-  TipherethEditPorterState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethLoadPortersState extends TipherethEventState {
+  TipherethLoadPortersState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethAddPorterContextState extends TipherethState
-    with EventStatusMixin {
-  TipherethAddPorterContextState(TipherethState state, this.statusCode,
-      {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethEditPorterState extends TipherethEventState {
+  TipherethEditPorterState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethEditPorterContextState extends TipherethState
-    with EventStatusMixin {
-  TipherethEditPorterContextState(TipherethState state, this.statusCode,
-      {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethAddPorterContextState extends TipherethEventState {
+  TipherethAddPorterContextState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethLoadPorterContextsState extends TipherethState
-    with EventStatusMixin {
-  TipherethLoadPorterContextsState(TipherethState state, this.statusCode,
-      {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethEditPorterContextState extends TipherethEventState {
+  TipherethEditPorterContextState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethLoadSessionsState extends TipherethState with EventStatusMixin {
-  TipherethLoadSessionsState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethLoadPorterContextsState extends TipherethEventState {
+  TipherethLoadPorterContextsState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class TipherethEditSessionState extends TipherethState with EventStatusMixin {
-  TipherethEditSessionState(TipherethState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class TipherethLoadSessionsState extends TipherethEventState {
+  TipherethLoadSessionsState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
 
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class TipherethEditSessionState extends TipherethEventState {
+  TipherethEditSessionState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }

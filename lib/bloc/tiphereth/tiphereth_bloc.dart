@@ -1,13 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../model/common_model.dart';
 import '../../service/di_service.dart';
 import '../../service/librarian_service.dart';
 
+part 'tiphereth_bloc.mapper.dart';
 part 'tiphereth_event.dart';
 part 'tiphereth_state.dart';
 
@@ -274,7 +277,7 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       // ));
     }, transformer: droppable());
 
-    add(TipherethLoadPorterContextsEvent());
+    // add(TipherethLoadPorterContextsEvent());
   }
 
   Future<ListUsersResponse> listUsers(

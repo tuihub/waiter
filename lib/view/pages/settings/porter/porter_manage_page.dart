@@ -27,7 +27,7 @@ class PorterManagePage extends StatelessWidget {
     void openEditPanel(int index) {
       context
           .read<TipherethBloc>()
-          .add(TipherethSetPorterEditIndexEvent(index));
+          .add(TipherethSetPorterEditIndexEvent(null, index));
       const SettingsFunctionRoute(SettingsFunctions.porter,
               action: SettingsActions.porterEdit)
           .go(context);
@@ -103,7 +103,7 @@ class PorterManagePage extends StatelessWidget {
           processing: state is TipherethLoadPortersState && state.processing,
           msg: state is TipherethLoadPortersState ? state.msg : '',
           onRefresh: () {
-            context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
+            context.read<TipherethBloc>().add(TipherethLoadPortersEvent(null));
           },
           children: [
             for (final value in porterGroup.values)
@@ -193,6 +193,7 @@ class PorterEditPanel extends StatelessWidget {
               : null,
           onSubmit: () {
             context.read<TipherethBloc>().add(TipherethEditPorterEvent(
+                  null,
                   porter.id,
                   enabled
                       ? UserStatus.USER_STATUS_ACTIVE

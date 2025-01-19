@@ -625,11 +625,11 @@ class SettingsFunctionRoute extends GoRouteData {
     if (action == null) {
       switch (function) {
         case SettingsFunctions.session:
-          context.read<TipherethBloc>().add(TipherethLoadSessionsEvent());
+          context.read<TipherethBloc>().add(TipherethLoadSessionsEvent(null));
         case SettingsFunctions.porter:
-          context.read<TipherethBloc>().add(TipherethLoadPortersEvent());
+          context.read<TipherethBloc>().add(TipherethLoadPortersEvent(null));
         case SettingsFunctions.porterContext:
-          context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent());
+          context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent(null));
         default:
       }
     }

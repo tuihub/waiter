@@ -79,7 +79,7 @@ class SessionManagePage extends StatelessWidget {
                   void openEditPage() {
                     context
                         .read<TipherethBloc>()
-                        .add(TipherethSetSessionEditIndexEvent(index));
+                        .add(TipherethSetSessionEditIndexEvent(null, index));
                     const SettingsFunctionRoute(SettingsFunctions.session,
                             action: SettingsActions.sessionEdit)
                         .go(context);
