@@ -40,7 +40,13 @@ class TipherethServerListPanel extends StatelessWidget {
                 subtitle: Text(server.username),
                 trailing: server.serverID == state.currentServer
                     ? const Icon(Icons.check)
-                    : null,
+                    : UniversalOutlinedButton(
+                        child: const Text('切换'),
+                        onPressed: () {
+                          context
+                              .read<MainBloc>()
+                              .add(MainLoginEvent(null, serverConfig: server));
+                        }),
                 onTap: () async {
                   await showDialog(
                     context: context,
@@ -318,7 +324,7 @@ class _LoginFormState extends State<LoginForm> {
 
     context.read<MainBloc>().add(MainLoginEvent(
           null,
-          password,
+          password: password,
           serverConfig: widget.server.copyWith(username: username),
         ));
   }

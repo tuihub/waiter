@@ -81,7 +81,8 @@ class SessionEditPanel extends StatelessWidget {
           extraActions: [
             UniversalElevatedButton(
               onPressed: () {
-                context.read<TipherethBloc>().add(TipherethEditSessionEvent(null,
+                context.read<TipherethBloc>().add(TipherethEditSessionEvent(
+                      null,
                       session.id,
                     ));
               },

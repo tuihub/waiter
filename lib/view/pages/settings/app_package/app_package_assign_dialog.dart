@@ -88,6 +88,7 @@ class AppPackageAssignDialog extends StatelessWidget {
           UniversalDialogAction(
             onPressed: () {
               context.read<GeburaBloc>().add(GeburaAssignAppEvent(
+                    null,
                     appPackage.id,
                     InternalID(id: $fixnum.Int64(appID)),
                   ));

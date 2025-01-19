@@ -61,7 +61,7 @@ class MainRepo {
     } else {
       // Upsert server and login
       final api = _api.get(context.sid);
-      await api.loadConfig(config, await getUseSystemProxy());
+      final isNew = await api.loadConfig(config, await getUseSystemProxy());
       if (password != null) {
         final resp = await api.doLogin(password);
         if (resp != null) {
@@ -71,13 +71,11 @@ class MainRepo {
       // Login success
       final newConfig = api.config ?? config;
       await setLastServer(newConfig.serverID);
-      await upsertServer(newConfig);
-      try {
+      if (isNew) {
+        await upsertServer(newConfig);
         api.serverConfigStream.listen((event) async {
           await _dao.upsertServer(event);
         });
-      } catch (e) {
-        debugPrint(e.toString());
       }
       return null;
     }

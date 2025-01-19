@@ -88,6 +88,7 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
             : null,
         onSubmit: () {
           context.read<GeburaBloc>().add(GeburaEditAppEvent(
+                null,
                 App(
                   id: widget.appPackage.id,
                   name: name,

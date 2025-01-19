@@ -84,7 +84,7 @@ class GeburaStorePage extends StatelessWidget {
                             onPressed: () {
                               controller.text = '';
                               context.read<GeburaBloc>().add(
-                                    GeburaSearchAppInfosEvent(''),
+                                    GeburaSearchAppInfosEvent(null, ''),
                                   );
                             },
                             splashColor: Theme.of(context).primaryColor,
@@ -92,7 +92,7 @@ class GeburaStorePage extends StatelessWidget {
                           )),
                       onChanged: (text) {
                         context.read<GeburaBloc>().add(
-                              GeburaSearchAppInfosEvent(text),
+                              GeburaSearchAppInfosEvent(null, text),
                             );
                       },
                     ),
@@ -133,7 +133,7 @@ class StoreList extends StatelessWidget {
                     openBuilder: (_, closedContainer) {
                       context
                           .read<GeburaBloc>()
-                          .add(GeburaFetchBoundAppInfosEvent(app.id));
+                          .add(GeburaFetchBoundAppInfosEvent(null, app.id));
                       return BlocProvider.value(
                         value: context.read<GeburaBloc>(),
                         child: ColoredBox(

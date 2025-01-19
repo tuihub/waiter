@@ -95,14 +95,22 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       try {
         final resp = await _repo.login(event.context,
             config: event.serverConfig, password: event.password);
-        emit(MainLoginState(
-          state.copyWith(
-            currentServer: event.serverConfig?.serverID ?? state.currentServer,
-          ),
-          EventStatus.success,
-          msg: resp,
-        ));
-        add(MainRefreshServerInfoEvent(event.context));
+        if (resp == null) {
+          emit(MainLoginState(
+            state.copyWith(
+              currentServer:
+                  event.serverConfig?.serverID ?? state.currentServer,
+            ),
+            EventStatus.success,
+          ));
+          add(MainRefreshServerInfoEvent(event.context));
+        } else {
+          emit(MainLoginState(
+            state,
+            EventStatus.failed,
+            msg: resp,
+          ));
+        }
       } catch (e) {
         debugPrint(e.toString());
         emit(MainLoginState(

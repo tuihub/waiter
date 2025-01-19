@@ -13,6 +13,7 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
   static GeburaStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = GeburaStateMapper._());
+      ServerIDMapper.ensureInitialized();
       LibraryListItemMapper.ensureInitialized();
       LocalAppRunRecordMapper.ensureInitialized();
       LocalLibraryScanResultMapper.ensureInitialized();
@@ -27,13 +28,14 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
   @override
   final String id = 'GeburaState';
 
-  static bool _$initialized(GeburaState v) => v.initialized;
-  static const Field<GeburaState, bool> _f$initialized =
-      Field('initialized', _$initialized, opt: true, def: false);
-  static List<LibraryListItem>? _$libraryListItems(GeburaState v) =>
+  static ServerID _$currentServer(GeburaState v) => v.currentServer;
+  static const Field<GeburaState, ServerID> _f$currentServer = Field(
+      'currentServer', _$currentServer,
+      opt: true, def: const ServerID.local());
+  static List<LibraryListItem> _$libraryListItems(GeburaState v) =>
       v.libraryListItems;
   static const Field<GeburaState, List<LibraryListItem>> _f$libraryListItems =
-      Field('libraryListItems', _$libraryListItems, opt: true);
+      Field('libraryListItems', _$libraryListItems, opt: true, def: const []);
   static Map<String, LocalAppRunRecord> _$runningInsts(GeburaState v) =>
       v.runningInsts;
   static const Field<GeburaState, Map<String, LocalAppRunRecord>>
@@ -52,41 +54,40 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
   static Map<String, LocalApp> _$libraryApps(GeburaState v) => v.libraryApps;
   static const Field<GeburaState, Map<String, LocalApp>> _f$libraryApps =
       Field('libraryApps', _$libraryApps, opt: true, def: const {});
-  static Map<String, LocalAppInst> _$libraryAppInsts(GeburaState v) =>
-      v.libraryAppInsts;
-  static const Field<GeburaState, Map<String, LocalAppInst>>
-      _f$libraryAppInsts =
-      Field('libraryAppInsts', _$libraryAppInsts, opt: true, def: const {});
-  static Map<String, LocalAppInstLauncher> _$libraryAppInstLaunchers(
+  static Map<String, LocalAppInst> _$localAppInsts(GeburaState v) =>
+      v.localAppInsts;
+  static const Field<GeburaState, Map<String, LocalAppInst>> _f$localAppInsts =
+      Field('localAppInsts', _$localAppInsts, opt: true, def: const {});
+  static Map<String, LocalAppInstLauncher> _$localAppInstLaunchers(
           GeburaState v) =>
-      v.libraryAppInstLaunchers;
+      v.localAppInstLaunchers;
   static const Field<GeburaState, Map<String, LocalAppInstLauncher>>
-      _f$libraryAppInstLaunchers = Field(
-          'libraryAppInstLaunchers', _$libraryAppInstLaunchers,
+      _f$localAppInstLaunchers = Field(
+          'localAppInstLaunchers', _$localAppInstLaunchers,
           opt: true, def: const {});
 
   @override
   final MappableFields<GeburaState> fields = const {
-    #initialized: _f$initialized,
+    #currentServer: _f$currentServer,
     #libraryListItems: _f$libraryListItems,
     #runningInsts: _f$runningInsts,
     #localLibraryScanResults: _f$localLibraryScanResults,
     #librarySettings: _f$librarySettings,
     #libraryApps: _f$libraryApps,
-    #libraryAppInsts: _f$libraryAppInsts,
-    #libraryAppInstLaunchers: _f$libraryAppInstLaunchers,
+    #localAppInsts: _f$localAppInsts,
+    #localAppInstLaunchers: _f$localAppInstLaunchers,
   };
 
   static GeburaState _instantiate(DecodingData data) {
     return GeburaState(
-        initialized: data.dec(_f$initialized),
+        currentServer: data.dec(_f$currentServer),
         libraryListItems: data.dec(_f$libraryListItems),
         runningInsts: data.dec(_f$runningInsts),
         localLibraryScanResults: data.dec(_f$localLibraryScanResults),
         librarySettings: data.dec(_f$librarySettings),
         libraryApps: data.dec(_f$libraryApps),
-        libraryAppInsts: data.dec(_f$libraryAppInsts),
-        libraryAppInstLaunchers: data.dec(_f$libraryAppInstLaunchers));
+        localAppInsts: data.dec(_f$localAppInsts),
+        localAppInstLaunchers: data.dec(_f$localAppInstLaunchers));
   }
 
   @override
@@ -106,8 +107,9 @@ extension GeburaStateValueCopy<$R, $Out>
 
 abstract class GeburaStateCopyWith<$R, $In extends GeburaState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ServerIDCopyWith<$R, ServerID, ServerID> get currentServer;
   ListCopyWith<$R, LibraryListItem,
-          LibraryListItemCopyWith<$R, LibraryListItem, LibraryListItem>>?
+          LibraryListItemCopyWith<$R, LibraryListItem, LibraryListItem>>
       get libraryListItems;
   MapCopyWith<$R, String, LocalAppRunRecord,
           LocalAppRunRecordCopyWith<$R, LocalAppRunRecord, LocalAppRunRecord>>
@@ -123,22 +125,22 @@ abstract class GeburaStateCopyWith<$R, $In extends GeburaState, $Out>
   MapCopyWith<$R, String, LocalApp, LocalAppCopyWith<$R, LocalApp, LocalApp>>
       get libraryApps;
   MapCopyWith<$R, String, LocalAppInst,
-      LocalAppInstCopyWith<$R, LocalAppInst, LocalAppInst>> get libraryAppInsts;
+      LocalAppInstCopyWith<$R, LocalAppInst, LocalAppInst>> get localAppInsts;
   MapCopyWith<
       $R,
       String,
       LocalAppInstLauncher,
       LocalAppInstLauncherCopyWith<$R, LocalAppInstLauncher,
-          LocalAppInstLauncher>> get libraryAppInstLaunchers;
+          LocalAppInstLauncher>> get localAppInstLaunchers;
   $R call(
-      {bool? initialized,
+      {ServerID? currentServer,
       List<LibraryListItem>? libraryListItems,
       Map<String, LocalAppRunRecord>? runningInsts,
       Map<String, LocalLibraryScanResult>? localLibraryScanResults,
       LibrarySettings? librarySettings,
       Map<String, LocalApp>? libraryApps,
-      Map<String, LocalAppInst>? libraryAppInsts,
-      Map<String, LocalAppInstLauncher>? libraryAppInstLaunchers});
+      Map<String, LocalAppInst>? localAppInsts,
+      Map<String, LocalAppInstLauncher>? localAppInstLaunchers});
   GeburaStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -151,12 +153,13 @@ class _GeburaStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<GeburaState> $mapper =
       GeburaStateMapper.ensureInitialized();
   @override
+  ServerIDCopyWith<$R, ServerID, ServerID> get currentServer =>
+      $value.currentServer.copyWith.$chain((v) => call(currentServer: v));
+  @override
   ListCopyWith<$R, LibraryListItem,
-          LibraryListItemCopyWith<$R, LibraryListItem, LibraryListItem>>?
-      get libraryListItems => $value.libraryListItems != null
-          ? ListCopyWith($value.libraryListItems!,
-              (v, t) => v.copyWith.$chain(t), (v) => call(libraryListItems: v))
-          : null;
+          LibraryListItemCopyWith<$R, LibraryListItem, LibraryListItem>>
+      get libraryListItems => ListCopyWith($value.libraryListItems,
+          (v, t) => v.copyWith.$chain(t), (v) => call(libraryListItems: v));
   @override
   MapCopyWith<$R, String, LocalAppRunRecord,
           LocalAppRunRecordCopyWith<$R, LocalAppRunRecord, LocalAppRunRecord>>
@@ -183,43 +186,43 @@ class _GeburaStateCopyWithImpl<$R, $Out>
   @override
   MapCopyWith<$R, String, LocalAppInst,
           LocalAppInstCopyWith<$R, LocalAppInst, LocalAppInst>>
-      get libraryAppInsts => MapCopyWith($value.libraryAppInsts,
-          (v, t) => v.copyWith.$chain(t), (v) => call(libraryAppInsts: v));
+      get localAppInsts => MapCopyWith($value.localAppInsts,
+          (v, t) => v.copyWith.$chain(t), (v) => call(localAppInsts: v));
   @override
   MapCopyWith<
       $R,
       String,
       LocalAppInstLauncher,
       LocalAppInstLauncherCopyWith<$R, LocalAppInstLauncher,
-          LocalAppInstLauncher>> get libraryAppInstLaunchers => MapCopyWith(
-      $value.libraryAppInstLaunchers,
+          LocalAppInstLauncher>> get localAppInstLaunchers => MapCopyWith(
+      $value.localAppInstLaunchers,
       (v, t) => v.copyWith.$chain(t),
-      (v) => call(libraryAppInstLaunchers: v));
+      (v) => call(localAppInstLaunchers: v));
   @override
   $R call(
-          {bool? initialized,
-          Object? libraryListItems = $none,
+          {ServerID? currentServer,
+          List<LibraryListItem>? libraryListItems,
           Map<String, LocalAppRunRecord>? runningInsts,
           Map<String, LocalLibraryScanResult>? localLibraryScanResults,
           Object? librarySettings = $none,
           Map<String, LocalApp>? libraryApps,
-          Map<String, LocalAppInst>? libraryAppInsts,
-          Map<String, LocalAppInstLauncher>? libraryAppInstLaunchers}) =>
+          Map<String, LocalAppInst>? localAppInsts,
+          Map<String, LocalAppInstLauncher>? localAppInstLaunchers}) =>
       $apply(FieldCopyWithData({
-        if (initialized != null) #initialized: initialized,
-        if (libraryListItems != $none) #libraryListItems: libraryListItems,
+        if (currentServer != null) #currentServer: currentServer,
+        if (libraryListItems != null) #libraryListItems: libraryListItems,
         if (runningInsts != null) #runningInsts: runningInsts,
         if (localLibraryScanResults != null)
           #localLibraryScanResults: localLibraryScanResults,
         if (librarySettings != $none) #librarySettings: librarySettings,
         if (libraryApps != null) #libraryApps: libraryApps,
-        if (libraryAppInsts != null) #libraryAppInsts: libraryAppInsts,
-        if (libraryAppInstLaunchers != null)
-          #libraryAppInstLaunchers: libraryAppInstLaunchers
+        if (localAppInsts != null) #localAppInsts: localAppInsts,
+        if (localAppInstLaunchers != null)
+          #localAppInstLaunchers: localAppInstLaunchers
       }));
   @override
   GeburaState $make(CopyWithData data) => GeburaState(
-      initialized: data.get(#initialized, or: $value.initialized),
+      currentServer: data.get(#currentServer, or: $value.currentServer),
       libraryListItems:
           data.get(#libraryListItems, or: $value.libraryListItems),
       runningInsts: data.get(#runningInsts, or: $value.runningInsts),
@@ -227,9 +230,9 @@ class _GeburaStateCopyWithImpl<$R, $Out>
           or: $value.localLibraryScanResults),
       librarySettings: data.get(#librarySettings, or: $value.librarySettings),
       libraryApps: data.get(#libraryApps, or: $value.libraryApps),
-      libraryAppInsts: data.get(#libraryAppInsts, or: $value.libraryAppInsts),
-      libraryAppInstLaunchers: data.get(#libraryAppInstLaunchers,
-          or: $value.libraryAppInstLaunchers));
+      localAppInsts: data.get(#localAppInsts, or: $value.localAppInsts),
+      localAppInstLaunchers:
+          data.get(#localAppInstLaunchers, or: $value.localAppInstLaunchers));
 
   @override
   GeburaStateCopyWith<$R2, GeburaState, $Out2> $chain<$R2, $Out2>(

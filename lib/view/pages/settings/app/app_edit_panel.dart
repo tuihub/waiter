@@ -128,6 +128,7 @@ class _AppEditPanelState extends State<AppEditPanel> {
             ? null
             : () {
                 context.read<GeburaBloc>().add(GeburaEditAppInfoEvent(
+                      null,
                       AppInfo(
                         id: widget.app.id,
                         source: widget.app.source,

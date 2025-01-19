@@ -28,6 +28,8 @@ class DIService {
   late PackageInfo _packageInfo;
   late AppDatabase _appDB;
   late DIProvider<LibrarianService> _apiProvider;
+  final StreamController<ServerID> _currentServerController =
+      StreamController.broadcast();
 
   // BLoC instances
   MainBloc? _mainBloc;
@@ -66,7 +68,8 @@ class DIService {
     _mainBloc = await MainBloc.init(mainRepo);
     _deepLinkBloc = DeepLinkBloc(null);
     _chesedBloc = ChesedBloc(_apiProvider);
-    _geburaBloc = GeburaBloc(geburaRepo);
+    _geburaBloc =
+        await GeburaBloc.init(geburaRepo, _currentServerController.stream);
     _netzachBloc = NetzachBloc(_apiProvider);
     _tipherethBloc = TipherethBloc(_apiProvider);
     _yesodBloc = YesodBloc(_apiProvider, yesodRepo);

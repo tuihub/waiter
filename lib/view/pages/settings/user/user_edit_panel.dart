@@ -201,12 +201,14 @@ class _UserEditPanelState extends State<UserEditPanel> {
           );
 
           if (newPassword.isEmpty) {
-            context.read<TipherethBloc>().add(TipherethEditUserEvent(null,
+            context.read<TipherethBloc>().add(TipherethEditUserEvent(
+                  null,
                   user,
                 ));
           } else {
             user.password = newPassword;
-            context.read<TipherethBloc>().add(TipherethEditUserEvent(null,
+            context.read<TipherethBloc>().add(TipherethEditUserEvent(
+                  null,
                   user,
                   password: oldPassword,
                 ));

@@ -11,7 +11,6 @@ import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
-import 'bloc/gebura/gebura_bloc.dart';
 import 'bloc/main_bloc.dart';
 import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
@@ -388,7 +387,6 @@ class GeburaRootRoute extends GoRouteData {
 
   @override
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
-    context.read<GeburaBloc>().add(GeburaInitEvent());
     return const GeburaLibraryRoute().location;
   }
 }
@@ -629,7 +627,9 @@ class SettingsFunctionRoute extends GoRouteData {
         case SettingsFunctions.porter:
           context.read<TipherethBloc>().add(TipherethLoadPortersEvent(null));
         case SettingsFunctions.porterContext:
-          context.read<TipherethBloc>().add(TipherethLoadPorterContextsEvent(null));
+          context
+              .read<TipherethBloc>()
+              .add(TipherethLoadPorterContextsEvent(null));
         default:
       }
     }

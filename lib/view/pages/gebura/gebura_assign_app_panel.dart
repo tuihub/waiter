@@ -123,6 +123,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                               context
                                   .read<GeburaBloc>()
                                   .add(GeburaSearchNewAppInfoEvent(
+                                    null,
                                     _searchController.text,
                                   ));
                             },
@@ -132,6 +133,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                           context
                               .read<GeburaBloc>()
                               .add(GeburaSearchNewAppInfoEvent(
+                                null,
                                 _searchController.text,
                               ));
                         },
@@ -199,6 +201,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                     context
                         .read<GeburaBloc>()
                         .add(GeburaAssignAppWithNewInfoEvent(
+                          null,
                           app.id,
                           selectedAppInfo!.source,
                           selectedAppInfo!.sourceAppId,

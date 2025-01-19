@@ -13,6 +13,7 @@ class MainStateMapper extends ClassMapperBase<MainState> {
   static MainStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = MainStateMapper._());
+      ServerIDMapper.ensureInitialized();
       ServerConfigMapper.ensureInitialized();
     }
     return _instance!;
@@ -114,6 +115,7 @@ extension MainStateValueCopy<$R, $Out> on ObjectCopyWith<$R, MainState, $Out> {
 
 abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ServerIDCopyWith<$R, ServerID, ServerID>? get currentServer;
   MapCopyWith<$R, ServerID, ServerConfig,
       ServerConfigCopyWith<$R, ServerConfig, ServerConfig>> get knownServers;
   MapCopyWith<$R, ServerID, ServerInformation,
@@ -148,6 +150,9 @@ class _MainStateCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<MainState> $mapper =
       MainStateMapper.ensureInitialized();
+  @override
+  ServerIDCopyWith<$R, ServerID, ServerID>? get currentServer =>
+      $value.currentServer?.copyWith.$chain((v) => call(currentServer: v));
   @override
   MapCopyWith<$R, ServerID, ServerConfig,
           ServerConfigCopyWith<$R, ServerConfig, ServerConfig>>

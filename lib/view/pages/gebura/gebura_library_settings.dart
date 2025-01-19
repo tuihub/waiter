@@ -117,7 +117,7 @@ class GeburaLibrarySettingsPage extends StatelessWidget {
           title: S.of(context).localLibraryManage,
           processing: state is GeburaScanLocalLibraryState && state.processing,
           onRefresh: () {
-            context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent());
+            context.read<GeburaBloc>().add(GeburaScanLocalLibraryEvent(null));
           },
           onAdd: () async {
             final navigator = Navigator.of(context);
@@ -280,12 +280,14 @@ class GeburaAppScanResultPanel extends StatelessWidget {
                           context
                               .read<GeburaBloc>()
                               .add(GeburaScanLocalLibraryEvent(
+                                null,
                                 refreshCommon: [uuid],
                               ));
                         case LocalLibraryScanResultType.steam:
                           context
                               .read<GeburaBloc>()
                               .add(GeburaScanLocalLibraryEvent(
+                                null,
                                 refreshSteam: [uuid],
                               ));
                       }
@@ -438,6 +440,7 @@ class _GeburaAppScanResultListState extends State<_GeburaAppScanResultList> {
                         case LocalLibraryScanResultType.common:
                           context.read<GeburaBloc>().add(
                                 GeburaTrackCommonAppsEvent(
+                                  null,
                                   widget.untracked
                                       .where((element) => selectedIndex[
                                           widget.untracked.indexOf(element)])
@@ -448,6 +451,7 @@ class _GeburaAppScanResultListState extends State<_GeburaAppScanResultList> {
                         case LocalLibraryScanResultType.steam:
                           context.read<GeburaBloc>().add(
                                 GeburaTrackSteamAppsEvent(
+                                  null,
                                   widget.untracked
                                       .where((element) => selectedIndex[
                                           widget.untracked.indexOf(element)])

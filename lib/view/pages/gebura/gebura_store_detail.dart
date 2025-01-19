@@ -208,7 +208,9 @@ class PurchaseAppDialog extends StatelessWidget {
           actions: [
             UniversalDialogAction(
               onPressed: () {
-                context.read<GeburaBloc>().add(GeburaPurchaseEvent(app.id));
+                context
+                    .read<GeburaBloc>()
+                    .add(GeburaPurchaseEvent(null, app.id));
               },
               isPrimary: true,
               child: state is GeburaPurchaseState && state.processing

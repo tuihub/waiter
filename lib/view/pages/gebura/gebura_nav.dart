@@ -71,15 +71,15 @@ class GeburaNav extends StatelessWidget {
                             icon: const Icon(FluentIcons.dismiss_24_regular),
                             onPressed: () {
                               context.read<GeburaBloc>().add(
-                                  GeburaApplyLibraryFilterEvent(query: ''));
+                                  GeburaApplyLibraryFilterEvent(null,
+                                      query: ''));
                               searchController.clear();
                             },
                           )
                         : null,
                     onChanged: (query) {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaApplyLibraryFilterEvent(query: query));
+                      context.read<GeburaBloc>().add(
+                          GeburaApplyLibraryFilterEvent(null, query: query));
                     },
                   ),
                 )
@@ -97,7 +97,8 @@ class GeburaNav extends StatelessWidget {
                               icon: Icon(UniversalUI.of(context).icons.clear),
                               onPressed: () {
                                 context.read<GeburaBloc>().add(
-                                    GeburaApplyLibraryFilterEvent(query: ''));
+                                    GeburaApplyLibraryFilterEvent(null,
+                                        query: ''));
                                 searchController.clear();
                               },
                             )
@@ -116,9 +117,8 @@ class GeburaNav extends StatelessWidget {
                       ),
                     ),
                     onChanged: (query) {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaApplyLibraryFilterEvent(query: query));
+                      context.read<GeburaBloc>().add(
+                          GeburaApplyLibraryFilterEvent(null, query: query));
                     },
                   ),
                 ),
@@ -129,8 +129,7 @@ class GeburaNav extends StatelessWidget {
                         controller: controller,
                         physics: physics,
                         children: [
-                          if (state.libraryListItems != null &&
-                              state.libraryListItems!.isNotEmpty)
+                          if (state.libraryListItems.isNotEmpty)
                             for (final LibraryListItem item
                                 in state.libraryListItems ?? [])
                               Material(

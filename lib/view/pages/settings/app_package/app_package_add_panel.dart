@@ -57,6 +57,7 @@ class AppPackageAddPanel extends StatelessWidget {
             : null,
         onSubmit: () {
           context.read<GeburaBloc>().add(GeburaAddAppEvent(
+                null,
                 App(
                   name: name,
                   description: description,

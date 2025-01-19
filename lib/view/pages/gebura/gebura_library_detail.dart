@@ -78,11 +78,11 @@ class GeburaLibraryDetailPage extends StatelessWidget {
         late LocalAppInstLauncherType? launcherType;
         late String? launcherUUID;
         if (item.lastLaunchedInstUUID != null) {
-          final appInst = state.libraryAppInsts[item.lastLaunchedInstUUID];
+          final appInst = state.localAppInsts[item.lastLaunchedInstUUID];
           if (appInst != null) {
             if (appInst.lastLaunchedLauncherUUID != null) {
               final launcher = state
-                  .libraryAppInstLaunchers[appInst.lastLaunchedLauncherUUID!];
+                  .localAppInstLaunchers[appInst.lastLaunchedLauncherUUID!];
               if (launcher != null) {
                 launcherUUID = launcher.uuid;
                 launcherType = launcher.launcherType;
@@ -194,7 +194,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                   (launcherUUID != null && runState == null)
                                       ? () async {
                                           context.read<GeburaBloc>().add(
-                                              GeburaLaunchLocalAppEvent(
+                                              GeburaLaunchLocalAppEvent(null,
                                                   launcherUUID: launcherUUID));
                                         }
                                       : null,
@@ -305,12 +305,12 @@ class _GeburaLibraryDetailInstListState
     final selected = context
         .read<GeburaBloc>()
         .state
-        .libraryAppInsts[launcher.appInstUUID]
+        .localAppInsts[launcher.appInstUUID]
         ?.lastLaunchedLauncherUUID;
     void doActivation() {
       context
           .read<GeburaBloc>()
-          .add(GeburaSaveLastLaunchAppInstEvent(launcher.uuid));
+          .add(GeburaSaveLastLaunchAppInstEvent(null, launcher.uuid));
     }
 
     if (triggerActivation && selected != launcher.uuid) {
@@ -439,9 +439,9 @@ class _GeburaLibraryDetailInstListState
       final List<Widget> instTiles = [];
 
       final appInsts =
-          state.libraryAppInsts.values.where((e) => e.appUUID == item.uuid);
+          state.localAppInsts.values.where((e) => e.appUUID == item.uuid);
       for (final inst in appInsts) {
-        final launchers = state.libraryAppInstLaunchers.values
+        final launchers = state.localAppInstLaunchers.values
             .where((e) => e.appInstUUID == inst.uuid)
             .toList();
         final subtitle = inst.path;
@@ -641,7 +641,7 @@ class _GeburaLibraryDetailAppSettingsState
             onPressed: () {
               context
                   .read<GeburaBloc>()
-                  .add(GeburaRefreshAppInfoEvent(widget.item.uuid));
+                  .add(GeburaRefreshAppInfoEvent(null, widget.item.uuid));
             },
           ),
         ],

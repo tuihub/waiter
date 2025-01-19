@@ -15,27 +15,45 @@ import '../../common/bloc_event_status_mixin.dart';
 import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
 import '../../l10n/l10n.dart';
+import '../../model/common_model.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/gebura_repo.dart';
 import '../../rust/api/simple.dart';
+import '../../service/di_service.dart';
 
+part 'gebura_bloc.mapper.dart';
 part 'gebura_event.dart';
 part 'gebura_state.dart';
-part 'gebura_bloc.mapper.dart';
 
 class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   final GeburaRepo _repo;
 
-  GeburaBloc(this._repo) : super(GeburaState()) {
-    on<GeburaInitEvent>((event, emit) async {
-      if (!state.initialized) {
-        add(GeburaScanLocalLibraryEvent());
-        add(GeburaRefreshLibraryListEvent());
-        add(GeburaLoadAppInstsEvent());
-        add(GeburaLoadAppInstLaunchersEvent());
-      }
+  static Future<GeburaBloc> init(
+      GeburaRepo repo, Stream<ServerID> serverID) async {
+    try {
+      final initialState = GeburaState();
+      final instance = GeburaBloc._(initialState, repo);
+      serverID.listen((event) {
+        instance.add(_GeburaSwitchServerEvent(event));
+      });
+      return instance;
+    } catch (e) {
+      debugPrint(e.toString());
+      return GeburaBloc._(GeburaState(), repo);
+    }
+  }
 
-      emit(state.copyWith(initialized: true));
+  GeburaBloc._(super.initialState, this._repo) {
+    on<_GeburaSwitchServerEvent>((event, emit) async {
+      emit(state.copyWith(currentServer: event.context.serverID));
+      add(GeburaInitEvent(event.context));
+    });
+
+    on<GeburaInitEvent>((event, emit) async {
+      add(GeburaScanLocalLibraryEvent(event.context));
+      add(GeburaRefreshLibraryListEvent(event.context));
+      add(GeburaLoadAppInstsEvent(event.context));
+      add(GeburaLoadAppInstLaunchersEvent(event.context));
     });
 
     // on<GeburaRefreshLibraryEvent>((event, emit) async {
@@ -136,7 +154,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           ),
           EventStatus.success,
         ));
-        add(GeburaApplyLibraryFilterEvent(usePreviousSettings: true));
+        add(GeburaApplyLibraryFilterEvent(event.context,
+            usePreviousSettings: true));
       } catch (e) {
         emit(GeburaRefreshLibraryState(state, EventStatus.failed,
             msg: S.current.unknownErrorOccurred));
@@ -193,7 +212,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             Map.fromEntries(appInsts.map((e) => MapEntry(e.uuid, e)));
         emit(GeburaLoadAppInstsState(
           state.copyWith(
-            libraryAppInsts: appInstsMap,
+            localAppInsts: appInstsMap,
           ),
           EventStatus.success,
         ));
@@ -210,7 +229,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             Map.fromEntries(launchers.map((e) => MapEntry(e.uuid, e)));
         emit(GeburaLoadAppInstLaunchersState(
           state.copyWith(
-            libraryAppInstLaunchers: launchersMap,
+            localAppInstLaunchers: launchersMap,
           ),
           EventStatus.success,
         ));
@@ -266,7 +285,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
 
     on<GeburaSaveLocalAppInstLaunchSettingEvent>((event, emit) async {
       debugPrint(event.commonSetting.toString());
-      var launcher = state.libraryAppInstLaunchers[event.launcherUUID];
+      var launcher = state.localAppInstLaunchers[event.launcherUUID];
       if (launcher == null) {
         emit(GeburaSaveLocalAppInstLaunchSettingState(state, EventStatus.failed,
             msg: S.current.unknownErrorOccurred));
@@ -279,8 +298,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       await _repo.updateLocalAppInstLauncher(launcher);
       emit(GeburaSaveLocalAppInstLaunchSettingState(
         state.copyWith(
-          libraryAppInstLaunchers:
-              state.libraryAppInstLaunchers.map((key, value) {
+          localAppInstLaunchers: state.localAppInstLaunchers.map((key, value) {
             if (key == event.launcherUUID) {
               return MapEntry(key, launcher!);
             }
@@ -374,9 +392,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     // }, transformer: droppable());
 
     on<GeburaSaveLastLaunchAppInstEvent>((event, emit) async {
-      final launcher = state.libraryAppInstLaunchers[event.launcherUUID];
+      final launcher = state.localAppInstLaunchers[event.launcherUUID];
       if (launcher != null) {
-        final appInst = state.libraryAppInsts[launcher.appInstUUID];
+        final appInst = state.localAppInsts[launcher.appInstUUID];
         if (appInst != null) {
           final app = state.libraryApps[appInst.appUUID];
           if (app != null) {
@@ -404,7 +422,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                     }
                     return MapEntry(key, value);
                   }),
-                  libraryAppInsts: state.libraryAppInsts.map((key, value) {
+                  localAppInsts: state.localAppInsts.map((key, value) {
                     if (key == appInst.uuid) {
                       return MapEntry(
                           key,
@@ -428,16 +446,16 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       late String appUUID;
       late LocalAppInstLauncher? launcher;
       if (event.launcherUUID != null) {
-        final launcherTmp = state.libraryAppInstLaunchers[event.launcherUUID];
+        final launcherTmp = state.localAppInstLaunchers[event.launcherUUID];
         if (launcherTmp != null) {
-          final appInst = state.libraryAppInsts[launcherTmp.appInstUUID];
+          final appInst = state.localAppInsts[launcherTmp.appInstUUID];
           if (appInst != null) {
             final app = state.libraryApps[appInst.appUUID];
             if (app != null) {
               state.libraryApps[app.uuid] = app.copyWith(
                 lastLaunchedInstUUID: appInst.uuid,
               );
-              state.libraryAppInsts[appInst.uuid] = appInst.copyWith(
+              state.localAppInsts[appInst.uuid] = appInst.copyWith(
                 lastLaunchedLauncherUUID: launcherTmp.uuid,
               );
               appUUID = app.uuid;
@@ -448,10 +466,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       } else {
         final app = state.libraryApps[event.appUUID];
         if (app != null) {
-          final appInst = state.libraryAppInsts[app.lastLaunchedInstUUID];
+          final appInst = state.localAppInsts[app.lastLaunchedInstUUID];
           if (appInst != null) {
             final launcherTmp =
-                state.libraryAppInstLaunchers[appInst.lastLaunchedLauncherUUID];
+                state.localAppInstLaunchers[appInst.lastLaunchedLauncherUUID];
             if (launcherTmp != null) {
               appUUID = app.uuid;
               launcher = launcherTmp;
@@ -697,7 +715,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             path: commonApp.installPath,
           );
           await _repo.addLocalAppInst(appInst, app: app);
-          add(GeburaRefreshAppInfoEvent(app.uuid));
+          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           for (final launcherPath in commonApp.launcherPaths) {
             final appInstLaunch = LocalAppInstLauncher(
                 uuid: const Uuid().v1(),
@@ -721,10 +739,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         }
       }
       if (processCount > 0) {
-        add(GeburaScanLocalLibraryEvent());
-        add(GeburaRefreshLibraryListEvent());
-        add(GeburaLoadAppInstsEvent());
-        add(GeburaLoadAppInstLaunchersEvent());
+        add(GeburaScanLocalLibraryEvent(event.context));
+        add(GeburaRefreshLibraryListEvent(event.context));
+        add(GeburaLoadAppInstsEvent(event.context));
+        add(GeburaLoadAppInstLaunchersEvent(event.context));
       }
       final msg =
           S.current.importCommonApplicationFinished(processCount, failedCount);
@@ -753,7 +771,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             path: steamApp.installPath,
           );
           await _repo.addLocalAppInst(appInst, app: app);
-          add(GeburaRefreshAppInfoEvent(app.uuid));
+          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           final appInstLaunch = LocalAppInstLauncher(
               uuid: const Uuid().v1(),
               appInstUUID: appInst.uuid,
@@ -775,10 +793,10 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
         }
       }
       if (processCount > 0) {
-        add(GeburaScanLocalLibraryEvent());
-        add(GeburaRefreshLibraryListEvent());
-        add(GeburaLoadAppInstsEvent());
-        add(GeburaLoadAppInstLaunchersEvent());
+        add(GeburaScanLocalLibraryEvent(event.context));
+        add(GeburaRefreshLibraryListEvent(event.context));
+        add(GeburaLoadAppInstsEvent(event.context));
+        add(GeburaLoadAppInstLaunchersEvent(event.context));
       }
       final msg =
           S.current.importSteamApplicationFinished(processCount, failedCount);
@@ -802,7 +820,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
               }
               return MapEntry(key, value);
             }),
-            libraryListItems: state.libraryListItems?.map((e) {
+            libraryListItems: state.libraryListItems.map((e) {
               if (e.uuid == app.uuid) {
                 return e.copyWith(
                   iconImagePath: app.iconImagePath,
@@ -981,7 +999,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   Future<String?> updateLocalApp(LocalApp app) async {
     try {
       await _repo.updateLocalApp(app);
-      add(GeburaRefreshLibraryListEvent());
+      add(GeburaRefreshLibraryListEvent(null));
       return null;
     } catch (e) {
       return e.toString();
@@ -991,7 +1009,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   Future<String?> addLocalAppInst(LocalAppInst appInst) async {
     try {
       await _repo.addLocalAppInst(appInst);
-      add(GeburaLoadAppInstsEvent());
+      add(GeburaLoadAppInstsEvent(null));
       return null;
     } catch (e) {
       return e.toString();
@@ -1001,7 +1019,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   Future<String?> updateLocalAppInst(LocalAppInst appInst) async {
     try {
       await _repo.updateLocalAppInst(appInst);
-      add(GeburaLoadAppInstsEvent());
+      add(GeburaLoadAppInstsEvent(null));
       return null;
     } catch (e) {
       return e.toString();
@@ -1012,7 +1030,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       LocalAppInstLauncher appInstLauncher) async {
     try {
       await _repo.addLocalAppInstLauncher(appInstLauncher);
-      add(GeburaLoadAppInstLaunchersEvent());
+      add(GeburaLoadAppInstLaunchersEvent(null));
       return null;
     } catch (e) {
       return e.toString();
@@ -1023,7 +1041,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       LocalAppInstLauncher appInstLauncher) async {
     try {
       await _repo.updateLocalAppInstLauncher(appInstLauncher);
-      add(GeburaLoadAppInstLaunchersEvent());
+      add(GeburaLoadAppInstLaunchersEvent(null));
       return null;
     } catch (e) {
       return e.toString();
@@ -1037,7 +1055,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
   Future<String?> saveLocalCommonAppLibraryFolder(CommonAppScan setting) async {
     try {
       await _repo.addLocalCommonLibraryFolder(_toDaoCommonAppScan(setting));
-      add(GeburaScanLocalLibraryEvent(refreshCommon: [setting.uuid]));
+      add(GeburaScanLocalLibraryEvent(null, refreshCommon: [setting.uuid]));
     } catch (e) {
       return e.toString();
     }
@@ -1058,7 +1076,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     if (result == SteamScanResult.fullyScanned) {
       try {
         await _repo.saveLocalSteamLibraryFolders(folders);
-        add(GeburaScanLocalLibraryEvent(refreshSteam: const []));
+        add(GeburaScanLocalLibraryEvent(null, refreshSteam: const []));
       } catch (e) {
         return (List<String>.empty(), SteamScanResult.unknownError);
       }

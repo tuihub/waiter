@@ -18,7 +18,7 @@ class _GeburaAppLauncherSettingTestPageState
   void _saveSetting() {
     if (newSetting != null) {
       context.read<GeburaBloc>().add(
-            GeburaSaveLocalAppInstLaunchSettingEvent(widget.launcher.uuid,
+            GeburaSaveLocalAppInstLaunchSettingEvent(null, widget.launcher.uuid,
                 commonSetting: newSetting),
           );
     }
@@ -140,7 +140,7 @@ class _GeburaAppLauncherSettingTestPageState
                                       final setting = widget.launcher.common;
                                       if (setting != null) {
                                         context.read<GeburaBloc>().add(
-                                            GeburaLaunchLocalAppEvent(
+                                            GeburaLaunchLocalAppEvent(null,
                                                 launcherUUID:
                                                     widget.launcher.uuid));
                                         setState(() {

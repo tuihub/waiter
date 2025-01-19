@@ -14,9 +14,9 @@ class MainInitEvent extends MainEvent {
 
 class MainLoginEvent extends MainEvent {
   final ServerConfig? serverConfig;
-  final String password;
+  final String? password;
 
-  MainLoginEvent(super.context, this.password, {this.serverConfig});
+  MainLoginEvent(super.context, {this.password, this.serverConfig});
 }
 
 class MainRefreshServerInfoEvent extends MainEvent {

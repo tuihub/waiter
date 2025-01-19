@@ -80,6 +80,7 @@ class AppAddPanel extends StatelessWidget {
         errorMsg: state is GeburaAddAppState && state.failed ? state.msg : null,
         onSubmit: () {
           context.read<GeburaBloc>().add(GeburaAddAppInfoEvent(
+                null,
                 AppInfo(
                   name: name,
                   type: appType,

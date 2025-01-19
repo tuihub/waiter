@@ -1,17 +1,31 @@
 part of 'gebura_bloc.dart';
 
 @immutable
-sealed class GeburaEvent {}
+sealed class GeburaEvent {
+  final EventContext context;
 
-final class GeburaInitEvent extends GeburaEvent {}
+  GeburaEvent(EventContext? context)
+      : context = context ?? EventContext(DIService.instance.currentServer);
+}
 
-final class GeburaRefreshLibraryListEvent extends GeburaEvent {}
+final class _GeburaSwitchServerEvent extends GeburaEvent {
+  _GeburaSwitchServerEvent(ServerID serverID) : super(EventContext(serverID));
+}
+
+final class GeburaInitEvent extends GeburaEvent {
+  GeburaInitEvent(super.context);
+}
+
+final class GeburaRefreshLibraryListEvent extends GeburaEvent {
+  GeburaRefreshLibraryListEvent(super.context);
+}
 
 final class GeburaApplyLibraryFilterEvent extends GeburaEvent {
   final String? query;
   final bool usePreviousSettings;
 
-  GeburaApplyLibraryFilterEvent({
+  GeburaApplyLibraryFilterEvent(
+    super.context, {
     this.query,
     this.usePreviousSettings = false,
   });
@@ -22,7 +36,8 @@ final class GeburaScanLocalLibraryEvent extends GeburaEvent {
   final List<String>? refreshSteam;
   final List<String>? refreshCommon;
 
-  GeburaScanLocalLibraryEvent({
+  GeburaScanLocalLibraryEvent(
+    super.context, {
     this.doAutoRefresh = false,
     this.refreshSteam,
     this.refreshCommon,
@@ -32,19 +47,19 @@ final class GeburaScanLocalLibraryEvent extends GeburaEvent {
 final class GeburaTrackCommonAppsEvent extends GeburaEvent {
   final List<String> uuids;
 
-  GeburaTrackCommonAppsEvent(this.uuids);
+  GeburaTrackCommonAppsEvent(super.context, this.uuids);
 }
 
 final class GeburaTrackSteamAppsEvent extends GeburaEvent {
   final List<String> uuids;
 
-  GeburaTrackSteamAppsEvent(this.uuids);
+  GeburaTrackSteamAppsEvent(super.context, this.uuids);
 }
 
 final class GeburaRefreshAppInfoEvent extends GeburaEvent {
   final String uuid;
 
-  GeburaRefreshAppInfoEvent(this.uuid);
+  GeburaRefreshAppInfoEvent(super.context, this.uuid);
 }
 
 final class GeburaSaveLocalAppInstLaunchSettingEvent extends GeburaEvent {
@@ -53,6 +68,7 @@ final class GeburaSaveLocalAppInstLaunchSettingEvent extends GeburaEvent {
   final LocalAppInstLaunchSteam? steamSetting;
 
   GeburaSaveLocalAppInstLaunchSettingEvent(
+    super.context,
     this.launcherUUID, {
     this.commonSetting,
     this.steamSetting,
@@ -62,77 +78,79 @@ final class GeburaSaveLocalAppInstLaunchSettingEvent extends GeburaEvent {
 final class GeburaSaveLastLaunchAppInstEvent extends GeburaEvent {
   final String launcherUUID;
 
-  GeburaSaveLastLaunchAppInstEvent(this.launcherUUID);
+  GeburaSaveLastLaunchAppInstEvent(super.context, this.launcherUUID);
 }
 
 final class GeburaLaunchLocalAppEvent extends GeburaEvent {
   final String? appUUID;
   final String? launcherUUID;
 
-  GeburaLaunchLocalAppEvent({this.appUUID, this.launcherUUID});
+  GeburaLaunchLocalAppEvent(super.context, {this.appUUID, this.launcherUUID});
 }
 
 final class GeburaSaveLocalCommonAppFolderSettingEvent extends GeburaEvent {
   final CommonAppScan setting;
 
-  GeburaSaveLocalCommonAppFolderSettingEvent(this.setting);
+  GeburaSaveLocalCommonAppFolderSettingEvent(super.context, this.setting);
 }
 
 final class GeburaLoadAppInstsEvent extends GeburaEvent {
-  GeburaLoadAppInstsEvent();
+  GeburaLoadAppInstsEvent(super.context);
 }
 
 final class GeburaLoadAppInstLaunchersEvent extends GeburaEvent {
-  GeburaLoadAppInstLaunchersEvent();
+  GeburaLoadAppInstLaunchersEvent(super.context);
 }
 
 // Events handle server data.
 
 // TODO: review
 
-final class GeburaRefreshLibraryEvent extends GeburaEvent {}
+final class GeburaRefreshLibraryEvent extends GeburaEvent {
+  GeburaRefreshLibraryEvent(super.context);
+}
 
 final class GeburaSearchAppInfosEvent extends GeburaEvent {
   final String query;
 
-  GeburaSearchAppInfosEvent(this.query);
+  GeburaSearchAppInfosEvent(super.context, this.query);
 }
 
 final class GeburaPurchaseEvent extends GeburaEvent {
   final InternalID id;
 
-  GeburaPurchaseEvent(this.id);
+  GeburaPurchaseEvent(super.context, this.id);
 }
 
 final class GeburaAddAppInfoEvent extends GeburaEvent {
   final AppInfo appInfo;
 
-  GeburaAddAppInfoEvent(this.appInfo);
+  GeburaAddAppInfoEvent(super.context, this.appInfo);
 }
 
 final class GeburaEditAppInfoEvent extends GeburaEvent {
   final AppInfo appInfo;
 
-  GeburaEditAppInfoEvent(this.appInfo);
+  GeburaEditAppInfoEvent(super.context, this.appInfo);
 }
 
 final class GeburaAddAppEvent extends GeburaEvent {
   final App app;
 
-  GeburaAddAppEvent(this.app);
+  GeburaAddAppEvent(super.context, this.app);
 }
 
 final class GeburaEditAppEvent extends GeburaEvent {
   final App app;
 
-  GeburaEditAppEvent(this.app);
+  GeburaEditAppEvent(super.context, this.app);
 }
 
 final class GeburaAssignAppEvent extends GeburaEvent {
   final InternalID appID;
   final InternalID appInfoID;
 
-  GeburaAssignAppEvent(this.appID, this.appInfoID);
+  GeburaAssignAppEvent(super.context, this.appID, this.appInfoID);
 }
 
 // final class GeburaImportSteamAppsEvent extends GeburaEvent {
@@ -159,7 +177,8 @@ final class GeburaFetchBoundAppInfosEvent extends GeburaEvent {
   final InternalID appID;
   final bool? refreshAfterSuccess;
 
-  GeburaFetchBoundAppInfosEvent(this.appID, {this.refreshAfterSuccess});
+  GeburaFetchBoundAppInfosEvent(super.context, this.appID,
+      {this.refreshAfterSuccess});
 }
 
 final class GeburaAssignAppWithNewInfoEvent extends GeburaEvent {
@@ -168,13 +187,13 @@ final class GeburaAssignAppWithNewInfoEvent extends GeburaEvent {
   final String appInfoSourceID;
 
   GeburaAssignAppWithNewInfoEvent(
-      this.appID, this.appInfoSource, this.appInfoSourceID);
+      super.context, this.appID, this.appInfoSource, this.appInfoSourceID);
 }
 
 final class GeburaSearchNewAppInfoEvent extends GeburaEvent {
   final String query;
 
-  GeburaSearchNewAppInfoEvent(this.query);
+  GeburaSearchNewAppInfoEvent(super.context, this.query);
 }
 
 final class GeburaReportAppRunTimeEvent extends GeburaEvent {
@@ -183,6 +202,7 @@ final class GeburaReportAppRunTimeEvent extends GeburaEvent {
   final DateTime endTime;
 
   GeburaReportAppRunTimeEvent(
+    super.context,
     this.appInstID,
     this.startTime,
     this.endTime,

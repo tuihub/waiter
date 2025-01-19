@@ -285,8 +285,8 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
                         context.read<TipherethBloc>().add(
-                            TipherethLinkAccountEvent(null,
-                                widget.platform, platformAccountID));
+                            TipherethLinkAccountEvent(
+                                null, widget.platform, platformAccountID));
                       }
                     },
                     child:
