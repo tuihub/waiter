@@ -22,7 +22,7 @@ class ThemeModeToggle extends StatelessWidget {
           ),
           padding: EdgeInsets.zero,
           onPressed: () {
-            context.read<MainBloc>().add(ToggleThemeModeEvent());
+            context.read<MainBloc>().add(ToggleThemeModeEvent(null));
           },
           icon: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),

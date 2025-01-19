@@ -33,32 +33,36 @@ class MainStateMapper extends ClassMapperBase<MainState> {
   static bool _$useSystemProxy(MainState v) => v.useSystemProxy;
   static const Field<MainState, bool> _f$useSystemProxy =
       Field('useSystemProxy', _$useSystemProxy, opt: true, def: false);
-  static String? _$currentServer(MainState v) => v.currentServer;
-  static const Field<MainState, String> _f$currentServer =
+  static ServerID? _$currentServer(MainState v) => v.currentServer;
+  static const Field<MainState, ServerID> _f$currentServer =
       Field('currentServer', _$currentServer, opt: true);
+  static ConnectionStatus? _$currentConnectionStatus(MainState v) =>
+      v.currentConnectionStatus;
+  static const Field<MainState, ConnectionStatus> _f$currentConnectionStatus =
+      Field('currentConnectionStatus', _$currentConnectionStatus, opt: true);
   static User? _$currentUser(MainState v) => v.currentUser;
   static const Field<MainState, User> _f$currentUser =
       Field('currentUser', _$currentUser, opt: true);
-  static Map<String, ServerConfig> _$knownServers(MainState v) =>
+  static Map<ServerID, ServerConfig> _$knownServers(MainState v) =>
       v.knownServers;
-  static const Field<MainState, Map<String, ServerConfig>> _f$knownServers =
+  static const Field<MainState, Map<ServerID, ServerConfig>> _f$knownServers =
       Field('knownServers', _$knownServers, opt: true, def: const {});
-  static Map<String, ServerInformation> _$knownServerInfos(MainState v) =>
+  static Map<ServerID, ServerInformation> _$knownServerInfos(MainState v) =>
       v.knownServerInfos;
-  static const Field<MainState, Map<String, ServerInformation>>
+  static const Field<MainState, Map<ServerID, ServerInformation>>
       _f$knownServerInfos =
       Field('knownServerInfos', _$knownServerInfos, opt: true, def: const {});
-  static Map<String, FeatureSummary> _$knownServerFeatureSummaries(
+  static Map<ServerID, FeatureSummary> _$knownServerFeatureSummaries(
           MainState v) =>
       v.knownServerFeatureSummaries;
-  static const Field<MainState, Map<String, FeatureSummary>>
+  static const Field<MainState, Map<ServerID, FeatureSummary>>
       _f$knownServerFeatureSummaries = Field(
           'knownServerFeatureSummaries', _$knownServerFeatureSummaries,
           opt: true, def: const {});
-  static Map<String, ServerInstanceSummary> _$knownServerInstanceSummaries(
+  static Map<ServerID, ServerInstanceSummary> _$knownServerInstanceSummaries(
           MainState v) =>
       v.knownServerInstanceSummaries;
-  static const Field<MainState, Map<String, ServerInstanceSummary>>
+  static const Field<MainState, Map<ServerID, ServerInstanceSummary>>
       _f$knownServerInstanceSummaries = Field(
           'knownServerInstanceSummaries', _$knownServerInstanceSummaries,
           opt: true, def: const {});
@@ -70,6 +74,7 @@ class MainStateMapper extends ClassMapperBase<MainState> {
     #uiDesign: _f$uiDesign,
     #useSystemProxy: _f$useSystemProxy,
     #currentServer: _f$currentServer,
+    #currentConnectionStatus: _f$currentConnectionStatus,
     #currentUser: _f$currentUser,
     #knownServers: _f$knownServers,
     #knownServerInfos: _f$knownServerInfos,
@@ -84,6 +89,7 @@ class MainStateMapper extends ClassMapperBase<MainState> {
         uiDesign: data.dec(_f$uiDesign),
         useSystemProxy: data.dec(_f$useSystemProxy),
         currentServer: data.dec(_f$currentServer),
+        currentConnectionStatus: data.dec(_f$currentConnectionStatus),
         currentUser: data.dec(_f$currentUser),
         knownServers: data.dec(_f$knownServers),
         knownServerInfos: data.dec(_f$knownServerInfos),
@@ -108,15 +114,15 @@ extension MainStateValueCopy<$R, $Out> on ObjectCopyWith<$R, MainState, $Out> {
 
 abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<$R, String, ServerConfig,
+  MapCopyWith<$R, ServerID, ServerConfig,
       ServerConfigCopyWith<$R, ServerConfig, ServerConfig>> get knownServers;
-  MapCopyWith<$R, String, ServerInformation,
+  MapCopyWith<$R, ServerID, ServerInformation,
           ObjectCopyWith<$R, ServerInformation, ServerInformation>>
       get knownServerInfos;
-  MapCopyWith<$R, String, FeatureSummary,
+  MapCopyWith<$R, ServerID, FeatureSummary,
           ObjectCopyWith<$R, FeatureSummary, FeatureSummary>>
       get knownServerFeatureSummaries;
-  MapCopyWith<$R, String, ServerInstanceSummary,
+  MapCopyWith<$R, ServerID, ServerInstanceSummary,
           ObjectCopyWith<$R, ServerInstanceSummary, ServerInstanceSummary>>
       get knownServerInstanceSummaries;
   $R call(
@@ -124,12 +130,13 @@ abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
       AppTheme? theme,
       UIDesign? uiDesign,
       bool? useSystemProxy,
-      String? currentServer,
+      ServerID? currentServer,
+      ConnectionStatus? currentConnectionStatus,
       User? currentUser,
-      Map<String, ServerConfig>? knownServers,
-      Map<String, ServerInformation>? knownServerInfos,
-      Map<String, FeatureSummary>? knownServerFeatureSummaries,
-      Map<String, ServerInstanceSummary>? knownServerInstanceSummaries});
+      Map<ServerID, ServerConfig>? knownServers,
+      Map<ServerID, ServerInformation>? knownServerInfos,
+      Map<ServerID, FeatureSummary>? knownServerFeatureSummaries,
+      Map<ServerID, ServerInstanceSummary>? knownServerInstanceSummaries});
   MainStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -142,26 +149,26 @@ class _MainStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<MainState> $mapper =
       MainStateMapper.ensureInitialized();
   @override
-  MapCopyWith<$R, String, ServerConfig,
+  MapCopyWith<$R, ServerID, ServerConfig,
           ServerConfigCopyWith<$R, ServerConfig, ServerConfig>>
       get knownServers => MapCopyWith($value.knownServers,
           (v, t) => v.copyWith.$chain(t), (v) => call(knownServers: v));
   @override
-  MapCopyWith<$R, String, ServerInformation,
+  MapCopyWith<$R, ServerID, ServerInformation,
           ObjectCopyWith<$R, ServerInformation, ServerInformation>>
       get knownServerInfos => MapCopyWith(
           $value.knownServerInfos,
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(knownServerInfos: v));
   @override
-  MapCopyWith<$R, String, FeatureSummary,
+  MapCopyWith<$R, ServerID, FeatureSummary,
           ObjectCopyWith<$R, FeatureSummary, FeatureSummary>>
       get knownServerFeatureSummaries => MapCopyWith(
           $value.knownServerFeatureSummaries,
           (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(knownServerFeatureSummaries: v));
   @override
-  MapCopyWith<$R, String, ServerInstanceSummary,
+  MapCopyWith<$R, ServerID, ServerInstanceSummary,
           ObjectCopyWith<$R, ServerInstanceSummary, ServerInstanceSummary>>
       get knownServerInstanceSummaries => MapCopyWith(
           $value.knownServerInstanceSummaries,
@@ -174,17 +181,21 @@ class _MainStateCopyWithImpl<$R, $Out>
           UIDesign? uiDesign,
           bool? useSystemProxy,
           Object? currentServer = $none,
+          Object? currentConnectionStatus = $none,
           Object? currentUser = $none,
-          Map<String, ServerConfig>? knownServers,
-          Map<String, ServerInformation>? knownServerInfos,
-          Map<String, FeatureSummary>? knownServerFeatureSummaries,
-          Map<String, ServerInstanceSummary>? knownServerInstanceSummaries}) =>
+          Map<ServerID, ServerConfig>? knownServers,
+          Map<ServerID, ServerInformation>? knownServerInfos,
+          Map<ServerID, FeatureSummary>? knownServerFeatureSummaries,
+          Map<ServerID, ServerInstanceSummary>?
+              knownServerInstanceSummaries}) =>
       $apply(FieldCopyWithData({
         if (themeMode != null) #themeMode: themeMode,
         if (theme != null) #theme: theme,
         if (uiDesign != null) #uiDesign: uiDesign,
         if (useSystemProxy != null) #useSystemProxy: useSystemProxy,
         if (currentServer != $none) #currentServer: currentServer,
+        if (currentConnectionStatus != $none)
+          #currentConnectionStatus: currentConnectionStatus,
         if (currentUser != $none) #currentUser: currentUser,
         if (knownServers != null) #knownServers: knownServers,
         if (knownServerInfos != null) #knownServerInfos: knownServerInfos,
@@ -200,6 +211,8 @@ class _MainStateCopyWithImpl<$R, $Out>
       uiDesign: data.get(#uiDesign, or: $value.uiDesign),
       useSystemProxy: data.get(#useSystemProxy, or: $value.useSystemProxy),
       currentServer: data.get(#currentServer, or: $value.currentServer),
+      currentConnectionStatus: data.get(#currentConnectionStatus,
+          or: $value.currentConnectionStatus),
       currentUser: data.get(#currentUser, or: $value.currentUser),
       knownServers: data.get(#knownServers, or: $value.knownServers),
       knownServerInfos:

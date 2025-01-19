@@ -1,21 +1,28 @@
 part of 'main_bloc.dart';
 
 @immutable
-sealed class MainEvent {}
+sealed class MainEvent {
+  final EventContext context;
 
-class MainInitEvent extends MainEvent {}
+  MainEvent(EventContext? context)
+      : context = context ?? EventContext(DIService.instance.currentServer);
+}
+
+class MainInitEvent extends MainEvent {
+  MainInitEvent(super.context);
+}
 
 class MainLoginEvent extends MainEvent {
   final ServerConfig? serverConfig;
   final String password;
 
-  MainLoginEvent(this.password, {this.serverConfig});
+  MainLoginEvent(super.context, this.password, {this.serverConfig});
 }
 
 class MainRefreshServerInfoEvent extends MainEvent {
-  final String? server;
+  final ServerID? server;
 
-  MainRefreshServerInfoEvent({this.server});
+  MainRefreshServerInfoEvent(super.context, {this.server});
 }
 
 class MainRegisterEvent extends MainEvent {
@@ -24,34 +31,38 @@ class MainRegisterEvent extends MainEvent {
   final String? captchaID;
   final String? captchaAns;
 
-  MainRegisterEvent(this.serverConfig, this.password,
+  MainRegisterEvent(super.context, this.serverConfig, this.password,
       {this.captchaID, this.captchaAns});
 }
 
-class ClientSettingEvent extends MainEvent {}
+class ClientSettingEvent extends MainEvent {
+  ClientSettingEvent(super.context);
+}
 
-class ToggleThemeModeEvent extends ClientSettingEvent {}
+class ToggleThemeModeEvent extends ClientSettingEvent {
+  ToggleThemeModeEvent(super.context);
+}
 
 class ChangeBrightnessEvent extends ClientSettingEvent {
   final ThemeMode themeMode;
 
-  ChangeBrightnessEvent(this.themeMode);
+  ChangeBrightnessEvent(super.context, this.themeMode);
 }
 
 class ChangeThemeEvent extends ClientSettingEvent {
   final AppTheme theme;
 
-  ChangeThemeEvent(this.theme);
+  ChangeThemeEvent(super.context, this.theme);
 }
 
 class ChangeUseSystemProxyEvent extends ClientSettingEvent {
   final bool useSystemProxy;
 
-  ChangeUseSystemProxyEvent(this.useSystemProxy);
+  ChangeUseSystemProxyEvent(super.context, this.useSystemProxy);
 }
 
 class ChangeUIDesignEvent extends ClientSettingEvent {
   final UIDesign design;
 
-  ChangeUIDesignEvent(this.design);
+  ChangeUIDesignEvent(super.context, this.design);
 }

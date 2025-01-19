@@ -9,11 +9,12 @@ part 'main_dao.g.dart';
 class MainDao extends DatabaseAccessor<AppDatabase> with _$MainDaoMixin {
   MainDao(super.db);
 
-  Future<int> addServer(ServerConfig data) async {
+  Future<int> upsertServer(ServerConfig data) async {
     if (data.username.isEmpty) {
       throw Exception('Username is empty');
     }
-    return into(serverConfigTable).insertOnConflictUpdate(ServerConfigTableCompanion(
+    return into(serverConfigTable)
+        .insertOnConflictUpdate(ServerConfigTableCompanion(
       host: Value(data.host),
       port: Value(data.port),
       enableTLS: Value(data.enableTLS),

@@ -3,12 +3,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:universal_io/io.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../common/steam/steam.dart';
-import '../../rust/api/win_icon.dart';
-import '../../service/librarian_service.dart';
+import '../common/steam/steam.dart';
+import '../rust/api/win_icon.dart';
+import '../service/di_service.dart';
+import '../service/librarian_service.dart';
 
 class GeburaRepo {
-  final LibrarianService _api;
+  final DIProvider<LibrarianService> _api;
   final GeburaDao _dao;
   final KVDao _kvDao;
 

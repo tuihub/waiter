@@ -20,7 +20,7 @@ class ChoreSetting extends StatelessWidget {
                 onChanged: (value) {
                   context
                       .read<MainBloc>()
-                      .add(ChangeUseSystemProxyEvent(value));
+                      .add(ChangeUseSystemProxyEvent(null, value));
                 },
               ),
             ),
@@ -31,7 +31,7 @@ class ChoreSetting extends StatelessWidget {
                 value: state.uiDesign == UIDesign.fluent,
                 onChanged: (value) {
                   context.read<MainBloc>().add(ChangeUIDesignEvent(
-                      value ? UIDesign.fluent : UIDesign.material));
+                      null, value ? UIDesign.fluent : UIDesign.material));
                 },
               ),
             ),

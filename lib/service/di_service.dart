@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dao/dao.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -8,9 +10,10 @@ import '../bloc/main_bloc.dart';
 import '../bloc/netzach/netzach_bloc.dart';
 import '../bloc/tiphereth/tiphereth_bloc.dart';
 import '../bloc/yesod/yesod_bloc.dart';
-import '../repo/gebura/gebura_repo.dart';
-import '../repo/local/yesod.dart';
-import '../repo/main/main_repo.dart';
+import '../model/common_model.dart';
+import '../repo/gebura_repo.dart';
+import '../repo/main_repo.dart';
+import '../repo/yesod_repo.dart';
 import 'librarian_service.dart';
 
 // DIService is a singleton class.
@@ -21,9 +24,10 @@ class DIService {
   DIService._internal();
 
   // Basic variables
-  String _dataPath = '';
+  late String _dataPath;
   late PackageInfo _packageInfo;
-  AppDatabase? _appDB;
+  late AppDatabase _appDB;
+  late DIProvider<LibrarianService> _apiProvider;
 
   // BLoC instances
   MainBloc? _mainBloc;
@@ -34,18 +38,43 @@ class DIService {
   TipherethBloc? _tipherethBloc;
   YesodBloc? _yesodBloc;
 
-  int _counter = 0;
-
   // Public
   static DIService get instance => _instance;
-  static Future<DIService> init(
-      {String? dataPath, required PackageInfo packageInfo}) async {
-    _instance._dataPath = dataPath ?? '';
-    _instance._packageInfo = packageInfo;
-    await _instance.buildBlocs();
+  static Future<DIService> init({
+    String? dataPath,
+    required PackageInfo packageInfo,
+  }) async {
+    await _instance._init(dataPath: dataPath, packageInfo: packageInfo);
     return _instance;
   }
 
+  Future<void> _init({
+    String? dataPath,
+    required PackageInfo packageInfo,
+  }) async {
+    _dataPath = dataPath ?? '';
+    _packageInfo = packageInfo;
+    _appDB = AppDatabase(_dataPath);
+    _apiProvider =
+        DIProvider<LibrarianService>((_) => LibrarianService.local());
+    final kvDao = KVDao(_appDB);
+    final mainDao = MainDao(_appDB);
+    final mainRepo = MainRepo(_apiProvider, mainDao, kvDao);
+    final geburaDao = GeburaDao(_appDB);
+    final geburaRepo = GeburaRepo(_apiProvider, geburaDao, kvDao);
+    final yesodRepo = await YesodRepo.init(_dataPath, _appDB);
+    _mainBloc = await MainBloc.init(mainRepo);
+    _deepLinkBloc = DeepLinkBloc(null);
+    _chesedBloc = ChesedBloc(_apiProvider);
+    _geburaBloc = GeburaBloc(geburaRepo);
+    _netzachBloc = NetzachBloc(_apiProvider);
+    _tipherethBloc = TipherethBloc(_apiProvider);
+    _yesodBloc = YesodBloc(_apiProvider, yesodRepo);
+  }
+
+  ServerID currentServer = const ServerID.local();
+  Stream<ConnectionStatus> get connectionStatusStream =>
+      _apiProvider.get(currentServer).connectionStatusStream;
   String get dataPath => _dataPath;
   PackageInfo get packageInfo => _packageInfo;
 
@@ -56,32 +85,18 @@ class DIService {
   NetzachBloc? get netzachBloc => _netzachBloc;
   TipherethBloc? get tipherethBloc => _tipherethBloc;
   YesodBloc? get yesodBloc => _yesodBloc;
+}
 
-  int get counter => _counter;
+class DIProvider<T> {
+  final T Function(ServerID) _defaultBuilder;
+  final Map<ServerID, T> _instance = {};
 
-  Future<void> buildBlocs({String? dataPath, LibrarianService? api}) async {
-    if (dataPath != null) {
-      if (_dataPath != dataPath) {
-        _appDB = AppDatabase(_dataPath);
-      }
-      _dataPath = dataPath;
+  DIProvider(this._defaultBuilder);
+
+  T get(ServerID id, {T Function(ServerID)? builder}) {
+    if (!_instance.containsKey(id)) {
+      _instance[id] = builder != null ? builder(id) : _defaultBuilder(id);
     }
-    _appDB = _appDB ?? AppDatabase(_dataPath);
-    final appDB = _appDB!;
-    final apiService = api ?? LibrarianService.local();
-    final kvDao = KVDao(appDB);
-    final mainDao = MainDao(appDB);
-    final mainRepo = MainRepo(apiService, mainDao, kvDao);
-    final geburaDao = GeburaDao(appDB);
-    final geburaRepo = GeburaRepo(apiService, geburaDao, kvDao);
-    final yesodRepo = await YesodRepo.init(_dataPath, appDB);
-    _mainBloc = await MainBloc.init(apiService, mainRepo);
-    _deepLinkBloc = DeepLinkBloc(null);
-    _chesedBloc = ChesedBloc(apiService);
-    _geburaBloc = GeburaBloc(geburaRepo);
-    _netzachBloc = NetzachBloc(apiService);
-    _tipherethBloc = TipherethBloc(apiService);
-    _yesodBloc = YesodBloc(apiService, yesodRepo);
-    _counter++;
+    return _instance[id]!;
   }
 }

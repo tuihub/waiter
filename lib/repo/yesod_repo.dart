@@ -6,7 +6,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
-import '../../model/yesod_model.dart';
+import '../model/yesod_model.dart';
 
 const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
 

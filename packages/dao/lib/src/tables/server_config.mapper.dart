@@ -6,6 +6,126 @@
 
 part of 'server_config.dart';
 
+class ServerIDMapper extends ClassMapperBase<ServerID> {
+  ServerIDMapper._();
+
+  static ServerIDMapper? _instance;
+  static ServerIDMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ServerIDMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ServerID';
+
+  static String _$host(ServerID v) => v.host;
+  static const Field<ServerID, String> _f$host = Field('host', _$host);
+  static int _$port(ServerID v) => v.port;
+  static const Field<ServerID, int> _f$port = Field('port', _$port);
+  static String _$username(ServerID v) => v.username;
+  static const Field<ServerID, String> _f$username =
+      Field('username', _$username);
+  static bool _$isLocal(ServerID v) => v.isLocal;
+  static const Field<ServerID, bool> _f$isLocal =
+      Field('isLocal', _$isLocal, opt: true, def: false);
+
+  @override
+  final MappableFields<ServerID> fields = const {
+    #host: _f$host,
+    #port: _f$port,
+    #username: _f$username,
+    #isLocal: _f$isLocal,
+  };
+
+  static ServerID _instantiate(DecodingData data) {
+    return ServerID(data.dec(_f$host), data.dec(_f$port), data.dec(_f$username),
+        data.dec(_f$isLocal));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ServerID fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ServerID>(map);
+  }
+
+  static ServerID fromJson(String json) {
+    return ensureInitialized().decodeJson<ServerID>(json);
+  }
+}
+
+mixin ServerIDMappable {
+  String toJson() {
+    return ServerIDMapper.ensureInitialized()
+        .encodeJson<ServerID>(this as ServerID);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ServerIDMapper.ensureInitialized()
+        .encodeMap<ServerID>(this as ServerID);
+  }
+
+  ServerIDCopyWith<ServerID, ServerID, ServerID> get copyWith =>
+      _ServerIDCopyWithImpl(this as ServerID, $identity, $identity);
+  @override
+  String toString() {
+    return ServerIDMapper.ensureInitialized().stringifyValue(this as ServerID);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return ServerIDMapper.ensureInitialized()
+        .equalsValue(this as ServerID, other);
+  }
+
+  @override
+  int get hashCode {
+    return ServerIDMapper.ensureInitialized().hashValue(this as ServerID);
+  }
+}
+
+extension ServerIDValueCopy<$R, $Out> on ObjectCopyWith<$R, ServerID, $Out> {
+  ServerIDCopyWith<$R, ServerID, $Out> get $asServerID =>
+      $base.as((v, t, t2) => _ServerIDCopyWithImpl(v, t, t2));
+}
+
+abstract class ServerIDCopyWith<$R, $In extends ServerID, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? host, int? port, String? username, bool? isLocal});
+  ServerIDCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ServerIDCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ServerID, $Out>
+    implements ServerIDCopyWith<$R, ServerID, $Out> {
+  _ServerIDCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ServerID> $mapper =
+      ServerIDMapper.ensureInitialized();
+  @override
+  $R call({String? host, int? port, String? username, bool? isLocal}) =>
+      $apply(FieldCopyWithData({
+        if (host != null) #host: host,
+        if (port != null) #port: port,
+        if (username != null) #username: username,
+        if (isLocal != null) #isLocal: isLocal
+      }));
+  @override
+  ServerID $make(CopyWithData data) => ServerID(
+      data.get(#host, or: $value.host),
+      data.get(#port, or: $value.port),
+      data.get(#username, or: $value.username),
+      data.get(#isLocal, or: $value.isLocal));
+
+  @override
+  ServerIDCopyWith<$R2, ServerID, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ServerIDCopyWithImpl($value, $cast, t);
+}
+
 class ServerConfigMapper extends ClassMapperBase<ServerConfig> {
   ServerConfigMapper._();
 

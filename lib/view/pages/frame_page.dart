@@ -7,7 +7,6 @@ import 'package:universal_ui/universal_ui.dart';
 import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
 import '../../route.dart';
-import '../helper/connection.dart';
 import '../layout/bootstrap_breakpoints.dart';
 import '../layout/overlapping_panels.dart';
 import '../specialized/title_bar.dart';
@@ -35,11 +34,11 @@ class AppFramePageState extends State<AppFramePage> {
   @override
   void initState() {
     super.initState();
-    updateModules();
+    updateModules(context);
   }
 
-  void updateModules() {
-    if (ConnectionHelper.isLocal(context)) {
+  void updateModules(BuildContext context) {
+    if (context.read<MainBloc>().state.isLocal) {
       _allowedModules = modules
           .where((e) => offlineAllowedModules.contains(e.name))
           .map((e) => e.name)
@@ -90,7 +89,7 @@ class AppFramePageState extends State<AppFramePage> {
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {
-        updateModules();
+        updateModules(context);
       },
       buildWhen: (previous, current) => previous.uiDesign != current.uiDesign,
       builder: (context, state) {

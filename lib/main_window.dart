@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'bloc/deeplink_bloc.dart';
-import 'bloc/main_bloc.dart';
 import 'common/platform.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';

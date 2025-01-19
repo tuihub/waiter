@@ -9,13 +9,16 @@ class MainState with MainStateMappable {
   bool useSystemProxy;
 
   // server info
-  String? currentServer;
+  ServerID? currentServer;
+  ConnectionStatus? currentConnectionStatus;
   User? currentUser;
-  Map<String, ServerConfig> knownServers;
-  Map<String, ServerInformation> knownServerInfos;
-  Map<String, FeatureSummary> knownServerFeatureSummaries;
-  Map<String, ServerInstanceSummary> knownServerInstanceSummaries;
+  Map<ServerID, ServerConfig> knownServers;
+  Map<ServerID, ServerInformation> knownServerInfos;
+  Map<ServerID, FeatureSummary> knownServerFeatureSummaries;
+  Map<ServerID, ServerInstanceSummary> knownServerInstanceSummaries;
 
+  bool get isLocal => currentServer?.isLocal ?? true;
+  bool get isNotLocal => !isLocal;
   ServerConfig? get serverConfig =>
       currentServer != null ? knownServers[currentServer!] : null;
   ServerInformation? get serverInfo =>
@@ -33,6 +36,7 @@ class MainState with MainStateMappable {
     this.uiDesign = UIDesign.material,
     this.useSystemProxy = false,
     this.currentServer,
+    this.currentConnectionStatus,
     this.currentUser,
     this.knownServers = const {},
     this.knownServerInfos = const {},
@@ -40,24 +44,23 @@ class MainState with MainStateMappable {
     this.knownServerInstanceSummaries = const {},
   });
 
-  void _from(MainState other) {
-    themeMode = other.themeMode;
-    theme = other.theme;
-    uiDesign = other.uiDesign;
-    useSystemProxy = other.useSystemProxy;
-    currentServer = other.currentServer;
-    currentUser = other.currentUser;
-    knownServers = other.knownServers;
-    knownServerInfos = other.knownServerInfos;
-    knownServerFeatureSummaries = other.knownServerFeatureSummaries;
-    knownServerInstanceSummaries = other.knownServerInstanceSummaries;
-  }
+  MainState.clone(MainState other)
+      : themeMode = other.themeMode,
+        theme = other.theme,
+        uiDesign = other.uiDesign,
+        useSystemProxy = other.useSystemProxy,
+        currentServer = other.currentServer,
+        currentConnectionStatus = other.currentConnectionStatus,
+        currentUser = other.currentUser,
+        knownServers = other.knownServers,
+        knownServerInfos = other.knownServerInfos,
+        knownServerFeatureSummaries = other.knownServerFeatureSummaries,
+        knownServerInstanceSummaries = other.knownServerInstanceSummaries;
 }
 
-class MainInitState extends MainState with EventStatusMixin {
-  MainInitState(MainState state, this.statusCode, {this.msg}) : super() {
-    _from(state);
-  }
+class MainEventState extends MainState with EventStatusMixin {
+  MainEventState.clone(super.state, this.statusCode, {this.msg})
+      : super.clone();
 
   @override
   final EventStatus? statusCode;
@@ -65,35 +68,27 @@ class MainInitState extends MainState with EventStatusMixin {
   final String? msg;
 }
 
-class MainLoginState extends MainState with EventStatusMixin {
-  MainLoginState(MainState state, this.statusCode, {this.msg}) : super() {
-    _from(state);
-  }
+class MainInitState extends MainEventState {
+  MainInitState(super.state, super.statusCode, {super.msg}) : super.clone();
+}
 
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class MainLoginState extends MainEventState {
+  MainLoginState(super.state, super.statusCode, {super.msg}) : super.clone();
 }
 
 class MainNewServerSetState extends MainState {
-  MainNewServerSetState(MainState state) : super() {
-    _from(state);
-  }
+  MainNewServerSetState(super.state) : super.clone();
 }
 
-class MainRegisterState extends MainState with EventStatusMixin {
-  MainRegisterState(MainState state, this.statusCode,
-      {this.msg, this.captchaID, this.captchaImage})
-      : super() {
-    _from(state);
-  }
+class MainRegisterState extends MainEventState {
+  MainRegisterState(
+    super.state,
+    super.statusCode, {
+    super.msg,
+    this.captchaID,
+    this.captchaImage,
+  }) : super.clone();
 
   final String? captchaID;
   final Uint8List? captchaImage;
-
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
 }

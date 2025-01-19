@@ -2,13 +2,14 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
+import '../../service/di_service.dart';
 import '../../service/librarian_service.dart';
 
 part 'chesed_event.dart';
 part 'chesed_state.dart';
 
 class ChesedBloc extends Bloc<ChesedEvent, ChesedState> {
-  final LibrarianService _api;
+  final DIProvider<LibrarianService> _api;
 
   ChesedBloc(this._api) : super(ChesedState()) {
     // on<ChesedSearchImagesEvent>((event, emit) async {

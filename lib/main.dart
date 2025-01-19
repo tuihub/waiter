@@ -79,16 +79,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      providers = genProviders(context);
-    });
-  }
-
-  late List<BlocProvider> providers;
-
   List<BlocProvider> genProviders(BuildContext context) {
     final List<BlocProvider> newProviders = [];
     if (widget.diService.mainBloc != null) {
@@ -125,8 +115,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      key: Key(widget.diService.counter.toString()),
-      providers: providers,
+      providers: genProviders(context),
       child: _MyAppWidget(widget.router),
     );
   }
@@ -140,6 +129,10 @@ class _MyAppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
+      buildWhen: (previous, current) =>
+          previous.themeMode != current.themeMode ||
+          previous.theme != current.theme ||
+          previous.uiDesign != current.uiDesign,
       builder: (context, state) {
         final lightTheme = _customizeTheme(
             Brightness.light,

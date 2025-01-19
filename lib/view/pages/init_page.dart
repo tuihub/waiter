@@ -22,7 +22,7 @@ class _InitPageState extends State<InitPage> {
   @override
   void initState() {
     super.initState();
-    context.read<MainBloc>().add(MainInitEvent());
+    context.read<MainBloc>().add(MainInitEvent(null));
   }
 
   @override

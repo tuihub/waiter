@@ -16,7 +16,7 @@ import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
 import '../../l10n/l10n.dart';
 import '../../model/gebura_model.dart';
-import '../../repo/gebura/gebura_repo.dart';
+import '../../repo/gebura_repo.dart';
 import '../../rust/api/simple.dart';
 
 part 'gebura_event.dart';

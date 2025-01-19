@@ -38,7 +38,7 @@ class TipherethServerListPanel extends StatelessWidget {
               ListTile(
                 title: Text('${server.host}:${server.port}'),
                 subtitle: Text(server.username),
-                trailing: server.uniqueKey == state.currentServer
+                trailing: server.serverID == state.currentServer
                     ? const Icon(Icons.check)
                     : null,
                 onTap: () async {
@@ -182,7 +182,7 @@ class _TipherethServerAddDialogState extends State<_TipherethServerAddDialog> {
 }
 
 class _TipherethServerLoginPage extends StatefulWidget {
-  const _TipherethServerLoginPage({super.key, required this.server});
+  const _TipherethServerLoginPage({required this.server});
 
   final ServerConfig server;
 
@@ -227,7 +227,7 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
             child: BlocBuilder<MainBloc, MainState>(
               builder: (context, state) {
                 final instanceSummary =
-                    state.knownServerInstanceSummaries[widget.server.uniqueKey];
+                    state.knownServerInstanceSummaries[widget.server.serverID];
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -317,6 +317,7 @@ class _LoginFormState extends State<LoginForm> {
     final password = _passwordController.text.trim();
 
     context.read<MainBloc>().add(MainLoginEvent(
+          null,
           password,
           serverConfig: widget.server.copyWith(username: username),
         ));
@@ -346,7 +347,7 @@ class _LoginFormState extends State<LoginForm> {
       },
       builder: (context, state) {
         final instanceSummary =
-            state.knownServerInstanceSummaries[widget.server.uniqueKey];
+            state.knownServerInstanceSummaries[widget.server.serverID];
         final instanceName = instanceSummary?.name ?? '';
         return Form(
           child: Padding(
@@ -475,11 +476,13 @@ class _RegisterFormState extends State<RegisterForm> {
 
     if (_captchaID == null || newCaptcha) {
       context.read<MainBloc>().add(MainRegisterEvent(
+            null,
             widget.server.copyWith(username: username),
             password,
           ));
     } else {
       context.read<MainBloc>().add(MainRegisterEvent(
+            null,
             widget.server.copyWith(username: username),
             password,
             captchaID: _captchaID,
@@ -520,7 +523,7 @@ class _RegisterFormState extends State<RegisterForm> {
       },
       builder: (context, state) {
         final instanceSummary =
-            state.knownServerInstanceSummaries[widget.server.uniqueKey];
+            state.knownServerInstanceSummaries[widget.server.serverID];
         final instanceName = instanceSummary?.name ?? '';
         return Form(
           child: Padding(

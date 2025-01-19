@@ -28,11 +28,15 @@ class LibrarianService {
   String _connectionStatusMessage = '';
   final StreamController<ConnectionStatus> _connectionStatusController =
       StreamController<ConnectionStatus>();
+  final StreamController<ServerConfig> _serverConfigController =
+      StreamController<ServerConfig>();
 
+  ServerConfig? get config => _config;
   ConnectionStatus get connectionStatus => _connectionStatus;
   String get connectionStatusMessage => _connectionStatusMessage;
   Stream<ConnectionStatus> get connectionStatusStream =>
       _connectionStatusController.stream;
+  Stream<ServerConfig> get serverConfigStream => _serverConfigController.stream;
 
   LibrarianService._({
     ServerConfig? config,
@@ -65,6 +69,23 @@ class LibrarianService {
     return service;
   }
 
+  Future<bool> loadConfig(
+    ServerConfig config, [
+    bool useSystemProxy = false,
+  ]) async {
+    if (_config != null) {
+      return false;
+    }
+    _config = config;
+    _client = await clientFactory(
+      config: config,
+      useSystemProxy: useSystemProxy,
+    );
+    _updateConnectionStatus(ConnectionStatus.disconnected);
+    await _doRefresh();
+    return true;
+  }
+
   static CallOptions _newCallOptions(String bearerToken) {
     return CallOptions(
       metadata: {'Authorization': 'Bearer $bearerToken'},
@@ -77,19 +98,13 @@ class LibrarianService {
     _connectionStatus = status;
     _connectionStatusMessage = message ?? '';
     if (oldStatus != status) _connectionStatusController.add(status);
+    debugPrint('Connection status: $status');
   }
 
-  Future<void> newServerConfig(
-    ServerConfig config, [
-    bool useSystemProxy = false,
-  ]) async {
+  void _updateServerConfig(ServerConfig config) {
     _config = config;
-    _client = await clientFactory(
-      config: config,
-      useSystemProxy: useSystemProxy,
-    );
-    _updateConnectionStatus(ConnectionStatus.disconnected);
-    await _doRefresh();
+    _serverConfigController.add(config);
+    debugPrint('Server config updated: ${config.serverID}');
   }
 
   Future<Result<Res, String>> doRequestWithOptions<Req, Res>(
@@ -167,7 +182,7 @@ class LibrarianService {
           ),
           options: _newCallOptions(_config!.refreshToken!));
       _option = _newCallOptions(resp.accessToken);
-      _config = _config!.copyWith(refreshToken: resp.refreshToken);
+      _updateServerConfig(_config!.copyWith(refreshToken: resp.refreshToken));
       _updateConnectionStatus(ConnectionStatus.connected);
       return true;
     } catch (e) {
@@ -197,7 +212,8 @@ class LibrarianService {
         return resp.error;
       case (Ok()):
         _option = _newCallOptions(resp.v.accessToken);
-        _config = _config!.copyWith(refreshToken: resp.v.refreshToken);
+        _updateServerConfig(
+            _config!.copyWith(refreshToken: resp.v.refreshToken));
         _updateConnectionStatus(ConnectionStatus.connected);
         if (_config!.deviceId == null) {
           return _doRegisterDevice();
@@ -221,7 +237,8 @@ class LibrarianService {
       case (Err(value: final String error)):
         return error;
       case (Ok(value: final RegisterDeviceResponse resp)):
-        _config = _config!.copyWith(deviceId: resp.deviceId.id.toInt());
+        _updateServerConfig(
+            _config!.copyWith(deviceId: resp.deviceId.id.toInt()));
         await _doRefresh();
         return null;
     }

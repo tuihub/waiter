@@ -14,7 +14,6 @@ import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../consts.dart';
 import '../../../l10n/librarian.dart';
 import '../../../route.dart';
-import '../../helper/connection.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
@@ -28,24 +27,26 @@ class TipherethNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          const MyProfileCard(),
-          if (ConnectionHelper.isNotLocal(context))
-            const Expanded(
-              child: MyAccountsCard(),
-            ),
-        ],
-      ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () {
-      //     ServerSelectOverlay.of(context)?.fullscreen();
-      //   },
-      //   icon: Icon(UniversalUI.of(context).icons.logout),
-      //   label: Text(S.of(context).changeServer),
-      // ),
-    );
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+      return Scaffold(
+        body: Column(
+          children: [
+            const MyProfileCard(),
+            if (state.isNotLocal)
+              const Expanded(
+                child: MyAccountsCard(),
+              ),
+          ],
+        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () {
+        //     ServerSelectOverlay.of(context)?.fullscreen();
+        //   },
+        //   icon: Icon(UniversalUI.of(context).icons.logout),
+        //   label: Text(S.of(context).changeServer),
+        // ),
+      );
+    });
   }
 }
 
@@ -65,14 +66,14 @@ class MyProfileCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (ConnectionHelper.isNotLocal(context))
+                      if (state.isNotLocal)
                         Text(
                           '${state.currentUser?.id.id.toHexString()}',
                           style: TextStyle(
                             color: Theme.of(context).disabledColor,
                           ),
                         ),
-                      if (ConnectionHelper.isNotLocal(context))
+                      if (state.isNotLocal)
                         Text(state.currentUser?.username ?? '',
                             style: const TextStyle(
                               fontSize: 32,
@@ -82,7 +83,7 @@ class MyProfileCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 32,
                             )),
-                      if (ConnectionHelper.isNotLocal(context))
+                      if (state.isNotLocal)
                         if (state.currentUser != null)
                           Text(userTypeString(state.currentUser!.type))
                     ],

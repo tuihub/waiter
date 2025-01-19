@@ -16,7 +16,7 @@ import '../consts.dart';
 import '../l10n/l10n.dart';
 import '../model/common_model.dart';
 import '../model/tiphereth_model.dart';
-import '../repo/main/main_repo.dart';
+import '../repo/main_repo.dart';
 import '../service/di_service.dart';
 import '../service/librarian_service.dart';
 
@@ -27,88 +27,82 @@ part 'main_state.dart';
 // MainBloc manage the basic state of the app,
 // including login, logout, and server switching.
 class MainBloc extends Bloc<MainEvent, MainState> {
-  final LibrarianService _api;
   final MainRepo _repo;
 
-  bool get isLocal => _api.connectionStatus == ConnectionStatus.local;
-
-  static Future<MainBloc> init(LibrarianService api, MainRepo repo) async {
-    final initialState = MainState().copyWith(
-      themeMode: await repo.getThemeMode(),
-      theme: await repo.getTheme(),
-      uiDesign: await repo.getUIDesign(),
-      useSystemProxy: await repo.getUseSystemProxy(),
-    );
-    return MainBloc._(initialState, api, repo);
+  static Future<MainBloc> init(MainRepo repo) async {
+    try {
+      final initialState = MainState().copyWith(
+        themeMode: await repo.getThemeMode(),
+        theme: await repo.getTheme(),
+        uiDesign: await repo.getUIDesign(),
+        useSystemProxy: await repo.getUseSystemProxy(),
+      );
+      return MainBloc._(initialState, repo);
+    } catch (e) {
+      debugPrint(e.toString());
+      return MainBloc._(MainState(), repo);
+    }
   }
 
   MainBloc._(
-    MainState initialState,
-    this._api,
+    super.initialState,
     this._repo,
-  ) : super(initialState) {
-    _api.connectionStatusStream.listen((event) {
-      if (event == ConnectionStatus.connected) {
-        add(MainRefreshServerInfoEvent());
-      }
-    });
-
+  ) {
     on<MainInitEvent>((event, emit) async {
-      final lastServer = await _repo.getLastServer();
-      final servers = await _repo.loadServers();
-      debugPrint(servers.toString());
-      final serverMap =
-          Map.fromEntries(servers.map((e) => MapEntry(e.uniqueKey, e)));
-      final ServerConfig? config = serverMap[lastServer];
-      if (config != null) {
-        await _api.newServerConfig(config, state.useSystemProxy);
-        emit(MainInitState(
-          state.copyWith(
-            currentServer: config.uniqueKey,
-            knownServers: serverMap,
-          ),
-          EventStatus.success,
-        ));
-      } else {
-        emit(MainInitState(
-          state.copyWith(
-            knownServers: serverMap,
-          ),
-          EventStatus.success,
-        ));
+      try {
+        final lastServer = await _repo.getLastServer();
+        final servers = await _repo.loadServers();
+        debugPrint(servers.toString());
+        final serverMap =
+            Map.fromEntries(servers.map((e) => MapEntry(e.serverID, e)));
+        final ServerConfig? config = serverMap[lastServer];
+        if (config != null) {
+          try {
+            await _repo.login(event.context, config: config);
+            emit(MainInitState(
+              state.copyWith(
+                currentServer: config.serverID,
+                knownServers: serverMap,
+              ),
+              EventStatus.success,
+            ));
+          } catch (e) {
+            debugPrint(e.toString());
+            emit(MainInitState(
+              state.copyWith(
+                knownServers: serverMap,
+              ),
+              EventStatus.failed,
+            ));
+            return;
+          }
+        } else {
+          emit(MainInitState(
+            state.copyWith(
+              knownServers: serverMap,
+            ),
+            EventStatus.success,
+          ));
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(MainInitState(state, EventStatus.failed));
       }
     }, transformer: droppable());
 
     on<MainLoginEvent>((event, emit) async {
       emit(MainLoginState(state, EventStatus.processing));
-
-      // Login to current server
-      if (event.serverConfig == null) {
-        final resp = await _api.doLogin(event.password);
-        if (resp != null) {
-          emit(MainLoginState(state, EventStatus.failed, msg: resp));
-        } else {
-          emit(MainLoginState(state, EventStatus.success));
-        }
-        return;
-      }
-
-      // Login to a new server
       try {
-        final config = event.serverConfig!;
-        final api = await LibrarianService.grpc(
-          config,
-          state.useSystemProxy,
-        );
-        final resp = await api.doLogin(event.password);
-        if (resp != null) {
-          emit(MainLoginState(state, EventStatus.failed, msg: resp));
-        } else {
-          await _repo.addServer(config);
-          await _repo.setLastServer(config.uniqueKey);
-          await DIService.instance.buildBlocs(api: api);
-          emit(MainLoginState(state, EventStatus.success));
-        }
+        final resp = await _repo.login(event.context,
+            config: event.serverConfig, password: event.password);
+        emit(MainLoginState(
+          state.copyWith(
+            currentServer: event.serverConfig?.serverID ?? state.currentServer,
+          ),
+          EventStatus.success,
+          msg: resp,
+        ));
+        add(MainRefreshServerInfoEvent(event.context));
       } catch (e) {
         debugPrint(e.toString());
         emit(MainLoginState(
@@ -120,48 +114,51 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }, transformer: droppable());
 
     on<MainRefreshServerInfoEvent>((event, emit) async {
-      if (isLocal) {
-        return;
-      }
       if (event.server == null && state.currentServer == null) {
         return;
       }
-      final currentServer = event.server ?? state.currentServer!;
-      var newState = state;
-      final resp = await _api.doRequest((client) => client.getServerInformation,
-          GetServerInformationRequest());
-      if (resp case Ok()) {
-        final info = resp.v;
-        final knownServerInfos = {
-          currentServer: ServerInformation(
-            sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
-            buildVersion: info.serverBinarySummary.buildVersion,
-            buildDate: info.serverBinarySummary.buildDate,
-            protocolVersion: info.protocolSummary.version,
-          ),
-          ...state.knownServerInfos,
-        };
-        final knownServerFeatureSummaries = {
-          currentServer: info.featureSummary,
-          ...state.knownServerFeatureSummaries,
-        };
-        final knownServerInstanceSummaries = {
-          currentServer: info.serverInstanceSummary,
-          ...state.knownServerInstanceSummaries,
-        };
-        newState = newState.copyWith(
-          knownServerInfos: knownServerInfos,
-          knownServerFeatureSummaries: knownServerFeatureSummaries,
-          knownServerInstanceSummaries: knownServerInstanceSummaries,
-        );
+      try {
+        final currentServer = event.server ?? state.currentServer!;
+        var newState = state;
+        final servers = await _repo.loadServers();
+        final serverMap =
+            Map.fromEntries(servers.map((e) => MapEntry(e.serverID, e)));
+        newState = newState.copyWith(knownServers: serverMap);
+        final resp = await _repo.getServerInfo(event.context);
+        if (resp case Ok()) {
+          final info = resp.v;
+          final knownServerInfos = {
+            currentServer: ServerInformation(
+              sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
+              buildVersion: info.serverBinarySummary.buildVersion,
+              buildDate: info.serverBinarySummary.buildDate,
+              protocolVersion: info.protocolSummary.version,
+            ),
+            ...state.knownServerInfos,
+          };
+          final knownServerFeatureSummaries = {
+            currentServer: info.featureSummary,
+            ...state.knownServerFeatureSummaries,
+          };
+          final knownServerInstanceSummaries = {
+            currentServer: info.serverInstanceSummary,
+            ...state.knownServerInstanceSummaries,
+          };
+          newState = newState.copyWith(
+            knownServerInfos: knownServerInfos,
+            knownServerFeatureSummaries: knownServerFeatureSummaries,
+            knownServerInstanceSummaries: knownServerInstanceSummaries,
+          );
+        }
+        final resp2 = await _repo.getUser(event.context);
+        if (resp2 case Ok()) {
+          final user = resp2.v;
+          newState = newState.copyWith(currentUser: user.user);
+        }
+        emit(newState);
+      } catch (e) {
+        debugPrint(e.toString());
       }
-      final resp2 =
-          await _api.doRequest((client) => client.getUser, GetUserRequest());
-      if (resp2 case Ok()) {
-        final user = resp2.v;
-        newState = newState.copyWith(currentUser: user.user);
-      }
-      emit(newState);
     }, transformer: restartable());
 
     on<MainRegisterEvent>((event, emit) async {
@@ -169,8 +166,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
       try {
         final config = event.serverConfig;
-        final api =
-            await LibrarianService.grpc(config, state.useSystemProxy);
+        final api = await LibrarianService.grpc(config, state.useSystemProxy);
         final captcha = event.captchaID != null && event.captchaAns != null
             ? RegisterUserRequest_Captcha(
                 id: event.captchaID, value: event.captchaAns)
@@ -210,8 +206,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               );
             }
           case Err():
-            emit(MainRegisterState(state, EventStatus.failed,
-                msg: resp.e));
+            emit(MainRegisterState(state, EventStatus.failed, msg: resp.e));
         }
       } catch (e) {
         debugPrint(e.toString());

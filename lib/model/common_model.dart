@@ -1,6 +1,15 @@
+import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 part 'common_model.mapper.dart';
+
+class EventContext {
+  final ServerID serverID;
+
+  ServerID get sid => serverID;
+
+  EventContext(this.serverID);
+}
 
 enum ConnectionStatus {
   connecting, // connecting to server, wait for connection established

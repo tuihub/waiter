@@ -7,7 +7,6 @@ import 'package:universal_ui/universal_ui.dart';
 import '../../../bloc/main_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
-import '../../helper/connection.dart';
 import '../../layout/overlapping_panels.dart';
 
 class SettingsNav extends StatelessWidget {
@@ -40,7 +39,7 @@ class SettingsNav extends StatelessWidget {
                           title: const Text('客户端设置'),
                           selected: function == SettingsFunctions.client,
                         ),
-                        if (ConnectionHelper.isNotLocal(context))
+                        if (state.isNotLocal)
                           UniversalListTile(
                             onTap: () {
                               const SettingsFunctionRoute(
@@ -52,7 +51,7 @@ class SettingsNav extends StatelessWidget {
                             title: const Text('登录设备管理'),
                             selected: function == SettingsFunctions.session,
                           ),
-                        if (ConnectionHelper.isNotLocal(context))
+                        if (state.isNotLocal)
                           UniversalListTile(
                             onTap: () {
                               const SettingsFunctionRoute(
@@ -65,7 +64,7 @@ class SettingsNav extends StatelessWidget {
                             selected:
                                 function == SettingsFunctions.porterContext,
                           ),
-                        if (ConnectionHelper.isNotLocal(context))
+                        if (state.isNotLocal)
                           if (state.currentUser?.type ==
                               UserType.USER_TYPE_ADMIN)
                             UniversalExpansionTile(

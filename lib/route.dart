@@ -344,14 +344,14 @@ class YesodFunctionRoute extends GoRouteData {
           context.read<YesodBloc>().add(YesodInitEvent());
           context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
         case YesodFunctions.feedManage:
-          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent(null));
           context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
         case YesodFunctions.actionManage:
-          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent(null));
           context.read<YesodBloc>().add(YesodFeedActionSetLoadEvent());
         case YesodFunctions.notifyTargetManage:
         case YesodFunctions.notifyFlowManage:
-          context.read<MainBloc>().add(MainRefreshServerInfoEvent());
+          context.read<MainBloc>().add(MainRefreshServerInfoEvent(null));
           context.read<NetzachBloc>().add(NetzachInitEvent());
           context.read<YesodBloc>().add(YesodInitEvent());
         default:

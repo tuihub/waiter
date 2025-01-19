@@ -15,7 +15,7 @@ class ThemeSetting extends StatelessWidget {
                 title: Text(S.of(context).theme),
                 trailing: UniversalIconButton(
                   onPressed: () {
-                    context.read<MainBloc>().add(ToggleThemeModeEvent());
+                    context.read<MainBloc>().add(ToggleThemeModeEvent(null));
                   },
                   icon: AnimatedSwitcher(
                     duration: Duration.zero,
@@ -60,7 +60,7 @@ class ThemeSetting extends StatelessWidget {
                               if (selected) {
                                 context
                                     .read<MainBloc>()
-                                    .add(ChangeThemeEvent(theme));
+                                    .add(ChangeThemeEvent(null, theme));
                               }
                             },
                           ),
