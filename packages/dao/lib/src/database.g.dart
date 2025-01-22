@@ -3172,7 +3172,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $LocalSteamAppScanResultTableTable localSteamAppScanResultTable =
       $LocalSteamAppScanResultTableTable(this);
   late final Index server = Index('server',
-      'CREATE INDEX server ON server_config_table (host, port, username)');
+      'CREATE UNIQUE INDEX server ON server_config_table (host, port, username)');
   late final Index localAppUuid = Index('local_app_uuid',
       'CREATE INDEX local_app_uuid ON local_app_table (uuid)');
   late final Index localAppInstUuid = Index('local_app_inst_uuid',

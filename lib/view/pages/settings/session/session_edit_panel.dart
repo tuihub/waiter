@@ -10,7 +10,9 @@ import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
 
 class SessionEditPanel extends StatelessWidget {
-  const SessionEditPanel({super.key});
+  const SessionEditPanel({super.key, required this.session});
+
+  final UserSession session;
 
   void close(BuildContext context) {
     ModuleFramePage.of(context)?.closeDrawer();
@@ -25,14 +27,7 @@ class SessionEditPanel extends StatelessWidget {
           close(context);
         }
       },
-      buildWhen: (previous, current) =>
-          previous.selectedSessionEditIndex != current.selectedSessionEditIndex,
       builder: (context, state) {
-        final session =
-            state.sessions != null && state.selectedSessionEditIndex != null
-                ? state.sessions![state.selectedSessionEditIndex!]
-                : UserSession();
-
         return RightPanelForm(
           title: Text(S.of(context).deviceDetail),
           formFields: [

@@ -24,13 +24,12 @@ class PorterManagePage extends StatelessWidget {
         .length;
     final enabledCount =
         porters.where((e) => e.status == UserStatus.USER_STATUS_ACTIVE).length;
-    void openEditPanel(int index) {
-      context
-          .read<TipherethBloc>()
-          .add(TipherethSetPorterEditIndexEvent(null, index));
-      const SettingsFunctionRoute(SettingsFunctions.porter,
-              action: SettingsActions.porterEdit)
-          .go(context);
+    void openEditPanel(Porter item) {
+      SettingsFunctionRoute(
+        SettingsFunctions.porter,
+        action: SettingsActions.porterEdit,
+        $extra: item,
+      ).go(context);
       ModuleFramePage.of(context)?.openDrawer();
     }
 
@@ -61,7 +60,7 @@ class PorterManagePage extends StatelessWidget {
             ),
             leading: _porterConnectionStatusIcon(porter.connectionStatus),
             onTap: () {
-              openEditPanel(porter.id.id.toInt());
+              openEditPanel(porter);
             },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -69,13 +68,13 @@ class PorterManagePage extends StatelessWidget {
                 UniversalSwitch(
                   value: porter.status == UserStatus.USER_STATUS_ACTIVE,
                   onChanged: (_) {
-                    openEditPanel(porter.id.id.toInt());
+                    openEditPanel(porter);
                   },
                 ),
                 UniversalIconButton(
                   icon: Icon(UniversalUI.of(context).icons.edit),
                   onPressed: () {
-                    openEditPanel(porter.id.id.toInt());
+                    openEditPanel(porter);
                   },
                 ),
               ],
@@ -116,7 +115,9 @@ class PorterManagePage extends StatelessWidget {
 }
 
 class PorterEditPanel extends StatelessWidget {
-  const PorterEditPanel({super.key});
+  const PorterEditPanel({super.key, required this.porter});
+
+  final Porter porter;
 
   void close(BuildContext context) {
     ModuleFramePage.of(context)?.closeDrawer();
@@ -131,16 +132,7 @@ class PorterEditPanel extends StatelessWidget {
           close(context);
         }
       },
-      buildWhen: (previous, current) =>
-          previous.selectedPorterEditIndex != current.selectedPorterEditIndex,
       builder: (context, state) {
-        final porter =
-            state.porters != null && state.selectedPorterEditIndex != null
-                ? state.porters!.firstWhere(
-                    (e) => e.id.id == state.selectedPorterEditIndex,
-                    orElse: Porter.new)
-                : Porter();
-
         var enabled = porter.status == UserStatus.USER_STATUS_ACTIVE;
 
         return RightPanelForm(

@@ -73,7 +73,7 @@ class ServerConfig with ServerConfigMappable {
 }
 
 @UseRowClass(ServerConfig)
-@TableIndex(name: 'server', columns: {#host, #port, #username})
+@TableIndex(name: 'server', columns: {#host, #port, #username}, unique: true)
 class ServerConfigTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get host => text()();

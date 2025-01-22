@@ -36,14 +36,6 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
   static List<UserSession>? _$sessions(TipherethState v) => v.sessions;
   static const Field<TipherethState, List<UserSession>> _f$sessions =
       Field('sessions', _$sessions, opt: true);
-  static int? _$selectedPorterEditIndex(TipherethState v) =>
-      v.selectedPorterEditIndex;
-  static const Field<TipherethState, int> _f$selectedPorterEditIndex =
-      Field('selectedPorterEditIndex', _$selectedPorterEditIndex, opt: true);
-  static int? _$selectedSessionEditIndex(TipherethState v) =>
-      v.selectedSessionEditIndex;
-  static const Field<TipherethState, int> _f$selectedSessionEditIndex =
-      Field('selectedSessionEditIndex', _$selectedSessionEditIndex, opt: true);
 
   @override
   final MappableFields<TipherethState> fields = const {
@@ -52,8 +44,6 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
     #porterGroups: _f$porterGroups,
     #porterContexts: _f$porterContexts,
     #sessions: _f$sessions,
-    #selectedPorterEditIndex: _f$selectedPorterEditIndex,
-    #selectedSessionEditIndex: _f$selectedSessionEditIndex,
   };
 
   static TipherethState _instantiate(DecodingData data) {
@@ -62,9 +52,7 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
         porters: data.dec(_f$porters),
         porterGroups: data.dec(_f$porterGroups),
         porterContexts: data.dec(_f$porterContexts),
-        sessions: data.dec(_f$sessions),
-        selectedPorterEditIndex: data.dec(_f$selectedPorterEditIndex),
-        selectedSessionEditIndex: data.dec(_f$selectedSessionEditIndex));
+        sessions: data.dec(_f$sessions));
   }
 
   @override
@@ -98,9 +86,7 @@ abstract class TipherethStateCopyWith<$R, $In extends TipherethState, $Out>
       List<Porter>? porters,
       List<PorterGroup>? porterGroups,
       List<PorterContext>? porterContexts,
-      List<UserSession>? sessions,
-      int? selectedPorterEditIndex,
-      int? selectedSessionEditIndex});
+      List<UserSession>? sessions});
   TipherethStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -160,19 +146,13 @@ class _TipherethStateCopyWithImpl<$R, $Out>
           Object? porters = $none,
           Object? porterGroups = $none,
           Object? porterContexts = $none,
-          Object? sessions = $none,
-          Object? selectedPorterEditIndex = $none,
-          Object? selectedSessionEditIndex = $none}) =>
+          Object? sessions = $none}) =>
       $apply(FieldCopyWithData({
         if (accounts != $none) #accounts: accounts,
         if (porters != $none) #porters: porters,
         if (porterGroups != $none) #porterGroups: porterGroups,
         if (porterContexts != $none) #porterContexts: porterContexts,
-        if (sessions != $none) #sessions: sessions,
-        if (selectedPorterEditIndex != $none)
-          #selectedPorterEditIndex: selectedPorterEditIndex,
-        if (selectedSessionEditIndex != $none)
-          #selectedSessionEditIndex: selectedSessionEditIndex
+        if (sessions != $none) #sessions: sessions
       }));
   @override
   TipherethState $make(CopyWithData data) => TipherethState(
@@ -180,11 +160,7 @@ class _TipherethStateCopyWithImpl<$R, $Out>
       porters: data.get(#porters, or: $value.porters),
       porterGroups: data.get(#porterGroups, or: $value.porterGroups),
       porterContexts: data.get(#porterContexts, or: $value.porterContexts),
-      sessions: data.get(#sessions, or: $value.sessions),
-      selectedPorterEditIndex: data.get(#selectedPorterEditIndex,
-          or: $value.selectedPorterEditIndex),
-      selectedSessionEditIndex: data.get(#selectedSessionEditIndex,
-          or: $value.selectedSessionEditIndex));
+      sessions: data.get(#sessions, or: $value.sessions));
 
   @override
   TipherethStateCopyWith<$R2, TipherethState, $Out2> $chain<$R2, $Out2>(

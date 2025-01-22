@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dao/dao.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../bloc/chesed/chesed_bloc.dart';
@@ -13,6 +14,7 @@ import '../bloc/yesod/yesod_bloc.dart';
 import '../model/common_model.dart';
 import '../repo/gebura_repo.dart';
 import '../repo/main_repo.dart';
+import '../repo/tiphereth_repo.dart';
 import '../repo/yesod_repo.dart';
 import 'librarian_service.dart';
 
@@ -24,10 +26,12 @@ class DIService {
   DIService._internal();
 
   // Basic variables
+  bool _initialized = false;
   late String _dataPath;
   late PackageInfo _packageInfo;
   late AppDatabase _appDB;
   late DIProvider<LibrarianService> _apiProvider;
+  ServerID _currentServer = const ServerID.local();
   final StreamController<ServerID> _currentServerController =
       StreamController.broadcast();
 
@@ -46,7 +50,14 @@ class DIService {
     String? dataPath,
     required PackageInfo packageInfo,
   }) async {
-    await _instance._init(dataPath: dataPath, packageInfo: packageInfo);
+    if (!_instance._initialized) {
+      _instance._currentServerController.stream.listen((event) {
+        debugPrint('Switch to new server: $event');
+        _instance._currentServer = event;
+      });
+      await _instance._init(dataPath: dataPath, packageInfo: packageInfo);
+      _instance._initialized = true;
+    }
     return _instance;
   }
 
@@ -66,17 +77,19 @@ class DIService {
     final geburaDao = GeburaDao(_appDB);
     final geburaRepo = GeburaRepo(_apiProvider, geburaDao, kvDao);
     final yesodRepo = await YesodRepo.init(_dataPath, _appDB);
+    final tipherethRepo = TipherethRepo(_apiProvider, kvDao);
     _mainBloc = await MainBloc.init(mainRepo);
     _deepLinkBloc = DeepLinkBloc(null);
     _chesedBloc = ChesedBloc(_apiProvider);
     _geburaBloc =
         await GeburaBloc.init(geburaRepo, _currentServerController.stream);
     _netzachBloc = NetzachBloc(_apiProvider);
-    _tipherethBloc = TipherethBloc(_apiProvider);
+    _tipherethBloc = await TipherethBloc.init(
+        tipherethRepo, _currentServerController.stream, _apiProvider);
     _yesodBloc = YesodBloc(_apiProvider, yesodRepo);
   }
 
-  ServerID currentServer = const ServerID.local();
+  ServerID get currentServer => _currentServer;
   Stream<ConnectionStatus> get connectionStatusStream =>
       _apiProvider.get(currentServer).connectionStatusStream;
   String get dataPath => _dataPath;

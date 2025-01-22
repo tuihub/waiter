@@ -77,11 +77,8 @@ class SessionManagePage extends StatelessWidget {
                   final item = listData.elementAt(index);
 
                   void openEditPage() {
-                    context
-                        .read<TipherethBloc>()
-                        .add(TipherethSetSessionEditIndexEvent(null, index));
-                    const SettingsFunctionRoute(SettingsFunctions.session,
-                            action: SettingsActions.sessionEdit)
+                    SettingsFunctionRoute(SettingsFunctions.session,
+                            action: SettingsActions.sessionEdit, $extra: item)
                         .go(context);
                     ModuleFramePage.of(context)?.openDrawer();
                   }

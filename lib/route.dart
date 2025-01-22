@@ -591,7 +591,9 @@ class SettingsFunctionRoute extends GoRouteData {
       SettingsFunctions.about: const AboutPage(),
     };
     final settingsActions = {
-      SettingsActions.sessionEdit: const SessionEditPanel(),
+      SettingsActions.sessionEdit: SessionEditPanel(
+        session: $extra is UserSession ? $extra! as UserSession : UserSession(),
+      ),
       SettingsActions.porterContextAdd: PorterContextAddPanel(
         key: ValueKey($extra),
         porterGroup:
@@ -603,7 +605,9 @@ class SettingsFunctionRoute extends GoRouteData {
             ? $extra! as PorterContext
             : PorterContext(),
       ),
-      SettingsActions.porterEdit: const PorterEditPanel(),
+      SettingsActions.porterEdit: PorterEditPanel(
+        porter: $extra is Porter ? $extra! as Porter : Porter(),
+      ),
       SettingsActions.userAdd: const UserAddPanel(),
       SettingsActions.userEdit: UserEditPanel(
         key: ValueKey($extra),

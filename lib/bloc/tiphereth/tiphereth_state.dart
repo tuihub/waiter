@@ -8,17 +8,12 @@ class TipherethState with TipherethStateMappable {
   late List<PorterContext>? porterContexts;
   late List<UserSession>? sessions;
 
-  late int? selectedPorterEditIndex;
-  late int? selectedSessionEditIndex;
-
   TipherethState({
     this.accounts,
     this.porters,
     this.porterGroups,
     this.porterContexts,
     this.sessions,
-    this.selectedPorterEditIndex,
-    this.selectedSessionEditIndex,
   });
 
   TipherethState.clone(TipherethState other)
@@ -26,9 +21,7 @@ class TipherethState with TipherethStateMappable {
         porters = other.porters,
         porterGroups = other.porterGroups,
         porterContexts = other.porterContexts,
-        sessions = other.sessions,
-        selectedPorterEditIndex = other.selectedPorterEditIndex,
-        selectedSessionEditIndex = other.selectedSessionEditIndex;
+        sessions = other.sessions;
 
   PorterGroup? getNotifyDestinationProvider(String id) {
     try {

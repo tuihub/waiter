@@ -8,24 +8,29 @@ sealed class TipherethEvent {
       : context = context ?? EventContext(DIService.instance.currentServer);
 }
 
-class TipherethAddUserEvent extends TipherethEvent {
+final class _TipherethSwitchServerEvent extends TipherethEvent {
+  _TipherethSwitchServerEvent(ServerID serverID)
+      : super(EventContext(serverID));
+}
+
+final class TipherethAddUserEvent extends TipherethEvent {
   final User user;
 
   TipherethAddUserEvent(super.context, this.user);
 }
 
-class TipherethEditUserEvent extends TipherethEvent {
+final class TipherethEditUserEvent extends TipherethEvent {
   final User user;
   final String? password;
 
   TipherethEditUserEvent(super.context, this.user, {this.password});
 }
 
-class TipherethGetAccountsEvent extends TipherethEvent {
+final class TipherethGetAccountsEvent extends TipherethEvent {
   TipherethGetAccountsEvent(super.context);
 }
 
-class TipherethLinkAccountEvent extends TipherethEvent {
+final class TipherethLinkAccountEvent extends TipherethEvent {
   final String platform;
   final String platformAccountID;
 
@@ -33,7 +38,7 @@ class TipherethLinkAccountEvent extends TipherethEvent {
       super.context, this.platform, this.platformAccountID);
 }
 
-class TipherethUnLinkAccountEvent extends TipherethEvent {
+final class TipherethUnLinkAccountEvent extends TipherethEvent {
   final String platform;
   final String platformAccountID;
 
@@ -41,50 +46,38 @@ class TipherethUnLinkAccountEvent extends TipherethEvent {
       super.context, this.platform, this.platformAccountID);
 }
 
-class TipherethLoadPortersEvent extends TipherethEvent {
+final class TipherethLoadPortersEvent extends TipherethEvent {
   TipherethLoadPortersEvent(super.context);
 }
 
-class TipherethSetPorterEditIndexEvent extends TipherethEvent {
-  final int index;
-
-  TipherethSetPorterEditIndexEvent(super.context, this.index);
-}
-
-class TipherethEditPorterEvent extends TipherethEvent {
+final class TipherethEditPorterEvent extends TipherethEvent {
   final InternalID porterID;
   final UserStatus status;
 
   TipherethEditPorterEvent(super.context, this.porterID, this.status);
 }
 
-class TipherethAddPorterContextEvent extends TipherethEvent {
+final class TipherethAddPorterContextEvent extends TipherethEvent {
   final PorterContext porterContext;
 
   TipherethAddPorterContextEvent(super.context, this.porterContext);
 }
 
-class TipherethEditPorterContextEvent extends TipherethEvent {
+final class TipherethEditPorterContextEvent extends TipherethEvent {
   final PorterContext porterContext;
 
   TipherethEditPorterContextEvent(super.context, this.porterContext);
 }
 
-class TipherethLoadPorterContextsEvent extends TipherethEvent {
+final class TipherethLoadPorterContextsEvent extends TipherethEvent {
   TipherethLoadPorterContextsEvent(super.context);
 }
 
-class TipherethLoadSessionsEvent extends TipherethEvent {
+final class TipherethLoadSessionsEvent extends TipherethEvent {
   TipherethLoadSessionsEvent(super.context);
 }
 
-class TipherethSetSessionEditIndexEvent extends TipherethEvent {
-  final int index;
-
-  TipherethSetSessionEditIndexEvent(super.context, this.index);
-}
-
-class TipherethEditSessionEvent extends TipherethEvent {
+final class TipherethEditSessionEvent extends TipherethEvent {
   final InternalID sessionID;
 
   TipherethEditSessionEvent(super.context, this.sessionID);

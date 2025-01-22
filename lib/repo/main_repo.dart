@@ -41,10 +41,8 @@ class MainRepo {
   Future<void> setLastServer(ServerID? id) async {
     if (id == null) {
       await _kvDao.remove(_kvBucket, _kLastServer);
-      DIService.instance.currentServer = const ServerID.local();
     } else {
       await _kvDao.set(_kvBucket, _kLastServer, id.toJson());
-      DIService.instance.currentServer = id;
     }
   }
 
@@ -65,7 +63,7 @@ class MainRepo {
       }
     } else {
       // Upsert server and login
-      final api = _api.get(context.sid);
+      final api = _api.get(config.serverID);
       final isNew = await api.loadConfig(
         config,
         await getUseSystemProxy(),
@@ -82,7 +80,7 @@ class MainRepo {
       await setLastServer(newConfig.serverID);
       _currentServerSink.add(newConfig.serverID);
       if (isNew) {
-        await upsertServer(newConfig);
+        await _dao.upsertServer(newConfig);
         api.serverConfigStream.listen((event) async {
           await _dao.upsertServer(event);
         });
