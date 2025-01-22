@@ -1,21 +1,27 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-part 'yesod_model.freezed.dart';
-part 'yesod_model.g.dart';
+part 'yesod_model.mapper.dart';
 
-@freezed
-class YesodFeedItemListConfig with _$YesodFeedItemListConfig {
-  const factory YesodFeedItemListConfig({
-    Iterable<String>? feedIdFilter,
-    Iterable<String>? authorIdFilter,
-    Iterable<String>? publishPlatformFilter,
-    Iterable<String>? categoryFilter,
-    bool? hideRead,
-    FeedItemListType? listType,
-  }) = _YesodFeedItemListConfig;
+@MappableClass()
+class YesodFeedItemListConfig with YesodFeedItemListConfigMappable {
+  final Iterable<String>? feedIdFilter;
+  final Iterable<String>? authorIdFilter;
+  final Iterable<String>? publishPlatformFilter;
+  final Iterable<String>? categoryFilter;
+  final bool? hideRead;
+  final FeedItemListType? listType;
 
-  factory YesodFeedItemListConfig.fromJson(Map<String, dynamic> json) =>
-      _$YesodFeedItemListConfigFromJson(json);
+  const YesodFeedItemListConfig({
+    this.feedIdFilter,
+    this.authorIdFilter,
+    this.publishPlatformFilter,
+    this.categoryFilter,
+    this.hideRead,
+    this.listType,
+  });
+
+  static const fromMap = YesodFeedItemListConfigMapper.fromMap;
+  static const fromJson = YesodFeedItemListConfigMapper.fromJson;
 }
 
 enum FeedItemListType {

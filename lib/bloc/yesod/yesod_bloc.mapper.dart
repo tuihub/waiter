@@ -13,6 +13,7 @@ class YesodStateMapper extends ClassMapperBase<YesodState> {
   static YesodStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = YesodStateMapper._());
+      YesodFeedItemListConfigMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -86,6 +87,8 @@ abstract class YesodStateCopyWith<$R, $In extends YesodState, $Out>
       ObjectCopyWith<$R, FeedItemDigest, FeedItemDigest>>? get feedItemDigests;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get feedCategories;
+  YesodFeedItemListConfigCopyWith<$R, YesodFeedItemListConfig,
+      YesodFeedItemListConfig>? get listConfig;
   $R call(
       {List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
       List<FeedActionSet>? feedActionSets,
@@ -141,6 +144,11 @@ class _YesodStateCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(feedCategories: v))
           : null;
+  @override
+  YesodFeedItemListConfigCopyWith<$R, YesodFeedItemListConfig,
+          YesodFeedItemListConfig>?
+      get listConfig =>
+          $value.listConfig?.copyWith.$chain((v) => call(listConfig: v));
   @override
   $R call(
           {Object? feedConfigs = $none,

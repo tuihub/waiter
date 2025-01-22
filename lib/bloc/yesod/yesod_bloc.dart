@@ -63,7 +63,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
 
     on<YesodFeedConfigLoadEvent>((event, emit) async {
       final List<ListFeedConfigsResponse_FeedWithConfig> configs =
-          await _repo.getFeedConfigs();
+          await _repo.getFeedConfigs(event.context);
       emit(YesodFeedConfigLoadState(state, EventStatus.processing));
 
       final resp = await _api.get(DIService.instance.currentServer).doRequest(
@@ -138,7 +138,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         )
       ];
       configs.addAll(state.feedConfigs ?? []);
-      await _repo.setFeedConfigs(configs);
+      await _repo.setFeedConfigs(event.context, configs);
       add(YesodFeedConfigLoadEvent(event.context));
       emit(YesodFeedConfigAddState(
         state.copyWith(feedConfigs: configs),
@@ -166,7 +166,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         return;
       }
       final configs = state.feedConfigs ?? [];
-      await _repo.setFeedConfigs(configs);
+      await _repo.setFeedConfigs(event.context, configs);
       add(YesodFeedConfigLoadEvent(event.context));
       emit(YesodFeedConfigEditState(
         state.copyWith(feedConfigs: configs),
@@ -328,7 +328,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         EventStatus.processing,
       ));
       FeedItem? item;
-      if (!_repo.existFeedItem(event.id)) {
+      if (!await _repo.existFeedItem(event.context, event.id)) {
         final resp = await _api.get(DIService.instance.currentServer).doRequest(
               (client) => client.getFeedItem,
               GetFeedItemRequest(
@@ -344,7 +344,7 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
           return;
         } else {
           item = resp.unwrap().item;
-          await _repo.setFeedItem(event.id, item);
+          await _repo.setFeedItem(event.context, event.id, item);
         }
       }
       emit(YesodFeedItemLoadState(state, EventStatus.success, feedItem: item));
@@ -387,16 +387,9 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
     });
   }
 
-  int cacheSize() {
-    return _repo.cacheSize();
-  }
-
-  Future<void> clearCache() async {
-    await _repo.clearCache();
-  }
-
   Future<FeedItem?> getFeedItem(InternalID id) async {
-    final item = await _repo.getFeedItem(id);
+    final item = await _repo.getFeedItem(
+        EventContext(DIService.instance.currentServer), id);
     if (item == null) {
       add(YesodFeedItemLoadEvent(null, id));
     }

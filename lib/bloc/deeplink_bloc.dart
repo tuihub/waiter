@@ -4,7 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dao/dao.dart';
 import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../common/platform.dart';
 

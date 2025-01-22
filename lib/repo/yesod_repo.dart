@@ -1,19 +1,15 @@
 import 'dart:convert';
 
 import 'package:dao/dao.dart';
-import 'package:hive/hive.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
-import 'package:universal_io/io.dart';
 
+import '../model/common_model.dart';
 import '../model/yesod_model.dart';
 import '../service/di_service.dart';
 import '../service/librarian_service.dart';
 
-const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
-
 class YesodRepo {
-  late final LazyBox<String> _feedItemCacheBox;
   final YesodDao _dao;
   final DIProvider<LibrarianService> _api;
   final KVDao _kvDao;
@@ -22,30 +18,17 @@ class YesodRepo {
 
   static const _kFeedItemListConfig = 'feedItemListConfig';
 
-  YesodRepo._(this._dao, this._api, this._kvDao, this._feedItemCacheBox);
-
-  static Future<YesodRepo> init(YesodDao dao, DIProvider<LibrarianService> api,
-      KVDao kvDao, String path) async {
-    final feedItemCacheBox =
-        await Hive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
-    return YesodRepo._(dao, api, kvDao, feedItemCacheBox);
-  }
-
-  Future<void> dispose() async {
-    await _feedItemCacheBox.close();
-  }
+  YesodRepo(this._dao, this._api, this._kvDao);
 
   Future<void> setFeedItemListConfig(YesodFeedItemListConfig data) {
-    return _kvDao.set(
-        _kvBucket, _kFeedItemListConfig, jsonEncode(data.toJson()));
+    return _kvDao.set(_kvBucket, _kFeedItemListConfig, data.toJson());
   }
 
   Future<YesodFeedItemListConfig> getFeedItemListConfig() async {
     try {
       final data = await _kvDao.get(_kvBucket, _kFeedItemListConfig);
       if (data != null) {
-        return YesodFeedItemListConfig.fromJson(
-            jsonDecode(data) as Map<String, dynamic>);
+        return YesodFeedItemListConfig.fromJson(data);
       }
     } catch (e) {
       // ignore
@@ -53,65 +36,52 @@ class YesodRepo {
     return const YesodFeedItemListConfig();
   }
 
-  Future<void> setFeedItem(InternalID id, FeedItem data) {
-    return _feedItemCacheBox.put(id.toString(), data.writeToJson());
+  Future<void> setFeedItem(EventContext context, InternalID id, FeedItem data) {
+    return _dao.addFeedItem(CacheFeedItem(
+      serverId: context.serverID.toString(),
+      internalId: id.toString(),
+      rawJsonData: jsonEncode(data.writeToJson()),
+    ));
   }
 
-  Future<FeedItem?> getFeedItem(InternalID id) async {
-    try {
-      final data = await _feedItemCacheBox.get(id.toString());
-      if (data != null) {
-        return FeedItem.fromJson(data);
-      }
-    } catch (e) {
-      // ignore
+  Future<FeedItem?> getFeedItem(EventContext context, InternalID id) async {
+    final data =
+        await _dao.getFeedItem(context.serverID.toString(), id.toString());
+    if (data != null) {
+      return FeedItem.fromJson(data.rawJsonData);
     }
     return null;
   }
 
-  bool existFeedItem(InternalID id) {
-    return _feedItemCacheBox.containsKey(id.toString());
+  Future<bool> existFeedItem(EventContext context, InternalID id) async {
+    return await getFeedItem(context, id) != null;
   }
 
   Future<void> setFeedConfigs(
-      List<ListFeedConfigsResponse_FeedWithConfig> data) {
-    return _dao.setAll(
+      EventContext context, List<ListFeedConfigsResponse_FeedWithConfig> data) {
+    return _dao.saveFeedConfigs(
       data
-          .map((e) => FeedConfigTableData(
+          .map((e) => CacheFeedConfig(
+                serverId: context.serverID.toString(),
                 internalId: e.config.id.toString(),
                 name: e.config.name,
                 category: e.config.category,
-                jsonData: e.writeToJson(),
+                rawJsonData: e.writeToJson(),
               ))
           .toList(),
     );
   }
 
-  Future<List<ListFeedConfigsResponse_FeedWithConfig>> getFeedConfigs() async {
+  Future<List<ListFeedConfigsResponse_FeedWithConfig>> getFeedConfigs(
+      EventContext context) async {
     try {
-      final data = await _dao.getAll();
+      final data = await _dao.loadFeedConfigs(context.serverID.toString());
       return data
           .map((e) =>
-              ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))
+              ListFeedConfigsResponse_FeedWithConfig.fromJson(e.rawJsonData))
           .toList();
     } catch (e) {
       return [];
     }
-  }
-
-  int cacheSize() {
-    if (_feedItemCacheBox.path != null) {
-      try {
-        return File(_feedItemCacheBox.path!).lengthSync();
-      } catch (e) {
-        return 0;
-      }
-    }
-    return 0;
-  }
-
-  Future<void> clearCache() async {
-    await _feedItemCacheBox.clear();
-    await _feedItemCacheBox.compact();
   }
 }

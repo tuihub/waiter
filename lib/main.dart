@@ -12,7 +12,6 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -40,9 +39,6 @@ part 'init.dart';
 
 // main function is the entry point of the app
 void main(List<String> args) async {
-  // Required for Android App
-  await Hive.initFlutter();
-
   final app = await init();
 
   runApp(app);

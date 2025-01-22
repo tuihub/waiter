@@ -98,7 +98,7 @@ class DIService {
     );
 
     _yesodBloc = await YesodBloc.init(
-      await YesodRepo.init(YesodDao(_appDB), _apiProvider, kvDao, _dataPath),
+      YesodRepo(YesodDao(_appDB), _apiProvider, kvDao),
       _currentServerController.stream,
       _apiProvider,
     );

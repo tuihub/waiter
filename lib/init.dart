@@ -22,9 +22,6 @@ Future<MyApp> init() async {
   // proxy
   await applySystemProxy();
 
-  // dao
-  await Hive.initFlutter(dataPath);
-
   // system tray
   await _initSystemTray();
 

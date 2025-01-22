@@ -5,6 +5,8 @@ export 'src/database.dart';
 export 'src/gebura_dao.dart';
 export 'src/kv.dart';
 export 'src/main_dao.dart';
+export 'src/tables/cache_feed_config.dart';
+export 'src/tables/cache_feed_item.dart';
 export 'src/tables/local_app.dart';
 export 'src/tables/local_app_inst.dart';
 export 'src/tables/local_app_inst_launcher.dart';

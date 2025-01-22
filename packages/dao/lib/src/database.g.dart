@@ -476,12 +476,27 @@ class ServerConfigTableCompanion extends UpdateCompanion<ServerConfig> {
   }
 }
 
-class $FeedConfigTableTable extends FeedConfigTable
-    with TableInfo<$FeedConfigTableTable, FeedConfigTableData> {
+class $CacheFeedConfigTableTable extends CacheFeedConfigTable
+    with TableInfo<$CacheFeedConfigTableTable, CacheFeedConfig> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $FeedConfigTableTable(this.attachedDatabase, [this._alias]);
+  $CacheFeedConfigTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _internalIdMeta =
       const VerificationMeta('internalId');
   @override
@@ -499,25 +514,34 @@ class $FeedConfigTableTable extends FeedConfigTable
   late final GeneratedColumn<String> category = GeneratedColumn<String>(
       'category', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _jsonDataMeta =
-      const VerificationMeta('jsonData');
+  static const VerificationMeta _rawJsonDataMeta =
+      const VerificationMeta('rawJsonData');
   @override
-  late final GeneratedColumn<String> jsonData = GeneratedColumn<String>(
-      'json_data', aliasedName, false,
+  late final GeneratedColumn<String> rawJsonData = GeneratedColumn<String>(
+      'raw_json_data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [internalId, name, category, jsonData];
+  List<GeneratedColumn> get $columns =>
+      [id, serverId, internalId, name, category, rawJsonData];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'feed_config_table';
+  static const String $name = 'cache_feed_config_table';
   @override
-  VerificationContext validateIntegrity(
-      Insertable<FeedConfigTableData> instance,
+  VerificationContext validateIntegrity(Insertable<CacheFeedConfig> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    } else if (isInserting) {
+      context.missing(_serverIdMeta);
+    }
     if (data.containsKey('internal_id')) {
       context.handle(
           _internalIdMeta,
@@ -538,190 +562,113 @@ class $FeedConfigTableTable extends FeedConfigTable
     } else if (isInserting) {
       context.missing(_categoryMeta);
     }
-    if (data.containsKey('json_data')) {
-      context.handle(_jsonDataMeta,
-          jsonData.isAcceptableOrUnknown(data['json_data']!, _jsonDataMeta));
+    if (data.containsKey('raw_json_data')) {
+      context.handle(
+          _rawJsonDataMeta,
+          rawJsonData.isAcceptableOrUnknown(
+              data['raw_json_data']!, _rawJsonDataMeta));
     } else if (isInserting) {
-      context.missing(_jsonDataMeta);
+      context.missing(_rawJsonDataMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {internalId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  FeedConfigTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CacheFeedConfig map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FeedConfigTableData(
+    return CacheFeedConfig(
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id'])!,
       internalId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}internal_id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       category: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
-      jsonData: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}json_data'])!,
+      rawJsonData: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}raw_json_data'])!,
     );
   }
 
   @override
-  $FeedConfigTableTable createAlias(String alias) {
-    return $FeedConfigTableTable(attachedDatabase, alias);
+  $CacheFeedConfigTableTable createAlias(String alias) {
+    return $CacheFeedConfigTableTable(attachedDatabase, alias);
   }
 }
 
-class FeedConfigTableData extends DataClass
-    implements Insertable<FeedConfigTableData> {
-  final String internalId;
-  final String name;
-  final String category;
-  final String jsonData;
-  const FeedConfigTableData(
-      {required this.internalId,
-      required this.name,
-      required this.category,
-      required this.jsonData});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['internal_id'] = Variable<String>(internalId);
-    map['name'] = Variable<String>(name);
-    map['category'] = Variable<String>(category);
-    map['json_data'] = Variable<String>(jsonData);
-    return map;
-  }
-
-  FeedConfigTableCompanion toCompanion(bool nullToAbsent) {
-    return FeedConfigTableCompanion(
-      internalId: Value(internalId),
-      name: Value(name),
-      category: Value(category),
-      jsonData: Value(jsonData),
-    );
-  }
-
-  factory FeedConfigTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FeedConfigTableData(
-      internalId: serializer.fromJson<String>(json['internalId']),
-      name: serializer.fromJson<String>(json['name']),
-      category: serializer.fromJson<String>(json['category']),
-      jsonData: serializer.fromJson<String>(json['jsonData']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'internalId': serializer.toJson<String>(internalId),
-      'name': serializer.toJson<String>(name),
-      'category': serializer.toJson<String>(category),
-      'jsonData': serializer.toJson<String>(jsonData),
-    };
-  }
-
-  FeedConfigTableData copyWith(
-          {String? internalId,
-          String? name,
-          String? category,
-          String? jsonData}) =>
-      FeedConfigTableData(
-        internalId: internalId ?? this.internalId,
-        name: name ?? this.name,
-        category: category ?? this.category,
-        jsonData: jsonData ?? this.jsonData,
-      );
-  FeedConfigTableData copyWithCompanion(FeedConfigTableCompanion data) {
-    return FeedConfigTableData(
-      internalId:
-          data.internalId.present ? data.internalId.value : this.internalId,
-      name: data.name.present ? data.name.value : this.name,
-      category: data.category.present ? data.category.value : this.category,
-      jsonData: data.jsonData.present ? data.jsonData.value : this.jsonData,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FeedConfigTableData(')
-          ..write('internalId: $internalId, ')
-          ..write('name: $name, ')
-          ..write('category: $category, ')
-          ..write('jsonData: $jsonData')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(internalId, name, category, jsonData);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FeedConfigTableData &&
-          other.internalId == this.internalId &&
-          other.name == this.name &&
-          other.category == this.category &&
-          other.jsonData == this.jsonData);
-}
-
-class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
+class CacheFeedConfigTableCompanion extends UpdateCompanion<CacheFeedConfig> {
+  final Value<int> id;
+  final Value<String> serverId;
   final Value<String> internalId;
   final Value<String> name;
   final Value<String> category;
-  final Value<String> jsonData;
-  final Value<int> rowid;
-  const FeedConfigTableCompanion({
+  final Value<String> rawJsonData;
+  const CacheFeedConfigTableCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
     this.internalId = const Value.absent(),
     this.name = const Value.absent(),
     this.category = const Value.absent(),
-    this.jsonData = const Value.absent(),
-    this.rowid = const Value.absent(),
+    this.rawJsonData = const Value.absent(),
   });
-  FeedConfigTableCompanion.insert({
+  CacheFeedConfigTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String serverId,
     required String internalId,
     required String name,
     required String category,
-    required String jsonData,
-    this.rowid = const Value.absent(),
-  })  : internalId = Value(internalId),
+    required String rawJsonData,
+  })  : serverId = Value(serverId),
+        internalId = Value(internalId),
         name = Value(name),
         category = Value(category),
-        jsonData = Value(jsonData);
-  static Insertable<FeedConfigTableData> custom({
+        rawJsonData = Value(rawJsonData);
+  static Insertable<CacheFeedConfig> custom({
+    Expression<int>? id,
+    Expression<String>? serverId,
     Expression<String>? internalId,
     Expression<String>? name,
     Expression<String>? category,
-    Expression<String>? jsonData,
-    Expression<int>? rowid,
+    Expression<String>? rawJsonData,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
       if (internalId != null) 'internal_id': internalId,
       if (name != null) 'name': name,
       if (category != null) 'category': category,
-      if (jsonData != null) 'json_data': jsonData,
-      if (rowid != null) 'rowid': rowid,
+      if (rawJsonData != null) 'raw_json_data': rawJsonData,
     });
   }
 
-  FeedConfigTableCompanion copyWith(
-      {Value<String>? internalId,
+  CacheFeedConfigTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? serverId,
+      Value<String>? internalId,
       Value<String>? name,
       Value<String>? category,
-      Value<String>? jsonData,
-      Value<int>? rowid}) {
-    return FeedConfigTableCompanion(
+      Value<String>? rawJsonData}) {
+    return CacheFeedConfigTableCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
       internalId: internalId ?? this.internalId,
       name: name ?? this.name,
       category: category ?? this.category,
-      jsonData: jsonData ?? this.jsonData,
-      rowid: rowid ?? this.rowid,
+      rawJsonData: rawJsonData ?? this.rawJsonData,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
     if (internalId.present) {
       map['internal_id'] = Variable<String>(internalId.value);
     }
@@ -731,23 +678,191 @@ class FeedConfigTableCompanion extends UpdateCompanion<FeedConfigTableData> {
     if (category.present) {
       map['category'] = Variable<String>(category.value);
     }
-    if (jsonData.present) {
-      map['json_data'] = Variable<String>(jsonData.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
+    if (rawJsonData.present) {
+      map['raw_json_data'] = Variable<String>(rawJsonData.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('FeedConfigTableCompanion(')
+    return (StringBuffer('CacheFeedConfigTableCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
           ..write('internalId: $internalId, ')
           ..write('name: $name, ')
           ..write('category: $category, ')
-          ..write('jsonData: $jsonData, ')
-          ..write('rowid: $rowid')
+          ..write('rawJsonData: $rawJsonData')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CacheFeedItemTableTable extends CacheFeedItemTable
+    with TableInfo<$CacheFeedItemTableTable, CacheFeedItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CacheFeedItemTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _internalIdMeta =
+      const VerificationMeta('internalId');
+  @override
+  late final GeneratedColumn<String> internalId = GeneratedColumn<String>(
+      'internal_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _rawJsonDataMeta =
+      const VerificationMeta('rawJsonData');
+  @override
+  late final GeneratedColumn<String> rawJsonData = GeneratedColumn<String>(
+      'raw_json_data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, serverId, internalId, rawJsonData];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cache_feed_item_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<CacheFeedItem> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    } else if (isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (data.containsKey('internal_id')) {
+      context.handle(
+          _internalIdMeta,
+          internalId.isAcceptableOrUnknown(
+              data['internal_id']!, _internalIdMeta));
+    } else if (isInserting) {
+      context.missing(_internalIdMeta);
+    }
+    if (data.containsKey('raw_json_data')) {
+      context.handle(
+          _rawJsonDataMeta,
+          rawJsonData.isAcceptableOrUnknown(
+              data['raw_json_data']!, _rawJsonDataMeta));
+    } else if (isInserting) {
+      context.missing(_rawJsonDataMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CacheFeedItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CacheFeedItem(
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id'])!,
+      internalId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}internal_id'])!,
+      rawJsonData: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}raw_json_data'])!,
+    );
+  }
+
+  @override
+  $CacheFeedItemTableTable createAlias(String alias) {
+    return $CacheFeedItemTableTable(attachedDatabase, alias);
+  }
+}
+
+class CacheFeedItemTableCompanion extends UpdateCompanion<CacheFeedItem> {
+  final Value<int> id;
+  final Value<String> serverId;
+  final Value<String> internalId;
+  final Value<String> rawJsonData;
+  const CacheFeedItemTableCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.internalId = const Value.absent(),
+    this.rawJsonData = const Value.absent(),
+  });
+  CacheFeedItemTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String serverId,
+    required String internalId,
+    required String rawJsonData,
+  })  : serverId = Value(serverId),
+        internalId = Value(internalId),
+        rawJsonData = Value(rawJsonData);
+  static Insertable<CacheFeedItem> custom({
+    Expression<int>? id,
+    Expression<String>? serverId,
+    Expression<String>? internalId,
+    Expression<String>? rawJsonData,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (internalId != null) 'internal_id': internalId,
+      if (rawJsonData != null) 'raw_json_data': rawJsonData,
+    });
+  }
+
+  CacheFeedItemTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? serverId,
+      Value<String>? internalId,
+      Value<String>? rawJsonData}) {
+    return CacheFeedItemTableCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      internalId: internalId ?? this.internalId,
+      rawJsonData: rawJsonData ?? this.rawJsonData,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (internalId.present) {
+      map['internal_id'] = Variable<String>(internalId.value);
+    }
+    if (rawJsonData.present) {
+      map['raw_json_data'] = Variable<String>(rawJsonData.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CacheFeedItemTableCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('internalId: $internalId, ')
+          ..write('rawJsonData: $rawJsonData')
           ..write(')'))
         .toString();
   }
@@ -3154,8 +3269,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $KVTableTable kVTable = $KVTableTable(this);
   late final $ServerConfigTableTable serverConfigTable =
       $ServerConfigTableTable(this);
-  late final $FeedConfigTableTable feedConfigTable =
-      $FeedConfigTableTable(this);
+  late final $CacheFeedConfigTableTable cacheFeedConfigTable =
+      $CacheFeedConfigTableTable(this);
+  late final $CacheFeedItemTableTable cacheFeedItemTable =
+      $CacheFeedItemTableTable(this);
   late final $LocalAppTableTable localAppTable = $LocalAppTableTable(this);
   late final $LocalAppInstTableTable localAppInstTable =
       $LocalAppInstTableTable(this);
@@ -3171,8 +3288,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LocalSteamAppScanTableTable(this);
   late final $LocalSteamAppScanResultTableTable localSteamAppScanResultTable =
       $LocalSteamAppScanResultTableTable(this);
-  late final Index server = Index('server',
-      'CREATE UNIQUE INDEX server ON server_config_table (host, port, username)');
+  late final Index serverConfig = Index('server_config',
+      'CREATE UNIQUE INDEX server_config ON server_config_table (host, port, username)');
+  late final Index cacheFeedConfigServerIdInternalId = Index(
+      'cache_feed_config_server_id_internal_id',
+      'CREATE UNIQUE INDEX cache_feed_config_server_id_internal_id ON cache_feed_config_table (server_id, internal_id)');
+  late final Index cacheFeedItemServerIdInternalId = Index(
+      'cache_feed_item_server_id_internal_id',
+      'CREATE UNIQUE INDEX cache_feed_item_server_id_internal_id ON cache_feed_item_table (server_id, internal_id)');
   late final Index localAppUuid = Index('local_app_uuid',
       'CREATE INDEX local_app_uuid ON local_app_table (uuid)');
   late final Index localAppInstUuid = Index('local_app_inst_uuid',
@@ -3213,7 +3336,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         kVTable,
         serverConfigTable,
-        feedConfigTable,
+        cacheFeedConfigTable,
+        cacheFeedItemTable,
         localAppTable,
         localAppInstTable,
         localAppInstLauncherTable,
@@ -3222,7 +3346,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         localCommonAppScanResultTable,
         localSteamAppScanTable,
         localSteamAppScanResultTable,
-        server,
+        serverConfig,
+        cacheFeedConfigServerIdInternalId,
+        cacheFeedItemServerIdInternalId,
         localAppUuid,
         localAppInstUuid,
         localAppInstAppUuid,
@@ -3574,32 +3700,40 @@ typedef $$ServerConfigTableTableProcessedTableManager = ProcessedTableManager<
     ),
     ServerConfig,
     PrefetchHooks Function()>;
-typedef $$FeedConfigTableTableCreateCompanionBuilder = FeedConfigTableCompanion
-    Function({
+typedef $$CacheFeedConfigTableTableCreateCompanionBuilder
+    = CacheFeedConfigTableCompanion Function({
+  Value<int> id,
+  required String serverId,
   required String internalId,
   required String name,
   required String category,
-  required String jsonData,
-  Value<int> rowid,
+  required String rawJsonData,
 });
-typedef $$FeedConfigTableTableUpdateCompanionBuilder = FeedConfigTableCompanion
-    Function({
+typedef $$CacheFeedConfigTableTableUpdateCompanionBuilder
+    = CacheFeedConfigTableCompanion Function({
+  Value<int> id,
+  Value<String> serverId,
   Value<String> internalId,
   Value<String> name,
   Value<String> category,
-  Value<String> jsonData,
-  Value<int> rowid,
+  Value<String> rawJsonData,
 });
 
-class $$FeedConfigTableTableFilterComposer
-    extends Composer<_$AppDatabase, $FeedConfigTableTable> {
-  $$FeedConfigTableTableFilterComposer({
+class $$CacheFeedConfigTableTableFilterComposer
+    extends Composer<_$AppDatabase, $CacheFeedConfigTableTable> {
+  $$CacheFeedConfigTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get internalId => $composableBuilder(
       column: $table.internalId, builder: (column) => ColumnFilters(column));
 
@@ -3609,19 +3743,25 @@ class $$FeedConfigTableTableFilterComposer
   ColumnFilters<String> get category => $composableBuilder(
       column: $table.category, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get jsonData => $composableBuilder(
-      column: $table.jsonData, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => ColumnFilters(column));
 }
 
-class $$FeedConfigTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $FeedConfigTableTable> {
-  $$FeedConfigTableTableOrderingComposer({
+class $$CacheFeedConfigTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $CacheFeedConfigTableTable> {
+  $$CacheFeedConfigTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get internalId => $composableBuilder(
       column: $table.internalId, builder: (column) => ColumnOrderings(column));
 
@@ -3631,19 +3771,25 @@ class $$FeedConfigTableTableOrderingComposer
   ColumnOrderings<String> get category => $composableBuilder(
       column: $table.category, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get jsonData => $composableBuilder(
-      column: $table.jsonData, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => ColumnOrderings(column));
 }
 
-class $$FeedConfigTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $FeedConfigTableTable> {
-  $$FeedConfigTableTableAnnotationComposer({
+class $$CacheFeedConfigTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CacheFeedConfigTableTable> {
+  $$CacheFeedConfigTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
   GeneratedColumn<String> get internalId => $composableBuilder(
       column: $table.internalId, builder: (column) => column);
 
@@ -3653,63 +3799,69 @@ class $$FeedConfigTableTableAnnotationComposer
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
 
-  GeneratedColumn<String> get jsonData =>
-      $composableBuilder(column: $table.jsonData, builder: (column) => column);
+  GeneratedColumn<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => column);
 }
 
-class $$FeedConfigTableTableTableManager extends RootTableManager<
+class $$CacheFeedConfigTableTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $FeedConfigTableTable,
-    FeedConfigTableData,
-    $$FeedConfigTableTableFilterComposer,
-    $$FeedConfigTableTableOrderingComposer,
-    $$FeedConfigTableTableAnnotationComposer,
-    $$FeedConfigTableTableCreateCompanionBuilder,
-    $$FeedConfigTableTableUpdateCompanionBuilder,
+    $CacheFeedConfigTableTable,
+    CacheFeedConfig,
+    $$CacheFeedConfigTableTableFilterComposer,
+    $$CacheFeedConfigTableTableOrderingComposer,
+    $$CacheFeedConfigTableTableAnnotationComposer,
+    $$CacheFeedConfigTableTableCreateCompanionBuilder,
+    $$CacheFeedConfigTableTableUpdateCompanionBuilder,
     (
-      FeedConfigTableData,
-      BaseReferences<_$AppDatabase, $FeedConfigTableTable, FeedConfigTableData>
+      CacheFeedConfig,
+      BaseReferences<_$AppDatabase, $CacheFeedConfigTableTable, CacheFeedConfig>
     ),
-    FeedConfigTableData,
+    CacheFeedConfig,
     PrefetchHooks Function()> {
-  $$FeedConfigTableTableTableManager(
-      _$AppDatabase db, $FeedConfigTableTable table)
+  $$CacheFeedConfigTableTableTableManager(
+      _$AppDatabase db, $CacheFeedConfigTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$FeedConfigTableTableFilterComposer($db: db, $table: table),
+              $$CacheFeedConfigTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$FeedConfigTableTableOrderingComposer($db: db, $table: table),
+              $$CacheFeedConfigTableTableOrderingComposer(
+                  $db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$FeedConfigTableTableAnnotationComposer($db: db, $table: table),
+              $$CacheFeedConfigTableTableAnnotationComposer(
+                  $db: db, $table: table),
           updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> serverId = const Value.absent(),
             Value<String> internalId = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String> category = const Value.absent(),
-            Value<String> jsonData = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
+            Value<String> rawJsonData = const Value.absent(),
           }) =>
-              FeedConfigTableCompanion(
+              CacheFeedConfigTableCompanion(
+            id: id,
+            serverId: serverId,
             internalId: internalId,
             name: name,
             category: category,
-            jsonData: jsonData,
-            rowid: rowid,
+            rawJsonData: rawJsonData,
           ),
           createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String serverId,
             required String internalId,
             required String name,
             required String category,
-            required String jsonData,
-            Value<int> rowid = const Value.absent(),
+            required String rawJsonData,
           }) =>
-              FeedConfigTableCompanion.insert(
+              CacheFeedConfigTableCompanion.insert(
+            id: id,
+            serverId: serverId,
             internalId: internalId,
             name: name,
             category: category,
-            jsonData: jsonData,
-            rowid: rowid,
+            rawJsonData: rawJsonData,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -3718,20 +3870,176 @@ class $$FeedConfigTableTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$FeedConfigTableTableProcessedTableManager = ProcessedTableManager<
+typedef $$CacheFeedConfigTableTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $CacheFeedConfigTableTable,
+        CacheFeedConfig,
+        $$CacheFeedConfigTableTableFilterComposer,
+        $$CacheFeedConfigTableTableOrderingComposer,
+        $$CacheFeedConfigTableTableAnnotationComposer,
+        $$CacheFeedConfigTableTableCreateCompanionBuilder,
+        $$CacheFeedConfigTableTableUpdateCompanionBuilder,
+        (
+          CacheFeedConfig,
+          BaseReferences<_$AppDatabase, $CacheFeedConfigTableTable,
+              CacheFeedConfig>
+        ),
+        CacheFeedConfig,
+        PrefetchHooks Function()>;
+typedef $$CacheFeedItemTableTableCreateCompanionBuilder
+    = CacheFeedItemTableCompanion Function({
+  Value<int> id,
+  required String serverId,
+  required String internalId,
+  required String rawJsonData,
+});
+typedef $$CacheFeedItemTableTableUpdateCompanionBuilder
+    = CacheFeedItemTableCompanion Function({
+  Value<int> id,
+  Value<String> serverId,
+  Value<String> internalId,
+  Value<String> rawJsonData,
+});
+
+class $$CacheFeedItemTableTableFilterComposer
+    extends Composer<_$AppDatabase, $CacheFeedItemTableTable> {
+  $$CacheFeedItemTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get internalId => $composableBuilder(
+      column: $table.internalId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => ColumnFilters(column));
+}
+
+class $$CacheFeedItemTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $CacheFeedItemTableTable> {
+  $$CacheFeedItemTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get internalId => $composableBuilder(
+      column: $table.internalId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CacheFeedItemTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CacheFeedItemTableTable> {
+  $$CacheFeedItemTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get internalId => $composableBuilder(
+      column: $table.internalId, builder: (column) => column);
+
+  GeneratedColumn<String> get rawJsonData => $composableBuilder(
+      column: $table.rawJsonData, builder: (column) => column);
+}
+
+class $$CacheFeedItemTableTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $FeedConfigTableTable,
-    FeedConfigTableData,
-    $$FeedConfigTableTableFilterComposer,
-    $$FeedConfigTableTableOrderingComposer,
-    $$FeedConfigTableTableAnnotationComposer,
-    $$FeedConfigTableTableCreateCompanionBuilder,
-    $$FeedConfigTableTableUpdateCompanionBuilder,
+    $CacheFeedItemTableTable,
+    CacheFeedItem,
+    $$CacheFeedItemTableTableFilterComposer,
+    $$CacheFeedItemTableTableOrderingComposer,
+    $$CacheFeedItemTableTableAnnotationComposer,
+    $$CacheFeedItemTableTableCreateCompanionBuilder,
+    $$CacheFeedItemTableTableUpdateCompanionBuilder,
     (
-      FeedConfigTableData,
-      BaseReferences<_$AppDatabase, $FeedConfigTableTable, FeedConfigTableData>
+      CacheFeedItem,
+      BaseReferences<_$AppDatabase, $CacheFeedItemTableTable, CacheFeedItem>
     ),
-    FeedConfigTableData,
+    CacheFeedItem,
+    PrefetchHooks Function()> {
+  $$CacheFeedItemTableTableTableManager(
+      _$AppDatabase db, $CacheFeedItemTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CacheFeedItemTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CacheFeedItemTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CacheFeedItemTableTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> serverId = const Value.absent(),
+            Value<String> internalId = const Value.absent(),
+            Value<String> rawJsonData = const Value.absent(),
+          }) =>
+              CacheFeedItemTableCompanion(
+            id: id,
+            serverId: serverId,
+            internalId: internalId,
+            rawJsonData: rawJsonData,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String serverId,
+            required String internalId,
+            required String rawJsonData,
+          }) =>
+              CacheFeedItemTableCompanion.insert(
+            id: id,
+            serverId: serverId,
+            internalId: internalId,
+            rawJsonData: rawJsonData,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CacheFeedItemTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CacheFeedItemTableTable,
+    CacheFeedItem,
+    $$CacheFeedItemTableTableFilterComposer,
+    $$CacheFeedItemTableTableOrderingComposer,
+    $$CacheFeedItemTableTableAnnotationComposer,
+    $$CacheFeedItemTableTableCreateCompanionBuilder,
+    $$CacheFeedItemTableTableUpdateCompanionBuilder,
+    (
+      CacheFeedItem,
+      BaseReferences<_$AppDatabase, $CacheFeedItemTableTable, CacheFeedItem>
+    ),
+    CacheFeedItem,
     PrefetchHooks Function()>;
 typedef $$LocalAppTableTableCreateCompanionBuilder = LocalAppTableCompanion
     Function({
@@ -5614,8 +5922,10 @@ class $AppDatabaseManager {
       $$KVTableTableTableManager(_db, _db.kVTable);
   $$ServerConfigTableTableTableManager get serverConfigTable =>
       $$ServerConfigTableTableTableManager(_db, _db.serverConfigTable);
-  $$FeedConfigTableTableTableManager get feedConfigTable =>
-      $$FeedConfigTableTableTableManager(_db, _db.feedConfigTable);
+  $$CacheFeedConfigTableTableTableManager get cacheFeedConfigTable =>
+      $$CacheFeedConfigTableTableTableManager(_db, _db.cacheFeedConfigTable);
+  $$CacheFeedItemTableTableTableManager get cacheFeedItemTable =>
+      $$CacheFeedItemTableTableTableManager(_db, _db.cacheFeedItemTable);
   $$LocalAppTableTableTableManager get localAppTable =>
       $$LocalAppTableTableTableManager(_db, _db.localAppTable);
   $$LocalAppInstTableTableTableManager get localAppInstTable =>
