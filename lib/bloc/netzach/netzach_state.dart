@@ -1,6 +1,7 @@
 part of 'netzach_bloc.dart';
 
-class NetzachState {
+@MappableClass(generateMethods: GenerateMethods.copy)
+class NetzachState with NetzachStateMappable {
   late List<NotifyTarget>? notifyTargets;
   late List<NotifyFlow>? notifyFlows;
 
@@ -17,37 +18,17 @@ class NetzachState {
     this.systemNotificationFilter,
   });
 
-  NetzachState copyWith({
-    List<NotifyTarget>? notifyTargets,
-    List<NotifyFlow>? notifyFlows,
-    int? notifyFlowEditIndex,
-    List<SystemNotification>? systemNotifications,
-    SystemNotificationFilter? systemNotificationFilter,
-  }) {
-    return NetzachState(
-      notifyTargets: notifyTargets ?? this.notifyTargets,
-      notifyFlows: notifyFlows ?? this.notifyFlows,
-      notifyFlowEditIndex: notifyFlowEditIndex ?? this.notifyFlowEditIndex,
-      systemNotifications: systemNotifications ?? this.systemNotifications,
-      systemNotificationFilter:
-          systemNotificationFilter ?? this.systemNotificationFilter,
-    );
-  }
-
-  void _from(NetzachState other) {
-    notifyTargets = other.notifyTargets;
-    notifyFlows = other.notifyFlows;
-    notifyFlowEditIndex = other.notifyFlowEditIndex;
-    systemNotifications = other.systemNotifications;
-    systemNotificationFilter = other.systemNotificationFilter;
-  }
+  NetzachState.clone(NetzachState other)
+      : notifyTargets = other.notifyTargets,
+        notifyFlows = other.notifyFlows,
+        notifyFlowEditIndex = other.notifyFlowEditIndex,
+        systemNotifications = other.systemNotifications,
+        systemNotificationFilter = other.systemNotificationFilter;
 }
 
-class NetzachTargetLoadState extends NetzachState with EventStatusMixin {
-  NetzachTargetLoadState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class NetzachEventState extends NetzachState with EventStatusMixin {
+  NetzachEventState.clone(super.state, this.statusCode, {this.msg})
+      : super.clone();
 
   @override
   final String? msg;
@@ -55,76 +36,37 @@ class NetzachTargetLoadState extends NetzachState with EventStatusMixin {
   final EventStatus statusCode;
 }
 
-class NetzachTargetAddState extends NetzachState with EventStatusMixin {
-  NetzachTargetAddState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachTargetLoadState extends NetzachEventState {
+  NetzachTargetLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class NetzachTargetEditState extends NetzachState with EventStatusMixin {
-  NetzachTargetEditState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachTargetAddState extends NetzachEventState {
+  NetzachTargetAddState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class NetzachFlowLoadState extends NetzachState with EventStatusMixin {
-  NetzachFlowLoadState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachTargetEditState extends NetzachEventState {
+  NetzachTargetEditState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class NetzachFlowAddState extends NetzachState with EventStatusMixin {
-  NetzachFlowAddState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachFlowLoadState extends NetzachEventState {
+  NetzachFlowLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class NetzachFlowEditState extends NetzachState with EventStatusMixin {
-  NetzachFlowEditState(NetzachState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachFlowAddState extends NetzachEventState {
+  NetzachFlowAddState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class NetzachSystemNotificationLoadState extends NetzachState
-    with EventStatusMixin {
-  NetzachSystemNotificationLoadState(NetzachState state, this.statusCode,
-      {this.msg})
-      : super() {
-    _from(state);
-  }
+class NetzachFlowEditState extends NetzachEventState {
+  NetzachFlowEditState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
 
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class NetzachSystemNotificationLoadState extends NetzachEventState {
+  NetzachSystemNotificationLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }

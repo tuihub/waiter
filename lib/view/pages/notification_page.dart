@@ -93,6 +93,7 @@ class NotificationPage extends StatelessWidget {
                           onChange: (allSelectedItems, selectedItem) {
                             context.read<NetzachBloc>().add(
                                   NetzachSystemNotificationFilterSetEvent(
+                                    null,
                                     SystemNotificationFilter(
                                       levelFilter: allSelectedItems,
                                       typeFilter: filter.typeFilter,
@@ -149,6 +150,7 @@ class NotificationPage extends StatelessWidget {
                           onChange: (allSelectedItems, selectedItem) {
                             context.read<NetzachBloc>().add(
                                   NetzachSystemNotificationFilterSetEvent(
+                                    null,
                                     SystemNotificationFilter(
                                       levelFilter: filter.levelFilter,
                                       typeFilter: allSelectedItems,
@@ -228,7 +230,7 @@ class NotificationPage extends StatelessWidget {
           onPressed: () {
             context
                 .read<NetzachBloc>()
-                .add(NetzachSystemNotificationLoadEvent(1));
+                .add(NetzachSystemNotificationLoadEvent(null, 1));
           },
           child: const Icon(Icons.refresh),
         ),

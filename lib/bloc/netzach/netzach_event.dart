@@ -1,52 +1,67 @@
 part of 'netzach_bloc.dart';
 
 @immutable
-sealed class NetzachEvent {}
+sealed class NetzachEvent {
+  final EventContext context;
 
-final class NetzachInitEvent extends NetzachEvent {}
+  NetzachEvent(EventContext? context)
+      : context = context ?? EventContext(DIService.instance.currentServer);
+}
 
-final class NetzachTargetLoadEvent extends NetzachEvent {}
+final class _NetzachSwitchServerEvent extends NetzachEvent {
+  _NetzachSwitchServerEvent(ServerID serverID) : super(EventContext(serverID));
+}
+
+final class NetzachInitEvent extends NetzachEvent {
+  NetzachInitEvent(super.context);
+}
+
+final class NetzachTargetLoadEvent extends NetzachEvent {
+  NetzachTargetLoadEvent(super.context);
+}
 
 final class NetzachTargetAddEvent extends NetzachEvent {
   final NotifyTarget target;
 
-  NetzachTargetAddEvent(this.target);
+  NetzachTargetAddEvent(super.context, this.target);
 }
 
 final class NetzachTargetEditEvent extends NetzachEvent {
   final NotifyTarget target;
 
-  NetzachTargetEditEvent(this.target);
+  NetzachTargetEditEvent(super.context, this.target);
 }
 
-final class NetzachFlowLoadEvent extends NetzachEvent {}
+final class NetzachFlowLoadEvent extends NetzachEvent {
+  NetzachFlowLoadEvent(super.context);
+}
 
 final class NetzachFlowAddEvent extends NetzachEvent {
   final NotifyFlow flow;
 
-  NetzachFlowAddEvent(this.flow);
+  NetzachFlowAddEvent(super.context, this.flow);
 }
 
 final class NetzachSetFlowEditIndexEvent extends NetzachEvent {
   final int index;
 
-  NetzachSetFlowEditIndexEvent(this.index);
+  NetzachSetFlowEditIndexEvent(super.context, this.index);
 }
 
 final class NetzachFlowEditEvent extends NetzachEvent {
   final NotifyFlow flow;
 
-  NetzachFlowEditEvent(this.flow);
+  NetzachFlowEditEvent(super.context, this.flow);
 }
 
 final class NetzachSystemNotificationLoadEvent extends NetzachEvent {
   final int page;
 
-  NetzachSystemNotificationLoadEvent(this.page);
+  NetzachSystemNotificationLoadEvent(super.context, this.page);
 }
 
 final class NetzachSystemNotificationFilterSetEvent extends NetzachEvent {
   final SystemNotificationFilter filter;
 
-  NetzachSystemNotificationFilterSetEvent(this.filter);
+  NetzachSystemNotificationFilterSetEvent(super.context, this.filter);
 }

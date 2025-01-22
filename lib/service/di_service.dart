@@ -83,7 +83,8 @@ class DIService {
     _chesedBloc = ChesedBloc(_apiProvider);
     _geburaBloc =
         await GeburaBloc.init(geburaRepo, _currentServerController.stream);
-    _netzachBloc = NetzachBloc(_apiProvider);
+    _netzachBloc =
+        await NetzachBloc.init(_currentServerController.stream, _apiProvider);
     _tipherethBloc = await TipherethBloc.init(
         tipherethRepo, _currentServerController.stream, _apiProvider);
     _yesodBloc = YesodBloc(_apiProvider, yesodRepo);

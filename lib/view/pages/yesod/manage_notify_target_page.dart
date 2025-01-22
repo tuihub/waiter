@@ -28,7 +28,7 @@ class NotifyTargetPage extends StatelessWidget {
         processing: state is NetzachTargetLoadState && state.processing,
         msg: state is NetzachTargetLoadState && state.failed ? state.msg : '',
         onRefresh: () {
-          context.read<NetzachBloc>().add(NetzachTargetLoadEvent());
+          context.read<NetzachBloc>().add(NetzachTargetLoadEvent(null));
         },
         onAdd: () {
           const YesodFunctionRoute(YesodFunctions.notifyTargetManage,
@@ -133,9 +133,9 @@ class NotifyTargetAddPanel extends StatelessWidget {
               state is NetzachTargetAddState && state.failed ? state.msg : null,
           onSubmit: () {
             if (jsonFormController.submit()) {
-              context
-                  .read<NetzachBloc>()
-                  .add(NetzachTargetAddEvent(NotifyTarget(
+              context.read<NetzachBloc>().add(NetzachTargetAddEvent(
+                  null,
+                  NotifyTarget(
                     name: name,
                     description: description,
                     destination: destination,
@@ -266,6 +266,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
           onSubmit: () {
             if (jsonFormController.submit()) {
               context.read<NetzachBloc>().add(NetzachTargetEditEvent(
+                    null,
                     NotifyTarget(
                       id: target.id,
                       name: name,

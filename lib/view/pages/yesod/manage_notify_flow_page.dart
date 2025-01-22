@@ -30,7 +30,7 @@ class NotifyFlowPage extends StatelessWidget {
         processing: state is NetzachFlowLoadState && state.processing,
         msg: state is NetzachFlowLoadState && state.failed ? state.msg : '',
         onRefresh: () {
-          context.read<NetzachBloc>().add(NetzachFlowLoadEvent());
+          context.read<NetzachBloc>().add(NetzachFlowLoadEvent(null));
         },
         onAdd: () {
           const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
@@ -52,9 +52,8 @@ class NotifyFlowPage extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                context
-                    .read<NetzachBloc>()
-                    .add(NetzachSetFlowEditIndexEvent(listData.indexOf(item)));
+                context.read<NetzachBloc>().add(
+                    NetzachSetFlowEditIndexEvent(null, listData.indexOf(item)));
                 const YesodFunctionRoute(YesodFunctions.notifyFlowManage,
                         action: YesodActions.notifyFlowEdit)
                     .go(context);
@@ -538,7 +537,9 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
           errorMsg:
               state is NetzachFlowAddState && state.failed ? state.msg : null,
           onSubmit: () {
-            context.read<NetzachBloc>().add(NetzachFlowAddEvent(NotifyFlow(
+            context.read<NetzachBloc>().add(NetzachFlowAddEvent(
+                null,
+                NotifyFlow(
                   name: name,
                   description: description,
                   status: enabled
@@ -1044,7 +1045,9 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
           errorMsg:
               state is NetzachFlowAddState && state.failed ? state.msg : null,
           onSubmit: () {
-            context.read<NetzachBloc>().add(NetzachFlowEditEvent(NotifyFlow(
+            context.read<NetzachBloc>().add(NetzachFlowEditEvent(
+                null,
+                NotifyFlow(
                   id: state.notifyFlows![state.notifyFlowEditIndex!].id,
                   name: name,
                   description: description,

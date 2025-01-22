@@ -351,7 +351,7 @@ class YesodFunctionRoute extends GoRouteData {
         case YesodFunctions.notifyTargetManage:
         case YesodFunctions.notifyFlowManage:
           context.read<MainBloc>().add(MainRefreshServerInfoEvent(null));
-          context.read<NetzachBloc>().add(NetzachInitEvent());
+          context.read<NetzachBloc>().add(NetzachInitEvent(null));
           context.read<YesodBloc>().add(YesodInitEvent());
         default:
       }
@@ -547,7 +547,9 @@ class NotificationRootRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    context.read<NetzachBloc>().add(NetzachSystemNotificationLoadEvent(1));
+    context
+        .read<NetzachBloc>()
+        .add(NetzachSystemNotificationLoadEvent(null, 1));
     return const NoTransitionPage(
       child: ModuleFramePage(
         leftPart: NotificationPage(),
