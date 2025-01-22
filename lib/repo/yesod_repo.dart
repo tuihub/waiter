@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dao/dao.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -37,10 +35,10 @@ class YesodRepo {
   }
 
   Future<void> setFeedItem(EventContext context, InternalID id, FeedItem data) {
-    return _dao.addFeedItem(CacheFeedItem(
+    return _dao.upsertFeedItem(CacheFeedItem(
       serverId: context.serverID.toString(),
       internalId: id.toString(),
-      rawJsonData: jsonEncode(data.writeToJson()),
+      rawJsonData: data.writeToJson(),
     ));
   }
 
@@ -51,10 +49,6 @@ class YesodRepo {
       return FeedItem.fromJson(data.rawJsonData);
     }
     return null;
-  }
-
-  Future<bool> existFeedItem(EventContext context, InternalID id) async {
-    return await getFeedItem(context, id) != null;
   }
 
   Future<void> setFeedConfigs(

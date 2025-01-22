@@ -78,13 +78,13 @@ class MainRepo {
       // Login success
       final newConfig = api.config ?? config;
       await setLastServer(newConfig.serverID);
-      _currentServerSink.add(newConfig.serverID);
       if (isNew) {
         await _dao.upsertServer(newConfig);
         api.serverConfigStream.listen((event) async {
           await _dao.upsertServer(event);
         });
       }
+      _currentServerSink.add(newConfig.serverID);
       return null;
     }
   }

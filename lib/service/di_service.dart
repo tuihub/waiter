@@ -75,6 +75,7 @@ class DIService {
     _mainBloc = await MainBloc.init(
       MainRepo(
           MainDao(_appDB), _apiProvider, kvDao, _currentServerController.sink),
+      _currentServerController.stream,
     );
 
     _deepLinkBloc = DeepLinkBloc(null);

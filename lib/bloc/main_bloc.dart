@@ -29,7 +29,7 @@ part 'main_state.dart';
 class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepo _repo;
 
-  static Future<MainBloc> init(MainRepo repo) async {
+  static Future<MainBloc> init(MainRepo repo, Stream<ServerID> serverID) async {
     try {
       final initialState = MainState().copyWith(
         themeMode: await repo.getThemeMode(),
@@ -37,7 +37,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         uiDesign: await repo.getUIDesign(),
         useSystemProxy: await repo.getUseSystemProxy(),
       );
-      return MainBloc._(initialState, repo);
+      final instance = MainBloc._(initialState, repo);
+      serverID.listen((event) {
+        instance.add(MainRefreshServerInfoEvent(EventContext(event)));
+      });
+      return instance;
     } catch (e) {
       debugPrint(e.toString());
       return MainBloc._(MainState(), repo);

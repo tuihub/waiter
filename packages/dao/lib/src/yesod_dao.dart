@@ -64,10 +64,13 @@ class YesodDao extends DatabaseAccessor<AppDatabase> with _$YesodDaoMixin {
     return query.getSingleOrNull();
   }
 
-  Future<int> addFeedItem(CacheFeedItem data) async {
-    return into(cacheFeedItemTable).insert(CacheFeedItemTableCompanion(
-        serverId: Value(data.serverId),
-        internalId: Value(data.internalId),
-        rawJsonData: Value(data.rawJsonData)));
+  Future<int> upsertFeedItem(CacheFeedItem data) async {
+    return into(cacheFeedItemTable).insert(
+      CacheFeedItemTableCompanion(
+          serverId: Value(data.serverId),
+          internalId: Value(data.internalId),
+          rawJsonData: Value(data.rawJsonData)),
+      mode: InsertMode.insertOrReplace,
+    );
   }
 }

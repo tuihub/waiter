@@ -328,24 +328,22 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
         EventStatus.processing,
       ));
       FeedItem? item;
-      if (!await _repo.existFeedItem(event.context, event.id)) {
-        final resp = await _api.get(DIService.instance.currentServer).doRequest(
-              (client) => client.getFeedItem,
-              GetFeedItemRequest(
-                id: event.id,
-              ),
-            );
-        if (resp case Err()) {
-          emit(YesodFeedItemLoadState(
-            state,
-            EventStatus.failed,
-            msg: resp.error,
-          ));
-          return;
-        } else {
-          item = resp.unwrap().item;
-          await _repo.setFeedItem(event.context, event.id, item);
-        }
+      final resp = await _api.get(DIService.instance.currentServer).doRequest(
+            (client) => client.getFeedItem,
+            GetFeedItemRequest(
+              id: event.id,
+            ),
+          );
+      if (resp case Err()) {
+        emit(YesodFeedItemLoadState(
+          state,
+          EventStatus.failed,
+          msg: resp.error,
+        ));
+        return;
+      } else {
+        item = resp.unwrap().item;
+        await _repo.setFeedItem(event.context, event.id, item);
       }
       emit(YesodFeedItemLoadState(state, EventStatus.success, feedItem: item));
     }, transformer: droppable());
@@ -388,11 +386,17 @@ class YesodBloc extends Bloc<YesodEvent, YesodState> {
   }
 
   Future<FeedItem?> getFeedItem(InternalID id) async {
-    final item = await _repo.getFeedItem(
-        EventContext(DIService.instance.currentServer), id);
-    if (item == null) {
+    try {
+      final item = await _repo.getFeedItem(
+          EventContext(DIService.instance.currentServer), id);
+      if (item == null) {
+        add(YesodFeedItemLoadEvent(null, id));
+      }
+      return item;
+    } catch (e) {
+      debugPrint(e.toString());
       add(YesodFeedItemLoadEvent(null, id));
+      return null;
     }
-    return item;
   }
 }
