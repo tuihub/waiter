@@ -17,7 +17,7 @@ class GeburaRepo {
 
   static const _kvBucket = 'gebura';
 
-  GeburaRepo(this._api, this._dao, this._kvDao);
+  GeburaRepo(this._dao, this._api, this._kvDao);
 
   Future<LocalApp> fetchLocalAppInfo(String uuid) async {
     LocalApp app = await _dao.getLocalApp(uuid);

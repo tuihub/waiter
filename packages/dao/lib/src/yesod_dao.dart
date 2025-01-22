@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 import 'database.dart';
 
-part 'feed_config.g.dart';
+part 'yesod_dao.g.dart';
 
 // FeedConfigTable is used to store feed config data.
 class FeedConfigTable extends Table {
@@ -17,9 +17,8 @@ class FeedConfigTable extends Table {
 }
 
 @DriftAccessor(tables: [FeedConfigTable])
-class FeedConfigDao extends DatabaseAccessor<AppDatabase>
-    with _$FeedConfigDaoMixin {
-  FeedConfigDao(super.db);
+class YesodDao extends DatabaseAccessor<AppDatabase> with _$YesodDaoMixin {
+  YesodDao(super.db);
 
   Future<List<FeedConfigTableData>> getAll() async {
     final query = select(feedConfigTable);

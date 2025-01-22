@@ -19,7 +19,7 @@ class MainRepo {
   final KVDao _kvDao;
   final StreamSink<ServerID> _currentServerSink;
 
-  MainRepo(this._api, this._dao, this._kvDao, this._currentServerSink);
+  MainRepo(this._dao, this._api, this._kvDao, this._currentServerSink);
 
   static const _kvBucket = 'main';
 

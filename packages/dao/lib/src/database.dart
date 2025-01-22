@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 
 import 'connection/shared.dart';
-import 'feed_config.dart';
 import 'kv.dart';
 import 'tables/local_app.dart';
 import 'tables/local_app_inst.dart';
@@ -13,6 +12,7 @@ import 'tables/local_steam_app_scan.dart';
 import 'tables/local_steam_app_scan_result.dart';
 import 'tables/server_config.dart';
 import 'tables/utils.dart';
+import 'yesod_dao.dart';
 
 part 'database.g.dart';
 

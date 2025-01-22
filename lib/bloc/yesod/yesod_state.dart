@@ -1,6 +1,7 @@
 part of 'yesod_bloc.dart';
 
-class YesodState {
+@MappableClass(generateMethods: GenerateMethods.copy)
+class YesodState with YesodStateMappable {
   // Data from server
   late List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs;
   late List<FeedActionSet>? feedActionSets;
@@ -18,141 +19,72 @@ class YesodState {
     this.listConfig,
   });
 
-  YesodState copyWith({
-    List<ListFeedConfigsResponse_FeedWithConfig>? feedConfigs,
-    List<FeedActionSet>? feedActionSets,
-    List<FeedItemDigest>? feedItemDigests,
-    List<String>? feedCategories,
-    YesodFeedItemListConfig? listConfig,
-  }) {
-    return YesodState(
-      feedConfigs: feedConfigs ?? this.feedConfigs,
-      feedActionSets: feedActionSets ?? this.feedActionSets,
-      feedItemDigests: feedItemDigests ?? this.feedItemDigests,
-      feedCategories: feedCategories ?? this.feedCategories,
-      listConfig: listConfig ?? this.listConfig,
-    );
-  }
-
-  void _from(YesodState other) {
-    feedConfigs = other.feedConfigs;
-    feedActionSets = other.feedActionSets;
-    feedItemDigests = other.feedItemDigests;
-    feedCategories = other.feedCategories;
-    listConfig = other.listConfig;
-  }
+  YesodState.clone(YesodState other)
+      : feedConfigs = other.feedConfigs,
+        feedActionSets = other.feedActionSets,
+        feedItemDigests = other.feedItemDigests,
+        feedCategories = other.feedCategories,
+        listConfig = other.listConfig;
 }
 
-class YesodFeedConfigLoadState extends YesodState with EventStatusMixin {
-  YesodFeedConfigLoadState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class YesodEventState extends YesodState with EventStatusMixin {
+  YesodEventState.clone(super.state, this.statusCode, {this.msg})
+      : super.clone();
 
-  @override
-  final String? msg;
   @override
   final EventStatus statusCode;
-}
-
-class YesodFeedConfigAddState extends YesodState with EventStatusMixin {
-  YesodFeedConfigAddState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
   @override
   final String? msg;
-  @override
-  final EventStatus statusCode;
 }
 
-class YesodFeedConfigEditState extends YesodState with EventStatusMixin {
-  YesodFeedConfigEditState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class YesodFeedConfigLoadState extends YesodEventState {
+  YesodFeedConfigLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class YesodFeedActionSetLoadState extends YesodState with EventStatusMixin {
-  YesodFeedActionSetLoadState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class YesodFeedConfigAddState extends YesodEventState {
+  YesodFeedConfigAddState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class YesodFeedActionSetAddState extends YesodState with EventStatusMixin {
-  YesodFeedActionSetAddState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class YesodFeedConfigEditState extends YesodEventState {
+  YesodFeedConfigEditState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class YesodFeedActionSetEditState extends YesodState with EventStatusMixin {
-  YesodFeedActionSetEditState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class YesodFeedActionSetLoadState extends YesodEventState {
+  YesodFeedActionSetLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
 
-class YesodFeedItemDigestLoadState extends YesodState with EventStatusMixin {
-  YesodFeedItemDigestLoadState(YesodState state, this.statusCode,
-      {this.currentPage, this.maxPage, this.msg})
-      : super() {
-    _from(state);
-  }
+class YesodFeedActionSetAddState extends YesodEventState {
+  YesodFeedActionSetAddState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
+
+class YesodFeedActionSetEditState extends YesodEventState {
+  YesodFeedActionSetEditState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
+
+class YesodFeedItemDigestLoadState extends YesodEventState {
+  YesodFeedItemDigestLoadState(super.state, super.statusCode,
+      {this.currentPage, this.maxPage, super.msg})
+      : super.clone();
 
   final int? currentPage;
   final int? maxPage;
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
 }
 
-class YesodFeedItemLoadState extends YesodState with EventStatusMixin {
-  YesodFeedItemLoadState(YesodState state, this.statusCode,
-      {this.feedItem, this.msg})
-      : super() {
-    _from(state);
-  }
+class YesodFeedItemLoadState extends YesodEventState {
+  YesodFeedItemLoadState(super.state, super.statusCode,
+      {this.feedItem, super.msg})
+      : super.clone();
 
   final FeedItem? feedItem;
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
 }
 
-class YesodFeedCategoriesLoadState extends YesodState with EventStatusMixin {
-  YesodFeedCategoriesLoadState(YesodState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
-
-  @override
-  final String? msg;
-  @override
-  final EventStatus statusCode;
+class YesodFeedCategoriesLoadState extends YesodEventState {
+  YesodFeedCategoriesLoadState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }

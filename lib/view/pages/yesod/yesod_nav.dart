@@ -25,6 +25,7 @@ class YesodNav extends StatelessWidget {
             leading: const Icon(Icons.feed),
             onTap: () {
               context.read<YesodBloc>().add(YesodFeedItemListConfigSetEvent(
+                    null,
                     (state.listConfig ?? const YesodFeedItemListConfig())
                         .copyWith(
                       feedIdFilter: [],
@@ -151,6 +152,7 @@ class _YesodFeedList extends StatelessWidget {
                     context
                         .read<YesodBloc>()
                         .add(YesodFeedItemListConfigSetEvent(
+                          null,
                           (state.listConfig ?? const YesodFeedItemListConfig())
                               .copyWith(
                             feedIdFilter: [feedConfig.config.id.id.toString()],

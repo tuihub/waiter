@@ -113,7 +113,7 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                     openContainer();
                     context
                         .read<YesodBloc>()
-                        .add(YesodFeedItemReadEvent(item.itemId));
+                        .add(YesodFeedItemReadEvent(null, item.itemId));
                   },
                   iconUrl: item.feedAvatarUrl,
                   images: item.imageUrls,
@@ -167,9 +167,8 @@ class YesodRecentPageState extends State<YesodRecentPage> {
                   controller.position.maxScrollExtent) {
                 if (lastStatus == EventStatus.success &&
                     (maxPageNum == null || lastPageNum < maxPageNum!)) {
-                  context
-                      .read<YesodBloc>()
-                      .add(YesodFeedItemDigestsLoadEvent(lastPageNum + 1));
+                  context.read<YesodBloc>().add(
+                      YesodFeedItemDigestsLoadEvent(null, lastPageNum + 1));
                 }
               }
             });
@@ -221,10 +220,9 @@ class YesodRecentPageState extends State<YesodRecentPage> {
           key: Key(isScrolledToTop.toString()),
           onPressed: isScrolledToTop
               ? () {
-                  context
-                      .read<YesodBloc>()
-                      .add(YesodFeedItemDigestsLoadEvent(1, refresh: true));
-                  context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
+                  context.read<YesodBloc>().add(
+                      YesodFeedItemDigestsLoadEvent(null, 1, refresh: true));
+                  context.read<YesodBloc>().add(YesodFeedConfigLoadEvent(null));
                 }
               : _scrollToTop,
           child: Icon(isScrolledToTop ? Icons.refresh : Icons.arrow_upward),
@@ -255,6 +253,7 @@ class YesodRecentSettingPanelState extends State<YesodRecentSettingPanel> {
 
   void submit(BuildContext context) {
     context.read<YesodBloc>().add(YesodFeedItemListConfigSetEvent(
+          null,
           YesodFeedItemListConfig(
             feedIdFilter: feedIDFilter,
             categoryFilter: categoryFilter,

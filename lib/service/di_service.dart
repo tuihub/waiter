@@ -67,27 +67,41 @@ class DIService {
   }) async {
     _dataPath = dataPath ?? '';
     _packageInfo = packageInfo;
-    _appDB = AppDatabase(_dataPath);
     _apiProvider =
         DIProvider<LibrarianService>((_) => LibrarianService.local());
+    _appDB = AppDatabase(_dataPath);
     final kvDao = KVDao(_appDB);
-    final mainDao = MainDao(_appDB);
-    final mainRepo =
-        MainRepo(_apiProvider, mainDao, kvDao, _currentServerController.sink);
-    final geburaDao = GeburaDao(_appDB);
-    final geburaRepo = GeburaRepo(_apiProvider, geburaDao, kvDao);
-    final yesodRepo = await YesodRepo.init(_dataPath, _appDB);
-    final tipherethRepo = TipherethRepo(_apiProvider, kvDao);
-    _mainBloc = await MainBloc.init(mainRepo);
+
+    _mainBloc = await MainBloc.init(
+      MainRepo(
+          MainDao(_appDB), _apiProvider, kvDao, _currentServerController.sink),
+    );
+
     _deepLinkBloc = DeepLinkBloc(null);
+
     _chesedBloc = ChesedBloc(_apiProvider);
-    _geburaBloc =
-        await GeburaBloc.init(geburaRepo, _currentServerController.stream);
-    _netzachBloc =
-        await NetzachBloc.init(_currentServerController.stream, _apiProvider);
+
+    _geburaBloc = await GeburaBloc.init(
+      GeburaRepo(GeburaDao(_appDB), _apiProvider, kvDao),
+      _currentServerController.stream,
+    );
+
+    _netzachBloc = await NetzachBloc.init(
+      _currentServerController.stream,
+      _apiProvider,
+    );
+
     _tipherethBloc = await TipherethBloc.init(
-        tipherethRepo, _currentServerController.stream, _apiProvider);
-    _yesodBloc = YesodBloc(_apiProvider, yesodRepo);
+      TipherethRepo(_apiProvider, kvDao),
+      _currentServerController.stream,
+      _apiProvider,
+    );
+
+    _yesodBloc = await YesodBloc.init(
+      await YesodRepo.init(YesodDao(_appDB), _apiProvider, kvDao, _dataPath),
+      _currentServerController.stream,
+      _apiProvider,
+    );
   }
 
   ServerID get currentServer => _currentServer;

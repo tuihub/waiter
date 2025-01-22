@@ -31,7 +31,7 @@ class YesodActionManagePage extends StatelessWidget {
         processing: state is YesodFeedActionSetLoadState && state.processing,
         msg: state is YesodFeedActionSetLoadState ? state.msg : '',
         onRefresh: () {
-          context.read<YesodBloc>().add(YesodFeedActionSetLoadEvent());
+          context.read<YesodBloc>().add(YesodFeedActionSetLoadEvent(null));
         },
         onAdd: () {
           const YesodFunctionRoute(YesodFunctions.actionManage,
@@ -158,9 +158,9 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
               ? state.msg
               : null,
           onSubmit: () {
-            context
-                .read<YesodBloc>()
-                .add(YesodFeedActionSetAddEvent(FeedActionSet(
+            context.read<YesodBloc>().add(YesodFeedActionSetAddEvent(
+                null,
+                FeedActionSet(
                   name: name,
                   description: description,
                   actions: actions,
@@ -285,9 +285,9 @@ class _YesodActionManageEditPanelState
               ? state.msg
               : null,
           onSubmit: () {
-            context
-                .read<YesodBloc>()
-                .add(YesodFeedActionSetEditEvent(FeedActionSet(
+            context.read<YesodBloc>().add(YesodFeedActionSetEditEvent(
+                null,
+                FeedActionSet(
                   id: id,
                   name: name,
                   description: description,

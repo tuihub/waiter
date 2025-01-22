@@ -7,25 +7,28 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_io/io.dart';
 
 import '../model/yesod_model.dart';
+import '../service/di_service.dart';
+import '../service/librarian_service.dart';
 
 const _feedItemCacheBoxFile = 'yesod_feed_item_cache';
 
 class YesodRepo {
-  late LazyBox<String> _feedItemCacheBox;
-  late AppDatabase _db;
+  late final LazyBox<String> _feedItemCacheBox;
+  final YesodDao _dao;
+  final DIProvider<LibrarianService> _api;
+  final KVDao _kvDao;
 
-  YesodRepo._init(
-    LazyBox<String> feedItemCacheBox,
-    AppDatabase db,
-  ) {
-    _feedItemCacheBox = feedItemCacheBox;
-    _db = db;
-  }
+  static const _kvBucket = 'yesod';
 
-  static Future<YesodRepo> init(String path, AppDatabase db) async {
+  static const _kFeedItemListConfig = 'feedItemListConfig';
+
+  YesodRepo._(this._dao, this._api, this._kvDao, this._feedItemCacheBox);
+
+  static Future<YesodRepo> init(YesodDao dao, DIProvider<LibrarianService> api,
+      KVDao kvDao, String path) async {
     final feedItemCacheBox =
         await Hive.openLazyBox<String>(_feedItemCacheBoxFile, path: path);
-    return YesodRepo._init(feedItemCacheBox, db);
+    return YesodRepo._(dao, api, kvDao, feedItemCacheBox);
   }
 
   Future<void> dispose() async {
@@ -33,13 +36,13 @@ class YesodRepo {
   }
 
   Future<void> setFeedItemListConfig(YesodFeedItemListConfig data) {
-    return KVDao(_db)
-        .set('feedItemListConfig', 'default', jsonEncode(data.toJson()));
+    return _kvDao.set(
+        _kvBucket, _kFeedItemListConfig, jsonEncode(data.toJson()));
   }
 
   Future<YesodFeedItemListConfig> getFeedItemListConfig() async {
     try {
-      final data = await KVDao(_db).get('feedItemListConfig', 'default');
+      final data = await _kvDao.get(_kvBucket, _kFeedItemListConfig);
       if (data != null) {
         return YesodFeedItemListConfig.fromJson(
             jsonDecode(data) as Map<String, dynamic>);
@@ -72,7 +75,7 @@ class YesodRepo {
 
   Future<void> setFeedConfigs(
       List<ListFeedConfigsResponse_FeedWithConfig> data) {
-    return FeedConfigDao(_db).setAll(
+    return _dao.setAll(
       data
           .map((e) => FeedConfigTableData(
                 internalId: e.config.id.toString(),
@@ -86,7 +89,7 @@ class YesodRepo {
 
   Future<List<ListFeedConfigsResponse_FeedWithConfig>> getFeedConfigs() async {
     try {
-      final data = await FeedConfigDao(_db).getAll();
+      final data = await _dao.getAll();
       return data
           .map((e) =>
               ListFeedConfigsResponse_FeedWithConfig.fromJson(e.jsonData))

@@ -43,7 +43,7 @@ class YesodFeedManagePage extends StatelessWidget {
         processing: state is YesodFeedConfigLoadState && state.processing,
         msg: state is YesodFeedConfigLoadState ? state.msg : '',
         onRefresh: () {
-          context.read<YesodBloc>().add(YesodFeedConfigLoadEvent());
+          context.read<YesodBloc>().add(YesodFeedConfigLoadEvent(null));
         },
         onAdd: () {
           const YesodFunctionRoute(YesodFunctions.feedManage,
@@ -250,7 +250,9 @@ class YesodFeedManageAddPanel extends StatelessWidget {
               : null,
           onSubmit: () {
             if (jsonFormController.submit()) {
-              context.read<YesodBloc>().add(YesodFeedConfigAddEvent(FeedConfig(
+              context.read<YesodBloc>().add(YesodFeedConfigAddEvent(
+                  null,
+                  FeedConfig(
                     name: name,
                     description: '',
                     source: FeatureRequest(
@@ -421,6 +423,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
           onSubmit: () {
             if (jsonFormController.submit()) {
               context.read<YesodBloc>().add(YesodFeedConfigEditEvent(
+                    null,
                     FeedConfig(
                       id: config.id,
                       name: name,
