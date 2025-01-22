@@ -61,7 +61,8 @@ class DIService {
         DIProvider<LibrarianService>((_) => LibrarianService.local());
     final kvDao = KVDao(_appDB);
     final mainDao = MainDao(_appDB);
-    final mainRepo = MainRepo(_apiProvider, mainDao, kvDao);
+    final mainRepo =
+        MainRepo(_apiProvider, mainDao, kvDao, _currentServerController.sink);
     final geburaDao = GeburaDao(_appDB);
     final geburaRepo = GeburaRepo(_apiProvider, geburaDao, kvDao);
     final yesodRepo = await YesodRepo.init(_dataPath, _appDB);

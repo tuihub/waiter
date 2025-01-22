@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:dao/dao.dart';
 import 'package:flutter/material.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
+import 'package:uuid/uuid.dart';
 
 import '../consts.dart';
 import '../model/common_model.dart';
@@ -14,8 +17,9 @@ class MainRepo {
   final DIProvider<LibrarianService> _api;
   final MainDao _dao;
   final KVDao _kvDao;
+  final StreamSink<ServerID> _currentServerSink;
 
-  MainRepo(this._api, this._dao, this._kvDao);
+  MainRepo(this._api, this._dao, this._kvDao, this._currentServerSink);
 
   static const _kvBucket = 'main';
 
@@ -24,6 +28,7 @@ class MainRepo {
   static const _kTheme = 'theme';
   static const _kUIDesign = 'uiDesign';
   static const _kUseSystemProxy = 'useSystemProxy';
+  static const _kClientLocalID = 'clientLocalID';
 
   Future<void> upsertServer(ServerConfig data) async {
     await _dao.upsertServer(data);
@@ -61,7 +66,11 @@ class MainRepo {
     } else {
       // Upsert server and login
       final api = _api.get(context.sid);
-      final isNew = await api.loadConfig(config, await getUseSystemProxy());
+      final isNew = await api.loadConfig(
+        config,
+        await getUseSystemProxy(),
+        await _getClientLocalID(),
+      );
       if (password != null) {
         final resp = await api.doLogin(password);
         if (resp != null) {
@@ -71,6 +80,7 @@ class MainRepo {
       // Login success
       final newConfig = api.config ?? config;
       await setLastServer(newConfig.serverID);
+      _currentServerSink.add(newConfig.serverID);
       if (isNew) {
         await upsertServer(newConfig);
         api.serverConfigStream.listen((event) async {
@@ -79,6 +89,15 @@ class MainRepo {
       }
       return null;
     }
+  }
+
+  Future<String> _getClientLocalID() async {
+    var id = await _kvDao.get(_kvBucket, _kClientLocalID);
+    if (id == null) {
+      id = const Uuid().v1();
+      await _kvDao.set(_kvBucket, _kClientLocalID, id);
+    }
+    return id;
   }
 
   Future<Result<GetServerInformationResponse, String>> getServerInfo(

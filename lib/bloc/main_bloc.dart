@@ -66,6 +66,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               ),
               EventStatus.success,
             ));
+            add(MainRefreshServerInfoEvent(event.context));
           } catch (e) {
             debugPrint(e.toString());
             emit(MainInitState(

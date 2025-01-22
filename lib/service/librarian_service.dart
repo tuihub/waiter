@@ -22,6 +22,7 @@ export 'package:option_result/result.dart';
 
 class LibrarianService {
   ServerConfig? _config;
+  String? _clientLocalID;
   LibrarianSephirahServiceClient? _client;
   CallOptions? _option;
   ConnectionStatus _connectionStatus;
@@ -72,11 +73,13 @@ class LibrarianService {
   Future<bool> loadConfig(
     ServerConfig config, [
     bool useSystemProxy = false,
+    String? clientLocalID,
   ]) async {
     if (_config != null) {
       return false;
     }
     _config = config;
+    _clientLocalID = clientLocalID;
     _client = await clientFactory(
       config: config,
       useSystemProxy: useSystemProxy,
@@ -160,7 +163,7 @@ class LibrarianService {
     return doRequestWithOptions<Req, Res>(requestBuilder, req, null);
   }
 
-  Future<bool> _doRefresh() async {
+  Future<bool> _doRefresh({bool withDeviceID = true}) async {
     // Check if the connection is local or uninitialized
     if (_connectionStatus == ConnectionStatus.local ||
         _client == null ||
@@ -178,17 +181,28 @@ class LibrarianService {
       debugPrint('refreshing token');
       final resp = await _client!.refreshToken(
           RefreshTokenRequest(
-            deviceId: deviceId,
+            deviceId: withDeviceID ? deviceId : null,
           ),
           options: _newCallOptions(_config!.refreshToken!));
       _option = _newCallOptions(resp.accessToken);
       _updateServerConfig(_config!.copyWith(refreshToken: resp.refreshToken));
       _updateConnectionStatus(ConnectionStatus.connected);
+      if (withDeviceID && _config!.deviceId == null) {
+        await _doRegisterDevice();
+      }
       return true;
     } catch (e) {
       debugPrint(e.toString());
-      if (e is GrpcError && e.code == StatusCode.unauthenticated) {
-        _updateConnectionStatus(ConnectionStatus.unauthenticated, e.message);
+      if (e is GrpcError) {
+        if (e.code == StatusCode.notFound && withDeviceID) {
+          await _doRefresh(withDeviceID: false);
+          if (connectionStatus == ConnectionStatus.connected) {
+            await _doRegisterDevice();
+          }
+        }
+        if (e.code == StatusCode.unauthenticated) {
+          _updateConnectionStatus(ConnectionStatus.unauthenticated, e.message);
+        }
       } else {
         _updateConnectionStatus(ConnectionStatus.disconnected, e.toString());
       }
@@ -231,6 +245,7 @@ class LibrarianService {
       (client) => client.registerDevice,
       RegisterDeviceRequest(
         deviceInfo: deviceInfo,
+        clientLocalId: _clientLocalID,
       ),
     );
     switch (resp) {
