@@ -7,7 +7,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import '../frb_generated.dart';
 
-Future<void> getImagesFromExe(
-        {required String executablePath, required String imagePath}) =>
-    RustLib.instance.api.crateApiWinIconGetImagesFromExe(
-        executablePath: executablePath, imagePath: imagePath);
+/// get system proxy settings, support windows, macos and linux
+Future<(bool, String, int)> getSystemProxy() =>
+    RustLib.instance.api.crateApiSystemProxyGetSystemProxy();

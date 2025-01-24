@@ -6,7 +6,7 @@ import 'package:grpc/grpc.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
 
 import '../../common/platform.dart';
-import '../../rust/api/simple.dart';
+import '../../rust/api/system_proxy.dart';
 
 Future<LibrarianSephirahServiceClient> newGrpc({
   required String host,

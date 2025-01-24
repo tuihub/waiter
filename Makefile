@@ -1,6 +1,6 @@
 init:
 	cd rust && make init
-	cargo install flutter_rust_bridge_codegen --version 2.5.0
+	cargo install flutter_rust_bridge_codegen --version 2.7.0
 	npm install @openapitools/openapi-generator-cli -g
 
 generate_rust_bridge:

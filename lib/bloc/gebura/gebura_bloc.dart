@@ -18,7 +18,7 @@ import '../../l10n/l10n.dart';
 import '../../model/common_model.dart';
 import '../../model/gebura_model.dart';
 import '../../repo/gebura_repo.dart';
-import '../../rust/api/simple.dart';
+import '../../rust/api/process_runner.dart';
 import '../../service/di_service.dart';
 
 part 'gebura_bloc.mapper.dart';
@@ -542,7 +542,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 monitorPath: setting.processPath ?? '',
                 workingDir: setting.workingDir ?? dirname(setting.launcherPath),
                 sleepCount: setting.sleepCount ?? 1,
-                sleepMillis: BigInt.from(1000));
+                sleepDuration: Duration(seconds: setting.sleepDuration ?? 1));
             runningInsts = state.runningInsts;
             runningInsts.remove(appUUID);
             if (!suceess) {
@@ -556,8 +556,8 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
               return;
             } else {
               record = record.copyWith(
-                startTime: DateTime.fromMillisecondsSinceEpoch(start * 1000),
-                endTime: DateTime.fromMillisecondsSinceEpoch(end * 1000),
+                startTime: start,
+                endTime: end,
               );
               await _repo.addLocalAppRunRecord(record);
               emit(GeburaLaunchLocalAppInstState(

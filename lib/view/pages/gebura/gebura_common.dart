@@ -1,7 +1,7 @@
 import 'package:extended_image/extended_image.dart';
+import 'package:extended_image_library/extended_image_library.dart' show File;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universal_io/io.dart' as io;
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -22,7 +22,7 @@ class GeburaAppCoverImage extends StatelessWidget {
       builder: (context, state) {
         if (path != null && path!.isNotEmpty) {
           return ExtendedImage.file(
-            io.File(path!),
+            File(path!),
           );
         } else if (url != null && url!.isNotEmpty) {
           return ExtendedImage.network(
@@ -60,7 +60,7 @@ class GeburaAppIconImage extends StatelessWidget {
   DecorationImage? _buildImage(BuildContext context) {
     if (path != null && path!.isNotEmpty) {
       return DecorationImage(
-        image: ExtendedFileImageProvider(io.File(path!)),
+        image: ExtendedFileImageProvider(File(path!)),
         fit: BoxFit.scaleDown,
       );
     } else if (url != null && url!.isNotEmpty) {
@@ -103,7 +103,7 @@ class GeburaAppBackgroundImage extends StatelessWidget {
   DecorationImage? _buildImage(BuildContext context) {
     if (path != null && path!.isNotEmpty) {
       return DecorationImage(
-        image: ExtendedFileImageProvider(io.File(path!)),
+        image: ExtendedFileImageProvider(File(path!)),
         fit: BoxFit.cover,
       );
     } else if (url != null && url!.isNotEmpty) {

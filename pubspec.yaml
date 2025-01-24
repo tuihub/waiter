@@ -101,7 +101,7 @@ dependencies:
   input_quantity: ^2.4.1
 
   # rust bridge
-  flutter_rust_bridge: 2.5.0 # use fixed version
+  flutter_rust_bridge: 2.7.0 # use fixed version
   rust_lib_waiter:
     path: rust_builder
 
@@ -161,6 +161,8 @@ dev_dependencies:
   go_router_builder: ^2.4.1
   build_verify: ^3.1.0
   dart_mappable_builder: ^4.3.0
+  integration_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

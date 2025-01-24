@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-use anyhow::{anyhow as err_msg, Result};
+use anyhow::Result;
 use glob;
 
 #[derive(Debug)]
@@ -67,7 +67,7 @@ fn walk_entry(
         entry_type: CommonAppScannedEntryType::Unknown,
         status: CommonAppScannedEntryStatus::Skipped,
     }];
-    if (!is_root(path.as_ref())) && is_hidden(path.as_ref()) {
+    if (!is_root(path)) && is_hidden(path) {
         return Ok(None);
     }
     match fs::metadata(path) {

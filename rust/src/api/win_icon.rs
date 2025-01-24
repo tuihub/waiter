@@ -39,9 +39,7 @@ mod wrapper {
             },
             UI::{
                 Shell::ExtractIconExW,
-                WindowsAndMessaging::{
-                    CopyIcon, DestroyIcon, GetIconInfoExW, HCURSOR, HICON, ICONINFOEXW,
-                },
+                WindowsAndMessaging::{DestroyIcon, GetIconInfoExW, HICON, ICONINFOEXW},
             },
         },
     };

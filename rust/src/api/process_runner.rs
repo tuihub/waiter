@@ -9,11 +9,10 @@ use std::{
 };
 
 use anyhow::{anyhow as err_msg, Result};
+use chrono::{DateTime, Utc};
 use log::info;
 use strum_macros::{Display, EnumString};
 use sysinfo::{PidExt, Process, ProcessExt, System, SystemExt};
-use sysproxy;
-use time;
 
 /// trace mode
 #[derive(Display, EnumString)]
@@ -34,37 +33,31 @@ pub fn process_runner(
     monitor_path: String,
     working_dir: String,
     sleep_count: i32,
-    sleep_millis: u64,
-) -> Result<(i64, i64, bool)> {
-    let execute =
-        PathBuf::try_from(execute_path).map_err(|e| err_msg!("invalid execute path {}", e))?;
+    sleep_duration: chrono::Duration,
+) -> Result<(DateTime<Utc>, DateTime<Utc>, bool)> {
+    let execute = PathBuf::from(execute_path);
     if !execute.is_file() {
         return Err(err_msg!("invalid execute path"));
     }
-    let working_dir =
-        PathBuf::try_from(&working_dir).map_err(|e| err_msg!("invalid working dir {}", e))?;
+    let working_dir = PathBuf::from(&working_dir);
     if !working_dir.is_dir() {
         return Err(err_msg!("invalid working dir path"));
     }
     // return Err(err_msg!("break for test {}",
     // working_dir.to_string_lossy().to_lowercase()));
-    let start_time = time::OffsetDateTime::now_utc();
+    let start_time = Utc::now();
     let mut child = process::Command::new(execute)
         .current_dir(working_dir)
         .spawn()?;
     match mode {
         TraceMode::Simple => {
             let status = child.wait()?;
-            let end_time = time::OffsetDateTime::now_utc();
-            Ok((
-                start_time.unix_timestamp(),
-                end_time.unix_timestamp(),
-                status.success(),
-            ))
+            let end_time = Utc::now();
+            Ok((start_time, end_time, status.success()))
         }
         TraceMode::ByName => {
             for _ in 0..sleep_count {
-                sleep(Duration::from_millis(sleep_millis));
+                sleep(sleep_duration.to_std()?);
                 let s = System::new_all();
                 let exit_code_mutex = Arc::new(Mutex::new(0));
                 let processes: Vec<&Process> = s
@@ -74,11 +67,9 @@ pub fn process_runner(
                         val.name().to_lowercase().contains(&name.to_lowercase())
                     })
                     .filter(|p| {
-                        time::OffsetDateTime::from(
-                            UNIX_EPOCH.add(time::Duration::seconds(p.start_time() as i64)),
-                        )
-                        .add(time::Duration::seconds(1))
-                            > start_time
+                        DateTime::<Utc>::from(
+                            UNIX_EPOCH.add(Duration::from_secs(p.start_time() + 1)),
+                        ) > start_time
                     })
                     .filter(|p| {
                         p.exe().to_string_lossy().to_lowercase() == monitor_path.to_lowercase()
@@ -104,13 +95,9 @@ pub fn process_runner(
                     for handle in handles {
                         handle.join().unwrap();
                     }
-                    let end_time = time::OffsetDateTime::now_utc();
+                    let end_time = Utc::now();
                     let exit_code = *exit_code_mutex.lock().unwrap();
-                    return Ok((
-                        start_time.unix_timestamp(),
-                        end_time.unix_timestamp(),
-                        exit_code == 0,
-                    ));
+                    return Ok((start_time, end_time, exit_code == 0));
                 }
             }
             Err(err_msg!("sleep time limit exceeded"))
@@ -192,16 +179,4 @@ fn wait_for_process_exit(pid: u32) -> Result<i32> {
 
         Ok(exit_code as i32)
     }
-}
-
-/// get system proxy settings, support windows, macos and linux
-#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
-pub fn get_system_proxy() -> Result<(bool, String, u16)> {
-    let proxy = sysproxy::Sysproxy::get_system_proxy()?;
-    Ok((proxy.enable, proxy.host, proxy.port))
-}
-
-#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
-pub fn get_system_proxy() -> Result<(bool, String, u16)> {
-    Err(err_msg!("Unsupported platform"))
 }

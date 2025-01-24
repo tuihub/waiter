@@ -4,6 +4,10 @@ SHELL := bash
 init:
 	rustup toolchain add stable
 	rustup toolchain add nightly
+	# for web
+	rustup +nightly component add rust-src
+	rustup target add wasm32-unknown-unknown --toolchain nightly
+	cargo install wasm-pack
 
 unset-override:
 	@# unset first in case of any previous overrides
@@ -17,6 +21,9 @@ pre-format: unset-override
 format: pre-format
 	@cargo +nightly fmt
 	@cargo sort -w -c &>/dev/null || cargo sort -w >/dev/null
+
+check-wasm:
+	@cargo +nightly check --target wasm32-unknown-unknown
 
 # show help
 help:
