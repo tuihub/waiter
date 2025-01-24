@@ -1,4 +1,96 @@
-part of 'tiphereth_nav.dart';
+import 'dart:async';
+
+import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
+
+import '../../../bloc/main_bloc.dart';
+import '../../../bloc/tiphereth/tiphereth_bloc.dart';
+import '../../../consts.dart';
+import '../../../l10n/librarian.dart';
+import '../../../route.dart';
+import '../../helper/duration_format.dart';
+import '../../layout/bootstrap_container.dart';
+import '../../specialized/backdrop_blur.dart';
+
+class TipherethAccountPage extends StatelessWidget {
+  const TipherethAccountPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
+      return Scaffold(
+        body: Column(
+          children: [
+            const MyProfileCard(),
+            if (state.isNotLocal)
+              const MyAccountsCard()
+            else
+              Expanded(
+                child: Center(
+                  child: UniversalElevatedButton(
+                      child: const Text('添加服务器'),
+                      onPressed: () {
+                        const SettingsFunctionRoute(SettingsFunctions.server)
+                            .go(context);
+                      }),
+                ),
+              ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class MyProfileCard extends StatelessWidget {
+  const MyProfileCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MainBloc, MainState>(
+      builder: (context, state) {
+        return UniversalCard(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state.isNotLocal)
+                    Text(
+                      '${state.currentUser?.id.id.toHexString()}',
+                      style: TextStyle(
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                  if (state.isNotLocal)
+                    Text(state.currentUser?.username ?? '',
+                        style: const TextStyle(
+                          fontSize: 32,
+                        ))
+                  else
+                    const Text('本地模式',
+                        style: TextStyle(
+                          fontSize: 32,
+                        )),
+                  if (state.isNotLocal)
+                    if (state.currentUser != null)
+                      Text(userTypeString(state.currentUser!.type))
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
 class MyAccountsCard extends StatelessWidget {
   const MyAccountsCard({super.key});
@@ -301,6 +393,128 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
         );
       },
     );
+  }
+}
+
+class UnLinkAccountDialog extends StatelessWidget {
+  const UnLinkAccountDialog({super.key, required this.account});
+
+  final Account account;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<TipherethBloc, TipherethState>(
+        listener: (context, state) {
+      if (state is TipherethUnLinkAccountState && state.success) {
+        Navigator.of(context).pop();
+      }
+    }, builder: (context, state) {
+      return UniversalDialog(
+        title: const Text('账户详情'),
+        content: SizedBox(
+          width: 600,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: 'ID',
+                ),
+                initialValue: account.platformAccountId,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: '平台',
+                ),
+                initialValue: account.platform,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: '用户名',
+                ),
+                initialValue: account.name,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                onSaved: null,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  // icon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  labelText: '上次更新时间',
+                ),
+                initialValue: DurationHelper.recentString(
+                    account.latestUpdateTime.toDateTime()),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: state is TipherethUnLinkAccountState && state.failed
+                    ? 48
+                    : 0,
+                child: state is TipherethUnLinkAccountState && state.failed
+                    ? Ink(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(kToolbarHeight),
+                        ),
+                        child: Center(
+                          child: Text(
+                            state.msg ?? '未知错误',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          UniversalDialogAction(
+            onPressed: () {
+              context.read<TipherethBloc>().add(TipherethUnLinkAccountEvent(
+                    null,
+                    account.platform,
+                    account.platformAccountId,
+                  ));
+            },
+            child: state is TipherethUnLinkAccountState && state.processing
+                ? const CircularProgressIndicator()
+                : const Text('解绑'),
+          ),
+          UniversalDialogAction(
+            onPressed: () {
+              Navigator.pop(context); //close Dialog
+            },
+            isPrimary: true,
+            child: const Text('关闭'),
+          )
+        ],
+      );
+    });
   }
 }
 

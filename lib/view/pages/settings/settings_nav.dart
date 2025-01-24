@@ -39,6 +39,17 @@ class SettingsNav extends StatelessWidget {
                           title: const Text('客户端设置'),
                           selected: function == SettingsFunctions.client,
                         ),
+                        UniversalListTile(
+                          onTap: () {
+                            const SettingsFunctionRoute(
+                                    SettingsFunctions.server)
+                                .go(context);
+                            OverlappingPanels.of(context)
+                                ?.reveal(RevealSide.main);
+                          },
+                          title: const Text('服务端选择'),
+                          selected: function == SettingsFunctions.server,
+                        ),
                         if (state.isNotLocal)
                           UniversalListTile(
                             onTap: () {
@@ -69,7 +80,7 @@ class SettingsNav extends StatelessWidget {
                               UserType.USER_TYPE_ADMIN)
                             UniversalExpansionTile(
                               title: const Text(
-                                '管理区域',
+                                '服务端管理',
                               ),
                               childrenPadding: const EdgeInsets.only(left: 12),
                               children: [

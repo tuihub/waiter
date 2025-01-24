@@ -14,15 +14,15 @@ import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/connectivity.dart';
 
-class TipherethServerListPanel extends StatelessWidget {
-  const TipherethServerListPanel({super.key});
+class ServerSelectPage extends StatelessWidget {
+  const ServerSelectPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
         return ListManagePage(
-          title: '服务器列表',
+          title: '服务端选择',
           processing: false,
           onAdd: () async {
             final navigator = Navigator.of(context);
@@ -35,26 +35,44 @@ class TipherethServerListPanel extends StatelessWidget {
           },
           children: [
             for (final server in state.knownServers.values)
-              ListTile(
+              UniversalListTile(
                 title: Text('${server.host}:${server.port}'),
                 subtitle: Text(server.username),
-                trailing: server.serverID == state.currentServer
-                    ? const Icon(Icons.check)
-                    : UniversalOutlinedButton(
-                        child: const Text('切换'),
-                        onPressed: () {
-                          context
-                              .read<MainBloc>()
-                              .add(MainLoginEvent(null, serverConfig: server));
-                        }),
-                onTap: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return _TipherethServerEditDialog(server: server);
-                    },
-                  );
-                },
+                trailing: Flexible(
+                  child: UniversalToolBar(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    primaryItems: [
+                      if (server.serverID == state.currentServer)
+                        UniversalToolBarItem(
+                          icon: UniversalUI.of(context).icons.check,
+                          label: const Text('当前'),
+                        )
+                      else
+                        UniversalToolBarItem(
+                          icon: UniversalUI.of(context).icons.arrowRight,
+                          label: const Text('切换'),
+                          onPressed: () async {
+                            context.read<MainBloc>().add(
+                                MainLoginEvent(null, serverConfig: server));
+                          },
+                        ),
+                    ],
+                    secondaryItems: [
+                      UniversalToolBarItem(
+                        icon: UniversalUI.of(context).icons.edit,
+                        label: const Text('编辑'),
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context) {
+                              return _TipherethServerEditDialog(server: server);
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
           ],
         );
@@ -267,12 +285,12 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
                       controller: flipCardController,
                       flipOnTouch: false,
                       front: UniversalCard(
-                          child: LoginForm(
+                          child: _LoginForm(
                         readOnly: !flipCardIsFront,
                         server: widget.server,
                       )),
                       back: UniversalCard(
-                        child: RegisterForm(
+                        child: _RegisterForm(
                           readOnly: flipCardIsFront,
                           onRegistered: toggleCard,
                           server: widget.server,
@@ -290,17 +308,17 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key, this.readOnly = false, required this.server});
+class _LoginForm extends StatefulWidget {
+  const _LoginForm({this.readOnly = false, required this.server});
 
   final bool readOnly;
   final ServerConfig server;
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<_LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends State<_LoginForm> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
 
@@ -424,9 +442,8 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({
-    super.key,
+class _RegisterForm extends StatefulWidget {
+  const _RegisterForm({
     this.readOnly = false,
     this.onRegistered,
     required this.server,
@@ -437,10 +454,10 @@ class RegisterForm extends StatefulWidget {
   final ServerConfig server;
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  State<_RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RegisterFormState extends State<_RegisterForm> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
   late TextEditingController _repeatPasswordController;

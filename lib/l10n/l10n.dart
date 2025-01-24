@@ -1260,6 +1260,16 @@ class S {
     );
   }
 
+  /// `警告：你正在管理服务器{serverName}数据，你的操作将影响所有用户`
+  String adminAreaWarning(Object serverName) {
+    return Intl.message(
+      '警告：你正在管理服务器$serverName数据，你的操作将影响所有用户',
+      name: 'adminAreaWarning',
+      desc: '',
+      args: [serverName],
+    );
+  }
+
   /// `Chrome`
   String get chrome {
     return Intl.message(

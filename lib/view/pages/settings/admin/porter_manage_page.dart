@@ -12,6 +12,7 @@ import '../../../components/toast.dart';
 import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
+import 'common.dart';
 
 class PorterManagePage extends StatelessWidget {
   const PorterManagePage({super.key});
@@ -105,6 +106,7 @@ class PorterManagePage extends StatelessWidget {
             context.read<TipherethBloc>().add(TipherethLoadPortersEvent(null));
           },
           children: [
+            const AdminAreaWarning(),
             for (final value in porterGroup.values)
               buildPorterGroup(context, value),
           ],

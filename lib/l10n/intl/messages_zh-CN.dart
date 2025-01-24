@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
+  static String m13(serverName) => "警告：你正在管理服务器${serverName}数据，你的操作将影响所有用户";
+
   static String m0(number) => "${number} 天前";
 
   static String m1(number) => "${number} 小时前";
@@ -34,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m6(number) => "${number} 年前";
 
-  static String m13(success, failed) =>
+  static String m14(success, failed) =>
       "导入应用程序完成，成功 ${success} 个，失败 ${failed} 个。";
 
   static String m7(success, failed) =>
@@ -48,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m11(number) => "发现 ${number} 个新应用";
 
-  static String m14(working, enabled, total) =>
+  static String m15(working, enabled, total) =>
       "${working}/${enabled} (${total}) 个正在工作";
 
   static String m12(server) => "注册到 ${server}";
@@ -140,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "add": MessageLookupByLibrary.simpleMessage("添加"),
         "addApplication": MessageLookupByLibrary.simpleMessage("添加应用"),
         "address": MessageLookupByLibrary.simpleMessage("地址"),
+        "adminAreaWarning": m13,
         "allArticles": MessageLookupByLibrary.simpleMessage("全部文章"),
         "applicationExitAbnormally":
             MessageLookupByLibrary.simpleMessage("应用程序异常退出"),
@@ -191,7 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "grpc": MessageLookupByLibrary.simpleMessage("gRPC"),
         "hide": MessageLookupByLibrary.simpleMessage("隐藏"),
         "id": MessageLookupByLibrary.simpleMessage("ID"),
-        "importCommonApplicationFinished": m13,
+        "importCommonApplicationFinished": m14,
         "importSteamApplicationFinished": m7,
         "importingCommonApplications":
             MessageLookupByLibrary.simpleMessage("正在导入应用程序"),
@@ -232,7 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请设置应用程序路径"),
         "pluginContextManage": MessageLookupByLibrary.simpleMessage("插件环境管理"),
         "pluginManage": MessageLookupByLibrary.simpleMessage("插件管理"),
-        "pluginWorkingProportion": m14,
+        "pluginWorkingProportion": m15,
         "port": MessageLookupByLibrary.simpleMessage("端口"),
         "refresh": MessageLookupByLibrary.simpleMessage("刷新"),
         "refreshCaptcha": MessageLookupByLibrary.simpleMessage("刷新验证码"),

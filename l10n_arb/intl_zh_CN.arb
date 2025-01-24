@@ -127,6 +127,7 @@
   "pluginManage": "插件管理",
   "pluginWorkingProportion": "{working}/{enabled} ({total}) 个正在工作",
   "pluginContextManage": "插件环境管理",
+  "adminAreaWarning": "警告：你正在管理服务器{serverName}数据，你的操作将影响所有用户",
 
   "chrome": "Chrome",
   "firefox": "Firefox",

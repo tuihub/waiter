@@ -28,23 +28,23 @@ import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/notification_page.dart';
 import 'view/pages/settings/about_page.dart';
-import 'view/pages/settings/app/app_add_panel.dart';
-import 'view/pages/settings/app/app_edit_panel.dart';
-import 'view/pages/settings/app/app_manage_page.dart';
-import 'view/pages/settings/app_package/app_package_add_panel.dart';
-import 'view/pages/settings/app_package/app_package_edit_panel.dart';
-import 'view/pages/settings/app_package/app_package_manage_page.dart';
+import 'view/pages/settings/admin/app_add_panel.dart';
+import 'view/pages/settings/admin/app_edit_panel.dart';
+import 'view/pages/settings/admin/app_manage_page.dart';
+import 'view/pages/settings/admin/app_package_add_panel.dart';
+import 'view/pages/settings/admin/app_package_edit_panel.dart';
+import 'view/pages/settings/admin/app_package_manage_page.dart';
+import 'view/pages/settings/admin/porter_manage_page.dart';
+import 'view/pages/settings/admin/user_add_panel.dart';
+import 'view/pages/settings/admin/user_edit_panel.dart';
+import 'view/pages/settings/admin/user_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
-import 'view/pages/settings/porter/porter_manage_page.dart';
 import 'view/pages/settings/porter_context_page.dart';
+import 'view/pages/settings/server_select_page.dart';
 import 'view/pages/settings/session/session_edit_panel.dart';
 import 'view/pages/settings/session/session_manage_page.dart';
 import 'view/pages/settings/settings_nav.dart';
-import 'view/pages/settings/user/user_add_panel.dart';
-import 'view/pages/settings/user/user_edit_panel.dart';
-import 'view/pages/settings/user/user_manage_page.dart';
-import 'view/pages/tiphereth/tiphereth_nav.dart';
-import 'view/pages/tiphereth/tiphereth_server_list_panel.dart';
+import 'view/pages/tiphereth/tiphereth_account_page.dart';
 import 'view/pages/web_landing_page.dart';
 import 'view/pages/yesod/manage_notify_flow_page.dart';
 import 'view/pages/yesod/manage_notify_target_page.dart';
@@ -78,10 +78,6 @@ enum ModuleName {
   String toString() => name;
 }
 
-enum TipherethActions {
-  serverList,
-}
-
 enum YesodFunctions {
   recent,
   timeline,
@@ -111,6 +107,7 @@ enum GeburaFunctions {
 
 enum SettingsFunctions {
   client,
+  server,
   session,
   porterContext,
   porter,
@@ -199,7 +196,9 @@ class ImageViewerRoute extends GoRouteData {
 @TypedStatefulShellRoute<ModuleRoute>(
   branches: [
     TypedStatefulShellBranch<TipherethRoute>(
-      routes: [TypedGoRoute<TipherethRootRoute>(path: '/module/Tiphereth')],
+      routes: [
+        TypedGoRoute<TipherethRootRoute>(path: '/module/Tiphereth'),
+      ],
     ),
     TypedStatefulShellBranch<YesodRoute>(
       routes: [
@@ -265,20 +264,13 @@ class TipherethRoute extends StatefulShellBranchData {
 }
 
 class TipherethRootRoute extends GoRouteData {
-  const TipherethRootRoute({this.action});
-
-  final TipherethActions? action;
+  const TipherethRootRoute();
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    final tipherethActions = {
-      TipherethActions.serverList: const TipherethServerListPanel(),
-    };
-    return NoTransitionPage(
+    return const NoTransitionPage(
       child: ModuleFramePage(
-        leftPart: const TipherethNav(),
-        middlePart: Container(),
-        rightPart: tipherethActions[action] ?? Container(),
+        leftPart: TipherethAccountPage(),
       ),
     );
   }
@@ -584,6 +576,7 @@ class SettingsFunctionRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     final settingsPages = {
       SettingsFunctions.client: const ClientSettingPage(),
+      SettingsFunctions.server: const ServerSelectPage(),
       SettingsFunctions.session: const SessionManagePage(),
       SettingsFunctions.porterContext: const PorterContextManagePage(),
       SettingsFunctions.porter: const PorterManagePage(),
