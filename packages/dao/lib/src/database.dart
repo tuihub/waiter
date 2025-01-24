@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
 import 'connection/shared.dart';
-import 'kv.dart';
+import 'kv_dao.dart';
 import 'tables/cache_feed_config.dart';
 import 'tables/cache_feed_item.dart';
 import 'tables/local_app.dart';

@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 import 'database.dart';
 
-part 'kv.g.dart';
+part 'kv_dao.g.dart';
 
 // KVTable is used to store a small amount of config data.
 class KVTable extends Table {
@@ -39,12 +39,20 @@ class KVDao extends DatabaseAccessor<AppDatabase> with _$KVDaoMixin {
   }
 
   Future<void> set(String bucket, String key, String value) async {
-    await into(kVTable).insertOnConflictUpdate(
+    await into(kVTable).insert(
       KVTableCompanion(
         bucket: Value(bucket),
         key: Value(key),
         value: Value(value),
       ),
+      onConflict: DoUpdate((old) {
+        return KVTableCompanion(
+          value: Value(value),
+        );
+      }, target: [
+        kVTable.bucket,
+        kVTable.key,
+      ]),
     );
   }
 
