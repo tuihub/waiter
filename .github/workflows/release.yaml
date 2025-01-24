@@ -78,7 +78,6 @@ jobs:
           flutter pub get
           flutter build apk --build-name=$GITHUB_REF_NAME --build-number=$GITHUB_RUN_NUMBER
           mv ./build/app/outputs/flutter-apk/app-release.apk ${{ env.APP_NAME }}-${{ github.ref_name }}.apk
-          mv ./build/app/outputs/flutter-apk/app-release.apk.sha1 ${{ env.APP_NAME }}-${{ github.ref_name }}.apk.sha1
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -86,7 +85,6 @@ jobs:
         with:
           files: |
             ${{ env.APP_NAME }}-${{ github.ref_name }}.apk
-            ${{ env.APP_NAME }}-${{ github.ref_name }}.apk.sha1
 
       - uses: actions/upload-artifact@v4
         with:
