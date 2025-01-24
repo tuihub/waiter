@@ -50,7 +50,7 @@ class PorterContextManagePage extends StatelessWidget {
             contexts.length,
           )),
       initiallyExpanded: true,
-      trailing: OutlinedButton.icon(
+      trailing: UniversalOutlinedButton.icon(
         label: Text(S.of(context).add),
         onPressed: () {
           SettingsFunctionRoute(
@@ -171,25 +171,16 @@ class PorterContextAddPanel extends StatelessWidget {
           formFields: [
             Text('插件名称: ${porterGroup.binarySummary.name}'),
             Text('插件介绍: ${porterGroup.binarySummary.description}'),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '区域',
-              ),
+            UniversalTextFormField(
+              labelText: '区域',
               onSaved: (newValue) => region = newValue!,
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+            UniversalTextFormField(
+              labelText: '名称',
               onSaved: (newValue) => name = newValue!,
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '描述',
-              ),
+            UniversalTextFormField(
+              labelText: '描述',
               onSaved: (newValue) => description = newValue!,
             ),
             if (porterGroup.contextJsonSchema.isNotEmpty)
@@ -282,27 +273,18 @@ class PorterContextEditPanel extends StatelessWidget {
               label: S.of(context).id,
               value: porterContext.id.id.toString(),
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '区域',
-              ),
+            UniversalTextFormField(
+              labelText: '区域',
               initialValue: region,
               onSaved: (newValue) => region = newValue!,
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+            UniversalTextFormField(
+              labelText: '名称',
               initialValue: name,
               onSaved: (newValue) => name = newValue!,
             ),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '描述',
-              ),
+            UniversalTextFormField(
+              labelText: '描述',
               initialValue: description,
               onSaved: (newValue) => description = newValue!,
             ),

@@ -55,56 +55,54 @@ class GeburaLibrarySettingsPage extends StatelessWidget {
       subtitle: Text(
         '共 ${item.installedCount}，已导入 ${item.trackedCount}',
       ),
-      trailing: Flexible(
-        child: UniversalToolBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
+      trailing: UniversalToolBar(
+        mainAxisAlignment: MainAxisAlignment.end,
+        primaryItems: [
+          UniversalToolBarItem(
+            icon: UniversalUI.of(context).icons.openInFull,
+            label: const Text('详情'),
+            onPressed: () {
+              GeburaLibrarySettingsRoute(
+                      action: GeburaLibrarySettingsActions.appScanResult,
+                      $extra: item.uuid)
+                  .go(context);
+              ModuleFramePage.of(context)?.openDrawer();
+            },
+          ),
+        ],
+        secondaryItems: [
+          if (item.type == LocalLibraryScanResultType.common)
             UniversalToolBarItem(
-              icon: UniversalUI.of(context).icons.openInFull,
-              label: const Text('详情'),
-              onPressed: () {
-                GeburaLibrarySettingsRoute(
-                        action: GeburaLibrarySettingsActions.appScanResult,
-                        $extra: item.uuid)
-                    .go(context);
-                ModuleFramePage.of(context)?.openDrawer();
-              },
-            ),
-          ],
-          secondaryItems: [
-            if (item.type == LocalLibraryScanResultType.common)
-              UniversalToolBarItem(
-                icon: UniversalUI.of(context).icons.edit,
-                label: const Text('编辑扫描设置'),
-                onPressed: () async {
-                  final setting = await context
-                      .read<GeburaBloc>()
-                      .getLocalCommonAppLibraryFolder(item.uuid);
-                  if (setting == null) {
-                    const Toast(title: '', message: '未找到设置').show(context);
-                  }
-                  await Navigator.of(context).push(
-                    UniversalPageRoute(builder: (context) {
-                      return _CommonAppFolderScanSettingPage(
-                        initialValue: setting,
-                      );
-                    }),
-                  );
-                },
-              ),
-            UniversalToolBarItem(
-              icon: UniversalUI.of(context).icons.folderOpen,
-              label: const Text('使用资源管理器打开'),
+              icon: UniversalUI.of(context).icons.edit,
+              label: const Text('编辑扫描设置'),
               onPressed: () async {
-                await OpenFile.open(item.path);
+                final setting = await context
+                    .read<GeburaBloc>()
+                    .getLocalCommonAppLibraryFolder(item.uuid);
+                if (setting == null) {
+                  const Toast(title: '', message: '未找到设置').show(context);
+                }
+                await Navigator.of(context).push(
+                  UniversalPageRoute(builder: (context) {
+                    return _CommonAppFolderScanSettingPage(
+                      initialValue: setting,
+                    );
+                  }),
+                );
               },
             ),
-            UniversalToolBarItem(
-              icon: UniversalUI.of(context).icons.delete,
-              label: const Text('删除'),
-            )
-          ],
-        ),
+          UniversalToolBarItem(
+            icon: UniversalUI.of(context).icons.folderOpen,
+            label: const Text('使用资源管理器打开'),
+            onPressed: () async {
+              await OpenFile.open(item.path);
+            },
+          ),
+          UniversalToolBarItem(
+            icon: UniversalUI.of(context).icons.delete,
+            label: const Text('删除'),
+          )
+        ],
       ),
     );
   }
@@ -171,7 +169,7 @@ class _GeburaLibrarySettingAddDialogState
                   Text('手动配置扫描', style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
-              UniversalElevatedButton(
+              UniversalFilledButton(
                 child: const Text('打开设置页面'),
                 onPressed: () async {
                   Navigator.of(context).pop();
@@ -198,7 +196,7 @@ class _GeburaLibrarySettingAddDialogState
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
-                UniversalElevatedButton(
+                UniversalFilledButton(
                   child: const Text('扫描'),
                   onPressed: () async {
                     final (folders, result) = await context
@@ -433,7 +431,7 @@ class _GeburaAppScanResultListState extends State<_GeburaAppScanResultList> {
         DataColumn2(
           label: Align(
             alignment: Alignment.centerRight,
-            child: UniversalElevatedButton(
+            child: UniversalFilledButton(
               onPressed: selectedIndex.contains(true)
                   ? () {
                       switch (widget.type) {

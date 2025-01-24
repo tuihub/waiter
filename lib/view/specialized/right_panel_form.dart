@@ -114,7 +114,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
               children: [
                 ...widget.extraActions ?? [],
                 if (widget.onSubmit != null)
-                  UniversalElevatedButton(
+                  UniversalFilledButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
@@ -125,7 +125,7 @@ class _RightPanelFormState extends State<RightPanelForm> {
                         ? const UniversalCircularProgressIndicator()
                         : Text(S.of(context).submit),
                   ),
-                UniversalElevatedButton(
+                UniversalFilledButton(
                   onPressed: () => widget.close(),
                   child: Text(S.of(context).close),
                 )
@@ -341,15 +341,12 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
                 value: selectedFlag?.id ?? '',
               )
             else
-              DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '类型',
-                ),
+              UniversalDropdownButtonFormField(
+                labelText: '类型',
                 value: selectedFlag,
                 items: [
                   for (final s in featureFlags)
-                    DropdownMenuItem(
+                    UniversalDropdownMenuItem(
                       value: s,
                       child: Text(s.id),
                     ),
@@ -372,15 +369,12 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
               ),
             if ((porterGroup?.regions.isNotEmpty ?? false) &&
                 ((porterGroup?.regions.length ?? 0) > 1))
-              DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '区域',
-                ),
+              UniversalDropdownButtonFormField(
+                labelText: '区域',
                 value: null,
                 items: [
                   for (final s in porterGroup!.regions)
-                    DropdownMenuItem(
+                    UniversalDropdownMenuItem(
                       value: s,
                       child: Text(s),
                     ),
@@ -405,17 +399,14 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
                     .isEmpty)
               const TextFormErrorMessage(message: '无可用执行环境，请前往插件环境管理页面添加'),
             if (selectedFlag?.requireContext ?? false)
-              DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '执行环境',
-                ),
+              UniversalDropdownButtonFormField(
+                labelText: '执行环境',
                 value: contextId,
                 items: [
                   for (final s in state.getPorterContexts(
                       porterGroup?.globalName ?? '',
                       region: region ?? ''))
-                    DropdownMenuItem(
+                    UniversalDropdownMenuItem(
                       value: s.id,
                       enabled: s.status ==
                           PorterContextStatus.PORTER_CONTEXT_STATUS_ACTIVE,

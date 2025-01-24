@@ -253,7 +253,7 @@ class _GeburaLibraryDetailAppInstLauncherEditPanelState
             ],
             Container(
               margin: const EdgeInsets.only(top: 16),
-              child: UniversalElevatedButton(
+              child: UniversalFilledButton(
                 onPressed: () async {
                   if (newSetting == null) {
                     return;

@@ -131,12 +131,9 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       const SizedBox(
                         height: 8,
                       ),
-                      TextFormField(
+                      UniversalTextFormField(
                         onChanged: (newValue) => name = newValue,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('名称'),
-                        ),
+                        labelText: '名称',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return '请输入名称';
@@ -147,12 +144,9 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
                       const SizedBox(
                         height: 16,
                       ),
-                      TextFormField(
+                      UniversalTextFormField(
                         onChanged: (newValue) => description = newValue,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '备注',
-                        ),
+                        labelText: '备注',
                       ),
                       const SizedBox(
                         height: 16,
@@ -637,13 +631,10 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       const SizedBox(
                         height: 8,
                       ),
-                      TextFormField(
+                      UniversalTextFormField(
                         initialValue: name,
                         onChanged: (newValue) => name = newValue,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('名称'),
-                        ),
+                        labelText: '名称',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return '请输入名称';
@@ -654,13 +645,10 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
                       const SizedBox(
                         height: 16,
                       ),
-                      TextFormField(
+                      UniversalTextFormField(
                         initialValue: description,
                         onChanged: (newValue) => description = newValue,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '备注',
-                        ),
+                        labelText: '备注',
                       ),
                       const SizedBox(
                         height: 16,

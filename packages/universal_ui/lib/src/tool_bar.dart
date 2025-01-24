@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'common.dart';
+import 'list_tile.dart';
 
 class UniversalToolBar extends StatelessWidget {
   const UniversalToolBar({
@@ -26,23 +27,30 @@ class UniversalToolBar extends StatelessWidget {
           mainAxisAlignment: mainAxisAlignment,
           children: [
             ...primaryItems,
-            material.PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  for (final item in secondaryItems)
-                    item.buildMaterialMenuItem(),
-                ];
-              },
-            ),
+            if (secondaryItems.isNotEmpty)
+              material.PopupMenuButton(
+                itemBuilder: (context) {
+                  return [
+                    for (final item in secondaryItems)
+                      item.buildMaterialMenuItem(),
+                  ];
+                },
+              ),
           ],
         );
       case UIDesign.fluent:
-        return fluent.CommandBar(
+        Widget ret = fluent.CommandBar(
           mainAxisAlignment: mainAxisAlignment,
           primaryItems: primaryItems.map((e) => e.buildFluentItem()).toList(),
           secondaryItems:
               secondaryItems.map((e) => e.buildFluentItem()).toList(),
         );
+        if (UniversalListTile.of(context) != null) {
+          ret = fluent.Flexible(
+            child: ret,
+          );
+        }
+        return ret;
     }
   }
 }

@@ -90,7 +90,7 @@ class ListManagePageState extends State<ListManagePage> {
               )
             else if (widget.children.isEmpty && widget.onAdd != null)
               Center(
-                child: UniversalElevatedButton.icon(
+                child: UniversalFilledButton.icon(
                   onPressed: widget.onAdd,
                   icon: Icon(UniversalUI.of(context).icons.add),
                   label: Text(S.of(context).add),

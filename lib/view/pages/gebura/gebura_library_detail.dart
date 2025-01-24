@@ -187,7 +187,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                         children:
                             SpacingHelper.listSpacing(width: 24, children: [
                           if (PlatformHelper.isWindowsApp())
-                            UniversalElevatedButton.icon(
+                            UniversalFilledButton.icon(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                               onPressed:
@@ -349,7 +349,7 @@ class _GeburaLibraryDetailInstListState
               }
             },
           ),
-          UniversalElevatedButton.icon(
+          UniversalFilledButton.icon(
             onPressed: () async {
               await context
                   .read<GeburaBloc>()
@@ -415,7 +415,7 @@ class _GeburaLibraryDetailInstListState
               }
             },
           ),
-          UniversalElevatedButton.icon(
+          UniversalFilledButton.icon(
             onPressed: () async {
               GeburaLibraryDetailRoute(
                 widget.item.uuid,

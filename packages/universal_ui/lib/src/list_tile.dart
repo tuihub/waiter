@@ -29,6 +29,10 @@ class UniversalListTile extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final bool selected;
 
+  static UniversalListTile? of(BuildContext context) {
+    return context.findAncestorWidgetOfExactType<UniversalListTile>();
+  }
+
   @override
   Widget build(BuildContext context) {
     final design = UniversalUI.of(context).design;

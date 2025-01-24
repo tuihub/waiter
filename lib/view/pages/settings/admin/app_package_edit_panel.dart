@@ -70,7 +70,7 @@ class _AppPackageEditPanelState extends State<AppPackageEditPanel> {
             ),
             maxLines: null,
           ),
-          UniversalElevatedButton(
+          UniversalFilledButton(
             onPressed: () {
               unawaited(showDialog<void>(
                 context: context,

@@ -68,7 +68,7 @@ class WebLandingPage extends StatelessWidget {
                               spacing: 16,
                               runSpacing: 16,
                               children: [
-                                UniversalElevatedButton.icon(
+                                UniversalFilledButton.icon(
                                   onPressed: () async {
                                     final host = DotEnvValue.host;
                                     final port = DotEnvValue.port.isNotEmpty
@@ -87,7 +87,7 @@ class WebLandingPage extends StatelessWidget {
                                       .icon),
                                   label: Text(S.of(context).connectInClient),
                                 ),
-                                UniversalElevatedButton.icon(
+                                UniversalFilledButton.icon(
                                   onPressed: () async {
                                     final host = DotEnvValue.host;
                                     final port = DotEnvValue.port.isNotEmpty
@@ -135,7 +135,7 @@ class WebLandingPage extends StatelessWidget {
                           spacing: 16,
                           runSpacing: 16,
                           children: [
-                            UniversalElevatedButton.icon(
+                            UniversalFilledButton.icon(
                               onPressed:
                                   DotEnvValue.winClientDownloadUrl.isNotEmpty
                                       ? () async {
@@ -153,7 +153,7 @@ class WebLandingPage extends StatelessWidget {
                                   const FaIcon(FontAwesomeIcons.windows).icon),
                               label: const Text('Windows'),
                             ),
-                            UniversalElevatedButton.icon(
+                            UniversalFilledButton.icon(
                               onPressed:
                                   DotEnvValue.andClientDownloadUrl.isNotEmpty
                                       ? () async {

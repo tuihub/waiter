@@ -77,8 +77,8 @@ class UniversalOutlinedButton extends StatelessWidget {
   }
 }
 
-class UniversalElevatedButton extends StatelessWidget {
-  const UniversalElevatedButton({
+class UniversalFilledButton extends StatelessWidget {
+  const UniversalFilledButton({
     super.key,
     this.onPressed,
     this.onLongPress,
@@ -105,7 +105,7 @@ class UniversalElevatedButton extends StatelessWidget {
 
     switch (design) {
       case UIDesign.material:
-        return material.ElevatedButton.icon(
+        return material.FilledButton.icon(
           onPressed: onPressed,
           onLongPress: onLongPress,
           focusNode: focusNode,
@@ -146,7 +146,7 @@ class UniversalElevatedButton extends StatelessWidget {
     }
   }
 
-  factory UniversalElevatedButton.icon({
+  factory UniversalFilledButton.icon({
     Key? key,
     required VoidCallback? onPressed,
     VoidCallback? onLongPress,
@@ -156,7 +156,7 @@ class UniversalElevatedButton extends StatelessWidget {
     EdgeInsetsGeometry? padding,
     required Widget label,
   }) {
-    return UniversalElevatedButton(
+    return UniversalFilledButton(
       key: key,
       onPressed: onPressed,
       onLongPress: onLongPress,

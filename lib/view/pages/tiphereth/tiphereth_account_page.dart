@@ -33,7 +33,7 @@ class TipherethAccountPage extends StatelessWidget {
             else
               Expanded(
                 child: Center(
-                  child: UniversalElevatedButton(
+                  child: UniversalFilledButton(
                       child: const Text('添加服务器'),
                       onPressed: () {
                         const SettingsFunctionRoute(SettingsFunctions.server)
@@ -248,7 +248,7 @@ class _AccountCard extends StatelessWidget {
                       const SizedBox(
                         height: 4,
                       ),
-                      OutlinedButton(
+                      UniversalOutlinedButton(
                         onPressed: () {
                           unawaited(showDialog<void>(
                             context: context,
@@ -339,7 +339,7 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        TextFormField(
+                        UniversalTextFormField(
                           onSaved: (newValue) => platformAccountID = newValue!,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -372,7 +372,7 @@ class _LinkAccountFormState extends State<LinkAccountForm> {
                       ],
                     ),
                   ),
-                  UniversalElevatedButton(
+                  UniversalFilledButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
@@ -416,53 +416,37 @@ class UnLinkAccountDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              TextFormField(
+              UniversalTextFormField(
                 onSaved: null,
                 readOnly: true,
-                decoration: const InputDecoration(
-                  // icon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  labelText: 'ID',
-                ),
+                labelText: 'ID',
                 initialValue: account.platformAccountId,
               ),
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              UniversalTextFormField(
                 onSaved: null,
                 readOnly: true,
-                decoration: const InputDecoration(
-                  // icon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  labelText: '平台',
-                ),
+                labelText: '平台',
                 initialValue: account.platform,
               ),
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              UniversalTextFormField(
                 onSaved: null,
                 readOnly: true,
-                decoration: const InputDecoration(
-                  // icon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  labelText: '用户名',
-                ),
+                labelText: '用户名',
                 initialValue: account.name,
               ),
               const SizedBox(
                 height: 16,
               ),
-              TextFormField(
+              UniversalTextFormField(
                 onSaved: null,
                 readOnly: true,
-                decoration: const InputDecoration(
-                  // icon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  labelText: '上次更新时间',
-                ),
+                labelText: '上次更新时间',
                 initialValue: DurationHelper.recentString(
                     account.latestUpdateTime.toDateTime()),
               ),

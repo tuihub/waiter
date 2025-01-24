@@ -604,7 +604,7 @@ class _CommonAppFolderScanSettingPageState
               children: SpacingHelper.listSpacing(
                 height: 16,
                 children: [
-                  UniversalElevatedButton.icon(
+                  UniversalFilledButton.icon(
                     onPressed: testRunning
                         ? null
                         : () async {
@@ -616,7 +616,7 @@ class _CommonAppFolderScanSettingPageState
                     label: const Text('测试'),
                     icon: Icon(UniversalUI.of(context).icons.play),
                   ),
-                  UniversalElevatedButton.icon(
+                  UniversalFilledButton.icon(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();

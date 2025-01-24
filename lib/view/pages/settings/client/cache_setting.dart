@@ -24,38 +24,36 @@ class _CacheSettingState extends State<CacheSetting> {
             color: Theme.of(context).disabledColor,
           ),
         ),
-        trailing: Flexible(
-          child: UniversalToolBar(
-            mainAxisAlignment: MainAxisAlignment.end,
-            primaryItems: [
-              UniversalToolBarItem(
-                icon: UniversalUI.of(context).icons.refresh,
-                label: Text(S.of(context).refresh),
-                onPressed: () {
+        trailing: UniversalToolBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            UniversalToolBarItem(
+              icon: UniversalUI.of(context).icons.refresh,
+              label: Text(S.of(context).refresh),
+              onPressed: () {
+                setState(() {
+                  _cacheSize = context.read<MainBloc>().cacheSize();
+                });
+              },
+            ),
+            UniversalToolBarItem(
+              icon: UniversalUI.of(context).icons.delete,
+              label: Text(S.of(context).clearCache),
+              onPressed: () async {
+                setState(() {
+                  _clearing = true;
+                });
+                await context.read<MainBloc>().clearCache().then((_) {
                   setState(() {
                     _cacheSize = context.read<MainBloc>().cacheSize();
                   });
-                },
-              ),
-              UniversalToolBarItem(
-                icon: UniversalUI.of(context).icons.delete,
-                label: Text(S.of(context).clearCache),
-                onPressed: () async {
-                  setState(() {
-                    _clearing = true;
-                  });
-                  await context.read<MainBloc>().clearCache().then((_) {
-                    setState(() {
-                      _cacheSize = context.read<MainBloc>().cacheSize();
-                    });
-                  });
-                  setState(() {
-                    _clearing = false;
-                  });
-                },
-              )
-            ],
-          ),
+                });
+                setState(() {
+                  _clearing = false;
+                });
+              },
+            )
+          ],
         ),
       );
     });

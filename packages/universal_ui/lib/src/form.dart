@@ -97,15 +97,19 @@ class UniversalTextFormField extends StatelessWidget {
 class UniversalDropdownButtonFormField<T> extends StatelessWidget {
   const UniversalDropdownButtonFormField({
     super.key,
+    this.labelText,
     this.value,
     required this.items,
     this.onChanged,
-    this.isExpanded = false,
+    this.validator,
+    this.isExpanded = true,
   });
 
+  final String? labelText;
   final T? value;
   final List<UniversalDropdownMenuItem<T>> items;
   final ValueChanged<T?>? onChanged;
+  final FormFieldValidator<T>? validator;
   final bool isExpanded;
 
   @override
@@ -118,28 +122,42 @@ class UniversalDropdownButtonFormField<T> extends StatelessWidget {
           value: value,
           items: items.map((item) => item.buildMaterial()).toList(),
           onChanged: onChanged,
+          validator: validator,
           isExpanded: isExpanded,
         );
       case UIDesign.fluent:
-        return fluent.ComboBox<T>(
+        Widget ret = fluent.ComboBox<T>(
           value: value,
           items: items.map((item) => item.buildFluent()).toList(),
           onChanged: onChanged,
           isExpanded: isExpanded,
         );
+        if (labelText != null) {
+          ret = fluent.InfoLabel(
+            label: labelText!,
+            child: ret,
+          );
+        }
+        return ret;
     }
   }
 }
 
 class UniversalDropdownMenuItem<T> {
-  UniversalDropdownMenuItem({required this.child, this.value});
+  UniversalDropdownMenuItem({
+    required this.child,
+    this.enabled = true,
+    this.value,
+  });
 
   final T? value;
+  final bool enabled;
   final Widget child;
 
   material.DropdownMenuItem<T> buildMaterial() {
     return material.DropdownMenuItem<T>(
       value: value,
+      enabled: enabled,
       child: child,
     );
   }
@@ -147,6 +165,7 @@ class UniversalDropdownMenuItem<T> {
   fluent.ComboBoxItem<T> buildFluent() {
     return fluent.ComboBoxItem<T>(
       value: value,
+      enabled: enabled,
       child: child,
     );
   }

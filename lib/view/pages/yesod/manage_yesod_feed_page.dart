@@ -145,12 +145,9 @@ class YesodFeedManageAddPanel extends StatelessWidget {
         return RightPanelForm(
           title: Text(S.of(context).feedConfigAdd),
           formFields: [
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => name = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('名称'),
-              ),
+              labelText: '名称',
               validator: (value) {
                 if (value?.isEmpty ?? false) {
                   return S.of(context).requiredField;
@@ -160,15 +157,12 @@ class YesodFeedManageAddPanel extends StatelessWidget {
             ),
             if (feedSources.isEmpty)
               const TextFormErrorMessage(message: '当前服务器无可用订阅源'),
-            DropdownButtonFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '订阅源类型',
-              ),
+            UniversalDropdownButtonFormField(
+              labelText: '订阅源类型',
               value: source,
               items: [
                 for (final s in feedSources)
-                  DropdownMenuItem(
+                  UniversalDropdownMenuItem(
                     value: s,
                     child: Text(s.id),
                   ),
@@ -198,13 +192,10 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                   submitButtonBuilder: (_) => Container(),
                 ),
               ),
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => refreshInterval = int.parse(newValue),
               initialValue: refreshInterval.toString(),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '刷新间隔(分钟)',
-              ),
+              labelText: '刷新间隔(分钟)',
               inputFormatters: [IntInputFormatter()],
               // The validator receives the text that the user has entered.
               validator: (value) {
@@ -214,12 +205,9 @@ class YesodFeedManageAddPanel extends StatelessWidget {
                 return null;
               },
             ),
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => category = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '分组',
-              ),
+              labelText: '分组',
             ),
             MultiSelectBottomSheetField<InternalID?>(
               title: const Text('规则集'),
@@ -321,13 +309,10 @@ class YesodFeedManageEditPanel extends StatelessWidget {
               label: S.of(context).id,
               value: config.id.id.toString(),
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: name,
               onSaved: (newValue) => name = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+              labelText: '名称',
               validator: (value) {
                 if (value?.isEmpty ?? false) {
                   return S.of(context).requiredField;
@@ -358,13 +343,10 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                   submitButtonBuilder: (_) => Container(),
                 ),
               ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: pullInterval.toString(),
               onSaved: (newValue) => pullInterval = int.parse(newValue!),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '刷新间隔(分钟)',
-              ),
+              labelText: '刷新间隔(分钟)',
               inputFormatters: [IntInputFormatter()],
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -373,13 +355,10 @@ class YesodFeedManageEditPanel extends StatelessWidget {
                 return null;
               },
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: category,
               onSaved: (newValue) => category = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '分组',
-              ),
+              labelText: '分组',
             ),
             MultiSelectDialogField<InternalID?>(
               title: const Text('规则集'),

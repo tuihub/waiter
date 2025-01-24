@@ -12,6 +12,7 @@ import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../common/bloc_event_status_mixin.dart';
+import '../common/platform.dart';
 import '../consts.dart';
 import '../l10n/l10n.dart';
 import '../model/common_model.dart';
@@ -30,11 +31,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   final MainRepo _repo;
 
   static Future<MainBloc> init(MainRepo repo, Stream<ServerID> serverID) async {
+    final defaultUIDesign =
+        PlatformHelper.isWindows() ? UIDesign.fluent : UIDesign.material;
     try {
       final initialState = MainState().copyWith(
         themeMode: await repo.getThemeMode(),
         theme: await repo.getTheme(),
-        uiDesign: await repo.getUIDesign(),
+        uiDesign: await repo.getUIDesign() ?? defaultUIDesign,
         useSystemProxy: await repo.getUseSystemProxy(),
       );
       final instance = MainBloc._(initialState, repo);
@@ -44,7 +47,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       return instance;
     } catch (e) {
       debugPrint(e.toString());
-      return MainBloc._(MainState(), repo);
+      return MainBloc._(
+          MainState().copyWith(
+            uiDesign: defaultUIDesign,
+          ),
+          repo);
     }
   }
 

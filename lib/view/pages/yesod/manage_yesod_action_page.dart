@@ -103,25 +103,19 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
           formFields: [
             if (features.isEmpty)
               const TextFormErrorMessage(message: '当前服务器无可用规则'),
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => name = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('名称'),
-              ),
+              labelText: '名称',
             ),
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => description = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('描述'),
-              ),
+              labelText: '描述',
             ),
             UniversalExpansionTile(
               title: Center(
                 child: Text('已配置${actions.length}个规则'),
               ),
-              subtitle: OutlinedButton(
+              subtitle: UniversalOutlinedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     UniversalPageRoute(
@@ -228,27 +222,21 @@ class _YesodActionManageEditPanelState
               label: S.of(context).id,
               value: id.id.toString(),
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: name,
               onSaved: (newValue) => name = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+              labelText: '名称',
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: description,
               onSaved: (newValue) => description = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '描述',
-              ),
+              labelText: '描述',
             ),
             UniversalExpansionTile(
               title: Center(
                 child: Text('已配置${actions.length}个规则'),
               ),
-              subtitle: OutlinedButton(
+              subtitle: UniversalOutlinedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     UniversalPageRoute(
@@ -393,7 +381,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          UniversalElevatedButton.icon(
+                          UniversalFilledButton.icon(
                             onPressed: i > 0
                                 ? () {
                                     setState(() {
@@ -409,7 +397,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: UniversalElevatedButton.icon(
+                            child: UniversalFilledButton.icon(
                               onPressed: () {
                                 setState(() {
                                   actions.removeAt(i);
@@ -421,7 +409,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                               label: const Text('删除'),
                             ),
                           ),
-                          UniversalElevatedButton.icon(
+                          UniversalFilledButton.icon(
                             onPressed: i < actions.length - 1
                                 ? () {
                                     setState(() {
@@ -520,11 +508,8 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               children: [
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '规则名称',
-                  ),
+                UniversalDropdownButtonFormField<String>(
+                  labelText: '规则名称',
                   value: action.id,
                   onChanged: allowChangeId
                       ? (newValue) {
@@ -537,7 +522,7 @@ class _YesodActionConfigureItemState extends State<_YesodActionConfigureItem> {
                       : null,
                   items: [
                     for (final feature in widget.features)
-                      DropdownMenuItem(
+                      UniversalDropdownMenuItem(
                         value: feature.id,
                         child: Text(feature.name),
                       ),

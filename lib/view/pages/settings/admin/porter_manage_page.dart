@@ -140,37 +140,25 @@ class PorterEditPanel extends StatelessWidget {
         return RightPanelForm(
           title: const Text('插件详情'),
           formFields: [
-            TextFormField(
+            UniversalTextFormField(
               initialValue: porter.id.id.toString(),
               readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'ID',
-              ),
+              labelText: 'ID',
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: porter.binarySummary.name,
               readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+              labelText: '名称',
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: porter.binarySummary.version,
               readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('版本'),
-              ),
+              labelText: '版本',
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: porter.globalName,
               readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '全局名称',
-              ),
+              labelText: '全局名称',
             ),
             UniversalSwitchFormField(
               initialValue: enabled,

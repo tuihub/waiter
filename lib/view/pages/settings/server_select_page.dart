@@ -38,40 +38,39 @@ class ServerSelectPage extends StatelessWidget {
               UniversalListTile(
                 title: Text('${server.host}:${server.port}'),
                 subtitle: Text(server.username),
-                trailing: Flexible(
-                  child: UniversalToolBar(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    primaryItems: [
-                      if (server.serverID == state.currentServer)
-                        UniversalToolBarItem(
-                          icon: UniversalUI.of(context).icons.check,
-                          label: const Text('当前'),
-                        )
-                      else
-                        UniversalToolBarItem(
-                          icon: UniversalUI.of(context).icons.arrowRight,
-                          label: const Text('切换'),
-                          onPressed: () async {
-                            context.read<MainBloc>().add(
-                                MainLoginEvent(null, serverConfig: server));
-                          },
-                        ),
-                    ],
-                    secondaryItems: [
+                trailing: UniversalToolBar(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  primaryItems: [
+                    if (server.serverID == state.currentServer)
                       UniversalToolBarItem(
-                        icon: UniversalUI.of(context).icons.edit,
-                        label: const Text('编辑'),
+                        icon: UniversalUI.of(context).icons.check,
+                        label: const Text('当前'),
+                      )
+                    else
+                      UniversalToolBarItem(
+                        icon: UniversalUI.of(context).icons.arrowRight,
+                        label: const Text('切换'),
                         onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return _TipherethServerEditDialog(server: server);
-                            },
-                          );
+                          context
+                              .read<MainBloc>()
+                              .add(MainLoginEvent(null, serverConfig: server));
                         },
                       ),
-                    ],
-                  ),
+                  ],
+                  secondaryItems: [
+                    UniversalToolBarItem(
+                      icon: UniversalUI.of(context).icons.edit,
+                      label: const Text('编辑'),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return _TipherethServerEditDialog(server: server);
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
           ],
@@ -183,7 +182,7 @@ class _TipherethServerAddDialogState extends State<_TipherethServerAddDialog> {
           },
           child: Text(S.of(context).check),
         ),
-        UniversalElevatedButton(
+        UniversalFilledButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
@@ -271,7 +270,7 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4),
-                        child: UniversalElevatedButton(
+                        child: UniversalFilledButton(
                           onPressed: toggleCard,
                           child: Text(
                             flipCardIsFront
@@ -416,7 +415,7 @@ class _LoginFormState extends State<_LoginForm> {
                   obscuringCharacter: '*',
                   readOnly: widget.readOnly,
                 ),
-                UniversalElevatedButton(
+                UniversalFilledButton(
                   onPressed: login,
                   child: state is MainLoginState && state.processing
                       ? const SizedBox(
@@ -614,7 +613,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                     controller: _captchaAnsController,
                     readOnly: widget.readOnly,
                   ),
-                UniversalElevatedButton(
+                UniversalFilledButton(
                   onPressed: register,
                   child: state is MainLoginState && state.processing
                       ? const SizedBox(

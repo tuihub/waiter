@@ -121,11 +121,7 @@ class AppFramePageState extends State<AppFramePage> {
                               return FadeTransition(
                                   opacity: animation, child: child);
                             },
-                            child: Container(
-                              key:
-                                  ValueKey(widget.navigationShell.currentIndex),
-                              child: widget.child,
-                            ),
+                            child: widget.child,
                           ),
                         ),
                       ],
@@ -189,10 +185,7 @@ class AppFramePageState extends State<AppFramePage> {
                             return FadeTransition(
                                 opacity: animation, child: child);
                           },
-                          child: Container(
-                            key: ValueKey(widget.navigationShell.currentIndex),
-                            child: widget.child,
-                          ),
+                          child: widget.child,
                         ),
                       ),
                     ),

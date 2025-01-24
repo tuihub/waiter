@@ -60,7 +60,7 @@ class _GeburaAppLauncherSettingTestPageState
                     const SizedBox(
                       height: 16,
                     ),
-                    UniversalElevatedButton(
+                    UniversalFilledButton(
                       onPressed: () async {
                         if (newSetting != null) {
                           _saveSetting();
@@ -91,7 +91,7 @@ class _GeburaAppLauncherSettingTestPageState
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        UniversalElevatedButton(
+                        UniversalFilledButton(
                           onPressed: () {
                             setState(() {
                               currentStep = 0;
@@ -114,7 +114,7 @@ class _GeburaAppLauncherSettingTestPageState
                                     style: TextStyle(color: Colors.red),
                                   ),
                                   const Text('点击确定将会保存您当前的设置'),
-                                  UniversalElevatedButton(
+                                  UniversalFilledButton(
                                     onPressed: () async {
                                       if (newSetting != null) {
                                         _saveSetting();
@@ -135,7 +135,7 @@ class _GeburaAppLauncherSettingTestPageState
                                 children: [
                                   const Text(
                                       '点击启动按钮启动应用\n如果您的应用有启动器，请在您设置的等待时间内完成实际应用的启动'),
-                                  UniversalElevatedButton(
+                                  UniversalFilledButton(
                                     onPressed: () async {
                                       final setting = widget.launcher.common;
                                       if (setting != null) {
@@ -166,7 +166,7 @@ class _GeburaAppLauncherSettingTestPageState
                                       style: TextStyle(color: Colors.red),
                                     ),
                                   if (runState == null)
-                                    UniversalElevatedButton(
+                                    UniversalFilledButton(
                                       onPressed: () async {
                                         setState(() {
                                           currentStep = 3;
@@ -190,7 +190,7 @@ class _GeburaAppLauncherSettingTestPageState
                                   else
                                     const Text('应用已关闭'),
                                   if (!(runState == null))
-                                    UniversalElevatedButton(
+                                    UniversalFilledButton(
                                       onPressed: () async {
                                         setState(() {
                                           currentStep = 4;
@@ -207,7 +207,7 @@ class _GeburaAppLauncherSettingTestPageState
                                 children: [
                                   Text('启动时间：${runState?.startTime ?? ''}'),
                                   Text('停止时间：${runState?.endTime ?? ''}'),
-                                  UniversalElevatedButton(
+                                  UniversalFilledButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },

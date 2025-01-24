@@ -94,12 +94,9 @@ class NotifyTargetAddPanel extends StatelessWidget {
         return RightPanelForm(
           title: Text(S.of(context).notifyTargetAdd),
           formFields: [
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => name = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('名称'),
-              ),
+              labelText: '名称',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return '请输入名称';
@@ -107,12 +104,9 @@ class NotifyTargetAddPanel extends StatelessWidget {
                 return null;
               },
             ),
-            TextFormField(
+            UniversalTextFormField(
               onChanged: (newValue) => description = newValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '备注',
-              ),
+              labelText: '备注',
             ),
             FeatureRequestFormField(
               featureFlags: notifyDestinations,
@@ -216,13 +210,10 @@ class NotifyTargetEditPanel extends StatelessWidget {
               label: S.of(context).id,
               value: target.id.id.toString(),
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: name,
               onSaved: (newValue) => name = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '名称',
-              ),
+              labelText: '名称',
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return '请输入名称';
@@ -230,13 +221,10 @@ class NotifyTargetEditPanel extends StatelessWidget {
                 return null;
               },
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: description,
               onSaved: (newValue) => description = newValue!,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('备注'),
-              ),
+              labelText: '备注',
             ),
             FeatureRequestFormField(
               featureFlags: notifyDestinations,

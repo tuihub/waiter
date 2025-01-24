@@ -31,50 +31,40 @@ class SessionEditPanel extends StatelessWidget {
         return RightPanelForm(
           title: Text(S.of(context).deviceDetail),
           formFields: [
-            TextFormField(
+            UniversalTextFormField(
               initialValue: session.id.id.toString(),
               readOnly: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).id,
-              ),
+              labelText: S.of(context).id,
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: '${session.deviceInfo.deviceName} ',
               readOnly: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).deviceName,
-              ),
+              labelText: S.of(context).deviceName,
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: '${session.deviceInfo.systemVersion} ',
               readOnly: true,
-              decoration: InputDecoration(
-                label: Text(S.of(context).operatingSystem),
-              ),
+              labelText: S.of(context).operatingSystem,
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue:
                   '${session.deviceInfo.clientName} ${session.deviceInfo.clientVersion}',
               readOnly: true,
-              decoration: InputDecoration(
-                labelText: S.of(context).client,
-              ),
+              labelText: S.of(context).client,
             ),
-            TextFormField(
+            UniversalTextFormField(
               initialValue: session.createTime
                   .toDateTime(toLocal: true)
                   .toIso8601String(),
               readOnly: true,
-              decoration: InputDecoration(
-                label: Text(S.of(context).lastLogin),
-              ),
+              labelText: S.of(context).lastLogin,
             ),
           ],
           errorMsg: state is TipherethEditSessionState && state.failed
               ? state.msg
               : null,
           extraActions: [
-            UniversalElevatedButton(
+            UniversalFilledButton(
               onPressed: () {
                 context.read<TipherethBloc>().add(TipherethEditSessionEvent(
                       null,
