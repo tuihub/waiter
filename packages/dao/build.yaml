@@ -5,3 +5,4 @@ targets:
         options:
           databases:
             main_database: lib/src/database.dart
+            log_database: lib/src/log_database/log_database.dart

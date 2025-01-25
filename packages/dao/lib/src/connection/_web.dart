@@ -2,10 +2,10 @@
 import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 
-QueryExecutor openConnection(String? _) {
+QueryExecutor openConnection(String _, String name) {
   return DatabaseConnection.delayed(Future(() async {
     final result = await WasmDatabase.open(
-      databaseName: 'my_app_db', // prefer to only use valid identifiers here
+      databaseName: name, // prefer to only use valid identifiers here
       sqlite3Uri: Uri.parse('sqlite3.wasm'),
       driftWorkerUri: Uri.parse('drift_worker.dart.js'),
     );

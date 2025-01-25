@@ -16,6 +16,17 @@ Future<MyApp> init() async {
     dataPath = (await getApplicationSupportDirectory()).path;
   }
 
+  // logger
+  Logger.init(dataPath ?? '');
+  FlutterError.onError = (FlutterErrorDetails details) {
+    Logger.error(
+      details.exceptionAsString(),
+      details.stack.toString(),
+      details.context.toString(),
+    );
+    FlutterError.presentError(details);
+  };
+
   // dotenv
   await dotenv.load();
 
@@ -32,7 +43,7 @@ Future<MyApp> init() async {
 
   // bloc
   if (kDebugMode) {
-    Bloc.observer = SimpleBlocObserver();
+    Bloc.observer = LoggerBlocObserver();
   }
   final diService = await DIService.init(
     dataPath: dataPath,

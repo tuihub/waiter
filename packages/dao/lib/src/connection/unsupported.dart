@@ -1,3 +1,3 @@
 import 'package:drift/backends.dart';
 
-QueryExecutor openConnection(String? _) => throw UnimplementedError();
+QueryExecutor openConnection(String _, String __) => throw UnimplementedError();

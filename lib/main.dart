@@ -26,7 +26,6 @@ import 'bloc/main_bloc.dart';
 import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
-import 'common/bloc_observer.dart';
 import 'common/deeplink/deeplink.dart';
 import 'common/platform.dart';
 import 'l10n/l10n.dart';
@@ -34,6 +33,7 @@ import 'route.dart';
 import 'rust/frb_generated.dart';
 import 'service/di_service.dart';
 import 'service/librarian_service/client.dart';
+import 'service/log_service.dart';
 
 part 'init.dart';
 

@@ -35,7 +35,8 @@ part 'database.g.dart';
   ],
 )
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(String dataPath) : super(openConnection(dataPath));
+  AppDatabase(String dataPath, {String name = 'db'})
+      : super(openConnection(dataPath, name));
 
   @override
   int get schemaVersion => 1;

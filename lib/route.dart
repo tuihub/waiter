@@ -16,6 +16,7 @@ import 'bloc/netzach/netzach_bloc.dart';
 import 'bloc/tiphereth/tiphereth_bloc.dart';
 import 'bloc/yesod/yesod_bloc.dart';
 import 'main_window.dart';
+import 'service/log_service.dart';
 import 'view/pages/chesed/chesed_home_page.dart';
 import 'view/pages/frame_page.dart';
 import 'view/pages/gebura/gebura_assign_app_panel.dart';
@@ -650,6 +651,7 @@ GoRouter getRouter() {
     initialLocation: const InitRoute().location,
     observers: [
       HeroController(),
+      LoggerRouterObserver(),
     ],
     debugLogDiagnostics: kDebugMode,
     routes: $appRoutes,

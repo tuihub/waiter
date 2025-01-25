@@ -4,6 +4,7 @@ library dao;
 export 'src/database.dart';
 export 'src/gebura_dao.dart';
 export 'src/kv_dao.dart';
+export 'src/log_database/log_database.dart';
 export 'src/main_dao.dart';
 export 'src/tables/cache_feed_config.dart';
 export 'src/tables/cache_feed_item.dart';
