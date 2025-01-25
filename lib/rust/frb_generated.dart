@@ -3,18 +3,16 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-
 import 'api/app_scan.dart';
 import 'api/process_runner.dart';
 import 'api/system_proxy.dart';
 import 'api/win_icon.dart';
+import 'dart:async';
+import 'dart:convert';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -131,8 +129,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiWinIconGetImagesFromExeConstMeta =>
       const TaskConstMeta(
-        debugName: 'get_images_from_exe',
-        argNames: ['executablePath', 'imagePath'],
+        debugName: "get_images_from_exe",
+        argNames: ["executablePath", "imagePath"],
       );
 
   @override
@@ -155,7 +153,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiSystemProxyGetSystemProxyConstMeta =>
       const TaskConstMeta(
-        debugName: 'get_system_proxy',
+        debugName: "get_system_proxy",
         argNames: [],
       );
 
@@ -201,15 +199,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiProcessRunnerProcessRunnerConstMeta =>
       const TaskConstMeta(
-        debugName: 'process_runner',
+        debugName: "process_runner",
         argNames: [
-          'mode',
-          'name',
-          'executePath',
-          'monitorPath',
-          'workingDir',
-          'sleepCount',
-          'sleepDuration'
+          "mode",
+          "name",
+          "executePath",
+          "monitorPath",
+          "workingDir",
+          "sleepCount",
+          "sleepDuration"
         ],
       );
 
@@ -235,8 +233,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiAppScanScanCommonAppsConstMeta =>
       const TaskConstMeta(
-        debugName: 'scan_common_apps',
-        argNames: ['setting'],
+        debugName: "scan_common_apps",
+        argNames: ["setting"],
       );
 
   @protected
@@ -248,13 +246,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   Duration dco_decode_Chrono_Duration(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dcoDecodeDuration(dco_decode_i_64(raw));
+    return dcoDecodeDuration(dco_decode_i_64(raw).toInt());
   }
 
   @protected
   DateTime dco_decode_Chrono_Utc(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dcoDecodeTimestamp(ts: dco_decode_i_64(raw), isUtc: true);
+    return dcoDecodeTimestamp(ts: dco_decode_i_64(raw).toInt(), isUtc: true);
   }
 
   @protected
@@ -417,28 +415,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_String(deserializer);
+    var inner = sse_decode_String(deserializer);
     return AnyhowException(inner);
   }
 
   @protected
   Duration sse_decode_Chrono_Duration(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_i_64(deserializer);
-    return Duration(microseconds: inner);
+    var inner = sse_decode_i_64(deserializer);
+    return Duration(microseconds: inner.toInt());
   }
 
   @protected
   DateTime sse_decode_Chrono_Utc(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_i_64(deserializer);
-    return DateTime.fromMicrosecondsSinceEpoch(inner, isUtc: true);
+    var inner = sse_decode_i_64(deserializer);
+    return DateTime.fromMicrosecondsSinceEpoch(inner.toInt(), isUtc: true);
   }
 
   @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_list_prim_u_8_strict(deserializer);
+    var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
   }
 
@@ -452,21 +450,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CommonAppScanSetting sse_decode_box_autoadd_common_app_scan_setting(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return sse_decode_common_app_scan_setting(deserializer);
+    return (sse_decode_common_app_scan_setting(deserializer));
   }
 
   @protected
   CommonAppScanSetting sse_decode_common_app_scan_setting(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final var_basePath = sse_decode_String(deserializer);
-    final var_minInstallDirDepth = sse_decode_i_32(deserializer);
-    final var_maxInstallDirDepth = sse_decode_i_32(deserializer);
-    final var_minExecutableDepth = sse_decode_i_32(deserializer);
-    final var_maxExecutableDepth = sse_decode_i_32(deserializer);
-    final var_excludeDirectoryMatchers = sse_decode_list_String(deserializer);
-    final var_includeExecutableMatchers = sse_decode_list_String(deserializer);
-    final var_excludeExecutableMatchers = sse_decode_list_String(deserializer);
+    var var_basePath = sse_decode_String(deserializer);
+    var var_minInstallDirDepth = sse_decode_i_32(deserializer);
+    var var_maxInstallDirDepth = sse_decode_i_32(deserializer);
+    var var_minExecutableDepth = sse_decode_i_32(deserializer);
+    var var_maxExecutableDepth = sse_decode_i_32(deserializer);
+    var var_excludeDirectoryMatchers = sse_decode_list_String(deserializer);
+    var var_includeExecutableMatchers = sse_decode_list_String(deserializer);
+    var var_excludeExecutableMatchers = sse_decode_list_String(deserializer);
     return CommonAppScanSetting(
         basePath: var_basePath,
         minInstallDirDepth: var_minInstallDirDepth,
@@ -482,10 +480,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CommonAppScannedEntry sse_decode_common_app_scanned_entry(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final var_path = sse_decode_String(deserializer);
-    final var_entryType =
-        sse_decode_common_app_scanned_entry_type(deserializer);
-    final var_status = sse_decode_common_app_scanned_entry_status(deserializer);
+    var var_path = sse_decode_String(deserializer);
+    var var_entryType = sse_decode_common_app_scanned_entry_type(deserializer);
+    var var_status = sse_decode_common_app_scanned_entry_status(deserializer);
     return CommonAppScannedEntry(
         path: var_path, entryType: var_entryType, status: var_status);
   }
@@ -494,7 +491,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CommonAppScannedEntryStatus sse_decode_common_app_scanned_entry_status(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_i_32(deserializer);
+    var inner = sse_decode_i_32(deserializer);
     return CommonAppScannedEntryStatus.values[inner];
   }
 
@@ -502,7 +499,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CommonAppScannedEntryType sse_decode_common_app_scanned_entry_type(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_i_32(deserializer);
+    var inner = sse_decode_i_32(deserializer);
     return CommonAppScannedEntryType.values[inner];
   }
 
@@ -522,8 +519,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<String> sse_decode_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
-    final len_ = sse_decode_i_32(deserializer);
-    final ans_ = <String>[];
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_String(deserializer));
     }
@@ -535,8 +532,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
-    final len_ = sse_decode_i_32(deserializer);
-    final ans_ = <CommonAppScannedEntry>[];
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <CommonAppScannedEntry>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_common_app_scanned_entry(deserializer));
     }
@@ -546,7 +543,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final len_ = sse_decode_i_32(deserializer);
+    var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
   }
 
@@ -556,7 +553,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     if (sse_decode_bool(deserializer)) {
-      return sse_decode_list_common_app_scanned_entry(deserializer);
+      return (sse_decode_list_common_app_scanned_entry(deserializer));
     } else {
       return null;
     }
@@ -566,9 +563,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   (bool, String, int) sse_decode_record_bool_string_u_16(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final var_field0 = sse_decode_bool(deserializer);
-    final var_field1 = sse_decode_String(deserializer);
-    final var_field2 = sse_decode_u_16(deserializer);
+    var var_field0 = sse_decode_bool(deserializer);
+    var var_field1 = sse_decode_String(deserializer);
+    var var_field2 = sse_decode_u_16(deserializer);
     return (var_field0, var_field1, var_field2);
   }
 
@@ -576,16 +573,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   (DateTime, DateTime, bool) sse_decode_record_chrono_utc_chrono_utc_bool(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final var_field0 = sse_decode_Chrono_Utc(deserializer);
-    final var_field1 = sse_decode_Chrono_Utc(deserializer);
-    final var_field2 = sse_decode_bool(deserializer);
+    var var_field0 = sse_decode_Chrono_Utc(deserializer);
+    var var_field1 = sse_decode_Chrono_Utc(deserializer);
+    var var_field2 = sse_decode_bool(deserializer);
     return (var_field0, var_field1, var_field2);
   }
 
   @protected
   TraceMode sse_decode_trace_mode(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_i_32(deserializer);
+    var inner = sse_decode_i_32(deserializer);
     return TraceMode.values[inner];
   }
 
