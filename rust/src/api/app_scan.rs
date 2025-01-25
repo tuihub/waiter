@@ -53,7 +53,8 @@ fn walk_entry(
     path: &Path,
     remain_walk_depth: Option<usize>,
 ) -> Result<Option<Vec<CommonAppScannedEntry>>> {
-    Err(err_msg!("unsupported platform"))
+    use anyhow::anyhow;
+    Err(anyhow!("unsupported platform"))
 }
 
 #[cfg(target_os = "windows")]

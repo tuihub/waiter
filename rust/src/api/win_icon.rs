@@ -17,7 +17,7 @@ mod wrapper {
     use anyhow::Result;
     use image::RgbaImage;
 
-    fn get_images_from_exe(_executable_path: &str) -> Result<Vec<RgbaImage>> {
+    pub fn get_images_from_exe(_executable_path: &str) -> Result<Vec<RgbaImage>> {
         Ok(Vec::new())
     }
 }

@@ -113,13 +113,15 @@ pub fn process_runner(
     monitor_path: String,
     working_dir: String,
     sleep_count: i32,
-    sleep_millis: u64,
-) -> Result<(i64, i64, bool)> {
-    Err(err_msg!("unsupported platform"))
+    sleep_duration: chrono::Duration,
+) -> Result<(DateTime<Utc>, DateTime<Utc>, bool)> {
+    use anyhow::anyhow;
+    Err(anyhow!("unsupported platform"))
 }
 
 #[cfg(target_os = "linux")]
 fn wait_for_process_exit(pid: u32) -> Result<i32> {
+    use anyhow::anyhow;
     use libc::{c_int, pid_t, WEXITSTATUS, WIFEXITED, WIFSIGNALED, WTERMSIG};
 
     extern "C" {
@@ -145,7 +147,7 @@ fn wait_for_process_exit(pid: u32) -> Result<i32> {
             signal
         ))
     } else {
-        Err(err_msg!("Unknown error"))
+        Err(anyhow!("Unknown error"))
     }
 }
 

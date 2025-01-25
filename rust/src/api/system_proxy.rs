@@ -7,5 +7,6 @@ pub fn get_system_proxy() -> anyhow::Result<(bool, String, u16)> {
 
 #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
 pub fn get_system_proxy() -> anyhow::Result<(bool, String, u16)> {
-    Err(err_msg!("Unsupported platform"))
+    use anyhow::anyhow;
+    Err(anyhow!("Unsupported platform"))
 }
