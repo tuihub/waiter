@@ -1,6 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
+import 'utils.dart';
+
 part 'local_app.mapper.dart';
 
 @MappableClass()
@@ -19,6 +21,7 @@ class LocalApp with LocalAppMappable {
   final String? releaseDate;
   final String? developer;
   final String? publisher;
+  final Map<String, String> thirdPartyIds;
 
   const LocalApp({
     required this.uuid,
@@ -35,6 +38,7 @@ class LocalApp with LocalAppMappable {
     this.releaseDate,
     this.developer,
     this.publisher,
+    this.thirdPartyIds = const {},
   });
 
   static const fromMap = LocalAppMapper.fromMap;
@@ -59,4 +63,5 @@ class LocalAppTable extends Table {
   TextColumn get releaseDate => text().nullable()();
   TextColumn get developer => text().nullable()();
   TextColumn get publisher => text().nullable()();
+  TextColumn get thirdPartyIds => text().map(const StringMapConverter())();
 }

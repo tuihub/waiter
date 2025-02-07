@@ -47,6 +47,7 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
       releaseDate: Value(data.releaseDate),
       developer: Value(data.developer),
       publisher: Value(data.publisher),
+      thirdPartyIds: Value(data.thirdPartyIds),
     ));
   }
 
@@ -82,6 +83,7 @@ class GeburaDao extends DatabaseAccessor<AppDatabase> with _$GeburaDaoMixin {
       releaseDate: Value(data.releaseDate),
       developer: Value(data.developer),
       publisher: Value(data.publisher),
+      thirdPartyIds: Value(data.thirdPartyIds),
     ));
   }
 

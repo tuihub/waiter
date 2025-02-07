@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Subject
 void main() {
-  final instance = SubjectBuilder();
-  // TODO add properties to the builder and call build()
+  final Subject? instance = /* Subject(...) */ null;
+  // TODO add properties to the entity
 
   group(Subject, () {
     // int id
@@ -65,7 +65,7 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Item> infobox
+    // List<Item> infobox
     test('to test the property `infobox`', () async {
       // TODO
     });
@@ -99,12 +99,12 @@ void main() {
     });
 
     // 由维基人维护的 tag
-    // BuiltList<String> metaTags
+    // List<String> metaTags
     test('to test the property `metaTags`', () async {
       // TODO
     });
 
-    // BuiltList<Tag> tags
+    // List<Tag> tags
     test('to test the property `tags`', () async {
       // TODO
     });

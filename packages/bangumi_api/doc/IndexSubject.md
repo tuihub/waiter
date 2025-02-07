@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **type** | **int** |  | 
 **name** | **String** |  | 
 **images** | [**Images**](Images.md) |  | [optional] 
-**infobox** | [**BuiltList&lt;Item&gt;**](Item.md) |  | [optional] 
+**infobox** | [**List&lt;Item&gt;**](Item.md) |  | [optional] 
 **date** | **String** |  | [optional] 
 **comment** | **String** |  | 
 **addedAt** | [**DateTime**](DateTime.md) |  | 

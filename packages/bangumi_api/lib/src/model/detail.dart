@@ -3,74 +3,69 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:bangumi_api/src/model/detail_one_of.dart';
-import 'dart:core';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-import 'package:one_of/one_of.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'detail.g.dart';
 
-/// Detail
-///
-/// Properties:
-/// * [error] - error message
-/// * [path] - request path
-@BuiltValue()
-abstract class Detail implements Built<Detail, DetailBuilder> {
-  /// One Of [DetailOneOf], [String]
-  OneOf get oneOf;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Detail {
+  /// Returns a new [Detail] instance.
+  Detail({
+    this.error,
+    this.path,
+  });
 
-  Detail._();
+  /// error message
+  @JsonKey(
+    name: r'error',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? error;
 
-  factory Detail([void updates(DetailBuilder b)]) = _$Detail;
+  /// request path
+  @JsonKey(
+    name: r'path',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? path;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DetailBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Detail> get serializer => _$DetailSerializer();
-}
-
-class _$DetailSerializer implements PrimitiveSerializer<Detail> {
-  @override
-  final Iterable<Type> types = const [Detail, _$Detail];
-
-  @override
-  final String wireName = r'Detail';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Detail object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {}
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    Detail object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final oneOf = object.oneOf;
-    return serializers.serialize(oneOf.value,
-        specifiedType: FullType(oneOf.valueType))!;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Detail &&
+            runtimeType == other.runtimeType &&
+            equals([
+              error,
+              path,
+            ], [
+              other.error,
+              other.path,
+            ]);
   }
 
   @override
-  Detail deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = DetailBuilder();
-    Object? oneOfDataSrc;
-    final targetType = const FullType(OneOf, [
-      FullType(String),
-      FullType(DetailOneOf),
-    ]);
-    oneOfDataSrc = serialized;
-    result.oneOf = serializers.deserialize(oneOfDataSrc,
-        specifiedType: targetType) as OneOf;
-    return result.build();
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          error,
+          path,
+        ],
+      );
+
+  factory Detail.fromJson(Map<String, dynamic> json) => _$DetailFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DetailToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }

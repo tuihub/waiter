@@ -5,410 +5,265 @@
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/subject_type.dart';
 import 'package:bangumi_api/src/model/collection.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:bangumi_api/src/model/rating.dart';
-import 'package:bangumi_api/src/model/item.dart';
 import 'package:bangumi_api/src/model/tag.dart';
 import 'package:bangumi_api/src/model/images.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'subject.g.dart';
 
-/// Subject
-///
-/// Properties:
-/// * [id]
-/// * [type]
-/// * [name]
-/// * [nameCn]
-/// * [summary]
-/// * [series] - 是否为书籍系列的主条目
-/// * [nsfw]
-/// * [locked]
-/// * [date] - air date in `YYYY-MM-DD` format
-/// * [platform] - TV, Web, 欧美剧, DLC...
-/// * [images]
-/// * [infobox]
-/// * [volumes] - 书籍条目的册数，由旧服务端从wiki中解析
-/// * [eps] - 由旧服务端从wiki中解析，对于书籍条目为`话数`
-/// * [totalEpisodes] - 数据库中的章节数量
-/// * [rating]
-/// * [collection]
-/// * [metaTags] - 由维基人维护的 tag
-/// * [tags]
-@BuiltValue()
-abstract class Subject implements Built<Subject, SubjectBuilder> {
-  @BuiltValueField(wireName: r'id')
-  int get id;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Subject {
+  /// Returns a new [Subject] instance.
+  Subject({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.nameCn,
+    required this.summary,
+    required this.series,
+    required this.nsfw,
+    required this.locked,
+    this.date,
+    required this.platform,
+    required this.images,
+    // this.infobox,
+    required this.volumes,
+    required this.eps,
+    this.totalEpisodes,
+    required this.rating,
+    required this.collection,
+    required this.metaTags,
+    required this.tags,
+  });
 
-  @BuiltValueField(wireName: r'type')
-  SubjectType get type;
-  // enum typeEnum {  1,  2,  3,  4,  6,  };
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  @BuiltValueField(wireName: r'name')
-  String get name;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final SubjectType type;
 
-  @BuiltValueField(wireName: r'name_cn')
-  String get nameCn;
+  @JsonKey(
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+  final String name;
 
-  @BuiltValueField(wireName: r'summary')
-  String get summary;
+  @JsonKey(
+    name: r'name_cn',
+    required: true,
+    includeIfNull: false,
+  )
+  final String nameCn;
+
+  @JsonKey(
+    name: r'summary',
+    required: true,
+    includeIfNull: false,
+  )
+  final String summary;
 
   /// 是否为书籍系列的主条目
-  @BuiltValueField(wireName: r'series')
-  bool get series;
+  @JsonKey(
+    name: r'series',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool series;
 
-  @BuiltValueField(wireName: r'nsfw')
-  bool get nsfw;
+  @JsonKey(
+    name: r'nsfw',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool nsfw;
 
-  @BuiltValueField(wireName: r'locked')
-  bool get locked;
+  @JsonKey(
+    name: r'locked',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool locked;
 
   /// air date in `YYYY-MM-DD` format
-  @BuiltValueField(wireName: r'date')
-  String? get date;
+  @JsonKey(
+    name: r'date',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? date;
 
   /// TV, Web, 欧美剧, DLC...
-  @BuiltValueField(wireName: r'platform')
-  String get platform;
+  @JsonKey(
+    name: r'platform',
+    required: true,
+    includeIfNull: false,
+  )
+  final String platform;
 
-  @BuiltValueField(wireName: r'images')
-  Images get images;
+  @JsonKey(
+    name: r'images',
+    required: true,
+    includeIfNull: false,
+  )
+  final Images images;
 
-  @BuiltValueField(wireName: r'infobox')
-  BuiltList<Item>? get infobox;
+  // @JsonKey(
+  //   name: r'infobox',
+  //   required: false,
+  //   includeIfNull: false,
+  // )
+  // final List<Item>? infobox;
 
   /// 书籍条目的册数，由旧服务端从wiki中解析
-  @BuiltValueField(wireName: r'volumes')
-  int get volumes;
+  @JsonKey(
+    name: r'volumes',
+    required: true,
+    includeIfNull: false,
+  )
+  final int volumes;
 
   /// 由旧服务端从wiki中解析，对于书籍条目为`话数`
-  @BuiltValueField(wireName: r'eps')
-  int get eps;
+  @JsonKey(
+    name: r'eps',
+    required: true,
+    includeIfNull: false,
+  )
+  final int eps;
 
   /// 数据库中的章节数量
-  @BuiltValueField(wireName: r'total_episodes')
-  int get totalEpisodes;
+  @JsonKey(
+    name: r'total_episodes',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? totalEpisodes;
 
-  @BuiltValueField(wireName: r'rating')
-  Rating get rating;
+  @JsonKey(
+    name: r'rating',
+    required: true,
+    includeIfNull: false,
+  )
+  final Rating rating;
 
-  @BuiltValueField(wireName: r'collection')
-  Collection get collection;
+  @JsonKey(
+    name: r'collection',
+    required: true,
+    includeIfNull: false,
+  )
+  final Collection collection;
 
   /// 由维基人维护的 tag
-  @BuiltValueField(wireName: r'meta_tags')
-  BuiltList<String> get metaTags;
+  @JsonKey(
+    name: r'meta_tags',
+    required: true,
+    includeIfNull: false,
+  )
+  final List<String> metaTags;
 
-  @BuiltValueField(wireName: r'tags')
-  BuiltList<Tag> get tags;
+  @JsonKey(
+    name: r'tags',
+    required: true,
+    includeIfNull: false,
+  )
+  final List<Tag> tags;
 
-  Subject._();
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Subject &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              type,
+              name,
+              nameCn,
+              summary,
+              series,
+              nsfw,
+              locked,
+              date,
+              platform,
+              images,
+              // infobox,
+              volumes,
+              eps,
+              totalEpisodes,
+              rating,
+              collection,
+              metaTags,
+              tags,
+            ], [
+              other.id,
+              other.type,
+              other.name,
+              other.nameCn,
+              other.summary,
+              other.series,
+              other.nsfw,
+              other.locked,
+              other.date,
+              other.platform,
+              other.images,
+              // other.infobox,
+              other.volumes,
+              other.eps,
+              other.totalEpisodes,
+              other.rating,
+              other.collection,
+              other.metaTags,
+              other.tags,
+            ]);
+  }
 
-  factory Subject([void updates(SubjectBuilder b)]) = _$Subject;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(SubjectBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Subject> get serializer => _$SubjectSerializer();
-}
-
-class _$SubjectSerializer implements PrimitiveSerializer<Subject> {
   @override
-  final Iterable<Type> types = const [Subject, _$Subject];
-
-  @override
-  final String wireName = r'Subject';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Subject object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(SubjectType),
-    );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'name_cn';
-    yield serializers.serialize(
-      object.nameCn,
-      specifiedType: const FullType(String),
-    );
-    yield r'summary';
-    yield serializers.serialize(
-      object.summary,
-      specifiedType: const FullType(String),
-    );
-    yield r'series';
-    yield serializers.serialize(
-      object.series,
-      specifiedType: const FullType(bool),
-    );
-    yield r'nsfw';
-    yield serializers.serialize(
-      object.nsfw,
-      specifiedType: const FullType(bool),
-    );
-    yield r'locked';
-    yield serializers.serialize(
-      object.locked,
-      specifiedType: const FullType(bool),
-    );
-    if (object.date != null) {
-      yield r'date';
-      yield serializers.serialize(
-        object.date,
-        specifiedType: const FullType(String),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          type,
+          name,
+          nameCn,
+          summary,
+          series,
+          nsfw,
+          locked,
+          date,
+          platform,
+          images,
+          // infobox,
+          volumes,
+          eps,
+          totalEpisodes,
+          rating,
+          collection,
+          metaTags,
+          tags,
+        ],
       );
-    }
-    yield r'platform';
-    yield serializers.serialize(
-      object.platform,
-      specifiedType: const FullType(String),
-    );
-    yield r'images';
-    yield serializers.serialize(
-      object.images,
-      specifiedType: const FullType(Images),
-    );
-    if (object.infobox != null) {
-      yield r'infobox';
-      yield serializers.serialize(
-        object.infobox,
-        specifiedType: const FullType(BuiltList, [FullType(Item)]),
-      );
-    }
-    yield r'volumes';
-    yield serializers.serialize(
-      object.volumes,
-      specifiedType: const FullType(int),
-    );
-    yield r'eps';
-    yield serializers.serialize(
-      object.eps,
-      specifiedType: const FullType(int),
-    );
-    yield r'total_episodes';
-    yield serializers.serialize(
-      object.totalEpisodes,
-      specifiedType: const FullType(int),
-    );
-    yield r'rating';
-    yield serializers.serialize(
-      object.rating,
-      specifiedType: const FullType(Rating),
-    );
-    yield r'collection';
-    yield serializers.serialize(
-      object.collection,
-      specifiedType: const FullType(Collection),
-    );
-    yield r'meta_tags';
-    yield serializers.serialize(
-      object.metaTags,
-      specifiedType: const FullType(BuiltList, [FullType(String)]),
-    );
-    yield r'tags';
-    yield serializers.serialize(
-      object.tags,
-      specifiedType: const FullType(BuiltList, [FullType(Tag)]),
-    );
-  }
+
+  factory Subject.fromJson(Map<String, dynamic> json) =>
+      _$SubjectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SubjectToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Subject object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required SubjectBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(SubjectType),
-          ) as SubjectType;
-          result.type = valueDes;
-          break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'name_cn':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nameCn = valueDes;
-          break;
-        case r'summary':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.summary = valueDes;
-          break;
-        case r'series':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.series = valueDes;
-          break;
-        case r'nsfw':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.nsfw = valueDes;
-          break;
-        case r'locked':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.locked = valueDes;
-          break;
-        case r'date':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.date = valueDes;
-          break;
-        case r'platform':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.platform = valueDes;
-          break;
-        case r'images':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Images),
-          ) as Images;
-          result.images.replace(valueDes);
-          break;
-        case r'infobox':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(Item)]),
-          ) as BuiltList<Item>;
-          result.infobox.replace(valueDes);
-          break;
-        case r'volumes':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.volumes = valueDes;
-          break;
-        case r'eps':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.eps = valueDes;
-          break;
-        case r'total_episodes':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.totalEpisodes = valueDes;
-          break;
-        case r'rating':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Rating),
-          ) as Rating;
-          result.rating.replace(valueDes);
-          break;
-        case r'collection':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Collection),
-          ) as Collection;
-          result.collection.replace(valueDes);
-          break;
-        case r'meta_tags':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(String)]),
-          ) as BuiltList<String>;
-          result.metaTags.replace(valueDes);
-          break;
-        case r'tags':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(Tag)]),
-          ) as BuiltList<Tag>;
-          result.tags.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  Subject deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = SubjectBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

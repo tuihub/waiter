@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Episode
 void main() {
-  final instance = EpisodeBuilder();
-  // TODO add properties to the builder and call build()
+  final Episode? instance = /* Episode(...) */ null;
+  // TODO add properties to the entity
 
   group(Episode, () {
     // int id

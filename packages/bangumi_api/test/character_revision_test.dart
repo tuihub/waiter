@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for CharacterRevision
 void main() {
-  final instance = CharacterRevisionBuilder();
-  // TODO add properties to the builder and call build()
+  final CharacterRevision? instance = /* CharacterRevision(...) */ null;
+  // TODO add properties to the entity
 
   group(CharacterRevision, () {
     // int id
@@ -32,7 +32,7 @@ void main() {
       // TODO
     });
 
-    // BuiltMap<String, CharacterRevisionDataItem> data
+    // Map<String, CharacterRevisionDataItem> data
     test('to test the property `data`', () async {
       // TODO
     });

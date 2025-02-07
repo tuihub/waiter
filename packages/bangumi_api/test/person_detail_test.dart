@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for PersonDetail
 void main() {
-  final instance = PersonDetailBuilder();
-  // TODO add properties to the builder and call build()
+  final PersonDetail? instance = /* PersonDetail(...) */ null;
+  // TODO add properties to the entity
 
   group(PersonDetail, () {
     // int id
@@ -23,7 +23,7 @@ void main() {
       // TODO
     });
 
-    // BuiltList<PersonCareer> career
+    // List<PersonCareer> career
     test('to test the property `career`', () async {
       // TODO
     });
@@ -51,7 +51,7 @@ void main() {
     });
 
     // server parsed infobox, a map from key to string or tuple null if server infobox is not valid
-    // BuiltList<JsonObject> infobox
+    // List<Object> infobox
     test('to test the property `infobox`', () async {
       // TODO
     });

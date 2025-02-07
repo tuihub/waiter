@@ -3,121 +3,67 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'tag.g.dart';
 
-/// Tag
-///
-/// Properties:
-/// * [name]
-/// * [count]
-@BuiltValue()
-abstract class Tag implements Built<Tag, TagBuilder> {
-  @BuiltValueField(wireName: r'name')
-  String get name;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Tag {
+  /// Returns a new [Tag] instance.
+  Tag({
+    required this.name,
+    required this.count,
+  });
 
-  @BuiltValueField(wireName: r'count')
-  int get count;
+  @JsonKey(
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+  final String name;
 
-  Tag._();
+  @JsonKey(
+    name: r'count',
+    required: true,
+    includeIfNull: false,
+  )
+  final int count;
 
-  factory Tag([void updates(TagBuilder b)]) = _$Tag;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(TagBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Tag> get serializer => _$TagSerializer();
-}
-
-class _$TagSerializer implements PrimitiveSerializer<Tag> {
-  @override
-  final Iterable<Type> types = const [Tag, _$Tag];
-
-  @override
-  final String wireName = r'Tag';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Tag object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'count';
-    yield serializers.serialize(
-      object.count,
-      specifiedType: const FullType(int),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Tag &&
+            runtimeType == other.runtimeType &&
+            equals([
+              name,
+              count,
+            ], [
+              other.name,
+              other.count,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Tag object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          name,
+          count,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required TagBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'count':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.count = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TagToJson(this);
 
   @override
-  Tag deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = TagBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

@@ -1,6 +1,6 @@
 import 'utils.dart';
 
-enum testEnum { a, b, c }
+enum _TestEnum { a, b, c }
 
 void main() {
   final stringList = ['a', 'b', 'c'];
@@ -13,13 +13,23 @@ void main() {
   assert(stringListFromSql[0] == stringList[0],
       'stringListFromSql: $stringListFromSql, stringList: $stringList');
 
-  final enumList = [testEnum.a, testEnum.b, testEnum.c];
+  final enumList = [_TestEnum.a, _TestEnum.b, _TestEnum.c];
   const enumListJson = '["testEnum.a","testEnum.b","testEnum.c"]';
-  final enumListConverter = EnumListConverter(() => testEnum.values);
+  final enumListConverter = EnumListConverter(() => _TestEnum.values);
   final enumListSql = enumListConverter.toSql(enumList);
   final enumListFromSql = enumListConverter.fromSql(enumListJson);
   assert(enumListSql == enumListJson,
       'enumListSql: $enumListSql, enumListJson: $enumListJson');
   assert(enumListFromSql[0] == enumList[0],
       'enumListFromSql: $enumListFromSql, enumList: $enumList');
+
+  final stringMap = {'a': 'b', 'c': 'd'};
+  const stringMapJson = '{"a":"b","c":"d"}';
+  const stringMapConverter = StringMapConverter();
+  final stringMapSql = stringMapConverter.toSql(stringMap);
+  final stringMapFromSql = stringMapConverter.fromSql(stringMapJson);
+  assert(stringMapSql == stringMapJson,
+      'stringMapSql: $stringMapSql, stringMapJson: $stringMapJson');
+  assert(stringMapFromSql['a'] == stringMap['a'],
+      'stringMapFromSql: $stringMapFromSql, stringMap: $stringMap');
 }

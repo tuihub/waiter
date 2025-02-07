@@ -3,269 +3,155 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'count.g.dart';
 
-/// Count
-///
-/// Properties:
-/// * [n1]
-/// * [n2]
-/// * [n3]
-/// * [n4]
-/// * [n5]
-/// * [n6]
-/// * [n7]
-/// * [n8]
-/// * [n9]
-/// * [n10]
-@BuiltValue()
-abstract class Count implements Built<Count, CountBuilder> {
-  @BuiltValueField(wireName: r'1')
-  int? get n1;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Count {
+  /// Returns a new [Count] instance.
+  Count({
+    this.n1,
+    this.n2,
+    this.n3,
+    this.n4,
+    this.n5,
+    this.n6,
+    this.n7,
+    this.n8,
+    this.n9,
+    this.n10,
+  });
 
-  @BuiltValueField(wireName: r'2')
-  int? get n2;
+  @JsonKey(
+    name: r'1',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n1;
 
-  @BuiltValueField(wireName: r'3')
-  int? get n3;
+  @JsonKey(
+    name: r'2',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n2;
 
-  @BuiltValueField(wireName: r'4')
-  int? get n4;
+  @JsonKey(
+    name: r'3',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n3;
 
-  @BuiltValueField(wireName: r'5')
-  int? get n5;
+  @JsonKey(
+    name: r'4',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n4;
 
-  @BuiltValueField(wireName: r'6')
-  int? get n6;
+  @JsonKey(
+    name: r'5',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n5;
 
-  @BuiltValueField(wireName: r'7')
-  int? get n7;
+  @JsonKey(
+    name: r'6',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n6;
 
-  @BuiltValueField(wireName: r'8')
-  int? get n8;
+  @JsonKey(
+    name: r'7',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n7;
 
-  @BuiltValueField(wireName: r'9')
-  int? get n9;
+  @JsonKey(
+    name: r'8',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n8;
 
-  @BuiltValueField(wireName: r'10')
-  int? get n10;
+  @JsonKey(
+    name: r'9',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n9;
 
-  Count._();
+  @JsonKey(
+    name: r'10',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? n10;
 
-  factory Count([void updates(CountBuilder b)]) = _$Count;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(CountBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Count> get serializer => _$CountSerializer();
-}
-
-class _$CountSerializer implements PrimitiveSerializer<Count> {
-  @override
-  final Iterable<Type> types = const [Count, _$Count];
-
-  @override
-  final String wireName = r'Count';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Count object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.n1 != null) {
-      yield r'1';
-      yield serializers.serialize(
-        object.n1,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n2 != null) {
-      yield r'2';
-      yield serializers.serialize(
-        object.n2,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n3 != null) {
-      yield r'3';
-      yield serializers.serialize(
-        object.n3,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n4 != null) {
-      yield r'4';
-      yield serializers.serialize(
-        object.n4,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n5 != null) {
-      yield r'5';
-      yield serializers.serialize(
-        object.n5,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n6 != null) {
-      yield r'6';
-      yield serializers.serialize(
-        object.n6,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n7 != null) {
-      yield r'7';
-      yield serializers.serialize(
-        object.n7,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n8 != null) {
-      yield r'8';
-      yield serializers.serialize(
-        object.n8,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n9 != null) {
-      yield r'9';
-      yield serializers.serialize(
-        object.n9,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.n10 != null) {
-      yield r'10';
-      yield serializers.serialize(
-        object.n10,
-        specifiedType: const FullType(int),
-      );
-    }
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Count &&
+            runtimeType == other.runtimeType &&
+            equals([
+              n1,
+              n2,
+              n3,
+              n4,
+              n5,
+              n6,
+              n7,
+              n8,
+              n9,
+              n10,
+            ], [
+              other.n1,
+              other.n2,
+              other.n3,
+              other.n4,
+              other.n5,
+              other.n6,
+              other.n7,
+              other.n8,
+              other.n9,
+              other.n10,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Count object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          n1,
+          n2,
+          n3,
+          n4,
+          n5,
+          n6,
+          n7,
+          n8,
+          n9,
+          n10,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required CountBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'1':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n1 = valueDes;
-          break;
-        case r'2':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n2 = valueDes;
-          break;
-        case r'3':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n3 = valueDes;
-          break;
-        case r'4':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n4 = valueDes;
-          break;
-        case r'5':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n5 = valueDes;
-          break;
-        case r'6':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n6 = valueDes;
-          break;
-        case r'7':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n7 = valueDes;
-          break;
-        case r'8':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n8 = valueDes;
-          break;
-        case r'9':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n9 = valueDes;
-          break;
-        case r'10':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.n10 = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Count.fromJson(Map<String, dynamic> json) => _$CountFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CountToJson(this);
 
   @override
-  Count deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = CountBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

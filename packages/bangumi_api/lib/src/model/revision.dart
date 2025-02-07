@@ -4,206 +4,101 @@
 
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/creator.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'revision.g.dart';
 
-/// Revision
-///
-/// Properties:
-/// * [id]
-/// * [type]
-/// * [creator]
-/// * [summary]
-/// * [createdAt]
-@BuiltValue(instantiable: false)
-abstract class Revision {
-  @BuiltValueField(wireName: r'id')
-  int get id;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Revision {
+  /// Returns a new [Revision] instance.
+  Revision({
+    required this.id,
+    required this.type,
+    this.creator,
+    required this.summary,
+    required this.createdAt,
+  });
 
-  @BuiltValueField(wireName: r'type')
-  int get type;
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  @BuiltValueField(wireName: r'creator')
-  Creator? get creator;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final int type;
 
-  @BuiltValueField(wireName: r'summary')
-  String get summary;
+  @JsonKey(
+    name: r'creator',
+    required: false,
+    includeIfNull: false,
+  )
+  final Creator? creator;
 
-  @BuiltValueField(wireName: r'created_at')
-  DateTime get createdAt;
+  @JsonKey(
+    name: r'summary',
+    required: true,
+    includeIfNull: false,
+  )
+  final String summary;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Revision> get serializer => _$RevisionSerializer();
-}
+  @JsonKey(
+    name: r'created_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime createdAt;
 
-class _$RevisionSerializer implements PrimitiveSerializer<Revision> {
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Revision &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              type,
+              creator,
+              summary,
+              createdAt,
+            ], [
+              other.id,
+              other.type,
+              other.creator,
+              other.summary,
+              other.createdAt,
+            ]);
+  }
+
   @override
-  final Iterable<Type> types = const [Revision];
-
-  @override
-  final String wireName = r'Revision';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Revision object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(int),
-    );
-    if (object.creator != null) {
-      yield r'creator';
-      yield serializers.serialize(
-        object.creator,
-        specifiedType: const FullType(Creator),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          type,
+          creator,
+          summary,
+          createdAt,
+        ],
       );
-    }
-    yield r'summary';
-    yield serializers.serialize(
-      object.summary,
-      specifiedType: const FullType(String),
-    );
-    yield r'created_at';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(DateTime),
-    );
-  }
+
+  factory Revision.fromJson(Map<String, dynamic> json) =>
+      _$RevisionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RevisionToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Revision object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  @override
-  Revision deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.deserialize(serialized,
-        specifiedType: FullType($Revision)) as $Revision;
-  }
-}
-
-/// a concrete implementation of [Revision], since [Revision] is not instantiable
-@BuiltValue(instantiable: true)
-abstract class $Revision
-    implements Revision, Built<$Revision, $RevisionBuilder> {
-  $Revision._();
-
-  factory $Revision([void Function($RevisionBuilder)? updates]) = _$$Revision;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults($RevisionBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<$Revision> get serializer => _$$RevisionSerializer();
-}
-
-class _$$RevisionSerializer implements PrimitiveSerializer<$Revision> {
-  @override
-  final Iterable<Type> types = const [$Revision, _$$Revision];
-
-  @override
-  final String wireName = r'$Revision';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    $Revision object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.serialize(object, specifiedType: FullType(Revision))!;
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required RevisionBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.type = valueDes;
-          break;
-        case r'creator':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Creator),
-          ) as Creator;
-          result.creator.replace(valueDes);
-          break;
-        case r'summary':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.summary = valueDes;
-          break;
-        case r'created_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.createdAt = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  $Revision deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = $RevisionBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

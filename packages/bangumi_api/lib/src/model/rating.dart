@@ -4,153 +4,89 @@
 
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/count.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'rating.g.dart';
 
-/// Rating
-///
-/// Properties:
-/// * [rank]
-/// * [total]
-/// * [count]
-/// * [score]
-@BuiltValue()
-abstract class Rating implements Built<Rating, RatingBuilder> {
-  @BuiltValueField(wireName: r'rank')
-  int get rank;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Rating {
+  /// Returns a new [Rating] instance.
+  Rating({
+    required this.rank,
+    required this.total,
+    required this.count,
+    required this.score,
+  });
 
-  @BuiltValueField(wireName: r'total')
-  int get total;
+  @JsonKey(
+    name: r'rank',
+    required: true,
+    includeIfNull: false,
+  )
+  final int rank;
 
-  @BuiltValueField(wireName: r'count')
-  Count get count;
+  @JsonKey(
+    name: r'total',
+    required: true,
+    includeIfNull: false,
+  )
+  final int total;
 
-  @BuiltValueField(wireName: r'score')
-  num get score;
+  @JsonKey(
+    name: r'count',
+    required: true,
+    includeIfNull: false,
+  )
+  final Count count;
 
-  Rating._();
+  @JsonKey(
+    name: r'score',
+    required: true,
+    includeIfNull: false,
+  )
+  final num score;
 
-  factory Rating([void updates(RatingBuilder b)]) = _$Rating;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(RatingBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Rating> get serializer => _$RatingSerializer();
-}
-
-class _$RatingSerializer implements PrimitiveSerializer<Rating> {
-  @override
-  final Iterable<Type> types = const [Rating, _$Rating];
-
-  @override
-  final String wireName = r'Rating';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Rating object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'rank';
-    yield serializers.serialize(
-      object.rank,
-      specifiedType: const FullType(int),
-    );
-    yield r'total';
-    yield serializers.serialize(
-      object.total,
-      specifiedType: const FullType(int),
-    );
-    yield r'count';
-    yield serializers.serialize(
-      object.count,
-      specifiedType: const FullType(Count),
-    );
-    yield r'score';
-    yield serializers.serialize(
-      object.score,
-      specifiedType: const FullType(num),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Rating &&
+            runtimeType == other.runtimeType &&
+            equals([
+              rank,
+              total,
+              count,
+              score,
+            ], [
+              other.rank,
+              other.total,
+              other.count,
+              other.score,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Rating object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          rank,
+          total,
+          count,
+          score,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required RatingBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'rank':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.rank = valueDes;
-          break;
-        case r'total':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.total = valueDes;
-          break;
-        case r'count':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Count),
-          ) as Count;
-          result.count.replace(valueDes);
-          break;
-        case r'score':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.score = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RatingToJson(this);
 
   @override
-  Rating deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = RatingBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

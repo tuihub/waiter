@@ -49,3 +49,26 @@ class EnumListConverter<T extends Enum> extends TypeConverter<List<T>, String>
     }
   }
 }
+
+class StringMapConverter extends TypeConverter<Map<String, String>, String>
+    with JsonTypeConverter<Map<String, String>, String> {
+  const StringMapConverter();
+
+  @override
+  Map<String, String> fromSql(String fromDb) {
+    try {
+      return (jsonDecode(fromDb) as Map).cast<String, String>();
+    } catch (e) {
+      return {};
+    }
+  }
+
+  @override
+  String toSql(Map<String, String> value) {
+    try {
+      return jsonEncode(value);
+    } catch (e) {
+      return '{}';
+    }
+  }
+}

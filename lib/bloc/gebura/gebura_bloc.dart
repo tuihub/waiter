@@ -33,6 +33,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     try {
       final initialState = GeburaState();
       final instance = GeburaBloc._(initialState, repo);
+      instance.add(GeburaInitEvent(null));
       serverID.listen((event) {
         instance.add(_GeburaSwitchServerEvent(event));
       });
@@ -715,7 +716,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             path: commonApp.installPath,
           );
           await _repo.addLocalAppInst(appInst, app: app);
-          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           for (final launcherPath in commonApp.launcherPaths) {
             final appInstLaunch = LocalAppInstLauncher(
                 uuid: const Uuid().v1(),
@@ -726,6 +726,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 ));
             await _repo.addLocalAppInstLauncher(appInstLaunch);
           }
+          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           final msg =
               '${S.current.importingCommonApplications} $processCount ( $failedCount ) / ${event.uuids.length}';
           emit(GeburaTrackCommonAppsState(
@@ -735,6 +736,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           ));
           processCount += 1;
         } catch (e) {
+          debugPrint(e.toString());
           failedCount += 1;
         }
       }
@@ -763,6 +765,9 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
           final app = LocalApp(
             uuid: const Uuid().v1(),
             name: steamApp.name,
+            thirdPartyIds: {
+              'steam': steamApp.steamAppID,
+            },
           );
           final appInst = LocalAppInst(
             uuid: const Uuid().v1(),
@@ -771,7 +776,6 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
             path: steamApp.installPath,
           );
           await _repo.addLocalAppInst(appInst, app: app);
-          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           final appInstLaunch = LocalAppInstLauncher(
               uuid: const Uuid().v1(),
               appInstUUID: appInst.uuid,
@@ -780,6 +784,7 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
                 steamAppID: steamApp.steamAppID,
               ));
           await _repo.addLocalAppInstLauncher(appInstLaunch);
+          add(GeburaRefreshAppInfoEvent(event.context, app.uuid));
           final msg =
               '${S.current.importingSteamApplications} $processCount ( $failedCount ) / ${event.uuids.length}';
           emit(GeburaTrackSteamAppsState(

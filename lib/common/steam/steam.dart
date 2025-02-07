@@ -181,19 +181,74 @@ InstalledSteamApps? _getAppInfo(String path) {
   return null;
 }
 
+final _langCodes = [
+  '',
+  'arabic',
+  'bulgarian',
+  'schinese',
+  'tchinese',
+  'czech',
+  'danish',
+  'dutch',
+  'english',
+  'finnish',
+  'french',
+  'german',
+  'greek',
+  'hungarian',
+  'italian',
+  'japanese',
+  'koreana',
+  'norwegian',
+  'polish',
+  'portuguese',
+  'brazilian',
+  'romanian',
+  'russian',
+  'spanish',
+  'latam',
+  'swedish',
+  'thai',
+  'turkish',
+  'ukrainian',
+  'vietnamese',
+];
+
 String? getAppIconFilePath(String appId) {
   final path = getSteamInstallPath();
   if (path == null) {
     return null;
   }
-  final filePath = p.join(
+  // Older versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      '${appId}_icon${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
+  }
+  // Newer versions of Steam
+  final dirPath = p.join(
     path,
     'appcache',
     'librarycache',
-    '${appId}_icon.jpg',
+    appId,
   );
-  if (io.File(filePath).existsSync()) {
-    return filePath;
+  final dir = io.Directory(dirPath);
+  if (dir.existsSync()) {
+    final files = dir.listSync();
+    for (final file in files) {
+      if (file is io.File) {
+        final fileName = p.basename(file.path);
+        if (fileName.length == 44) {
+          return file.path;
+        }
+      }
+    }
   }
   return null;
 }
@@ -203,14 +258,30 @@ String? getAppCoverFilePath(String appId) {
   if (path == null) {
     return null;
   }
-  final filePath = p.join(
-    path,
-    'appcache',
-    'librarycache',
-    '${appId}_library_600x900.jpg',
-  );
-  if (io.File(filePath).existsSync()) {
-    return filePath;
+  // Older versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      '${appId}_library_600x900${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
+  }
+  // Newer versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      appId,
+      'library_600x900${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
   }
   return null;
 }
@@ -220,23 +291,56 @@ String? getAppBackgroundFilePath(String appId) {
   if (path == null) {
     return null;
   }
-  var filePath = p.join(
-    path,
-    'appcache',
-    'librarycache',
-    '${appId}_library_hero.jpg',
-  );
-  if (io.File(filePath).existsSync()) {
-    return filePath;
+  // Older versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      '${appId}_library_hero${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
   }
-  filePath = p.join(
-    path,
-    'appcache',
-    'librarycache',
-    '${appId}_header.jpg',
-  );
-  if (io.File(filePath).existsSync()) {
-    return filePath;
+  // Newer versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      appId,
+      'library_hero${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
+  }
+  // Fallback to header image
+  // Older versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      '${appId}_header${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
+  }
+  // Newer versions of Steam
+  for (final langCode in _langCodes) {
+    final filePath = p.join(
+      path,
+      'appcache',
+      'librarycache',
+      appId,
+      'header${langCode == '' ? '' : '_$langCode'}.jpg',
+    );
+    if (io.File(filePath).existsSync()) {
+      return filePath;
+    }
   }
   return null;
 }

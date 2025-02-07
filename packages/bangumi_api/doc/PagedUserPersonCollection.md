@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **total** | **int** |  | [optional] [default to 0]
 **limit** | **int** |  | [optional] [default to 0]
 **offset** | **int** |  | [optional] [default to 0]
-**data** | [**BuiltList&lt;UserPersonCollection&gt;**](UserPersonCollection.md) |  | [optional] [default to ListBuilder()]
+**data** | [**List&lt;UserPersonCollection&gt;**](UserPersonCollection.md) |  | [optional] [default to []]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

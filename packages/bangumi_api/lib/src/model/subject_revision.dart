@@ -5,179 +5,112 @@
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/creator.dart';
 import 'package:bangumi_api/src/model/subject_revision_data.dart';
-import 'package:bangumi_api/src/model/revision.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'subject_revision.g.dart';
 
-/// SubjectRevision
-///
-/// Properties:
-/// * [id]
-/// * [type]
-/// * [creator]
-/// * [summary]
-/// * [createdAt]
-/// * [data]
-@BuiltValue()
-abstract class SubjectRevision
-    implements Revision, Built<SubjectRevision, SubjectRevisionBuilder> {
-  @BuiltValueField(wireName: r'data')
-  SubjectRevisionData? get data;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class SubjectRevision {
+  /// Returns a new [SubjectRevision] instance.
+  SubjectRevision({
+    required this.id,
+    required this.type,
+    this.creator,
+    required this.summary,
+    required this.createdAt,
+    this.data,
+  });
 
-  SubjectRevision._();
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  factory SubjectRevision([void updates(SubjectRevisionBuilder b)]) =
-      _$SubjectRevision;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final int type;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(SubjectRevisionBuilder b) => b;
+  @JsonKey(
+    name: r'creator',
+    required: false,
+    includeIfNull: false,
+  )
+  final Creator? creator;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<SubjectRevision> get serializer =>
-      _$SubjectRevisionSerializer();
-}
+  @JsonKey(
+    name: r'summary',
+    required: true,
+    includeIfNull: false,
+  )
+  final String summary;
 
-class _$SubjectRevisionSerializer
-    implements PrimitiveSerializer<SubjectRevision> {
+  @JsonKey(
+    name: r'created_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime createdAt;
+
+  @JsonKey(
+    name: r'data',
+    required: false,
+    includeIfNull: false,
+  )
+  final SubjectRevisionData? data;
+
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SubjectRevision &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              type,
+              creator,
+              summary,
+              createdAt,
+              data,
+            ], [
+              other.id,
+              other.type,
+              other.creator,
+              other.summary,
+              other.createdAt,
+              other.data,
+            ]);
+  }
+
   @override
-  final Iterable<Type> types = const [SubjectRevision, _$SubjectRevision];
-
-  @override
-  final String wireName = r'SubjectRevision';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    SubjectRevision object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'summary';
-    yield serializers.serialize(
-      object.summary,
-      specifiedType: const FullType(String),
-    );
-    yield r'created_at';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(DateTime),
-    );
-    if (object.creator != null) {
-      yield r'creator';
-      yield serializers.serialize(
-        object.creator,
-        specifiedType: const FullType(Creator),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          type,
+          creator,
+          summary,
+          createdAt,
+          data,
+        ],
       );
-    }
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    if (object.data != null) {
-      yield r'data';
-      yield serializers.serialize(
-        object.data,
-        specifiedType: const FullType(SubjectRevisionData),
-      );
-    }
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(int),
-    );
-  }
+
+  factory SubjectRevision.fromJson(Map<String, dynamic> json) =>
+      _$SubjectRevisionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SubjectRevisionToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    SubjectRevision object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required SubjectRevisionBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'summary':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.summary = valueDes;
-          break;
-        case r'created_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.createdAt = valueDes;
-          break;
-        case r'creator':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Creator),
-          ) as Creator;
-          result.creator.replace(valueDes);
-          break;
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(SubjectRevisionData),
-          ) as SubjectRevisionData;
-          result.data.replace(valueDes);
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.type = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  SubjectRevision deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = SubjectRevisionBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

@@ -3,256 +3,156 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'subject_revision_data.g.dart';
 
-/// SubjectRevisionData
-///
-/// Properties:
-/// * [fieldEps]
-/// * [fieldInfobox]
-/// * [fieldSummary]
-/// * [name]
-/// * [nameCn]
-/// * [platform]
-/// * [subjectId]
-/// * [type]
-/// * [typeId]
-/// * [voteField]
-@BuiltValue()
-abstract class SubjectRevisionData
-    implements Built<SubjectRevisionData, SubjectRevisionDataBuilder> {
-  @BuiltValueField(wireName: r'field_eps')
-  int get fieldEps;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class SubjectRevisionData {
+  /// Returns a new [SubjectRevisionData] instance.
+  SubjectRevisionData({
+    required this.fieldEps,
+    required this.fieldInfobox,
+    required this.fieldSummary,
+    required this.name,
+    required this.nameCn,
+    required this.platform,
+    required this.subjectId,
+    required this.type,
+    required this.typeId,
+    required this.voteField,
+  });
 
-  @BuiltValueField(wireName: r'field_infobox')
-  String get fieldInfobox;
+  @JsonKey(
+    name: r'field_eps',
+    required: true,
+    includeIfNull: false,
+  )
+  final int fieldEps;
 
-  @BuiltValueField(wireName: r'field_summary')
-  String get fieldSummary;
+  @JsonKey(
+    name: r'field_infobox',
+    required: true,
+    includeIfNull: false,
+  )
+  final String fieldInfobox;
 
-  @BuiltValueField(wireName: r'name')
-  String get name;
+  @JsonKey(
+    name: r'field_summary',
+    required: true,
+    includeIfNull: false,
+  )
+  final String fieldSummary;
 
-  @BuiltValueField(wireName: r'name_cn')
-  String get nameCn;
+  @JsonKey(
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+  final String name;
 
-  @BuiltValueField(wireName: r'platform')
-  int get platform;
+  @JsonKey(
+    name: r'name_cn',
+    required: true,
+    includeIfNull: false,
+  )
+  final String nameCn;
 
-  @BuiltValueField(wireName: r'subject_id')
-  int get subjectId;
+  @JsonKey(
+    name: r'platform',
+    required: true,
+    includeIfNull: false,
+  )
+  final int platform;
 
-  @BuiltValueField(wireName: r'type')
-  int get type;
+  @JsonKey(
+    name: r'subject_id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int subjectId;
 
-  @BuiltValueField(wireName: r'type_id')
-  int get typeId;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final int type;
 
-  @BuiltValueField(wireName: r'vote_field')
-  String get voteField;
+  @JsonKey(
+    name: r'type_id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int typeId;
 
-  SubjectRevisionData._();
+  @JsonKey(
+    name: r'vote_field',
+    required: true,
+    includeIfNull: false,
+  )
+  final String voteField;
 
-  factory SubjectRevisionData([void updates(SubjectRevisionDataBuilder b)]) =
-      _$SubjectRevisionData;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(SubjectRevisionDataBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<SubjectRevisionData> get serializer =>
-      _$SubjectRevisionDataSerializer();
-}
-
-class _$SubjectRevisionDataSerializer
-    implements PrimitiveSerializer<SubjectRevisionData> {
-  @override
-  final Iterable<Type> types = const [
-    SubjectRevisionData,
-    _$SubjectRevisionData
-  ];
-
-  @override
-  final String wireName = r'SubjectRevisionData';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    SubjectRevisionData object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'field_eps';
-    yield serializers.serialize(
-      object.fieldEps,
-      specifiedType: const FullType(int),
-    );
-    yield r'field_infobox';
-    yield serializers.serialize(
-      object.fieldInfobox,
-      specifiedType: const FullType(String),
-    );
-    yield r'field_summary';
-    yield serializers.serialize(
-      object.fieldSummary,
-      specifiedType: const FullType(String),
-    );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'name_cn';
-    yield serializers.serialize(
-      object.nameCn,
-      specifiedType: const FullType(String),
-    );
-    yield r'platform';
-    yield serializers.serialize(
-      object.platform,
-      specifiedType: const FullType(int),
-    );
-    yield r'subject_id';
-    yield serializers.serialize(
-      object.subjectId,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(int),
-    );
-    yield r'type_id';
-    yield serializers.serialize(
-      object.typeId,
-      specifiedType: const FullType(int),
-    );
-    yield r'vote_field';
-    yield serializers.serialize(
-      object.voteField,
-      specifiedType: const FullType(String),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SubjectRevisionData &&
+            runtimeType == other.runtimeType &&
+            equals([
+              fieldEps,
+              fieldInfobox,
+              fieldSummary,
+              name,
+              nameCn,
+              platform,
+              subjectId,
+              type,
+              typeId,
+              voteField,
+            ], [
+              other.fieldEps,
+              other.fieldInfobox,
+              other.fieldSummary,
+              other.name,
+              other.nameCn,
+              other.platform,
+              other.subjectId,
+              other.type,
+              other.typeId,
+              other.voteField,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    SubjectRevisionData object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          fieldEps,
+          fieldInfobox,
+          fieldSummary,
+          name,
+          nameCn,
+          platform,
+          subjectId,
+          type,
+          typeId,
+          voteField,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required SubjectRevisionDataBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'field_eps':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.fieldEps = valueDes;
-          break;
-        case r'field_infobox':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.fieldInfobox = valueDes;
-          break;
-        case r'field_summary':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.fieldSummary = valueDes;
-          break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'name_cn':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nameCn = valueDes;
-          break;
-        case r'platform':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.platform = valueDes;
-          break;
-        case r'subject_id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.subjectId = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.type = valueDes;
-          break;
-        case r'type_id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.typeId = valueDes;
-          break;
-        case r'vote_field':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.voteField = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory SubjectRevisionData.fromJson(Map<String, dynamic> json) =>
+      _$SubjectRevisionDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SubjectRevisionDataToJson(this);
 
   @override
-  SubjectRevisionData deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = SubjectRevisionDataBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

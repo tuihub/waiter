@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for PersonImages
 void main() {
-  final instance = PersonImagesBuilder();
-  // TODO add properties to the builder and call build()
+  final PersonImages? instance = /* PersonImages(...) */ null;
+  // TODO add properties to the entity
 
   group(PersonImages, () {
     // String large

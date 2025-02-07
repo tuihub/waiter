@@ -3,154 +3,90 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'person_images.g.dart';
 
-/// PersonImages
-///
-/// Properties:
-/// * [large]
-/// * [medium]
-/// * [small]
-/// * [grid]
-@BuiltValue()
-abstract class PersonImages
-    implements Built<PersonImages, PersonImagesBuilder> {
-  @BuiltValueField(wireName: r'large')
-  String get large;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class PersonImages {
+  /// Returns a new [PersonImages] instance.
+  PersonImages({
+    required this.large,
+    required this.medium,
+    required this.small,
+    required this.grid,
+  });
 
-  @BuiltValueField(wireName: r'medium')
-  String get medium;
+  @JsonKey(
+    name: r'large',
+    required: true,
+    includeIfNull: false,
+  )
+  final String large;
 
-  @BuiltValueField(wireName: r'small')
-  String get small;
+  @JsonKey(
+    name: r'medium',
+    required: true,
+    includeIfNull: false,
+  )
+  final String medium;
 
-  @BuiltValueField(wireName: r'grid')
-  String get grid;
+  @JsonKey(
+    name: r'small',
+    required: true,
+    includeIfNull: false,
+  )
+  final String small;
 
-  PersonImages._();
+  @JsonKey(
+    name: r'grid',
+    required: true,
+    includeIfNull: false,
+  )
+  final String grid;
 
-  factory PersonImages([void updates(PersonImagesBuilder b)]) = _$PersonImages;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(PersonImagesBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<PersonImages> get serializer => _$PersonImagesSerializer();
-}
-
-class _$PersonImagesSerializer implements PrimitiveSerializer<PersonImages> {
-  @override
-  final Iterable<Type> types = const [PersonImages, _$PersonImages];
-
-  @override
-  final String wireName = r'PersonImages';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    PersonImages object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'large';
-    yield serializers.serialize(
-      object.large,
-      specifiedType: const FullType(String),
-    );
-    yield r'medium';
-    yield serializers.serialize(
-      object.medium,
-      specifiedType: const FullType(String),
-    );
-    yield r'small';
-    yield serializers.serialize(
-      object.small,
-      specifiedType: const FullType(String),
-    );
-    yield r'grid';
-    yield serializers.serialize(
-      object.grid,
-      specifiedType: const FullType(String),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PersonImages &&
+            runtimeType == other.runtimeType &&
+            equals([
+              large,
+              medium,
+              small,
+              grid,
+            ], [
+              other.large,
+              other.medium,
+              other.small,
+              other.grid,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    PersonImages object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          large,
+          medium,
+          small,
+          grid,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required PersonImagesBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'large':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.large = valueDes;
-          break;
-        case r'medium':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.medium = valueDes;
-          break;
-        case r'small':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.small = valueDes;
-          break;
-        case r'grid':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.grid = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory PersonImages.fromJson(Map<String, dynamic> json) =>
+      _$PersonImagesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PersonImagesToJson(this);
 
   @override
-  PersonImages deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = PersonImagesBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

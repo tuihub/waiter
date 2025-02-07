@@ -1,9 +1,9 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 /// tests for DefaultApi
 void main() {
-  final instance = Openapi().getDefaultApi();
+  final instance = BangumiApi().getDefaultApi();
 
   group(DefaultApi, () {
     // Add a subject to Index
@@ -67,7 +67,7 @@ void main() {
     //
     // cache with 60s
     //
-    //Future<CharacterDetail> getCharacterById(int characterId) async
+    //Future<Character> getCharacterById(int characterId) async
     test('test getCharacterById', () async {
       // TODO
     });
@@ -176,49 +176,49 @@ void main() {
 
     // get person related characters
     //
-    //Future<BuiltList<PersonCharacter>> getRelatedCharactersByPersonId(int personId) async
+    //Future<List<PersonCharacter>> getRelatedCharactersByPersonId(int personId) async
     test('test getRelatedCharactersByPersonId', () async {
       // TODO
     });
 
     // Get Subject Characters
     //
-    //Future<BuiltList<RelatedCharacter>> getRelatedCharactersBySubjectId(int subjectId) async
+    //Future<List<RelatedCharacter>> getRelatedCharactersBySubjectId(int subjectId) async
     test('test getRelatedCharactersBySubjectId', () async {
       // TODO
     });
 
     // get character related persons
     //
-    //Future<BuiltList<CharacterPerson>> getRelatedPersonsByCharacterId(int characterId) async
+    //Future<List<CharacterPerson>> getRelatedPersonsByCharacterId(int characterId) async
     test('test getRelatedPersonsByCharacterId', () async {
       // TODO
     });
 
     // Get Subject Persons
     //
-    //Future<BuiltList<RelatedPerson>> getRelatedPersonsBySubjectId(int subjectId) async
+    //Future<List<RelatedPerson>> getRelatedPersonsBySubjectId(int subjectId) async
     test('test getRelatedPersonsBySubjectId', () async {
       // TODO
     });
 
     // get character related subjects
     //
-    //Future<BuiltList<V0RelatedSubject>> getRelatedSubjectsByCharacterId(int characterId) async
+    //Future<List<V0RelatedSubject>> getRelatedSubjectsByCharacterId(int characterId) async
     test('test getRelatedSubjectsByCharacterId', () async {
       // TODO
     });
 
     // get person related subjects
     //
-    //Future<BuiltList<V0RelatedSubject>> getRelatedSubjectsByPersonId(int personId) async
+    //Future<List<V0RelatedSubject>> getRelatedSubjectsByPersonId(int personId) async
     test('test getRelatedSubjectsByPersonId', () async {
       // TODO
     });
 
     // Get Subject Relations
     //
-    //Future<BuiltList<V0SubjectRelation>> getRelatedSubjectsBySubjectId(int subjectId) async
+    //Future<List<V0SubjectRelation>> getRelatedSubjectsBySubjectId(int subjectId) async
     test('test getRelatedSubjectsBySubjectId', () async {
       // TODO
     });
@@ -378,6 +378,24 @@ void main() {
     //
     //Future putUserEpisodeCollection(int episodeId, { PutUserEpisodeCollectionRequest putUserEpisodeCollectionRequest }) async
     test('test putUserEpisodeCollection', () async {
+      // TODO
+    });
+
+    // 角色搜索
+    //
+    // ## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - `nsfw`: 使用 `include` 包含NSFW搜索结果。默认排除搜索NSFW条目。无权限情况下忽略此选项，不会返回NSFW条目。
+    //
+    //Future<PagedCharacter> searchCharacters({ int limit, int offset, SearchCharactersRequest searchCharactersRequest }) async
+    test('test searchCharacters', () async {
+      // TODO
+    });
+
+    // 人物搜索
+    //
+    // ## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - `career`: 职业，可以多次出现。`且` 关系。  不同筛选条件之间为 `且`
+    //
+    //Future<PagedPerson> searchPersons({ int limit, int offset, SearchPersonsRequest searchPersonsRequest }) async
+    test('test searchPersons', () async {
       // TODO
     });
 

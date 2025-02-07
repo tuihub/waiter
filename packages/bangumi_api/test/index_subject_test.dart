@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for IndexSubject
 void main() {
-  final instance = IndexSubjectBuilder();
-  // TODO add properties to the builder and call build()
+  final IndexSubject? instance = /* IndexSubject(...) */ null;
+  // TODO add properties to the entity
 
   group(IndexSubject, () {
     // int id
@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Item> infobox
+    // List<Item> infobox
     test('to test the property `infobox`', () async {
       // TODO
     });

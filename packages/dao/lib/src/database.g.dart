@@ -967,6 +967,15 @@ class $LocalAppTableTable extends LocalAppTable
   late final GeneratedColumn<String> publisher = GeneratedColumn<String>(
       'publisher', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _thirdPartyIdsMeta =
+      const VerificationMeta('thirdPartyIds');
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      thirdPartyIds = GeneratedColumn<String>(
+              'third_party_ids', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<Map<String, String>>(
+              $LocalAppTableTable.$converterthirdPartyIds);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -983,7 +992,8 @@ class $LocalAppTableTable extends LocalAppTable
         description,
         releaseDate,
         developer,
-        publisher
+        publisher,
+        thirdPartyIds
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1078,6 +1088,7 @@ class $LocalAppTableTable extends LocalAppTable
       context.handle(_publisherMeta,
           publisher.isAcceptableOrUnknown(data['publisher']!, _publisherMeta));
     }
+    context.handle(_thirdPartyIdsMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1116,6 +1127,9 @@ class $LocalAppTableTable extends LocalAppTable
           .read(DriftSqlType.string, data['${effectivePrefix}developer']),
       publisher: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}publisher']),
+      thirdPartyIds: $LocalAppTableTable.$converterthirdPartyIds.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}third_party_ids'])!),
     );
   }
 
@@ -1123,6 +1137,9 @@ class $LocalAppTableTable extends LocalAppTable
   $LocalAppTableTable createAlias(String alias) {
     return $LocalAppTableTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<Map<String, String>, String, String>
+      $converterthirdPartyIds = const StringMapConverter();
 }
 
 class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
@@ -1141,6 +1158,7 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
   final Value<String?> releaseDate;
   final Value<String?> developer;
   final Value<String?> publisher;
+  final Value<Map<String, String>> thirdPartyIds;
   const LocalAppTableCompanion({
     this.id = const Value.absent(),
     this.uuid = const Value.absent(),
@@ -1157,6 +1175,7 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
     this.releaseDate = const Value.absent(),
     this.developer = const Value.absent(),
     this.publisher = const Value.absent(),
+    this.thirdPartyIds = const Value.absent(),
   });
   LocalAppTableCompanion.insert({
     this.id = const Value.absent(),
@@ -1174,8 +1193,10 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
     this.releaseDate = const Value.absent(),
     this.developer = const Value.absent(),
     this.publisher = const Value.absent(),
+    required Map<String, String> thirdPartyIds,
   })  : uuid = Value(uuid),
-        name = Value(name);
+        name = Value(name),
+        thirdPartyIds = Value(thirdPartyIds);
   static Insertable<LocalApp> custom({
     Expression<int>? id,
     Expression<String>? uuid,
@@ -1192,6 +1213,7 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
     Expression<String>? releaseDate,
     Expression<String>? developer,
     Expression<String>? publisher,
+    Expression<String>? thirdPartyIds,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1212,6 +1234,7 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
       if (releaseDate != null) 'release_date': releaseDate,
       if (developer != null) 'developer': developer,
       if (publisher != null) 'publisher': publisher,
+      if (thirdPartyIds != null) 'third_party_ids': thirdPartyIds,
     });
   }
 
@@ -1230,7 +1253,8 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
       Value<String?>? description,
       Value<String?>? releaseDate,
       Value<String?>? developer,
-      Value<String?>? publisher}) {
+      Value<String?>? publisher,
+      Value<Map<String, String>>? thirdPartyIds}) {
     return LocalAppTableCompanion(
       id: id ?? this.id,
       uuid: uuid ?? this.uuid,
@@ -1247,6 +1271,7 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
       releaseDate: releaseDate ?? this.releaseDate,
       developer: developer ?? this.developer,
       publisher: publisher ?? this.publisher,
+      thirdPartyIds: thirdPartyIds ?? this.thirdPartyIds,
     );
   }
 
@@ -1300,6 +1325,11 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
     if (publisher.present) {
       map['publisher'] = Variable<String>(publisher.value);
     }
+    if (thirdPartyIds.present) {
+      map['third_party_ids'] = Variable<String>($LocalAppTableTable
+          .$converterthirdPartyIds
+          .toSql(thirdPartyIds.value));
+    }
     return map;
   }
 
@@ -1320,7 +1350,8 @@ class LocalAppTableCompanion extends UpdateCompanion<LocalApp> {
           ..write('description: $description, ')
           ..write('releaseDate: $releaseDate, ')
           ..write('developer: $developer, ')
-          ..write('publisher: $publisher')
+          ..write('publisher: $publisher, ')
+          ..write('thirdPartyIds: $thirdPartyIds')
           ..write(')'))
         .toString();
   }
@@ -4058,6 +4089,7 @@ typedef $$LocalAppTableTableCreateCompanionBuilder = LocalAppTableCompanion
   Value<String?> releaseDate,
   Value<String?> developer,
   Value<String?> publisher,
+  required Map<String, String> thirdPartyIds,
 });
 typedef $$LocalAppTableTableUpdateCompanionBuilder = LocalAppTableCompanion
     Function({
@@ -4076,6 +4108,7 @@ typedef $$LocalAppTableTableUpdateCompanionBuilder = LocalAppTableCompanion
   Value<String?> releaseDate,
   Value<String?> developer,
   Value<String?> publisher,
+  Value<Map<String, String>> thirdPartyIds,
 });
 
 class $$LocalAppTableTableFilterComposer
@@ -4136,6 +4169,12 @@ class $$LocalAppTableTableFilterComposer
 
   ColumnFilters<String> get publisher => $composableBuilder(
       column: $table.publisher, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<Map<String, String>, Map<String, String>,
+          String>
+      get thirdPartyIds => $composableBuilder(
+          column: $table.thirdPartyIds,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 }
 
 class $$LocalAppTableTableOrderingComposer
@@ -4199,6 +4238,10 @@ class $$LocalAppTableTableOrderingComposer
 
   ColumnOrderings<String> get publisher => $composableBuilder(
       column: $table.publisher, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get thirdPartyIds => $composableBuilder(
+      column: $table.thirdPartyIds,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$LocalAppTableTableAnnotationComposer
@@ -4254,6 +4297,10 @@ class $$LocalAppTableTableAnnotationComposer
 
   GeneratedColumn<String> get publisher =>
       $composableBuilder(column: $table.publisher, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Map<String, String>, String>
+      get thirdPartyIds => $composableBuilder(
+          column: $table.thirdPartyIds, builder: (column) => column);
 }
 
 class $$LocalAppTableTableTableManager extends RootTableManager<
@@ -4294,6 +4341,7 @@ class $$LocalAppTableTableTableManager extends RootTableManager<
             Value<String?> releaseDate = const Value.absent(),
             Value<String?> developer = const Value.absent(),
             Value<String?> publisher = const Value.absent(),
+            Value<Map<String, String>> thirdPartyIds = const Value.absent(),
           }) =>
               LocalAppTableCompanion(
             id: id,
@@ -4311,6 +4359,7 @@ class $$LocalAppTableTableTableManager extends RootTableManager<
             releaseDate: releaseDate,
             developer: developer,
             publisher: publisher,
+            thirdPartyIds: thirdPartyIds,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -4328,6 +4377,7 @@ class $$LocalAppTableTableTableManager extends RootTableManager<
             Value<String?> releaseDate = const Value.absent(),
             Value<String?> developer = const Value.absent(),
             Value<String?> publisher = const Value.absent(),
+            required Map<String, String> thirdPartyIds,
           }) =>
               LocalAppTableCompanion.insert(
             id: id,
@@ -4345,6 +4395,7 @@ class $$LocalAppTableTableTableManager extends RootTableManager<
             releaseDate: releaseDate,
             developer: developer,
             publisher: publisher,
+            thirdPartyIds: thirdPartyIds,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

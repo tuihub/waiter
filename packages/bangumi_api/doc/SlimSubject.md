@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **collectionTotal** | **int** | 收藏人数 | 
 **score** | **num** | 分数 | 
 **rank** | **int** | 排名 | 
-**tags** | [**BuiltList&lt;Tag&gt;**](Tag.md) | 前 10 个 tag | 
+**tags** | [**List&lt;Tag&gt;**](Tag.md) | 前 10 个 tag | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

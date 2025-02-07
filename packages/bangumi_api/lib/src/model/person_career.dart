@@ -3,53 +3,42 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'person_career.g.dart';
-
-class PersonCareer extends EnumClass {
+/// An enumeration.
+enum PersonCareer {
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'producer')
-  static const PersonCareer producer = _$producer;
+  @JsonValue(r'producer')
+  producer(r'producer'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'mangaka')
-  static const PersonCareer mangaka = _$mangaka;
+  @JsonValue(r'mangaka')
+  mangaka(r'mangaka'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'artist')
-  static const PersonCareer artist = _$artist;
+  @JsonValue(r'artist')
+  artist(r'artist'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'seiyu')
-  static const PersonCareer seiyu = _$seiyu;
+  @JsonValue(r'seiyu')
+  seiyu(r'seiyu'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'writer')
-  static const PersonCareer writer = _$writer;
+  @JsonValue(r'writer')
+  writer(r'writer'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'illustrator')
-  static const PersonCareer illustrator = _$illustrator;
+  @JsonValue(r'illustrator')
+  illustrator(r'illustrator'),
 
   /// An enumeration.
-  @BuiltValueEnumConst(wireName: r'actor')
-  static const PersonCareer actor = _$actor;
+  @JsonValue(r'actor')
+  actor(r'actor');
 
-  static Serializer<PersonCareer> get serializer => _$personCareerSerializer;
+  const PersonCareer(this.value);
 
-  const PersonCareer._(String name) : super(name);
+  final String value;
 
-  static BuiltSet<PersonCareer> get values => _$values;
-  static PersonCareer valueOf(String name) => _$valueOf(name);
+  @override
+  String toString() => value;
 }
-
-/// Optionally, enum_class can generate a mixin to go with your enum for use
-/// with Angular. It exposes your enum constants as getters. So, if you mix it
-/// in to your Dart component class, the values become available to the
-/// corresponding Angular template.
-///
-/// Trigger mixin generation by writing a line like this one next to your enum.
-abstract class PersonCareerMixin = Object with _$PersonCareerMixin;

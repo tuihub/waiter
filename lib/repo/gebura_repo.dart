@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:dao/dao.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:universal_io/io.dart';
 import 'package:uuid/uuid.dart';
 
+import '../common/app_scrape/source.dart';
+import '../common/app_scrape/source_bangumi.dart';
 import '../common/steam/steam.dart';
 import '../rust/api/win_icon.dart';
 import '../service/di_service.dart';
@@ -39,8 +42,32 @@ class GeburaRepo {
               app = app.copyWith(
                 iconImagePath: iconImagePath,
               );
-            } catch (_) {
-              // pass
+              AppScrapedInfo? scraped;
+              if (!app.thirdPartyIds.containsKey('bangumi')) {
+                scraped = await BangumiSource().searchAppByName(app.name);
+              } else {
+                scraped = await BangumiSource().searchAppById(
+                  app.thirdPartyIds['bangumi']!,
+                );
+              }
+              if (scraped != null) {
+                app = app.copyWith(
+                  name: scraped.name,
+                  shortDescription:
+                      app.shortDescription ?? scraped.shortDescription,
+                  iconImageUrl: app.iconImageUrl ?? scraped.iconImageUrl,
+                  backgroundImageUrl:
+                      app.backgroundImageUrl ?? scraped.backgroundImageUrl,
+                  coverImageUrl: app.coverImageUrl ?? scraped.coverImageUrl,
+                  description: app.description ?? scraped.description,
+                  releaseDate: app.releaseDate ?? scraped.releaseDate,
+                  developer: app.developer ?? scraped.developer,
+                  publisher: app.publisher ?? scraped.publisher,
+                  thirdPartyIds: {'bangumi': scraped.id, ...app.thirdPartyIds},
+                );
+              }
+            } catch (e) {
+              debugPrint('Failed to fetch common launcher info: $e');
             }
           case LocalAppInstLauncherType.steam:
             final steamAppID = launcher.steam!.steamAppID;

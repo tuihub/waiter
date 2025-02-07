@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Detail
 void main() {
-  final instance = DetailBuilder();
-  // TODO add properties to the builder and call build()
+  final Detail? instance = /* Detail(...) */ null;
+  // TODO add properties to the entity
 
   group(Detail, () {
     // error message

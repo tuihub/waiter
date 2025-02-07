@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for V0RelatedSubject
 void main() {
-  final instance = V0RelatedSubjectBuilder();
-  // TODO add properties to the builder and call build()
+  final V0RelatedSubject? instance = /* V0RelatedSubject(...) */ null;
+  // TODO add properties to the entity
 
   group(V0RelatedSubject, () {
     // int id

@@ -3,227 +3,136 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
 import 'package:bangumi_api/src/model/item.dart';
 import 'package:bangumi_api/src/model/images.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'index_subject.g.dart';
 
-/// 同名字段意义同<a href=\"#model-Subject\">Subject</a>
-///
-/// Properties:
-/// * [id]
-/// * [type]
-/// * [name]
-/// * [images]
-/// * [infobox]
-/// * [date]
-/// * [comment]
-/// * [addedAt]
-@BuiltValue()
-abstract class IndexSubject
-    implements Built<IndexSubject, IndexSubjectBuilder> {
-  @BuiltValueField(wireName: r'id')
-  int get id;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class IndexSubject {
+  /// Returns a new [IndexSubject] instance.
+  IndexSubject({
+    required this.id,
+    required this.type,
+    required this.name,
+    this.images,
+    this.infobox,
+    this.date,
+    required this.comment,
+    required this.addedAt,
+  });
 
-  @BuiltValueField(wireName: r'type')
-  int get type;
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  @BuiltValueField(wireName: r'name')
-  String get name;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final int type;
 
-  @BuiltValueField(wireName: r'images')
-  Images? get images;
+  @JsonKey(
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+  final String name;
 
-  @BuiltValueField(wireName: r'infobox')
-  BuiltList<Item>? get infobox;
+  @JsonKey(
+    name: r'images',
+    required: false,
+    includeIfNull: false,
+  )
+  final Images? images;
 
-  @BuiltValueField(wireName: r'date')
-  String? get date;
+  @JsonKey(
+    name: r'infobox',
+    required: false,
+    includeIfNull: false,
+  )
+  final List<Item>? infobox;
 
-  @BuiltValueField(wireName: r'comment')
-  String get comment;
+  @JsonKey(
+    name: r'date',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? date;
 
-  @BuiltValueField(wireName: r'added_at')
-  DateTime get addedAt;
+  @JsonKey(
+    name: r'comment',
+    required: true,
+    includeIfNull: false,
+  )
+  final String comment;
 
-  IndexSubject._();
+  @JsonKey(
+    name: r'added_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime addedAt;
 
-  factory IndexSubject([void updates(IndexSubjectBuilder b)]) = _$IndexSubject;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(IndexSubjectBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<IndexSubject> get serializer => _$IndexSubjectSerializer();
-}
-
-class _$IndexSubjectSerializer implements PrimitiveSerializer<IndexSubject> {
-  @override
-  final Iterable<Type> types = const [IndexSubject, _$IndexSubject];
-
-  @override
-  final String wireName = r'IndexSubject';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    IndexSubject object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(int),
-    );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    if (object.images != null) {
-      yield r'images';
-      yield serializers.serialize(
-        object.images,
-        specifiedType: const FullType(Images),
-      );
-    }
-    if (object.infobox != null) {
-      yield r'infobox';
-      yield serializers.serialize(
-        object.infobox,
-        specifiedType: const FullType(BuiltList, [FullType(Item)]),
-      );
-    }
-    if (object.date != null) {
-      yield r'date';
-      yield serializers.serialize(
-        object.date,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'comment';
-    yield serializers.serialize(
-      object.comment,
-      specifiedType: const FullType(String),
-    );
-    yield r'added_at';
-    yield serializers.serialize(
-      object.addedAt,
-      specifiedType: const FullType(DateTime),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is IndexSubject &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              type,
+              name,
+              images,
+              infobox,
+              date,
+              comment,
+              addedAt,
+            ], [
+              other.id,
+              other.type,
+              other.name,
+              other.images,
+              other.infobox,
+              other.date,
+              other.comment,
+              other.addedAt,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    IndexSubject object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          type,
+          name,
+          images,
+          infobox,
+          date,
+          comment,
+          addedAt,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required IndexSubjectBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.type = valueDes;
-          break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'images':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Images),
-          ) as Images;
-          result.images.replace(valueDes);
-          break;
-        case r'infobox':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(Item)]),
-          ) as BuiltList<Item>;
-          result.infobox.replace(valueDes);
-          break;
-        case r'date':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.date = valueDes;
-          break;
-        case r'comment':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.comment = valueDes;
-          break;
-        case r'added_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.addedAt = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory IndexSubject.fromJson(Map<String, dynamic> json) =>
+      _$IndexSubjectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IndexSubjectToJson(this);
 
   @override
-  IndexSubject deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = IndexSubjectBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

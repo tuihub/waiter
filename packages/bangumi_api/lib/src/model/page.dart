@@ -3,171 +3,78 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'page.g.dart';
 
-/// Page
-///
-/// Properties:
-/// * [total]
-/// * [limit]
-/// * [offset]
-@BuiltValue(instantiable: false)
-abstract class Page {
-  @BuiltValueField(wireName: r'total')
-  int get total;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Page {
+  /// Returns a new [Page] instance.
+  Page({
+    required this.total,
+    required this.limit,
+    required this.offset,
+  });
 
-  @BuiltValueField(wireName: r'limit')
-  int get limit;
+  @JsonKey(
+    name: r'total',
+    required: true,
+    includeIfNull: false,
+  )
+  final int total;
 
-  @BuiltValueField(wireName: r'offset')
-  int get offset;
+  @JsonKey(
+    name: r'limit',
+    required: true,
+    includeIfNull: false,
+  )
+  final int limit;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Page> get serializer => _$PageSerializer();
-}
+  @JsonKey(
+    name: r'offset',
+    required: true,
+    includeIfNull: false,
+  )
+  final int offset;
 
-class _$PageSerializer implements PrimitiveSerializer<Page> {
-  @override
-  final Iterable<Type> types = const [Page];
-
-  @override
-  final String wireName = r'Page';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Page object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'total';
-    yield serializers.serialize(
-      object.total,
-      specifiedType: const FullType(int),
-    );
-    yield r'limit';
-    yield serializers.serialize(
-      object.limit,
-      specifiedType: const FullType(int),
-    );
-    yield r'offset';
-    yield serializers.serialize(
-      object.offset,
-      specifiedType: const FullType(int),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Page &&
+            runtimeType == other.runtimeType &&
+            equals([
+              total,
+              limit,
+              offset,
+            ], [
+              other.total,
+              other.limit,
+              other.offset,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Page object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          total,
+          limit,
+          offset,
+        ],
+      );
+
+  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PageToJson(this);
 
   @override
-  Page deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.deserialize(serialized, specifiedType: FullType($Page))
-        as $Page;
-  }
-}
-
-/// a concrete implementation of [Page], since [Page] is not instantiable
-@BuiltValue(instantiable: true)
-abstract class $Page implements Page, Built<$Page, $PageBuilder> {
-  $Page._();
-
-  factory $Page([void Function($PageBuilder)? updates]) = _$$Page;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults($PageBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<$Page> get serializer => _$$PageSerializer();
-}
-
-class _$$PageSerializer implements PrimitiveSerializer<$Page> {
-  @override
-  final Iterable<Type> types = const [$Page, _$$Page];
-
-  @override
-  final String wireName = r'$Page';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    $Page object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return serializers.serialize(object, specifiedType: FullType(Page))!;
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required PageBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'total':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.total = valueDes;
-          break;
-        case r'limit':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.limit = valueDes;
-          break;
-        case r'offset':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.offset = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  $Page deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = $PageBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

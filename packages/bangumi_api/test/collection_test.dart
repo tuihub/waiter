@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Collection
 void main() {
-  final instance = CollectionBuilder();
-  // TODO add properties to the builder and call build()
+  final Collection? instance = /* Collection(...) */ null;
+  // TODO add properties to the entity
 
   group(Collection, () {
     // int wish

@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for DetailedRevision
 void main() {
-  final instance = DetailedRevisionBuilder();
-  // TODO add properties to the builder and call build()
+  final DetailedRevision? instance = /* DetailedRevision(...) */ null;
+  // TODO add properties to the entity
 
   group(DetailedRevision, () {
     // int id
@@ -33,7 +33,7 @@ void main() {
     });
 
     // 编辑修改内容，响应类型不固定
-    // JsonObject data
+    // Object data
     test('to test the property `data`', () async {
       // TODO
     });

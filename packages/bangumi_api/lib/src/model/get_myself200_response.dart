@@ -3,196 +3,152 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:bangumi_api/src/model/user.dart';
 import 'package:bangumi_api/src/model/avatar.dart';
 import 'package:bangumi_api/src/model/user_group.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'get_myself200_response.g.dart';
 
-/// GetMyself200Response
-///
-/// Properties:
-/// * [id]
-/// * [username] - 唯一用户名，初始与 UID 相同，可修改一次
-/// * [nickname]
-/// * [userGroup]
-/// * [avatar]
-/// * [sign] - 个人签名
-/// * [timeOffset] - 用户设置的时区偏移，以小时为单位。比如 GMT+8（shanghai/beijing）为 8
-@BuiltValue()
-abstract class GetMyself200Response
-    implements User, Built<GetMyself200Response, GetMyself200ResponseBuilder> {
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class GetMyself200Response {
+  /// Returns a new [GetMyself200Response] instance.
+  GetMyself200Response({
+    required this.id,
+    required this.username,
+    required this.nickname,
+    required this.userGroup,
+    required this.avatar,
+    required this.sign,
+    required this.email,
+    required this.regTime,
+    this.timeOffset,
+  });
+
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
+
+  /// 唯一用户名，初始与 UID 相同，可修改一次
+  @JsonKey(
+    name: r'username',
+    required: true,
+    includeIfNull: false,
+  )
+  final String username;
+
+  @JsonKey(
+    name: r'nickname',
+    required: true,
+    includeIfNull: false,
+  )
+  final String nickname;
+
+  @JsonKey(
+    name: r'user_group',
+    required: true,
+    includeIfNull: false,
+  )
+  final UserGroup userGroup;
+
+  @JsonKey(
+    name: r'avatar',
+    required: true,
+    includeIfNull: false,
+  )
+  final Avatar avatar;
+
+  /// 个人签名
+  @JsonKey(
+    name: r'sign',
+    required: true,
+    includeIfNull: false,
+  )
+  final String sign;
+
+  /// 用户绑定的邮箱地址
+  @JsonKey(
+    name: r'email',
+    required: true,
+    includeIfNull: false,
+  )
+  final String email;
+
+  /// 用户注册时间。比如 2017-12-03T08:51:16+08:00
+  @JsonKey(
+    name: r'reg_time',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime regTime;
+
   /// 用户设置的时区偏移，以小时为单位。比如 GMT+8（shanghai/beijing）为 8
-  @BuiltValueField(wireName: r'time_offset')
-  int? get timeOffset;
+  @JsonKey(
+    name: r'time_offset',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? timeOffset;
 
-  GetMyself200Response._();
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is GetMyself200Response &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              username,
+              nickname,
+              userGroup,
+              avatar,
+              sign,
+              email,
+              regTime,
+              timeOffset,
+            ], [
+              other.id,
+              other.username,
+              other.nickname,
+              other.userGroup,
+              other.avatar,
+              other.sign,
+              other.email,
+              other.regTime,
+              other.timeOffset,
+            ]);
+  }
 
-  factory GetMyself200Response([void updates(GetMyself200ResponseBuilder b)]) =
-      _$GetMyself200Response;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(GetMyself200ResponseBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<GetMyself200Response> get serializer =>
-      _$GetMyself200ResponseSerializer();
-}
-
-class _$GetMyself200ResponseSerializer
-    implements PrimitiveSerializer<GetMyself200Response> {
   @override
-  final Iterable<Type> types = const [
-    GetMyself200Response,
-    _$GetMyself200Response
-  ];
-
-  @override
-  final String wireName = r'GetMyself200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    GetMyself200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'nickname';
-    yield serializers.serialize(
-      object.nickname,
-      specifiedType: const FullType(String),
-    );
-    yield r'sign';
-    yield serializers.serialize(
-      object.sign,
-      specifiedType: const FullType(String),
-    );
-    if (object.timeOffset != null) {
-      yield r'time_offset';
-      yield serializers.serialize(
-        object.timeOffset,
-        specifiedType: const FullType(int),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          username,
+          nickname,
+          userGroup,
+          avatar,
+          sign,
+          email,
+          regTime,
+          timeOffset,
+        ],
       );
-    }
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'avatar';
-    yield serializers.serialize(
-      object.avatar,
-      specifiedType: const FullType(Avatar),
-    );
-    yield r'user_group';
-    yield serializers.serialize(
-      object.userGroup,
-      specifiedType: const FullType(UserGroup),
-    );
-    yield r'username';
-    yield serializers.serialize(
-      object.username,
-      specifiedType: const FullType(String),
-    );
-  }
+
+  factory GetMyself200Response.fromJson(Map<String, dynamic> json) =>
+      _$GetMyself200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetMyself200ResponseToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    GetMyself200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required GetMyself200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'nickname':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nickname = valueDes;
-          break;
-        case r'sign':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.sign = valueDes;
-          break;
-        case r'time_offset':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.timeOffset = valueDes;
-          break;
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'avatar':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Avatar),
-          ) as Avatar;
-          result.avatar.replace(valueDes);
-          break;
-        case r'user_group':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(UserGroup),
-          ) as UserGroup;
-          result.userGroup = valueDes;
-          break;
-        case r'username':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.username = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  GetMyself200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = GetMyself200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

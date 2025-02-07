@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for V
 void main() {
-  final instance = VBuilder();
-  // TODO add properties to the builder and call build()
+  final V? instance = /* V(...) */ null;
+  // TODO add properties to the entity
 
   group(V, () {
     // String v

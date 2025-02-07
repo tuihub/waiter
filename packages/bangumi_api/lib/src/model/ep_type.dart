@@ -3,53 +3,42 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'ep_type.g.dart';
-
-class EpType extends EnumClass {
+/// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
+enum EpType {
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 0)
-  static const EpType MainStory = _$MainStory;
+  @JsonValue(0)
+  MainStory('0'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 1)
-  static const EpType SP = _$SP;
+  @JsonValue(1)
+  SP('1'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 2)
-  static const EpType OP = _$OP;
+  @JsonValue(2)
+  OP('2'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 3)
-  static const EpType ED = _$ED;
+  @JsonValue(3)
+  ED('3'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 4)
-  static const EpType PV = _$PV;
+  @JsonValue(4)
+  PV('4'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 5)
-  static const EpType MAD = _$MAD;
+  @JsonValue(5)
+  MAD('5'),
 
   /// 本篇 = 0 特别篇 = 1 OP = 2 ED = 3 预告/宣传/广告 = 4 MAD = 5 其他 = 6
-  @BuiltValueEnumConst(wireNumber: 6)
-  static const EpType Other = _$Other;
+  @JsonValue(6)
+  Other('6');
 
-  static Serializer<EpType> get serializer => _$epTypeSerializer;
+  const EpType(this.value);
 
-  const EpType._(String name) : super(name);
+  final String value;
 
-  static BuiltSet<EpType> get values => _$values;
-  static EpType valueOf(String name) => _$valueOf(name);
+  @override
+  String toString() => value;
 }
-
-/// Optionally, enum_class can generate a mixin to go with your enum for use
-/// with Angular. It exposes your enum constants as getters. So, if you mix it
-/// in to your Dart component class, the values become available to the
-/// corresponding Angular template.
-///
-/// Trigger mixin generation by writing a line like this one next to your enum.
-abstract class EpTypeMixin = Object with _$EpTypeMixin;

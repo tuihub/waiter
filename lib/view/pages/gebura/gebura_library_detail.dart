@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -75,8 +76,8 @@ class GeburaLibraryDetailPage extends StatelessWidget {
           const GeburaLibraryRoute().go(context);
         }
         final item = state.libraryApps[uuid]!;
-        late LocalAppInstLauncherType? launcherType;
-        late String? launcherUUID;
+        LocalAppInstLauncherType? launcherType;
+        String? launcherUUID;
         if (item.lastLaunchedInstUUID != null) {
           final appInst = state.localAppInsts[item.lastLaunchedInstUUID];
           if (appInst != null) {
@@ -272,6 +273,19 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                   _GeburaLibraryDetailInstList(item: item),
                   SpacingHelper.defaultDivider,
                   _GeburaLibraryDetailRunRecordChart(item: item),
+                  SpacingHelper.defaultDivider,
+                  if (item.description != null)
+                    if (item.description!.contains('</p>'))
+                      HtmlWidget(
+                        item.description!,
+                        renderMode: RenderMode.column,
+                        enableCaching: true,
+                      )
+                    else
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(item.description!),
+                      ),
                   const SizedBox(
                     height: 16,
                   ),

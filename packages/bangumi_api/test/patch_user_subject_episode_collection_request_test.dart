@@ -1,13 +1,14 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for PatchUserSubjectEpisodeCollectionRequest
 void main() {
-  final instance = PatchUserSubjectEpisodeCollectionRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final PatchUserSubjectEpisodeCollectionRequest?
+      instance = /* PatchUserSubjectEpisodeCollectionRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(PatchUserSubjectEpisodeCollectionRequest, () {
-    // BuiltList<int> episodeId
+    // List<int> episodeId
     test('to test the property `episodeId`', () async {
       // TODO
     });

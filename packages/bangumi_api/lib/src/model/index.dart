@@ -5,255 +5,160 @@
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/stat.dart';
 import 'package:bangumi_api/src/model/creator.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'index.g.dart';
 
-/// Index
-///
-/// Properties:
-/// * [id]
-/// * [title]
-/// * [desc]
-/// * [total] - 收录条目总数
-/// * [stat] - 目录评论及收藏数
-/// * [createdAt]
-/// * [updatedAt]
-/// * [creator]
-/// * [ban] - deprecated, always false.
-/// * [nsfw]
-@BuiltValue()
-abstract class Index implements Built<Index, IndexBuilder> {
-  @BuiltValueField(wireName: r'id')
-  int get id;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Index {
+  /// Returns a new [Index] instance.
+  Index({
+    required this.id,
+    required this.title,
+    required this.desc,
+    this.total = 0,
+    required this.stat,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.creator,
+    required this.ban,
+    required this.nsfw,
+  });
 
-  @BuiltValueField(wireName: r'title')
-  String get title;
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  @BuiltValueField(wireName: r'desc')
-  String get desc;
+  @JsonKey(
+    name: r'title',
+    required: true,
+    includeIfNull: false,
+  )
+  final String title;
+
+  @JsonKey(
+    name: r'desc',
+    required: true,
+    includeIfNull: false,
+  )
+  final String desc;
 
   /// 收录条目总数
-  @BuiltValueField(wireName: r'total')
-  int? get total;
+  @JsonKey(
+    defaultValue: 0,
+    name: r'total',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? total;
 
   /// 目录评论及收藏数
-  @BuiltValueField(wireName: r'stat')
-  Stat get stat;
+  @JsonKey(
+    name: r'stat',
+    required: true,
+    includeIfNull: false,
+  )
+  final Stat stat;
 
-  @BuiltValueField(wireName: r'created_at')
-  DateTime get createdAt;
+  @JsonKey(
+    name: r'created_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime createdAt;
 
-  @BuiltValueField(wireName: r'updated_at')
-  DateTime get updatedAt;
+  @JsonKey(
+    name: r'updated_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime updatedAt;
 
-  @BuiltValueField(wireName: r'creator')
-  Creator get creator;
+  @JsonKey(
+    name: r'creator',
+    required: true,
+    includeIfNull: false,
+  )
+  final Creator creator;
 
   /// deprecated, always false.
   @Deprecated('ban has been deprecated')
-  @BuiltValueField(wireName: r'ban')
-  bool get ban;
+  @JsonKey(
+    name: r'ban',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool ban;
 
-  @BuiltValueField(wireName: r'nsfw')
-  bool get nsfw;
+  @JsonKey(
+    name: r'nsfw',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool nsfw;
 
-  Index._();
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Index &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              title,
+              desc,
+              total,
+              stat,
+              createdAt,
+              updatedAt,
+              creator,
+              ban,
+              nsfw,
+            ], [
+              other.id,
+              other.title,
+              other.desc,
+              other.total,
+              other.stat,
+              other.createdAt,
+              other.updatedAt,
+              other.creator,
+              other.ban,
+              other.nsfw,
+            ]);
+  }
 
-  factory Index([void updates(IndexBuilder b)]) = _$Index;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(IndexBuilder b) => b..total = 0;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Index> get serializer => _$IndexSerializer();
-}
-
-class _$IndexSerializer implements PrimitiveSerializer<Index> {
   @override
-  final Iterable<Type> types = const [Index, _$Index];
-
-  @override
-  final String wireName = r'Index';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Index object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'title';
-    yield serializers.serialize(
-      object.title,
-      specifiedType: const FullType(String),
-    );
-    yield r'desc';
-    yield serializers.serialize(
-      object.desc,
-      specifiedType: const FullType(String),
-    );
-    if (object.total != null) {
-      yield r'total';
-      yield serializers.serialize(
-        object.total,
-        specifiedType: const FullType(int),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          title,
+          desc,
+          total,
+          stat,
+          createdAt,
+          updatedAt,
+          creator,
+          ban,
+          nsfw,
+        ],
       );
-    }
-    yield r'stat';
-    yield serializers.serialize(
-      object.stat,
-      specifiedType: const FullType(Stat),
-    );
-    yield r'created_at';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(DateTime),
-    );
-    yield r'updated_at';
-    yield serializers.serialize(
-      object.updatedAt,
-      specifiedType: const FullType(DateTime),
-    );
-    yield r'creator';
-    yield serializers.serialize(
-      object.creator,
-      specifiedType: const FullType(Creator),
-    );
-    yield r'ban';
-    yield serializers.serialize(
-      object.ban,
-      specifiedType: const FullType(bool),
-    );
-    yield r'nsfw';
-    yield serializers.serialize(
-      object.nsfw,
-      specifiedType: const FullType(bool),
-    );
-  }
+
+  factory Index.fromJson(Map<String, dynamic> json) => _$IndexFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IndexToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Index object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required IndexBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'title':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.title = valueDes;
-          break;
-        case r'desc':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.desc = valueDes;
-          break;
-        case r'total':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.total = valueDes;
-          break;
-        case r'stat':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Stat),
-          ) as Stat;
-          result.stat.replace(valueDes);
-          break;
-        case r'created_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.createdAt = valueDes;
-          break;
-        case r'updated_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.updatedAt = valueDes;
-          break;
-        case r'creator':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Creator),
-          ) as Creator;
-          result.creator.replace(valueDes);
-          break;
-        case r'ban':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.ban = valueDes;
-          break;
-        case r'nsfw':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.nsfw = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  Index deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = IndexBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for ErrorDetail
 void main() {
-  final instance = ErrorDetailBuilder();
-  // TODO add properties to the builder and call build()
+  final ErrorDetail? instance = /* ErrorDetail(...) */ null;
+  // TODO add properties to the entity
 
   group(ErrorDetail, () {
     // String title

@@ -3,224 +3,123 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'person_revision_profession.g.dart';
 
-/// PersonRevisionProfession
-///
-/// Properties:
-/// * [producer]
-/// * [mangaka]
-/// * [artist]
-/// * [seiyu]
-/// * [writer]
-/// * [illustrator]
-/// * [actor]
-@BuiltValue()
-abstract class PersonRevisionProfession
-    implements
-        Built<PersonRevisionProfession, PersonRevisionProfessionBuilder> {
-  @BuiltValueField(wireName: r'producer')
-  String? get producer;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class PersonRevisionProfession {
+  /// Returns a new [PersonRevisionProfession] instance.
+  PersonRevisionProfession({
+    this.producer,
+    this.mangaka,
+    this.artist,
+    this.seiyu,
+    this.writer,
+    this.illustrator,
+    this.actor,
+  });
 
-  @BuiltValueField(wireName: r'mangaka')
-  String? get mangaka;
+  @JsonKey(
+    name: r'producer',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? producer;
 
-  @BuiltValueField(wireName: r'artist')
-  String? get artist;
+  @JsonKey(
+    name: r'mangaka',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? mangaka;
 
-  @BuiltValueField(wireName: r'seiyu')
-  String? get seiyu;
+  @JsonKey(
+    name: r'artist',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? artist;
 
-  @BuiltValueField(wireName: r'writer')
-  String? get writer;
+  @JsonKey(
+    name: r'seiyu',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? seiyu;
 
-  @BuiltValueField(wireName: r'illustrator')
-  String? get illustrator;
+  @JsonKey(
+    name: r'writer',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? writer;
 
-  @BuiltValueField(wireName: r'actor')
-  String? get actor;
+  @JsonKey(
+    name: r'illustrator',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? illustrator;
 
-  PersonRevisionProfession._();
+  @JsonKey(
+    name: r'actor',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? actor;
 
-  factory PersonRevisionProfession(
-          [void updates(PersonRevisionProfessionBuilder b)]) =
-      _$PersonRevisionProfession;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(PersonRevisionProfessionBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<PersonRevisionProfession> get serializer =>
-      _$PersonRevisionProfessionSerializer();
-}
-
-class _$PersonRevisionProfessionSerializer
-    implements PrimitiveSerializer<PersonRevisionProfession> {
-  @override
-  final Iterable<Type> types = const [
-    PersonRevisionProfession,
-    _$PersonRevisionProfession
-  ];
-
-  @override
-  final String wireName = r'PersonRevisionProfession';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    PersonRevisionProfession object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.producer != null) {
-      yield r'producer';
-      yield serializers.serialize(
-        object.producer,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.mangaka != null) {
-      yield r'mangaka';
-      yield serializers.serialize(
-        object.mangaka,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.artist != null) {
-      yield r'artist';
-      yield serializers.serialize(
-        object.artist,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.seiyu != null) {
-      yield r'seiyu';
-      yield serializers.serialize(
-        object.seiyu,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.writer != null) {
-      yield r'writer';
-      yield serializers.serialize(
-        object.writer,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.illustrator != null) {
-      yield r'illustrator';
-      yield serializers.serialize(
-        object.illustrator,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.actor != null) {
-      yield r'actor';
-      yield serializers.serialize(
-        object.actor,
-        specifiedType: const FullType(String),
-      );
-    }
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PersonRevisionProfession &&
+            runtimeType == other.runtimeType &&
+            equals([
+              producer,
+              mangaka,
+              artist,
+              seiyu,
+              writer,
+              illustrator,
+              actor,
+            ], [
+              other.producer,
+              other.mangaka,
+              other.artist,
+              other.seiyu,
+              other.writer,
+              other.illustrator,
+              other.actor,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    PersonRevisionProfession object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          producer,
+          mangaka,
+          artist,
+          seiyu,
+          writer,
+          illustrator,
+          actor,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required PersonRevisionProfessionBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'producer':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.producer = valueDes;
-          break;
-        case r'mangaka':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.mangaka = valueDes;
-          break;
-        case r'artist':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.artist = valueDes;
-          break;
-        case r'seiyu':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.seiyu = valueDes;
-          break;
-        case r'writer':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.writer = valueDes;
-          break;
-        case r'illustrator':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.illustrator = valueDes;
-          break;
-        case r'actor':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.actor = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory PersonRevisionProfession.fromJson(Map<String, dynamic> json) =>
+      _$PersonRevisionProfessionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PersonRevisionProfessionToJson(this);
 
   @override
-  PersonRevisionProfession deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = PersonRevisionProfessionBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

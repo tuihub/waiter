@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **creator** | [**Creator**](Creator.md) |  | [optional] 
 **summary** | **String** |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
-**data** | [**JsonObject**](.md) | 编辑修改内容，响应类型不固定 | [optional] 
+**data** | **Object** | 编辑修改内容，响应类型不固定 | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

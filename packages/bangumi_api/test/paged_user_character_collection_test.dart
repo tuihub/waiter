@@ -1,10 +1,11 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for PagedUserCharacterCollection
 void main() {
-  final instance = PagedUserCharacterCollectionBuilder();
-  // TODO add properties to the builder and call build()
+  final PagedUserCharacterCollection?
+      instance = /* PagedUserCharacterCollection(...) */ null;
+  // TODO add properties to the entity
 
   group(PagedUserCharacterCollection, () {
     // int total (default value: 0)
@@ -22,7 +23,7 @@ void main() {
       // TODO
     });
 
-    // BuiltList<UserCharacterCollection> data (default value: ListBuilder())
+    // List<UserCharacterCollection> data (default value: [])
     test('to test the property `data`', () async {
       // TODO
     });

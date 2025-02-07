@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **creator** | [**Creator**](Creator.md) |  | [optional] 
 **summary** | **String** |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
-**data** | [**BuiltMap&lt;String, PersonRevisionDataItem&gt;**](PersonRevisionDataItem.md) |  | [optional] 
+**data** | [**Map&lt;String, PersonRevisionDataItem&gt;**](PersonRevisionDataItem.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

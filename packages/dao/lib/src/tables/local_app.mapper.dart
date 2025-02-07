@@ -60,6 +60,9 @@ class LocalAppMapper extends ClassMapperBase<LocalApp> {
   static String? _$publisher(LocalApp v) => v.publisher;
   static const Field<LocalApp, String> _f$publisher =
       Field('publisher', _$publisher, opt: true);
+  static Map<String, String> _$thirdPartyIds(LocalApp v) => v.thirdPartyIds;
+  static const Field<LocalApp, Map<String, String>> _f$thirdPartyIds =
+      Field('thirdPartyIds', _$thirdPartyIds, opt: true, def: const {});
 
   @override
   final MappableFields<LocalApp> fields = const {
@@ -77,6 +80,7 @@ class LocalAppMapper extends ClassMapperBase<LocalApp> {
     #releaseDate: _f$releaseDate,
     #developer: _f$developer,
     #publisher: _f$publisher,
+    #thirdPartyIds: _f$thirdPartyIds,
   };
 
   static LocalApp _instantiate(DecodingData data) {
@@ -94,7 +98,8 @@ class LocalAppMapper extends ClassMapperBase<LocalApp> {
         description: data.dec(_f$description),
         releaseDate: data.dec(_f$releaseDate),
         developer: data.dec(_f$developer),
-        publisher: data.dec(_f$publisher));
+        publisher: data.dec(_f$publisher),
+        thirdPartyIds: data.dec(_f$thirdPartyIds));
   }
 
   @override
@@ -146,6 +151,8 @@ extension LocalAppValueCopy<$R, $Out> on ObjectCopyWith<$R, LocalApp, $Out> {
 
 abstract class LocalAppCopyWith<$R, $In extends LocalApp, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, String, ObjectCopyWith<$R, String, String>>
+      get thirdPartyIds;
   $R call(
       {String? uuid,
       String? name,
@@ -160,7 +167,8 @@ abstract class LocalAppCopyWith<$R, $In extends LocalApp, $Out>
       String? description,
       String? releaseDate,
       String? developer,
-      String? publisher});
+      String? publisher,
+      Map<String, String>? thirdPartyIds});
   LocalAppCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -172,6 +180,12 @@ class _LocalAppCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<LocalApp> $mapper =
       LocalAppMapper.ensureInitialized();
+  @override
+  MapCopyWith<$R, String, String, ObjectCopyWith<$R, String, String>>
+      get thirdPartyIds => MapCopyWith(
+          $value.thirdPartyIds,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(thirdPartyIds: v));
   @override
   $R call(
           {String? uuid,
@@ -187,7 +201,8 @@ class _LocalAppCopyWithImpl<$R, $Out>
           Object? description = $none,
           Object? releaseDate = $none,
           Object? developer = $none,
-          Object? publisher = $none}) =>
+          Object? publisher = $none,
+          Map<String, String>? thirdPartyIds}) =>
       $apply(FieldCopyWithData({
         if (uuid != null) #uuid: uuid,
         if (name != null) #name: name,
@@ -205,7 +220,8 @@ class _LocalAppCopyWithImpl<$R, $Out>
         if (description != $none) #description: description,
         if (releaseDate != $none) #releaseDate: releaseDate,
         if (developer != $none) #developer: developer,
-        if (publisher != $none) #publisher: publisher
+        if (publisher != $none) #publisher: publisher,
+        if (thirdPartyIds != null) #thirdPartyIds: thirdPartyIds
       }));
   @override
   LocalApp $make(CopyWithData data) => LocalApp(
@@ -226,7 +242,8 @@ class _LocalAppCopyWithImpl<$R, $Out>
       description: data.get(#description, or: $value.description),
       releaseDate: data.get(#releaseDate, or: $value.releaseDate),
       developer: data.get(#developer, or: $value.developer),
-      publisher: data.get(#publisher, or: $value.publisher));
+      publisher: data.get(#publisher, or: $value.publisher),
+      thirdPartyIds: data.get(#thirdPartyIds, or: $value.thirdPartyIds));
 
   @override
   LocalAppCopyWith<$R2, LocalApp, $Out2> $chain<$R2, $Out2>(

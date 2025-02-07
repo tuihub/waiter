@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for ValueAnyOfInner
 void main() {
-  final instance = ValueAnyOfInnerBuilder();
-  // TODO add properties to the builder and call build()
+  final ValueAnyOfInner? instance = /* ValueAnyOfInner(...) */ null;
+  // TODO add properties to the entity
 
   group(ValueAnyOfInner, () {
     // String k

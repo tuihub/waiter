@@ -4,121 +4,67 @@
 
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/value.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'item.g.dart';
 
-/// Item
-///
-/// Properties:
-/// * [key]
-/// * [value]
-@BuiltValue()
-abstract class Item implements Built<Item, ItemBuilder> {
-  @BuiltValueField(wireName: r'key')
-  String get key;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Item {
+  /// Returns a new [Item] instance.
+  Item({
+    required this.key,
+    required this.value,
+  });
 
-  @BuiltValueField(wireName: r'value')
-  Value get value;
+  @JsonKey(
+    name: r'key',
+    required: true,
+    includeIfNull: false,
+  )
+  final String key;
 
-  Item._();
+  @JsonKey(
+    name: r'value',
+    required: true,
+    includeIfNull: false,
+  )
+  final Value value;
 
-  factory Item([void updates(ItemBuilder b)]) = _$Item;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ItemBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Item> get serializer => _$ItemSerializer();
-}
-
-class _$ItemSerializer implements PrimitiveSerializer<Item> {
-  @override
-  final Iterable<Type> types = const [Item, _$Item];
-
-  @override
-  final String wireName = r'Item';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Item object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'key';
-    yield serializers.serialize(
-      object.key,
-      specifiedType: const FullType(String),
-    );
-    yield r'value';
-    yield serializers.serialize(
-      object.value,
-      specifiedType: const FullType(Value),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Item &&
+            runtimeType == other.runtimeType &&
+            equals([
+              key,
+              value,
+            ], [
+              other.key,
+              other.value,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Item object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          key,
+          value,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ItemBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'key':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.key = valueDes;
-          break;
-        case r'value':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Value),
-          ) as Value;
-          result.value.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ItemToJson(this);
 
   @override
-  Item deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ItemBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

@@ -15,7 +15,7 @@ generate_dart:
 	dart run build_runner build
 
 generate_bangumi_api:
-	openapi-generator-cli generate -i https://raw.githubusercontent.com/bangumi/api/refs/heads/master/open-api/v0.yaml -g dart-dio -o packages/bangumi_api --additional-properties=pubName=bangumi_api
+	openapi-generator-cli generate -i https://raw.githubusercontent.com/bangumi/api/refs/heads/master/open-api/v0.yaml -g dart-dio -o packages/bangumi_api --additional-properties=pubName=bangumi_api,serializationLibrary=json_serializable,equalityCheckMethod=equatable,disallowAdditionalPropertiesIfNotPresent=false
 	cd packages/bangumi_api && dart pub get && dart run build_runner build
 
 generate: generate_rust_bridge generate_dart

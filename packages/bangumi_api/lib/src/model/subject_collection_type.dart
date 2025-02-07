@@ -3,47 +3,34 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'subject_collection_type.g.dart';
-
-class SubjectCollectionType extends EnumClass {
+/// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
+enum SubjectCollectionType {
   /// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
-  @BuiltValueEnumConst(wireNumber: 1)
-  static const SubjectCollectionType Wish = _$Wish;
+  @JsonValue(1)
+  Wish('1'),
 
   /// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
-  @BuiltValueEnumConst(wireNumber: 2)
-  static const SubjectCollectionType Done = _$Done;
+  @JsonValue(2)
+  Done('2'),
 
   /// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
-  @BuiltValueEnumConst(wireNumber: 3)
-  static const SubjectCollectionType Doing = _$Doing;
+  @JsonValue(3)
+  Doing('3'),
 
   /// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
-  @BuiltValueEnumConst(wireNumber: 4)
-  static const SubjectCollectionType OnHold = _$OnHold;
+  @JsonValue(4)
+  OnHold('4'),
 
   /// - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
-  @BuiltValueEnumConst(wireNumber: 5)
-  static const SubjectCollectionType Dropped = _$Dropped;
+  @JsonValue(5)
+  Dropped('5');
 
-  static Serializer<SubjectCollectionType> get serializer =>
-      _$subjectCollectionTypeSerializer;
+  const SubjectCollectionType(this.value);
 
-  const SubjectCollectionType._(String name) : super(name);
+  final String value;
 
-  static BuiltSet<SubjectCollectionType> get values => _$values;
-  static SubjectCollectionType valueOf(String name) => _$valueOf(name);
+  @override
+  String toString() => value;
 }
-
-/// Optionally, enum_class can generate a mixin to go with your enum for use
-/// with Angular. It exposes your enum constants as getters. So, if you mix it
-/// in to your Dart component class, the values become available to the
-/// corresponding Angular template.
-///
-/// Trigger mixin generation by writing a line like this one next to your enum.
-abstract class SubjectCollectionTypeMixin = Object
-    with _$SubjectCollectionTypeMixin;

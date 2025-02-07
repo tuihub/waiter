@@ -3,134 +3,71 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
 import 'package:bangumi_api/src/model/episode_collection_type.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'patch_user_subject_episode_collection_request.g.dart';
 
-/// PatchUserSubjectEpisodeCollectionRequest
-///
-/// Properties:
-/// * [episodeId]
-/// * [type]
-@BuiltValue()
-abstract class PatchUserSubjectEpisodeCollectionRequest
-    implements
-        Built<PatchUserSubjectEpisodeCollectionRequest,
-            PatchUserSubjectEpisodeCollectionRequestBuilder> {
-  @BuiltValueField(wireName: r'episode_id')
-  BuiltList<int> get episodeId;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class PatchUserSubjectEpisodeCollectionRequest {
+  /// Returns a new [PatchUserSubjectEpisodeCollectionRequest] instance.
+  PatchUserSubjectEpisodeCollectionRequest({
+    required this.episodeId,
+    required this.type,
+  });
 
-  @BuiltValueField(wireName: r'type')
-  EpisodeCollectionType get type;
-  // enum typeEnum {  1,  2,  3,  };
+  @JsonKey(
+    name: r'episode_id',
+    required: true,
+    includeIfNull: false,
+  )
+  final List<int> episodeId;
 
-  PatchUserSubjectEpisodeCollectionRequest._();
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final EpisodeCollectionType type;
 
-  factory PatchUserSubjectEpisodeCollectionRequest(
-          [void updates(PatchUserSubjectEpisodeCollectionRequestBuilder b)]) =
-      _$PatchUserSubjectEpisodeCollectionRequest;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(PatchUserSubjectEpisodeCollectionRequestBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<PatchUserSubjectEpisodeCollectionRequest> get serializer =>
-      _$PatchUserSubjectEpisodeCollectionRequestSerializer();
-}
-
-class _$PatchUserSubjectEpisodeCollectionRequestSerializer
-    implements PrimitiveSerializer<PatchUserSubjectEpisodeCollectionRequest> {
-  @override
-  final Iterable<Type> types = const [
-    PatchUserSubjectEpisodeCollectionRequest,
-    _$PatchUserSubjectEpisodeCollectionRequest
-  ];
-
-  @override
-  final String wireName = r'PatchUserSubjectEpisodeCollectionRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    PatchUserSubjectEpisodeCollectionRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'episode_id';
-    yield serializers.serialize(
-      object.episodeId,
-      specifiedType: const FullType(BuiltList, [FullType(int)]),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(EpisodeCollectionType),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PatchUserSubjectEpisodeCollectionRequest &&
+            runtimeType == other.runtimeType &&
+            equals([
+              episodeId,
+              type,
+            ], [
+              other.episodeId,
+              other.type,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    PatchUserSubjectEpisodeCollectionRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          episodeId,
+          type,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required PatchUserSubjectEpisodeCollectionRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'episode_id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(int)]),
-          ) as BuiltList<int>;
-          result.episodeId.replace(valueDes);
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(EpisodeCollectionType),
-          ) as EpisodeCollectionType;
-          result.type = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory PatchUserSubjectEpisodeCollectionRequest.fromJson(
+          Map<String, dynamic> json) =>
+      _$PatchUserSubjectEpisodeCollectionRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$PatchUserSubjectEpisodeCollectionRequestToJson(this);
 
   @override
-  PatchUserSubjectEpisodeCollectionRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = PatchUserSubjectEpisodeCollectionRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

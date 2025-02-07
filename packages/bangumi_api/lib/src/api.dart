@@ -3,8 +3,6 @@
 //
 
 import 'package:dio/dio.dart';
-import 'package:built_value/serializer.dart';
-import 'package:bangumi_api/src/serializers.dart';
 import 'package:bangumi_api/src/auth/api_key_auth.dart';
 import 'package:bangumi_api/src/auth/basic_auth.dart';
 import 'package:bangumi_api/src/auth/bearer_auth.dart';
@@ -15,15 +13,11 @@ class BangumiApi {
   static const String basePath = r'http://localhost';
 
   final Dio dio;
-  final Serializers serializers;
-
   BangumiApi({
     Dio? dio,
-    Serializers? serializers,
     String? basePathOverride,
     List<Interceptor>? interceptors,
-  })  : this.serializers = serializers ?? standardSerializers,
-        this.dio = dio ??
+  }) : this.dio = dio ??
             Dio(BaseOptions(
               baseUrl: basePathOverride ?? basePath,
               connectTimeout: const Duration(milliseconds: 5000),
@@ -79,6 +73,6 @@ class BangumiApi {
   /// Get DefaultApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   DefaultApi getDefaultApi() {
-    return DefaultApi(dio, serializers);
+    return DefaultApi(dio);
   }
 }

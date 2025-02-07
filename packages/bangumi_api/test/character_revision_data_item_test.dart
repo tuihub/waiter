@@ -1,10 +1,11 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for CharacterRevisionDataItem
 void main() {
-  final instance = CharacterRevisionDataItemBuilder();
-  // TODO add properties to the builder and call build()
+  final CharacterRevisionDataItem?
+      instance = /* CharacterRevisionDataItem(...) */ null;
+  // TODO add properties to the entity
 
   group(CharacterRevisionDataItem, () {
     // String infobox

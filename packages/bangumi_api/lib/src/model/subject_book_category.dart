@@ -3,43 +3,30 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'subject_book_category.g.dart';
-
-class SubjectBookCategory extends EnumClass {
+/// 书籍类型 - `0` 为 其他 - `1001` 为 漫画 - `1002` 为 小说 - `1003` 为 画集
+enum SubjectBookCategory {
   /// 书籍类型 - `0` 为 其他 - `1001` 为 漫画 - `1002` 为 小说 - `1003` 为 画集
-  @BuiltValueEnumConst(wireNumber: 0)
-  static const SubjectBookCategory Other = _$Other;
+  @JsonValue(0)
+  Other('0'),
 
   /// 书籍类型 - `0` 为 其他 - `1001` 为 漫画 - `1002` 为 小说 - `1003` 为 画集
-  @BuiltValueEnumConst(wireNumber: 1001)
-  static const SubjectBookCategory Comic = _$Comic;
+  @JsonValue(1001)
+  Comic('1001'),
 
   /// 书籍类型 - `0` 为 其他 - `1001` 为 漫画 - `1002` 为 小说 - `1003` 为 画集
-  @BuiltValueEnumConst(wireNumber: 1002)
-  static const SubjectBookCategory Novel = _$Novel;
+  @JsonValue(1002)
+  Novel('1002'),
 
   /// 书籍类型 - `0` 为 其他 - `1001` 为 漫画 - `1002` 为 小说 - `1003` 为 画集
-  @BuiltValueEnumConst(wireNumber: 1003)
-  static const SubjectBookCategory Illustration = _$Illustration;
+  @JsonValue(1003)
+  Illustration('1003');
 
-  static Serializer<SubjectBookCategory> get serializer =>
-      _$subjectBookCategorySerializer;
+  const SubjectBookCategory(this.value);
 
-  const SubjectBookCategory._(String name) : super(name);
+  final String value;
 
-  static BuiltSet<SubjectBookCategory> get values => _$values;
-  static SubjectBookCategory valueOf(String name) => _$valueOf(name);
+  @override
+  String toString() => value;
 }
-
-/// Optionally, enum_class can generate a mixin to go with your enum for use
-/// with Angular. It exposes your enum constants as getters. So, if you mix it
-/// in to your Dart component class, the values become available to the
-/// corresponding Angular template.
-///
-/// Trigger mixin generation by writing a line like this one next to your enum.
-abstract class SubjectBookCategoryMixin = Object
-    with _$SubjectBookCategoryMixin;

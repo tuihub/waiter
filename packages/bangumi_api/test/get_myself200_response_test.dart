@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for GetMyself200Response
 void main() {
-  final instance = GetMyself200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final GetMyself200Response? instance = /* GetMyself200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(GetMyself200Response, () {
     // int id
@@ -36,6 +36,18 @@ void main() {
     // 个人签名
     // String sign
     test('to test the property `sign`', () async {
+      // TODO
+    });
+
+    // 用户绑定的邮箱地址
+    // String email
+    test('to test the property `email`', () async {
+      // TODO
+    });
+
+    // 用户注册时间。比如 2017-12-03T08:51:16+08:00
+    // DateTime regTime
+    test('to test the property `regTime`', () async {
       // TODO
     });
 

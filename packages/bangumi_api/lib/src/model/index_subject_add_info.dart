@@ -3,151 +3,80 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'index_subject_add_info.g.dart';
 
-/// 新增某条目到目录的请求信息
-///
-/// Properties:
-/// * [subjectId]
-/// * [sort] - 排序条件，越小越靠前
-/// * [comment]
-@BuiltValue()
-abstract class IndexSubjectAddInfo
-    implements Built<IndexSubjectAddInfo, IndexSubjectAddInfoBuilder> {
-  @BuiltValueField(wireName: r'subject_id')
-  int? get subjectId;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class IndexSubjectAddInfo {
+  /// Returns a new [IndexSubjectAddInfo] instance.
+  IndexSubjectAddInfo({
+    this.subjectId,
+    this.sort,
+    this.comment,
+  });
+
+  @JsonKey(
+    name: r'subject_id',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? subjectId;
 
   /// 排序条件，越小越靠前
-  @BuiltValueField(wireName: r'sort')
-  int? get sort;
+  @JsonKey(
+    name: r'sort',
+    required: false,
+    includeIfNull: false,
+  )
+  final int? sort;
 
-  @BuiltValueField(wireName: r'comment')
-  String? get comment;
+  @JsonKey(
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? comment;
 
-  IndexSubjectAddInfo._();
-
-  factory IndexSubjectAddInfo([void updates(IndexSubjectAddInfoBuilder b)]) =
-      _$IndexSubjectAddInfo;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(IndexSubjectAddInfoBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<IndexSubjectAddInfo> get serializer =>
-      _$IndexSubjectAddInfoSerializer();
-}
-
-class _$IndexSubjectAddInfoSerializer
-    implements PrimitiveSerializer<IndexSubjectAddInfo> {
-  @override
-  final Iterable<Type> types = const [
-    IndexSubjectAddInfo,
-    _$IndexSubjectAddInfo
-  ];
-
-  @override
-  final String wireName = r'IndexSubjectAddInfo';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    IndexSubjectAddInfo object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.subjectId != null) {
-      yield r'subject_id';
-      yield serializers.serialize(
-        object.subjectId,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.sort != null) {
-      yield r'sort';
-      yield serializers.serialize(
-        object.sort,
-        specifiedType: const FullType(int),
-      );
-    }
-    if (object.comment != null) {
-      yield r'comment';
-      yield serializers.serialize(
-        object.comment,
-        specifiedType: const FullType(String),
-      );
-    }
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is IndexSubjectAddInfo &&
+            runtimeType == other.runtimeType &&
+            equals([
+              subjectId,
+              sort,
+              comment,
+            ], [
+              other.subjectId,
+              other.sort,
+              other.comment,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    IndexSubjectAddInfo object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          subjectId,
+          sort,
+          comment,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required IndexSubjectAddInfoBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'subject_id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.subjectId = valueDes;
-          break;
-        case r'sort':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.sort = valueDes;
-          break;
-        case r'comment':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.comment = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory IndexSubjectAddInfo.fromJson(Map<String, dynamic> json) =>
+      _$IndexSubjectAddInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IndexSubjectAddInfoToJson(this);
 
   @override
-  IndexSubjectAddInfo deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = IndexSubjectAddInfoBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

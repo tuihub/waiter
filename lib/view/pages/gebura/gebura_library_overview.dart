@@ -16,11 +16,25 @@ class GeburaLibraryOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GeburaBloc, GeburaState>(
       builder: (context, state) {
-        final apps = state.libraryListItems ?? [];
+        final apps = state.libraryListItems;
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              UniversalToolBar(
+                mainAxisAlignment: MainAxisAlignment.end,
+                primaryItems: [
+                  UniversalToolBarItem(
+                    icon: UniversalUI.of(context).icons.refresh,
+                    label: Text(S.of(context).refresh),
+                    onPressed: () {
+                      context
+                          .read<GeburaBloc>()
+                          .add(GeburaRefreshLibraryListEvent(null));
+                    },
+                  ),
+                ],
+              ),
               Expanded(
                 child: apps.isNotEmpty
                     ? GridView.builder(

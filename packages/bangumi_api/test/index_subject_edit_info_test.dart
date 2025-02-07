@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for IndexSubjectEditInfo
 void main() {
-  final instance = IndexSubjectEditInfoBuilder();
-  // TODO add properties to the builder and call build()
+  final IndexSubjectEditInfo? instance = /* IndexSubjectEditInfo(...) */ null;
+  // TODO add properties to the entity
 
   group(IndexSubjectEditInfo, () {
     // 排序条件，越小越靠前

@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Stat
 void main() {
-  final instance = StatBuilder();
-  // TODO add properties to the builder and call build()
+  final Stat? instance = /* Stat(...) */ null;
+  // TODO add properties to the entity
 
   group(Stat, () {
     // int comments

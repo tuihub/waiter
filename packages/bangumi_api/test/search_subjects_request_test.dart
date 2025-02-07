@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for SearchSubjectsRequest
 void main() {
-  final instance = SearchSubjectsRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final SearchSubjectsRequest? instance = /* SearchSubjectsRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(SearchSubjectsRequest, () {
     // String keyword

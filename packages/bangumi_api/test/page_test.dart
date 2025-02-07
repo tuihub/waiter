@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for Page
 void main() {
-  //final instance = PageBuilder();
-  // TODO add properties to the builder and call build()
+  final Page? instance = /* Page(...) */ null;
+  // TODO add properties to the entity
 
   group(Page, () {
     // int total

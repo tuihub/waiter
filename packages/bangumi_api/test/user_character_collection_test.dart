@@ -1,10 +1,11 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for UserCharacterCollection
 void main() {
-  final instance = UserCharacterCollectionBuilder();
-  // TODO add properties to the builder and call build()
+  final UserCharacterCollection? instance = /* UserCharacterCollection(...) */
+      null;
+  // TODO add properties to the entity
 
   group(UserCharacterCollection, () {
     // int id

@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for IndexSubjectAddInfo
 void main() {
-  final instance = IndexSubjectAddInfoBuilder();
-  // TODO add properties to the builder and call build()
+  final IndexSubjectAddInfo? instance = /* IndexSubjectAddInfo(...) */ null;
+  // TODO add properties to the entity
 
   group(IndexSubjectAddInfo, () {
     // int subjectId

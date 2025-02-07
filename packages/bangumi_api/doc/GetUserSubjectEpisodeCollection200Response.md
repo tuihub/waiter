@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **total** | **int** |  | 
 **limit** | **int** |  | 
 **offset** | **int** |  | 
-**data** | [**BuiltList&lt;UserEpisodeCollection&gt;**](UserEpisodeCollection.md) |  | [optional] 
+**data** | [**List&lt;UserEpisodeCollection&gt;**](UserEpisodeCollection.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

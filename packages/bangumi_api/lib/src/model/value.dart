@@ -3,72 +3,39 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:bangumi_api/src/model/value_any_of_inner.dart';
-import 'dart:core';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-import 'package:one_of/any_of.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'value.g.dart';
 
-/// Value
-@BuiltValue()
-abstract class Value implements Built<Value, ValueBuilder> {
-  /// Any Of [BuiltList<ValueAnyOfInner>], [String]
-  AnyOf get anyOf;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Value {
+  /// Returns a new [Value] instance.
+  Value();
 
-  Value._();
-
-  factory Value([void updates(ValueBuilder b)]) = _$Value;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ValueBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Value> get serializer => _$ValueSerializer();
-}
-
-class _$ValueSerializer implements PrimitiveSerializer<Value> {
-  @override
-  final Iterable<Type> types = const [Value, _$Value];
-
-  @override
-  final String wireName = r'Value';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Value object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {}
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    Value object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final anyOf = object.anyOf;
-    return serializers.serialize(anyOf,
-        specifiedType: FullType(
-            AnyOf, anyOf.valueTypes.map((type) => FullType(type)).toList()))!;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Value && runtimeType == other.runtimeType && equals([], []);
   }
 
   @override
-  Value deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ValueBuilder();
-    Object? anyOfDataSrc;
-    final targetType = const FullType(AnyOf, [
-      FullType(String),
-      FullType(BuiltList, [FullType(ValueAnyOfInner)]),
-    ]);
-    anyOfDataSrc = serialized;
-    result.anyOf = serializers.deserialize(anyOfDataSrc,
-        specifiedType: targetType) as AnyOf;
-    return result.build();
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [],
+      );
+
+  factory Value.fromJson(Map<String, dynamic> json) => _$ValueFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ValueToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }

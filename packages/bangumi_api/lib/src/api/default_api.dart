@@ -4,11 +4,12 @@
 
 import 'dart:async';
 
-import 'package:built_value/serializer.dart';
+// ignore: unused_import
+import 'dart:convert';
+import 'package:bangumi_api/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:bangumi_api/src/api_util.dart';
-import 'package:bangumi_api/src/model/character_detail.dart';
+import 'package:bangumi_api/src/model/character.dart';
 import 'package:bangumi_api/src/model/character_person.dart';
 import 'package:bangumi_api/src/model/character_revision.dart';
 import 'package:bangumi_api/src/model/detailed_revision.dart';
@@ -20,7 +21,9 @@ import 'package:bangumi_api/src/model/index.dart';
 import 'package:bangumi_api/src/model/index_basic_info.dart';
 import 'package:bangumi_api/src/model/index_subject_add_info.dart';
 import 'package:bangumi_api/src/model/index_subject_edit_info.dart';
+import 'package:bangumi_api/src/model/paged_character.dart';
 import 'package:bangumi_api/src/model/paged_episode.dart';
+import 'package:bangumi_api/src/model/paged_person.dart';
 import 'package:bangumi_api/src/model/paged_revision.dart';
 import 'package:bangumi_api/src/model/paged_subject.dart';
 import 'package:bangumi_api/src/model/paged_user_character_collection.dart';
@@ -33,6 +36,8 @@ import 'package:bangumi_api/src/model/person_revision.dart';
 import 'package:bangumi_api/src/model/put_user_episode_collection_request.dart';
 import 'package:bangumi_api/src/model/related_character.dart';
 import 'package:bangumi_api/src/model/related_person.dart';
+import 'package:bangumi_api/src/model/search_characters_request.dart';
+import 'package:bangumi_api/src/model/search_persons_request.dart';
 import 'package:bangumi_api/src/model/search_subjects_request.dart';
 import 'package:bangumi_api/src/model/subject.dart';
 import 'package:bangumi_api/src/model/subject_category.dart';
@@ -47,14 +52,11 @@ import 'package:bangumi_api/src/model/user_subject_collection.dart';
 import 'package:bangumi_api/src/model/user_subject_collection_modify_payload.dart';
 import 'package:bangumi_api/src/model/v0_related_subject.dart';
 import 'package:bangumi_api/src/model/v0_subject_relation.dart';
-import 'package:built_collection/built_collection.dart';
 
 class DefaultApi {
   final Dio _dio;
 
-  final Serializers _serializers;
-
-  const DefaultApi(this._dio, this._serializers);
+  const DefaultApi(this._dio);
 
   /// Add a subject to Index
   ///
@@ -81,10 +83,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}/subjects'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}/subjects'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -107,10 +107,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(IndexSubjectAddInfo);
-      _bodyData = indexSubjectAddInfo == null
-          ? null
-          : _serializers.serialize(indexSubjectAddInfo, specifiedType: _type);
+      _bodyData = jsonEncode(indexSubjectAddInfo);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -158,10 +155,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}/collect'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}/collect'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -214,10 +209,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}/collect'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}/collect'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -270,10 +263,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}/collect'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}/collect'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -329,14 +320,8 @@ class DefaultApi {
     ProgressCallback? onReceiveProgress,
   }) async {
     final _path = r'/v0/indices/{index_id}/subjects/{subject_id}'
-        .replaceAll(
-            '{' r'index_id' '}',
-            encodeQueryParameter(_serializers, indexId, const FullType(int))
-                .toString())
-        .replaceAll(
-            '{' r'subject_id' '}',
-            encodeQueryParameter(_serializers, subjectId, const FullType(int))
-                .toString());
+        .replaceAll('{' r'index_id' '}', indexId.toString())
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{
@@ -391,10 +376,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'PUT',
       headers: <String, dynamic>{
@@ -417,10 +400,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(IndexBasicInfo);
-      _bodyData = indexBasicInfo == null
-          ? null
-          : _serializers.serialize(indexBasicInfo, specifiedType: _type);
+      _bodyData = jsonEncode(indexBasicInfo);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -445,13 +425,10 @@ class DefaultApi {
     Index? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(Index),
-            ) as Index;
+          : deserialize<Index, Index>(rawData, 'Index', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -502,14 +479,8 @@ class DefaultApi {
     ProgressCallback? onReceiveProgress,
   }) async {
     final _path = r'/v0/indices/{index_id}/subjects/{subject_id}'
-        .replaceAll(
-            '{' r'index_id' '}',
-            encodeQueryParameter(_serializers, indexId, const FullType(int))
-                .toString())
-        .replaceAll(
-            '{' r'subject_id' '}',
-            encodeQueryParameter(_serializers, subjectId, const FullType(int))
-                .toString());
+        .replaceAll('{' r'index_id' '}', indexId.toString())
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'PUT',
       headers: <String, dynamic>{
@@ -532,10 +503,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(IndexSubjectEditInfo);
-      _bodyData = indexSubjectEditInfo == null
-          ? null
-          : _serializers.serialize(indexSubjectEditInfo, specifiedType: _type);
+      _bodyData = jsonEncode(indexSubjectEditInfo);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -572,9 +540,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [CharacterDetail] as data
+  /// Returns a [Future] containing a [Response] with a [Character] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CharacterDetail>> getCharacterById({
+  Future<Response<Character>> getCharacterById({
     required int characterId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -583,10 +551,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -607,16 +573,14 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    CharacterDetail? _responseData;
+    Character? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(CharacterDetail),
-            ) as CharacterDetail;
+          : deserialize<Character, Character>(rawData, 'Character',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -627,7 +591,7 @@ class DefaultApi {
       );
     }
 
-    return Response<CharacterDetail>(
+    return Response<Character>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -664,10 +628,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}/image'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}/image'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -687,7 +649,7 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'type': encodeQueryParameter(_serializers, type, const FullType(String)),
+      r'type': type,
     };
 
     final _response = await _dio.request<Object>(
@@ -725,10 +687,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/revisions/characters/{revision_id}'.replaceAll(
-        '{' r'revision_id' '}',
-        encodeQueryParameter(_serializers, revisionId, const FullType(int))
-            .toString());
+    final _path = r'/v0/revisions/characters/{revision_id}'
+        .replaceAll('{' r'revision_id' '}', revisionId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -752,13 +712,12 @@ class DefaultApi {
     CharacterRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(CharacterRevision),
-            ) as CharacterRevision;
+          : deserialize<CharacterRevision, CharacterRevision>(
+              rawData, 'CharacterRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -822,14 +781,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'character_id':
-          encodeQueryParameter(_serializers, characterId, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'character_id': characterId,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -844,13 +798,11 @@ class DefaultApi {
     PagedRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedRevision),
-            ) as PagedRevision;
+          : deserialize<PagedRevision, PagedRevision>(rawData, 'PagedRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -896,10 +848,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/episodes/{episode_id}'.replaceAll(
-        '{' r'episode_id' '}',
-        encodeQueryParameter(_serializers, episodeId, const FullType(int))
-            .toString());
+    final _path = r'/v0/episodes/{episode_id}'
+        .replaceAll('{' r'episode_id' '}', episodeId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -929,13 +879,11 @@ class DefaultApi {
     EpisodeDetail? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(EpisodeDetail),
-            ) as EpisodeDetail;
+          : deserialize<EpisodeDetail, EpisodeDetail>(rawData, 'EpisodeDetail',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -981,10 +929,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/revisions/episodes/{revision_id}'.replaceAll(
-        '{' r'revision_id' '}',
-        encodeQueryParameter(_serializers, revisionId, const FullType(int))
-            .toString());
+    final _path = r'/v0/revisions/episodes/{revision_id}'
+        .replaceAll('{' r'revision_id' '}', revisionId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1008,13 +954,12 @@ class DefaultApi {
     DetailedRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(DetailedRevision),
-            ) as DetailedRevision;
+          : deserialize<DetailedRevision, DetailedRevision>(
+              rawData, 'DetailedRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1078,14 +1023,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'episode_id':
-          encodeQueryParameter(_serializers, episodeId, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'episode_id': episodeId,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -1100,13 +1040,11 @@ class DefaultApi {
     PagedRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedRevision),
-            ) as PagedRevision;
+          : deserialize<PagedRevision, PagedRevision>(rawData, 'PagedRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1178,17 +1116,10 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'subject_id':
-          encodeQueryParameter(_serializers, subjectId, const FullType(int)),
-      if (type != null)
-        r'type':
-            encodeQueryParameter(_serializers, type, const FullType(EpType)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'subject_id': subjectId,
+      if (type != null) r'type': type,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -1203,13 +1134,11 @@ class DefaultApi {
     PagedEpisode? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedEpisode),
-            ) as PagedEpisode;
+          : deserialize<PagedEpisode, PagedEpisode>(rawData, 'PagedEpisode',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1255,10 +1184,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1288,13 +1215,10 @@ class DefaultApi {
     Index? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(Index),
-            ) as Index;
+          : deserialize<Index, Index>(rawData, 'Index', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1346,10 +1270,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}/subjects'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}/subjects'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1369,15 +1291,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (type != null)
-        r'type': encodeQueryParameter(
-            _serializers, type, const FullType(SubjectType)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      if (type != null) r'type': type,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -1443,13 +1359,12 @@ class DefaultApi {
     GetMyself200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(GetMyself200Response),
-            ) as GetMyself200Response;
+          : deserialize<GetMyself200Response, GetMyself200Response>(
+              rawData, 'GetMyself200Response',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1495,10 +1410,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1522,13 +1435,11 @@ class DefaultApi {
     PersonDetail? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PersonDetail),
-            ) as PersonDetail;
+          : deserialize<PersonDetail, PersonDetail>(rawData, 'PersonDetail',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1576,10 +1487,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}/image'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}/image'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1599,7 +1508,7 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'type': encodeQueryParameter(_serializers, type, const FullType(String)),
+      r'type': type,
     };
 
     final _response = await _dio.request<Object>(
@@ -1637,10 +1546,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/revisions/persons/{revision_id}'.replaceAll(
-        '{' r'revision_id' '}',
-        encodeQueryParameter(_serializers, revisionId, const FullType(int))
-            .toString());
+    final _path = r'/v0/revisions/persons/{revision_id}'
+        .replaceAll('{' r'revision_id' '}', revisionId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1664,13 +1571,12 @@ class DefaultApi {
     PersonRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PersonRevision),
-            ) as PersonRevision;
+          : deserialize<PersonRevision, PersonRevision>(
+              rawData, 'PersonRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1734,14 +1640,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'person_id':
-          encodeQueryParameter(_serializers, personId, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'person_id': personId,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -1756,13 +1657,11 @@ class DefaultApi {
     PagedRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedRevision),
-            ) as PagedRevision;
+          : deserialize<PagedRevision, PagedRevision>(rawData, 'PagedRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1797,9 +1696,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<PersonCharacter>] as data
+  /// Returns a [Future] containing a [Response] with a [List<PersonCharacter>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<PersonCharacter>>> getRelatedCharactersByPersonId({
+  Future<Response<List<PersonCharacter>>> getRelatedCharactersByPersonId({
     required int personId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1808,10 +1707,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}/characters'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}/characters'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1832,17 +1729,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<PersonCharacter>? _responseData;
+    List<PersonCharacter>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(PersonCharacter)]),
-            ) as BuiltList<PersonCharacter>;
+          : deserialize<List<PersonCharacter>, PersonCharacter>(
+              rawData, 'List<PersonCharacter>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1853,7 +1748,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<PersonCharacter>>(
+    return Response<List<PersonCharacter>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1877,10 +1772,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<RelatedCharacter>] as data
+  /// Returns a [Future] containing a [Response] with a [List<RelatedCharacter>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<RelatedCharacter>>>
-      getRelatedCharactersBySubjectId({
+  Future<Response<List<RelatedCharacter>>> getRelatedCharactersBySubjectId({
     required int subjectId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1889,10 +1783,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/subjects/{subject_id}/characters'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/subjects/{subject_id}/characters'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1919,17 +1811,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<RelatedCharacter>? _responseData;
+    List<RelatedCharacter>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(RelatedCharacter)]),
-            ) as BuiltList<RelatedCharacter>;
+          : deserialize<List<RelatedCharacter>, RelatedCharacter>(
+              rawData, 'List<RelatedCharacter>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1940,7 +1830,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<RelatedCharacter>>(
+    return Response<List<RelatedCharacter>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -1964,9 +1854,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<CharacterPerson>] as data
+  /// Returns a [Future] containing a [Response] with a [List<CharacterPerson>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<CharacterPerson>>> getRelatedPersonsByCharacterId({
+  Future<Response<List<CharacterPerson>>> getRelatedPersonsByCharacterId({
     required int characterId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1975,10 +1865,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}/persons'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}/persons'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -1999,17 +1887,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<CharacterPerson>? _responseData;
+    List<CharacterPerson>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(CharacterPerson)]),
-            ) as BuiltList<CharacterPerson>;
+          : deserialize<List<CharacterPerson>, CharacterPerson>(
+              rawData, 'List<CharacterPerson>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2020,7 +1906,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<CharacterPerson>>(
+    return Response<List<CharacterPerson>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2044,9 +1930,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<RelatedPerson>] as data
+  /// Returns a [Future] containing a [Response] with a [List<RelatedPerson>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<RelatedPerson>>> getRelatedPersonsBySubjectId({
+  Future<Response<List<RelatedPerson>>> getRelatedPersonsBySubjectId({
     required int subjectId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2055,10 +1941,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/subjects/{subject_id}/persons'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/subjects/{subject_id}/persons'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2085,17 +1969,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<RelatedPerson>? _responseData;
+    List<RelatedPerson>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(RelatedPerson)]),
-            ) as BuiltList<RelatedPerson>;
+          : deserialize<List<RelatedPerson>, RelatedPerson>(
+              rawData, 'List<RelatedPerson>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2106,7 +1988,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<RelatedPerson>>(
+    return Response<List<RelatedPerson>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2130,10 +2012,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<V0RelatedSubject>] as data
+  /// Returns a [Future] containing a [Response] with a [List<V0RelatedSubject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<V0RelatedSubject>>>
-      getRelatedSubjectsByCharacterId({
+  Future<Response<List<V0RelatedSubject>>> getRelatedSubjectsByCharacterId({
     required int characterId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2142,10 +2023,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}/subjects'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}/subjects'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2166,17 +2045,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<V0RelatedSubject>? _responseData;
+    List<V0RelatedSubject>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(V0RelatedSubject)]),
-            ) as BuiltList<V0RelatedSubject>;
+          : deserialize<List<V0RelatedSubject>, V0RelatedSubject>(
+              rawData, 'List<V0RelatedSubject>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2187,7 +2064,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<V0RelatedSubject>>(
+    return Response<List<V0RelatedSubject>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2211,9 +2088,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<V0RelatedSubject>] as data
+  /// Returns a [Future] containing a [Response] with a [List<V0RelatedSubject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<V0RelatedSubject>>> getRelatedSubjectsByPersonId({
+  Future<Response<List<V0RelatedSubject>>> getRelatedSubjectsByPersonId({
     required int personId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2222,10 +2099,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}/subjects'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}/subjects'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2246,17 +2121,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<V0RelatedSubject>? _responseData;
+    List<V0RelatedSubject>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(V0RelatedSubject)]),
-            ) as BuiltList<V0RelatedSubject>;
+          : deserialize<List<V0RelatedSubject>, V0RelatedSubject>(
+              rawData, 'List<V0RelatedSubject>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2267,7 +2140,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<V0RelatedSubject>>(
+    return Response<List<V0RelatedSubject>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2291,9 +2164,9 @@ class DefaultApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<V0SubjectRelation>] as data
+  /// Returns a [Future] containing a [Response] with a [List<V0SubjectRelation>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<V0SubjectRelation>>> getRelatedSubjectsBySubjectId({
+  Future<Response<List<V0SubjectRelation>>> getRelatedSubjectsBySubjectId({
     required int subjectId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -2302,10 +2175,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/subjects/{subject_id}/subjects'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/subjects/{subject_id}/subjects'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2332,17 +2203,15 @@ class DefaultApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<V0SubjectRelation>? _responseData;
+    List<V0SubjectRelation>? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(BuiltList, [FullType(V0SubjectRelation)]),
-            ) as BuiltList<V0SubjectRelation>;
+          : deserialize<List<V0SubjectRelation>, V0SubjectRelation>(
+              rawData, 'List<V0SubjectRelation>',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2353,7 +2222,7 @@ class DefaultApi {
       );
     }
 
-    return Response<BuiltList<V0SubjectRelation>>(
+    return Response<List<V0SubjectRelation>>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -2388,10 +2257,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/subjects/{subject_id}'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/subjects/{subject_id}'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2421,13 +2288,10 @@ class DefaultApi {
     Subject? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(Subject),
-            ) as Subject;
+          : deserialize<Subject, Subject>(rawData, 'Subject', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2475,10 +2339,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/subjects/{subject_id}/image'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/subjects/{subject_id}/image'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2498,7 +2360,7 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'type': encodeQueryParameter(_serializers, type, const FullType(String)),
+      r'type': type,
     };
 
     final _response = await _dio.request<Object>(
@@ -2536,10 +2398,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/revisions/subjects/{revision_id}'.replaceAll(
-        '{' r'revision_id' '}',
-        encodeQueryParameter(_serializers, revisionId, const FullType(int))
-            .toString());
+    final _path = r'/v0/revisions/subjects/{revision_id}'
+        .replaceAll('{' r'revision_id' '}', revisionId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2563,13 +2423,12 @@ class DefaultApi {
     SubjectRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(SubjectRevision),
-            ) as SubjectRevision;
+          : deserialize<SubjectRevision, SubjectRevision>(
+              rawData, 'SubjectRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2633,14 +2492,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'subject_id':
-          encodeQueryParameter(_serializers, subjectId, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'subject_id': subjectId,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -2655,13 +2509,11 @@ class DefaultApi {
     PagedRevision? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedRevision),
-            ) as PagedRevision;
+          : deserialize<PagedRevision, PagedRevision>(rawData, 'PagedRevision',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2743,31 +2595,15 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'type':
-          encodeQueryParameter(_serializers, type, const FullType(SubjectType)),
-      if (cat != null)
-        r'cat': encodeQueryParameter(
-            _serializers, cat, const FullType(SubjectCategory)),
-      if (series != null)
-        r'series':
-            encodeQueryParameter(_serializers, series, const FullType(bool)),
-      if (platform != null)
-        r'platform': encodeQueryParameter(
-            _serializers, platform, const FullType(String)),
-      if (sort != null)
-        r'sort':
-            encodeQueryParameter(_serializers, sort, const FullType(String)),
-      if (year != null)
-        r'year': encodeQueryParameter(_serializers, year, const FullType(int)),
-      if (month != null)
-        r'month':
-            encodeQueryParameter(_serializers, month, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      r'type': type,
+      if (cat != null) r'cat': cat,
+      if (series != null) r'series': series,
+      if (platform != null) r'platform': platform,
+      if (sort != null) r'sort': sort,
+      if (year != null) r'year': year,
+      if (month != null) r'month': month,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -2782,13 +2618,11 @@ class DefaultApi {
     PagedSubject? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedSubject),
-            ) as PagedSubject;
+          : deserialize<PagedSubject, PagedSubject>(rawData, 'PagedSubject',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2836,10 +2670,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/{username}/avatar'.replaceAll(
-        '{' r'username' '}',
-        encodeQueryParameter(_serializers, username, const FullType(String))
-            .toString());
+    final _path = r'/v0/users/{username}/avatar'
+        .replaceAll('{' r'username' '}', username.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2853,7 +2685,7 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'type': encodeQueryParameter(_serializers, type, const FullType(String)),
+      r'type': type,
     };
 
     final _response = await _dio.request<Object>(
@@ -2891,10 +2723,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/{username}'.replaceAll(
-        '{' r'username' '}',
-        encodeQueryParameter(_serializers, username, const FullType(String))
-            .toString());
+    final _path = r'/v0/users/{username}'
+        .replaceAll('{' r'username' '}', username.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -2918,13 +2748,10 @@ class DefaultApi {
     User? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(User),
-            ) as User;
+          : deserialize<User, User>(rawData, 'User', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -2974,16 +2801,8 @@ class DefaultApi {
   }) async {
     final _path =
         r'/v0/users/{username}/collections/-/characters/{character_id}'
-            .replaceAll(
-                '{' r'username' '}',
-                encodeQueryParameter(
-                        _serializers, username, const FullType(String))
-                    .toString())
-            .replaceAll(
-                '{' r'character_id' '}',
-                encodeQueryParameter(
-                        _serializers, characterId, const FullType(int))
-                    .toString());
+            .replaceAll('{' r'username' '}', username.toString())
+            .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3007,13 +2826,12 @@ class DefaultApi {
     UserCharacterCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(UserCharacterCollection),
-            ) as UserCharacterCollection;
+          : deserialize<UserCharacterCollection, UserCharacterCollection>(
+              rawData, 'UserCharacterCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3059,10 +2877,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/{username}/collections/-/characters'.replaceAll(
-        '{' r'username' '}',
-        encodeQueryParameter(_serializers, username, const FullType(String))
-            .toString());
+    final _path = r'/v0/users/{username}/collections/-/characters'
+        .replaceAll('{' r'username' '}', username.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3086,13 +2902,13 @@ class DefaultApi {
     PagedUserCharacterCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedUserCharacterCollection),
-            ) as PagedUserCharacterCollection;
+          : deserialize<PagedUserCharacterCollection,
+                  PagedUserCharacterCollection>(
+              rawData, 'PagedUserCharacterCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3141,14 +2957,8 @@ class DefaultApi {
     ProgressCallback? onReceiveProgress,
   }) async {
     final _path = r'/v0/users/{username}/collections/{subject_id}'
-        .replaceAll(
-            '{' r'username' '}',
-            encodeQueryParameter(_serializers, username, const FullType(String))
-                .toString())
-        .replaceAll(
-            '{' r'subject_id' '}',
-            encodeQueryParameter(_serializers, subjectId, const FullType(int))
-                .toString());
+        .replaceAll('{' r'username' '}', username.toString())
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3178,13 +2988,12 @@ class DefaultApi {
     UserSubjectCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(UserSubjectCollection),
-            ) as UserSubjectCollection;
+          : deserialize<UserSubjectCollection, UserSubjectCollection>(
+              rawData, 'UserSubjectCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3238,10 +3047,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/{username}/collections'.replaceAll(
-        '{' r'username' '}',
-        encodeQueryParameter(_serializers, username, const FullType(String))
-            .toString());
+    final _path = r'/v0/users/{username}/collections'
+        .replaceAll('{' r'username' '}', username.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3261,18 +3068,10 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (subjectType != null)
-        r'subject_type': encodeQueryParameter(
-            _serializers, subjectType, const FullType(SubjectType)),
-      if (type != null)
-        r'type': encodeQueryParameter(
-            _serializers, type, const FullType(SubjectCollectionType)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      if (subjectType != null) r'subject_type': subjectType,
+      if (type != null) r'type': type,
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     final _response = await _dio.request<Object>(
@@ -3287,13 +3086,12 @@ class DefaultApi {
     PagedUserCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedUserCollection),
-            ) as PagedUserCollection;
+          : deserialize<PagedUserCollection, PagedUserCollection>(
+              rawData, 'PagedUserCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3339,10 +3137,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/-/episodes/{episode_id}'.replaceAll(
-        '{' r'episode_id' '}',
-        encodeQueryParameter(_serializers, episodeId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/-/episodes/{episode_id}'
+        .replaceAll('{' r'episode_id' '}', episodeId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3372,13 +3168,12 @@ class DefaultApi {
     UserEpisodeCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(UserEpisodeCollection),
-            ) as UserEpisodeCollection;
+          : deserialize<UserEpisodeCollection, UserEpisodeCollection>(
+              rawData, 'UserEpisodeCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3427,14 +3222,8 @@ class DefaultApi {
     ProgressCallback? onReceiveProgress,
   }) async {
     final _path = r'/v0/users/{username}/collections/-/persons/{person_id}'
-        .replaceAll(
-            '{' r'username' '}',
-            encodeQueryParameter(_serializers, username, const FullType(String))
-                .toString())
-        .replaceAll(
-            '{' r'person_id' '}',
-            encodeQueryParameter(_serializers, personId, const FullType(int))
-                .toString());
+        .replaceAll('{' r'username' '}', username.toString())
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3458,13 +3247,12 @@ class DefaultApi {
     UserPersonCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(UserPersonCollection),
-            ) as UserPersonCollection;
+          : deserialize<UserPersonCollection, UserPersonCollection>(
+              rawData, 'UserPersonCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3510,10 +3298,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/{username}/collections/-/persons'.replaceAll(
-        '{' r'username' '}',
-        encodeQueryParameter(_serializers, username, const FullType(String))
-            .toString());
+    final _path = r'/v0/users/{username}/collections/-/persons'
+        .replaceAll('{' r'username' '}', username.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3537,13 +3323,12 @@ class DefaultApi {
     PagedUserPersonCollection? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedUserPersonCollection),
-            ) as PagedUserPersonCollection;
+          : deserialize<PagedUserPersonCollection, PagedUserPersonCollection>(
+              rawData, 'PagedUserPersonCollection',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3596,10 +3381,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/{subject_id}/episodes'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/{subject_id}/episodes'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -3619,15 +3402,9 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (episodeType != null)
-        r'episode_type': encodeQueryParameter(
-            _serializers, episodeType, const FullType(EpType)),
+      if (offset != null) r'offset': offset,
+      if (limit != null) r'limit': limit,
+      if (episodeType != null) r'episode_type': episodeType,
     };
 
     final _response = await _dio.request<Object>(
@@ -3642,14 +3419,13 @@ class DefaultApi {
     GetUserSubjectEpisodeCollection200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType:
-                  const FullType(GetUserSubjectEpisodeCollection200Response),
-            ) as GetUserSubjectEpisodeCollection200Response;
+          : deserialize<GetUserSubjectEpisodeCollection200Response,
+                  GetUserSubjectEpisodeCollection200Response>(
+              rawData, 'GetUserSubjectEpisodeCollection200Response',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3723,13 +3499,10 @@ class DefaultApi {
     Index? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(Index),
-            ) as Index;
+          : deserialize<Index, Index>(rawData, 'Index', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -3777,10 +3550,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/{subject_id}'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/{subject_id}'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'PATCH',
       headers: <String, dynamic>{
@@ -3803,11 +3574,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(UserSubjectCollectionModifyPayload);
-      _bodyData = userSubjectCollectionModifyPayload == null
-          ? null
-          : _serializers.serialize(userSubjectCollectionModifyPayload,
-              specifiedType: _type);
+      _bodyData = jsonEncode(userSubjectCollectionModifyPayload);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -3858,10 +3625,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/{subject_id}/episodes'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/{subject_id}/episodes'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'PATCH',
       headers: <String, dynamic>{
@@ -3884,11 +3649,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(PatchUserSubjectEpisodeCollectionRequest);
-      _bodyData = patchUserSubjectEpisodeCollectionRequest == null
-          ? null
-          : _serializers.serialize(patchUserSubjectEpisodeCollectionRequest,
-              specifiedType: _type);
+      _bodyData = jsonEncode(patchUserSubjectEpisodeCollectionRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -3938,10 +3699,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/{subject_id}'.replaceAll(
-        '{' r'subject_id' '}',
-        encodeQueryParameter(_serializers, subjectId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/{subject_id}'
+        .replaceAll('{' r'subject_id' '}', subjectId.toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -3964,11 +3723,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(UserSubjectCollectionModifyPayload);
-      _bodyData = userSubjectCollectionModifyPayload == null
-          ? null
-          : _serializers.serialize(userSubjectCollectionModifyPayload,
-              specifiedType: _type);
+      _bodyData = jsonEncode(userSubjectCollectionModifyPayload);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -4018,10 +3773,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/users/-/collections/-/episodes/{episode_id}'.replaceAll(
-        '{' r'episode_id' '}',
-        encodeQueryParameter(_serializers, episodeId, const FullType(int))
-            .toString());
+    final _path = r'/v0/users/-/collections/-/episodes/{episode_id}'
+        .replaceAll('{' r'episode_id' '}', episodeId.toString());
     final _options = Options(
       method: r'PUT',
       headers: <String, dynamic>{
@@ -4044,11 +3797,7 @@ class DefaultApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(PutUserEpisodeCollectionRequest);
-      _bodyData = putUserEpisodeCollectionRequest == null
-          ? null
-          : _serializers.serialize(putUserEpisodeCollectionRequest,
-              specifiedType: _type);
+      _bodyData = jsonEncode(putUserEpisodeCollectionRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -4071,6 +3820,213 @@ class DefaultApi {
     );
 
     return _response;
+  }
+
+  /// 角色搜索
+  /// ## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - &#x60;nsfw&#x60;: 使用 &#x60;include&#x60; 包含NSFW搜索结果。默认排除搜索NSFW条目。无权限情况下忽略此选项，不会返回NSFW条目。
+  ///
+  /// Parameters:
+  /// * [limit] - 分页参数
+  /// * [offset] - 分页参数
+  /// * [searchCharactersRequest]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [PagedCharacter] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<PagedCharacter>> searchCharacters({
+    int? limit,
+    int? offset,
+    SearchCharactersRequest? searchCharactersRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v0/search/characters';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
+    };
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(searchCharactersRequest);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(
+          _dio.options,
+          _path,
+          queryParameters: _queryParameters,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    PagedCharacter? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<PagedCharacter, PagedCharacter>(
+              rawData, 'PagedCharacter',
+              growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<PagedCharacter>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// 人物搜索
+  /// ## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - &#x60;career&#x60;: 职业，可以多次出现。&#x60;且&#x60; 关系。  不同筛选条件之间为 &#x60;且&#x60;
+  ///
+  /// Parameters:
+  /// * [limit] - 分页参数
+  /// * [offset] - 分页参数
+  /// * [searchPersonsRequest]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [PagedPerson] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<PagedPerson>> searchPersons({
+    int? limit,
+    int? offset,
+    SearchPersonsRequest? searchPersonsRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v0/search/persons';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
+    };
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(searchPersonsRequest);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _options.compose(
+          _dio.options,
+          _path,
+          queryParameters: _queryParameters,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    PagedPerson? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<PagedPerson, PagedPerson>(rawData, 'PagedPerson',
+              growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<PagedPerson>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
   }
 
   /// 条目搜索
@@ -4115,21 +4071,14 @@ class DefaultApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (limit != null)
-        r'limit':
-            encodeQueryParameter(_serializers, limit, const FullType(int)),
-      if (offset != null)
-        r'offset':
-            encodeQueryParameter(_serializers, offset, const FullType(int)),
+      if (limit != null) r'limit': limit,
+      if (offset != null) r'offset': offset,
     };
 
     dynamic _bodyData;
 
     try {
-      const _type = FullType(SearchSubjectsRequest);
-      _bodyData = searchSubjectsRequest == null
-          ? null
-          : _serializers.serialize(searchSubjectsRequest, specifiedType: _type);
+      _bodyData = jsonEncode(searchSubjectsRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(
@@ -4156,13 +4105,11 @@ class DefaultApi {
     PagedSubject? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null
+      final rawData = _response.data;
+      _responseData = rawData == null
           ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(PagedSubject),
-            ) as PagedSubject;
+          : deserialize<PagedSubject, PagedSubject>(rawData, 'PagedSubject',
+              growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -4208,10 +4155,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/characters/{character_id}/collect'.replaceAll(
-        '{' r'character_id' '}',
-        encodeQueryParameter(_serializers, characterId, const FullType(int))
-            .toString());
+    final _path = r'/v0/characters/{character_id}/collect'
+        .replaceAll('{' r'character_id' '}', characterId.toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{
@@ -4264,10 +4209,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/indices/{index_id}/collect'.replaceAll(
-        '{' r'index_id' '}',
-        encodeQueryParameter(_serializers, indexId, const FullType(int))
-            .toString());
+    final _path = r'/v0/indices/{index_id}/collect'
+        .replaceAll('{' r'index_id' '}', indexId.toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{
@@ -4320,10 +4263,8 @@ class DefaultApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/v0/persons/{person_id}/collect'.replaceAll(
-        '{' r'person_id' '}',
-        encodeQueryParameter(_serializers, personId, const FullType(int))
-            .toString());
+    final _path = r'/v0/persons/{person_id}/collect'
+        .replaceAll('{' r'person_id' '}', personId.toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{

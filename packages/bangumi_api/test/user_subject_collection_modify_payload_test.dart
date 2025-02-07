@@ -1,10 +1,11 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for UserSubjectCollectionModifyPayload
 void main() {
-  final instance = UserSubjectCollectionModifyPayloadBuilder();
-  // TODO add properties to the builder and call build()
+  final UserSubjectCollectionModifyPayload?
+      instance = /* UserSubjectCollectionModifyPayload(...) */ null;
+  // TODO add properties to the entity
 
   group(UserSubjectCollectionModifyPayload, () {
     // 修改条目收藏类型
@@ -44,7 +45,7 @@ void main() {
     });
 
     // 不传或者 `null` 都会被忽略，传 `[]` 则会删除所有 tag。
-    // BuiltList<String> tags
+    // List<String> tags
     test('to test the property `tags`', () async {
       // TODO
     });

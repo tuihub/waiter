@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for SlimSubject
 void main() {
-  final instance = SlimSubjectBuilder();
-  // TODO add properties to the builder and call build()
+  final SlimSubject? instance = /* SlimSubject(...) */ null;
+  // TODO add properties to the entity
 
   group(SlimSubject, () {
     // int id
@@ -75,7 +75,7 @@ void main() {
     });
 
     // 前 10 个 tag
-    // BuiltList<Tag> tags
+    // List<Tag> tags
     test('to test the property `tags`', () async {
       // TODO
     });

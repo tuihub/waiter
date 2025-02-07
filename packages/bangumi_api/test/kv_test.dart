@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for KV
 void main() {
-  final instance = KVBuilder();
-  // TODO add properties to the builder and call build()
+  final KV? instance = /* KV(...) */ null;
+  // TODO add properties to the entity
 
   group(KV, () {
     // String k

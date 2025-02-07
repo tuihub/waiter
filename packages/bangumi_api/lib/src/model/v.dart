@@ -3,105 +3,56 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'v.g.dart';
 
-/// V
-///
-/// Properties:
-/// * [v]
-@BuiltValue()
-abstract class V implements Built<V, VBuilder> {
-  @BuiltValueField(wireName: r'v')
-  String get v;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class V {
+  /// Returns a new [V] instance.
+  V({
+    required this.v,
+  });
 
-  V._();
+  @JsonKey(
+    name: r'v',
+    required: true,
+    includeIfNull: false,
+  )
+  final String v;
 
-  factory V([void updates(VBuilder b)]) = _$V;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(VBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<V> get serializer => _$VSerializer();
-}
-
-class _$VSerializer implements PrimitiveSerializer<V> {
-  @override
-  final Iterable<Type> types = const [V, _$V];
-
-  @override
-  final String wireName = r'V';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    V object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'v';
-    yield serializers.serialize(
-      object.v,
-      specifiedType: const FullType(String),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is V &&
+            runtimeType == other.runtimeType &&
+            equals([
+              v,
+            ], [
+              other.v,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    V object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          v,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required VBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'v':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.v = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory V.fromJson(Map<String, dynamic> json) => _$VFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VToJson(this);
 
   @override
-  V deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = VBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

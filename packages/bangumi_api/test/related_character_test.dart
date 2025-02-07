@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for RelatedCharacter
 void main() {
-  final instance = RelatedCharacterBuilder();
-  // TODO add properties to the builder and call build()
+  final RelatedCharacter? instance = /* RelatedCharacter(...) */ null;
+  // TODO add properties to the entity
 
   group(RelatedCharacter, () {
     // int id
@@ -35,7 +35,7 @@ void main() {
     });
 
     // 演员列表
-    // BuiltList<Person> actors (default value: ListBuilder())
+    // List<Person> actors (default value: [])
     test('to test the property `actors`', () async {
       // TODO
     });

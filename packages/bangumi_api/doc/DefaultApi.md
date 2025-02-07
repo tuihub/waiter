@@ -58,6 +58,8 @@ Method | HTTP request | Description
 [**patchUserSubjectEpisodeCollection**](DefaultApi.md#patchusersubjectepisodecollection) | **PATCH** /v0/users/-/collections/{subject_id}/episodes | 章节收藏信息
 [**postUserCollection**](DefaultApi.md#postusercollection) | **POST** /v0/users/-/collections/{subject_id} | 新增或修改用户单个条目收藏
 [**putUserEpisodeCollection**](DefaultApi.md#putuserepisodecollection) | **PUT** /v0/users/-/collections/-/episodes/{episode_id} | 更新章节收藏信息
+[**searchCharacters**](DefaultApi.md#searchcharacters) | **POST** /v0/search/characters | 角色搜索
+[**searchPersons**](DefaultApi.md#searchpersons) | **POST** /v0/search/persons | 人物搜索
 [**searchSubjects**](DefaultApi.md#searchsubjects) | **POST** /v0/search/subjects | 条目搜索
 [**uncollectCharacterByCharacterIdAndUserId**](DefaultApi.md#uncollectcharacterbycharacteridanduserid) | **DELETE** /v0/characters/{character_id}/collect | Uncollect character for current user
 [**uncollectIndexByIndexIdAndUserId**](DefaultApi.md#uncollectindexbyindexidanduserid) | **DELETE** /v0/indices/{index_id}/collect | Uncollect index for current user
@@ -364,7 +366,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getCharacterById**
-> CharacterDetail getCharacterById(characterId)
+> Character getCharacterById(characterId)
 
 Get Character Detail
 
@@ -393,7 +395,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**CharacterDetail**](CharacterDetail.md)
+[**Character**](Character.md)
 
 ### Authorization
 
@@ -672,7 +674,7 @@ import 'package:bangumi_api/api.dart';
 
 final api = BangumiApi().getDefaultApi();
 final int subjectId = 56; // int | 条目 ID
-final EpType type = 56; // EpType | 参照章节的`type`
+final EpType type = ; // EpType | 参照章节的`type`
 final int limit = 56; // int | 分页参数
 final int offset = 56; // int | 分页参数
 
@@ -689,7 +691,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **subjectId** | **int**| 条目 ID | 
- **type** | **EpType**| 参照章节的`type` | [optional] 
+ **type** | [**EpType**](.md)| 参照章节的`type` | [optional] 
  **limit** | **int**| 分页参数 | [optional] [default to 100]
  **offset** | **int**| 分页参数 | [optional] [default to 0]
 
@@ -1006,7 +1008,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedCharactersByPersonId**
-> BuiltList<PersonCharacter> getRelatedCharactersByPersonId(personId)
+> List<PersonCharacter> getRelatedCharactersByPersonId(personId)
 
 get person related characters
 
@@ -1033,7 +1035,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;PersonCharacter&gt;**](PersonCharacter.md)
+[**List&lt;PersonCharacter&gt;**](PersonCharacter.md)
 
 ### Authorization
 
@@ -1047,7 +1049,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedCharactersBySubjectId**
-> BuiltList<RelatedCharacter> getRelatedCharactersBySubjectId(subjectId)
+> List<RelatedCharacter> getRelatedCharactersBySubjectId(subjectId)
 
 Get Subject Characters
 
@@ -1074,7 +1076,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;RelatedCharacter&gt;**](RelatedCharacter.md)
+[**List&lt;RelatedCharacter&gt;**](RelatedCharacter.md)
 
 ### Authorization
 
@@ -1088,7 +1090,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedPersonsByCharacterId**
-> BuiltList<CharacterPerson> getRelatedPersonsByCharacterId(characterId)
+> List<CharacterPerson> getRelatedPersonsByCharacterId(characterId)
 
 get character related persons
 
@@ -1115,7 +1117,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;CharacterPerson&gt;**](CharacterPerson.md)
+[**List&lt;CharacterPerson&gt;**](CharacterPerson.md)
 
 ### Authorization
 
@@ -1129,7 +1131,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedPersonsBySubjectId**
-> BuiltList<RelatedPerson> getRelatedPersonsBySubjectId(subjectId)
+> List<RelatedPerson> getRelatedPersonsBySubjectId(subjectId)
 
 Get Subject Persons
 
@@ -1156,7 +1158,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;RelatedPerson&gt;**](RelatedPerson.md)
+[**List&lt;RelatedPerson&gt;**](RelatedPerson.md)
 
 ### Authorization
 
@@ -1170,7 +1172,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedSubjectsByCharacterId**
-> BuiltList<V0RelatedSubject> getRelatedSubjectsByCharacterId(characterId)
+> List<V0RelatedSubject> getRelatedSubjectsByCharacterId(characterId)
 
 get character related subjects
 
@@ -1197,7 +1199,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;V0RelatedSubject&gt;**](V0RelatedSubject.md)
+[**List&lt;V0RelatedSubject&gt;**](V0RelatedSubject.md)
 
 ### Authorization
 
@@ -1211,7 +1213,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedSubjectsByPersonId**
-> BuiltList<V0RelatedSubject> getRelatedSubjectsByPersonId(personId)
+> List<V0RelatedSubject> getRelatedSubjectsByPersonId(personId)
 
 get person related subjects
 
@@ -1238,7 +1240,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;V0RelatedSubject&gt;**](V0RelatedSubject.md)
+[**List&lt;V0RelatedSubject&gt;**](V0RelatedSubject.md)
 
 ### Authorization
 
@@ -1252,7 +1254,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRelatedSubjectsBySubjectId**
-> BuiltList<V0SubjectRelation> getRelatedSubjectsBySubjectId(subjectId)
+> List<V0SubjectRelation> getRelatedSubjectsBySubjectId(subjectId)
 
 Get Subject Relations
 
@@ -1279,7 +1281,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;V0SubjectRelation&gt;**](V0SubjectRelation.md)
+[**List&lt;V0SubjectRelation&gt;**](V0SubjectRelation.md)
 
 ### Authorization
 
@@ -1752,7 +1754,7 @@ import 'package:bangumi_api/api.dart';
 final api = BangumiApi().getDefaultApi();
 final String username = username_example; // String | 设置了用户名之后无法使用 UID。
 final SubjectType subjectType = ; // SubjectType | 条目类型，默认为全部  具体含义见 [SubjectType](#model-SubjectType)
-final SubjectCollectionType type = 56; // SubjectCollectionType | 收藏类型，默认为全部  具体含义见 [CollectionType](#model-CollectionType)
+final SubjectCollectionType type = ; // SubjectCollectionType | 收藏类型，默认为全部  具体含义见 [CollectionType](#model-CollectionType)
 final int limit = 56; // int | 分页参数
 final int offset = 56; // int | 分页参数
 
@@ -1770,7 +1772,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **username** | **String**| 设置了用户名之后无法使用 UID。 | 
  **subjectType** | [**SubjectType**](.md)| 条目类型，默认为全部  具体含义见 [SubjectType](#model-SubjectType) | [optional] 
- **type** | **SubjectCollectionType**| 收藏类型，默认为全部  具体含义见 [CollectionType](#model-CollectionType) | [optional] 
+ **type** | [**SubjectCollectionType**](.md)| 收藏类型，默认为全部  具体含义见 [CollectionType](#model-CollectionType) | [optional] 
  **limit** | **int**| 分页参数 | [optional] [default to 30]
  **offset** | **int**| 分页参数 | [optional] [default to 0]
 
@@ -2164,6 +2166,100 @@ void (empty response body)
 ### Authorization
 
 [HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **searchCharacters**
+> PagedCharacter searchCharacters(limit, offset, searchCharactersRequest)
+
+角色搜索
+
+## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - `nsfw`: 使用 `include` 包含NSFW搜索结果。默认排除搜索NSFW条目。无权限情况下忽略此选项，不会返回NSFW条目。 
+
+### Example
+```dart
+import 'package:bangumi_api/api.dart';
+
+final api = BangumiApi().getDefaultApi();
+final int limit = 56; // int | 分页参数
+final int offset = 56; // int | 分页参数
+final SearchCharactersRequest searchCharactersRequest = ; // SearchCharactersRequest | 
+
+try {
+    final response = api.searchCharacters(limit, offset, searchCharactersRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DefaultApi->searchCharacters: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **int**| 分页参数 | [optional] 
+ **offset** | **int**| 分页参数 | [optional] 
+ **searchCharactersRequest** | [**SearchCharactersRequest**](SearchCharactersRequest.md)|  | [optional] 
+
+### Return type
+
+[**PagedCharacter**](PagedCharacter.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **searchPersons**
+> PagedPerson searchPersons(limit, offset, searchPersonsRequest)
+
+人物搜索
+
+## 实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动  目前支持的筛选条件包括: - `career`: 职业，可以多次出现。`且` 关系。  不同筛选条件之间为 `且` 
+
+### Example
+```dart
+import 'package:bangumi_api/api.dart';
+
+final api = BangumiApi().getDefaultApi();
+final int limit = 56; // int | 分页参数
+final int offset = 56; // int | 分页参数
+final SearchPersonsRequest searchPersonsRequest = ; // SearchPersonsRequest | 
+
+try {
+    final response = api.searchPersons(limit, offset, searchPersonsRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DefaultApi->searchPersons: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **int**| 分页参数 | [optional] 
+ **offset** | **int**| 分页参数 | [optional] 
+ **searchPersonsRequest** | [**SearchPersonsRequest**](SearchPersonsRequest.md)|  | [optional] 
+
+### Return type
+
+[**PagedPerson**](PagedPerson.md)
+
+### Authorization
+
+No authorization required
 
 ### HTTP request headers
 

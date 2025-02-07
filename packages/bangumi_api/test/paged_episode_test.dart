@@ -1,10 +1,10 @@
 import 'package:test/test.dart';
-import 'package:openapi/openapi.dart';
+import 'package:bangumi_api/bangumi_api.dart';
 
 // tests for PagedEpisode
 void main() {
-  final instance = PagedEpisodeBuilder();
-  // TODO add properties to the builder and call build()
+  final PagedEpisode? instance = /* PagedEpisode(...) */ null;
+  // TODO add properties to the entity
 
   group(PagedEpisode, () {
     // int total (default value: 0)
@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Episode> data (default value: ListBuilder())
+    // List<Episode> data (default value: [])
     test('to test the property `data`', () async {
       // TODO
     });

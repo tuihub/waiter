@@ -3,121 +3,67 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'stat.g.dart';
 
-/// Stat
-///
-/// Properties:
-/// * [comments]
-/// * [collects]
-@BuiltValue()
-abstract class Stat implements Built<Stat, StatBuilder> {
-  @BuiltValueField(wireName: r'comments')
-  int get comments;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Stat {
+  /// Returns a new [Stat] instance.
+  Stat({
+    required this.comments,
+    required this.collects,
+  });
 
-  @BuiltValueField(wireName: r'collects')
-  int get collects;
+  @JsonKey(
+    name: r'comments',
+    required: true,
+    includeIfNull: false,
+  )
+  final int comments;
 
-  Stat._();
+  @JsonKey(
+    name: r'collects',
+    required: true,
+    includeIfNull: false,
+  )
+  final int collects;
 
-  factory Stat([void updates(StatBuilder b)]) = _$Stat;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(StatBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Stat> get serializer => _$StatSerializer();
-}
-
-class _$StatSerializer implements PrimitiveSerializer<Stat> {
-  @override
-  final Iterable<Type> types = const [Stat, _$Stat];
-
-  @override
-  final String wireName = r'Stat';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Stat object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'comments';
-    yield serializers.serialize(
-      object.comments,
-      specifiedType: const FullType(int),
-    );
-    yield r'collects';
-    yield serializers.serialize(
-      object.collects,
-      specifiedType: const FullType(int),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Stat &&
+            runtimeType == other.runtimeType &&
+            equals([
+              comments,
+              collects,
+            ], [
+              other.comments,
+              other.collects,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Stat object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          comments,
+          collects,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required StatBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'comments':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.comments = valueDes;
-          break;
-        case r'collects':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.collects = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Stat.fromJson(Map<String, dynamic> json) => _$StatFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StatToJson(this);
 
   @override
-  Stat deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = StatBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

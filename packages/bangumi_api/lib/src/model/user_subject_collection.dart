@@ -5,281 +5,169 @@
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/subject_collection_type.dart';
 import 'package:bangumi_api/src/model/subject_type.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:bangumi_api/src/model/slim_subject.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'user_subject_collection.g.dart';
 
-/// UserSubjectCollection
-///
-/// Properties:
-/// * [subjectId]
-/// * [subjectType]
-/// * [rate]
-/// * [type]
-/// * [comment]
-/// * [tags]
-/// * [epStatus]
-/// * [volStatus]
-/// * [updatedAt] - 本时间并不代表条目的收藏时间。修改评分，评价，章节观看状态等收藏信息时未更新此时间是一个 bug。请不要依赖此特性
-/// * [private]
-/// * [subject]
-@BuiltValue()
-abstract class UserSubjectCollection
-    implements Built<UserSubjectCollection, UserSubjectCollectionBuilder> {
-  @BuiltValueField(wireName: r'subject_id')
-  int get subjectId;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class UserSubjectCollection {
+  /// Returns a new [UserSubjectCollection] instance.
+  UserSubjectCollection({
+    required this.subjectId,
+    required this.subjectType,
+    required this.rate,
+    required this.type,
+    this.comment,
+    required this.tags,
+    required this.epStatus,
+    required this.volStatus,
+    required this.updatedAt,
+    required this.private,
+    this.subject,
+  });
 
-  @BuiltValueField(wireName: r'subject_type')
-  SubjectType get subjectType;
-  // enum subjectTypeEnum {  1,  2,  3,  4,  6,  };
+  @JsonKey(
+    name: r'subject_id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int subjectId;
 
-  @BuiltValueField(wireName: r'rate')
-  int get rate;
+  @JsonKey(
+    name: r'subject_type',
+    required: true,
+    includeIfNull: false,
+  )
+  final SubjectType subjectType;
 
-  @BuiltValueField(wireName: r'type')
-  SubjectCollectionType get type;
-  // enum typeEnum {  1,  2,  3,  4,  5,  };
+  @JsonKey(
+    name: r'rate',
+    required: true,
+    includeIfNull: false,
+  )
+  final int rate;
 
-  @BuiltValueField(wireName: r'comment')
-  String? get comment;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final SubjectCollectionType type;
 
-  @BuiltValueField(wireName: r'tags')
-  BuiltList<String> get tags;
+  @JsonKey(
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? comment;
 
-  @BuiltValueField(wireName: r'ep_status')
-  int get epStatus;
+  @JsonKey(
+    name: r'tags',
+    required: true,
+    includeIfNull: false,
+  )
+  final List<String> tags;
 
-  @BuiltValueField(wireName: r'vol_status')
-  int get volStatus;
+  @JsonKey(
+    name: r'ep_status',
+    required: true,
+    includeIfNull: false,
+  )
+  final int epStatus;
+
+  @JsonKey(
+    name: r'vol_status',
+    required: true,
+    includeIfNull: false,
+  )
+  final int volStatus;
 
   /// 本时间并不代表条目的收藏时间。修改评分，评价，章节观看状态等收藏信息时未更新此时间是一个 bug。请不要依赖此特性
-  @BuiltValueField(wireName: r'updated_at')
-  DateTime get updatedAt;
+  @JsonKey(
+    name: r'updated_at',
+    required: true,
+    includeIfNull: false,
+  )
+  final DateTime updatedAt;
 
-  @BuiltValueField(wireName: r'private')
-  bool get private;
+  @JsonKey(
+    name: r'private',
+    required: true,
+    includeIfNull: false,
+  )
+  final bool private;
 
-  @BuiltValueField(wireName: r'subject')
-  SlimSubject? get subject;
+  @JsonKey(
+    name: r'subject',
+    required: false,
+    includeIfNull: false,
+  )
+  final SlimSubject? subject;
 
-  UserSubjectCollection._();
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is UserSubjectCollection &&
+            runtimeType == other.runtimeType &&
+            equals([
+              subjectId,
+              subjectType,
+              rate,
+              type,
+              comment,
+              tags,
+              epStatus,
+              volStatus,
+              updatedAt,
+              private,
+              subject,
+            ], [
+              other.subjectId,
+              other.subjectType,
+              other.rate,
+              other.type,
+              other.comment,
+              other.tags,
+              other.epStatus,
+              other.volStatus,
+              other.updatedAt,
+              other.private,
+              other.subject,
+            ]);
+  }
 
-  factory UserSubjectCollection(
-      [void updates(UserSubjectCollectionBuilder b)]) = _$UserSubjectCollection;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserSubjectCollectionBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<UserSubjectCollection> get serializer =>
-      _$UserSubjectCollectionSerializer();
-}
-
-class _$UserSubjectCollectionSerializer
-    implements PrimitiveSerializer<UserSubjectCollection> {
   @override
-  final Iterable<Type> types = const [
-    UserSubjectCollection,
-    _$UserSubjectCollection
-  ];
-
-  @override
-  final String wireName = r'UserSubjectCollection';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    UserSubjectCollection object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'subject_id';
-    yield serializers.serialize(
-      object.subjectId,
-      specifiedType: const FullType(int),
-    );
-    yield r'subject_type';
-    yield serializers.serialize(
-      object.subjectType,
-      specifiedType: const FullType(SubjectType),
-    );
-    yield r'rate';
-    yield serializers.serialize(
-      object.rate,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(SubjectCollectionType),
-    );
-    if (object.comment != null) {
-      yield r'comment';
-      yield serializers.serialize(
-        object.comment,
-        specifiedType: const FullType(String),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          subjectId,
+          subjectType,
+          rate,
+          type,
+          comment,
+          tags,
+          epStatus,
+          volStatus,
+          updatedAt,
+          private,
+          subject,
+        ],
       );
-    }
-    yield r'tags';
-    yield serializers.serialize(
-      object.tags,
-      specifiedType: const FullType(BuiltList, [FullType(String)]),
-    );
-    yield r'ep_status';
-    yield serializers.serialize(
-      object.epStatus,
-      specifiedType: const FullType(int),
-    );
-    yield r'vol_status';
-    yield serializers.serialize(
-      object.volStatus,
-      specifiedType: const FullType(int),
-    );
-    yield r'updated_at';
-    yield serializers.serialize(
-      object.updatedAt,
-      specifiedType: const FullType(DateTime),
-    );
-    yield r'private';
-    yield serializers.serialize(
-      object.private,
-      specifiedType: const FullType(bool),
-    );
-    if (object.subject != null) {
-      yield r'subject';
-      yield serializers.serialize(
-        object.subject,
-        specifiedType: const FullType(SlimSubject),
-      );
-    }
-  }
+
+  factory UserSubjectCollection.fromJson(Map<String, dynamic> json) =>
+      _$UserSubjectCollectionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserSubjectCollectionToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UserSubjectCollection object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required UserSubjectCollectionBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'subject_id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.subjectId = valueDes;
-          break;
-        case r'subject_type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(SubjectType),
-          ) as SubjectType;
-          result.subjectType = valueDes;
-          break;
-        case r'rate':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.rate = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(SubjectCollectionType),
-          ) as SubjectCollectionType;
-          result.type = valueDes;
-          break;
-        case r'comment':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.comment = valueDes;
-          break;
-        case r'tags':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(String)]),
-          ) as BuiltList<String>;
-          result.tags.replace(valueDes);
-          break;
-        case r'ep_status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.epStatus = valueDes;
-          break;
-        case r'vol_status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.volStatus = valueDes;
-          break;
-        case r'updated_at':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.updatedAt = valueDes;
-          break;
-        case r'private':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.private = valueDes;
-          break;
-        case r'subject':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(SlimSubject),
-          ) as SlimSubject;
-          result.subject.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  UserSubjectCollection deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UserSubjectCollectionBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

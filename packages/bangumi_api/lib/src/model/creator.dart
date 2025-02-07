@@ -3,121 +3,68 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'creator.g.dart';
 
-/// 意义同<a href=\"#model-Me\">Me</a>
-///
-/// Properties:
-/// * [username]
-/// * [nickname]
-@BuiltValue()
-abstract class Creator implements Built<Creator, CreatorBuilder> {
-  @BuiltValueField(wireName: r'username')
-  String get username;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Creator {
+  /// Returns a new [Creator] instance.
+  Creator({
+    required this.username,
+    required this.nickname,
+  });
 
-  @BuiltValueField(wireName: r'nickname')
-  String get nickname;
+  @JsonKey(
+    name: r'username',
+    required: true,
+    includeIfNull: false,
+  )
+  final String username;
 
-  Creator._();
+  @JsonKey(
+    name: r'nickname',
+    required: true,
+    includeIfNull: false,
+  )
+  final String nickname;
 
-  factory Creator([void updates(CreatorBuilder b)]) = _$Creator;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(CreatorBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Creator> get serializer => _$CreatorSerializer();
-}
-
-class _$CreatorSerializer implements PrimitiveSerializer<Creator> {
-  @override
-  final Iterable<Type> types = const [Creator, _$Creator];
-
-  @override
-  final String wireName = r'Creator';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Creator object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'username';
-    yield serializers.serialize(
-      object.username,
-      specifiedType: const FullType(String),
-    );
-    yield r'nickname';
-    yield serializers.serialize(
-      object.nickname,
-      specifiedType: const FullType(String),
-    );
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Creator &&
+            runtimeType == other.runtimeType &&
+            equals([
+              username,
+              nickname,
+            ], [
+              other.username,
+              other.nickname,
+            ]);
   }
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Creator object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          username,
+          nickname,
+        ],
+      );
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required CreatorBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'username':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.username = valueDes;
-          break;
-        case r'nickname':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nickname = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Creator.fromJson(Map<String, dynamic> json) =>
+      _$CreatorFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreatorToJson(this);
 
   @override
-  Creator deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = CreatorBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }

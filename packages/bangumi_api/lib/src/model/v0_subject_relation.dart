@@ -4,191 +4,112 @@
 
 // ignore_for_file: unused_element
 import 'package:bangumi_api/src/model/images.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/src/equatable_utils.dart';
 
 part 'v0_subject_relation.g.dart';
 
-/// V0SubjectRelation
-///
-/// Properties:
-/// * [id]
-/// * [type]
-/// * [name]
-/// * [nameCn]
-/// * [images]
-/// * [relation]
-@BuiltValue()
-abstract class V0SubjectRelation
-    implements Built<V0SubjectRelation, V0SubjectRelationBuilder> {
-  @BuiltValueField(wireName: r'id')
-  int get id;
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class V0SubjectRelation {
+  /// Returns a new [V0SubjectRelation] instance.
+  V0SubjectRelation({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.nameCn,
+    this.images,
+    required this.relation,
+  });
 
-  @BuiltValueField(wireName: r'type')
-  int get type;
+  @JsonKey(
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+  final int id;
 
-  @BuiltValueField(wireName: r'name')
-  String get name;
+  @JsonKey(
+    name: r'type',
+    required: true,
+    includeIfNull: false,
+  )
+  final int type;
 
-  @BuiltValueField(wireName: r'name_cn')
-  String get nameCn;
+  @JsonKey(
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+  final String name;
 
-  @BuiltValueField(wireName: r'images')
-  Images? get images;
+  @JsonKey(
+    name: r'name_cn',
+    required: true,
+    includeIfNull: false,
+  )
+  final String nameCn;
 
-  @BuiltValueField(wireName: r'relation')
-  String get relation;
+  @JsonKey(
+    name: r'images',
+    required: false,
+    includeIfNull: false,
+  )
+  final Images? images;
 
-  V0SubjectRelation._();
+  @JsonKey(
+    name: r'relation',
+    required: true,
+    includeIfNull: false,
+  )
+  final String relation;
 
-  factory V0SubjectRelation([void updates(V0SubjectRelationBuilder b)]) =
-      _$V0SubjectRelation;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is V0SubjectRelation &&
+            runtimeType == other.runtimeType &&
+            equals([
+              id,
+              type,
+              name,
+              nameCn,
+              images,
+              relation,
+            ], [
+              other.id,
+              other.type,
+              other.name,
+              other.nameCn,
+              other.images,
+              other.relation,
+            ]);
+  }
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(V0SubjectRelationBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<V0SubjectRelation> get serializer =>
-      _$V0SubjectRelationSerializer();
-}
-
-class _$V0SubjectRelationSerializer
-    implements PrimitiveSerializer<V0SubjectRelation> {
   @override
-  final Iterable<Type> types = const [V0SubjectRelation, _$V0SubjectRelation];
-
-  @override
-  final String wireName = r'V0SubjectRelation';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    V0SubjectRelation object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(int),
-    );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(int),
-    );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'name_cn';
-    yield serializers.serialize(
-      object.nameCn,
-      specifiedType: const FullType(String),
-    );
-    if (object.images != null) {
-      yield r'images';
-      yield serializers.serialize(
-        object.images,
-        specifiedType: const FullType(Images),
+  int get hashCode =>
+      runtimeType.hashCode ^
+      mapPropsToHashCode(
+        [
+          id,
+          type,
+          name,
+          nameCn,
+          images,
+          relation,
+        ],
       );
-    }
-    yield r'relation';
-    yield serializers.serialize(
-      object.relation,
-      specifiedType: const FullType(String),
-    );
-  }
+
+  factory V0SubjectRelation.fromJson(Map<String, dynamic> json) =>
+      _$V0SubjectRelationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$V0SubjectRelationToJson(this);
 
   @override
-  Object serialize(
-    Serializers serializers,
-    V0SubjectRelation object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required V0SubjectRelationBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.id = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(int),
-          ) as int;
-          result.type = valueDes;
-          break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'name_cn':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.nameCn = valueDes;
-          break;
-        case r'images':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Images),
-          ) as Images;
-          result.images.replace(valueDes);
-          break;
-        case r'relation':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.relation = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
-
-  @override
-  V0SubjectRelation deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = V0SubjectRelationBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
