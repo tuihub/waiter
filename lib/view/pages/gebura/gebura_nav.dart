@@ -33,6 +33,9 @@ class GeburaNav extends StatelessWidget {
           return previous.libraryListItems != current.libraryListItems;
         },
         builder: (context, state) {
+          if (searchController.text == '') {
+            searchController.text = state.librarySettings?.filter?.query ?? '';
+          }
           return Column(
             children: [
               if (mainState.isNotLocal)
@@ -130,8 +133,9 @@ class GeburaNav extends StatelessWidget {
                         physics: physics,
                         children: [
                           if (state.libraryListItems.isNotEmpty)
-                            for (final LibraryListItem item
-                                in state.libraryListItems ?? [])
+                            for (final LibraryListItem item in state
+                                .libraryListItems
+                                .where((e) => !e.filtered))
                               Material(
                                   child: UniversalListTile(
                                 // https://github.com/flutter/flutter/issues/86584

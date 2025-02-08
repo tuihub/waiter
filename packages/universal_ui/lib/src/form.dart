@@ -206,7 +206,7 @@ class UniversalSwitchFormField extends FormField<bool> {
                 subtitle: subtitle,
               );
             case UIDesign.fluent:
-              return fluent.ListTile(
+              return material.ListTile(
                 title: title,
                 subtitle: subtitle,
                 trailing: fluent.ToggleSwitch(

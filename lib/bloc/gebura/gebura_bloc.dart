@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 import '../../common/app_scan/app_scan.dart';
 import '../../common/app_scan/model.dart';
 import '../../common/bloc_event_status_mixin.dart';
+import '../../common/cjk_helper.dart';
 import '../../common/platform.dart';
 import '../../common/steam/steam.dart';
 import '../../l10n/l10n.dart';
@@ -174,25 +175,24 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
       }
       // prepare library items
       var newListItems = state.libraryApps.values
-              .map((e) => LibraryListItem(
-                    uuid: e.uuid,
-                    name: e.name,
-                    iconImagePath: e.iconImagePath,
-                    coverImagePath: e.coverImagePath,
-                    backgroundImagePath: e.backgroundImagePath,
-                    filtered: false,
-                  ))
-              .toList() ??
-          [];
+          .map((e) => LibraryListItem(
+                uuid: e.uuid,
+                name: e.name,
+                iconImagePath: e.iconImagePath,
+                coverImagePath: e.coverImagePath,
+                backgroundImagePath: e.backgroundImagePath,
+                filtered: false,
+              ))
+          .toList();
       // apply filter
       if (settings.filter != null) {
         final filter = settings.filter!;
         if (filter.query != null && filter.query!.isNotEmpty) {
-          final query = filter.query!.toLowerCase();
+          final query = filter.query!;
 
           newListItems = newListItems.map((e) {
             return e.copyWith(
-              filtered: !e.filtered && e.name.toLowerCase().contains(query),
+              filtered: e.filtered || !CJKHelper.contains(e.name, query),
             );
           }).toList();
         }

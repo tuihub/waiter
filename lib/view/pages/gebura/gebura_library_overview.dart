@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_hero/local_hero.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../model/gebura_model.dart';
 import '../../../route.dart';
+import '../../helper/app_bar.dart';
 import 'gebura_common.dart';
 
 class GeburaLibraryOverview extends StatelessWidget {
@@ -14,109 +16,120 @@ class GeburaLibraryOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GeburaBloc, GeburaState>(
-      builder: (context, state) {
-        final apps = state.libraryListItems;
-        return Scaffold(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UniversalToolBar(
-                mainAxisAlignment: MainAxisAlignment.end,
-                primaryItems: [
-                  UniversalToolBarItem(
-                    icon: UniversalUI.of(context).icons.refresh,
-                    label: Text(S.of(context).refresh),
-                    onPressed: () {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaRefreshLibraryListEvent(null));
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: apps.isNotEmpty
-                    ? GridView.builder(
-                        padding: const EdgeInsets.all(8),
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          childAspectRatio: 0.75,
-                        ),
-                        itemCount: apps.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item = apps.elementAt(index);
-                          return _GeburaLibraryOverviewItem(
-                            index: index,
-                            item: item,
-                          );
+    return LayoutBuilder(builder: (context, constraints) {
+      final width = constraints.maxWidth;
+      return BlocBuilder<GeburaBloc, GeburaState>(
+        builder: (context, state) {
+          final apps = state.libraryListItems.where((e) => !e.filtered);
+          return Scaffold(
+            appBar: AppBar(
+              shape: UniversalUI.of(context).defaultShape,
+              backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
+              leading: AppBarHelper.defaultMainLeading(context),
+              title: Text(S.of(context).library),
+              actions: [
+                Container(
+                  width: width / 2,
+                  padding: const EdgeInsets.only(right: 8),
+                  child: UniversalToolBar(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    primaryItems: [
+                      UniversalToolBarItem(
+                        icon: UniversalUI.of(context).icons.refresh,
+                        label: Text(S.of(context).refresh),
+                        onPressed: () {
+                          context
+                              .read<GeburaBloc>()
+                              .add(GeburaRefreshLibraryListEvent(null));
                         },
-                      )
-                    : Center(
-                        child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(S.of(context).noAppInLibrary),
-                          const SizedBox(height: 12),
-                          UniversalOutlinedButton(
-                            onPressed: () {
-                              const GeburaLibrarySettingsRoute().go(context);
-                            },
-                            child: Text(S.of(context).addApplication),
-                          ),
-                        ],
-                      )),
-              ),
-              const Row(
-                children: [
-                  Expanded(child: SizedBox()),
-                ],
-              ),
-            ],
-          ),
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     const GeburaLibrarySettingsRoute().go(context);
-          //   },
-          //   child: const Icon(Icons.settings),
-          // ),
-          // floatingActionButtonLocation: localLibraryState.isNotEmpty
-          //     ? FloatingActionButtonLocation.endContained
-          //     : FloatingActionButtonLocation.endFloat,
-          // bottomNavigationBar: ClipRRect(
-          //   borderRadius: const BorderRadius.only(
-          //     topRight: Radius.circular(16),
-          //     topLeft: Radius.circular(16),
-          //   ),
-          //   child: BottomAppBar(
-          //     height: localLibraryState.isNotEmpty ? 88 : 0,
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.end,
-          //       crossAxisAlignment: CrossAxisAlignment.center,
-          //       children: [
-          //         Text(
-          //           localLibraryState,
-          //           style: const TextStyle(
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //         TextButton(
-          //           onPressed: () {
-          //             context
-          //                 .read<GeburaBloc>()
-          //                 .add(GeburaClearLocalLibraryStateEvent());
-          //           },
-          //           child: Text(S.of(context).hide),
-          //         ),
-          //         // const SizedBox(width: 64),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-        );
-      },
-    );
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            body: DynMouseScroll(
+              builder: (context, controller, physics) {
+                if (apps.isNotEmpty) {
+                  return GridView.builder(
+                    controller: controller,
+                    physics: physics,
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemCount: apps.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = apps.elementAt(index);
+                      return _GeburaLibraryOverviewItem(
+                        index: index,
+                        item: item,
+                      );
+                    },
+                  );
+                } else {
+                  return Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(S.of(context).noAppInLibrary),
+                      const SizedBox(height: 12),
+                      UniversalOutlinedButton(
+                        onPressed: () {
+                          const GeburaLibrarySettingsRoute().go(context);
+                        },
+                        child: Text(S.of(context).addApplication),
+                      ),
+                    ],
+                  ));
+                }
+              },
+            ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     const GeburaLibrarySettingsRoute().go(context);
+            //   },
+            //   child: const Icon(Icons.settings),
+            // ),
+            // floatingActionButtonLocation: localLibraryState.isNotEmpty
+            //     ? FloatingActionButtonLocation.endContained
+            //     : FloatingActionButtonLocation.endFloat,
+            // bottomNavigationBar: ClipRRect(
+            //   borderRadius: const BorderRadius.only(
+            //     topRight: Radius.circular(16),
+            //     topLeft: Radius.circular(16),
+            //   ),
+            //   child: BottomAppBar(
+            //     height: localLibraryState.isNotEmpty ? 88 : 0,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.end,
+            //       crossAxisAlignment: CrossAxisAlignment.center,
+            //       children: [
+            //         Text(
+            //           localLibraryState,
+            //           style: const TextStyle(
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //         TextButton(
+            //           onPressed: () {
+            //             context
+            //                 .read<GeburaBloc>()
+            //                 .add(GeburaClearLocalLibraryStateEvent());
+            //           },
+            //           child: Text(S.of(context).hide),
+            //         ),
+            //         // const SizedBox(width: 64),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+          );
+        },
+      );
+    });
   }
 }
 
