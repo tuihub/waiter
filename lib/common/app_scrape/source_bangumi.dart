@@ -29,6 +29,7 @@ class BangumiSource extends AppScrapeSource {
               type: [SubjectType.Game],
             ),
           ),
+          limit: 1,
         );
     if (resp.data != null && resp.data!.data != null) {
       final subject = resp.data!.data!.first;

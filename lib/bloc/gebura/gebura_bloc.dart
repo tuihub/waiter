@@ -815,7 +815,28 @@ class GeburaBloc extends Bloc<GeburaEvent, GeburaState> {
     on<GeburaRefreshAppInfoEvent>((event, emit) async {
       emit(GeburaRefreshAppInfoState(state, EventStatus.processing));
       try {
-        final app = await _repo.fetchLocalAppInfo(event.uuid);
+        var app = await _repo.fetchLocalAppInfo(event.uuid);
+        try {
+          final iconImagePath = await _repo.localizeImage(
+              url: app.iconImageUrl, path: app.iconImagePath);
+          app = app.copyWith(iconImagePath: iconImagePath);
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+        try {
+          final coverImagePath = await _repo.localizeImage(
+              url: app.coverImageUrl, path: app.coverImagePath);
+          app = app.copyWith(coverImagePath: coverImagePath);
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+        try {
+          final backgroundImagePath = await _repo.localizeImage(
+              url: app.backgroundImageUrl, path: app.backgroundImagePath);
+          app = app.copyWith(backgroundImagePath: backgroundImagePath);
+        } catch (e) {
+          debugPrint(e.toString());
+        }
         await _repo.updateLocalApp(app);
         emit(GeburaRefreshAppInfoState(
           state.copyWith(

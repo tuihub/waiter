@@ -83,7 +83,7 @@ class DIService {
     _chesedBloc = ChesedBloc(_apiProvider);
 
     _geburaBloc = await GeburaBloc.init(
-      GeburaRepo(GeburaDao(_appDB), _apiProvider, kvDao),
+      GeburaRepo(GeburaDao(_appDB), _apiProvider, kvDao, _dataPath),
       _currentServerController.stream,
     );
 
