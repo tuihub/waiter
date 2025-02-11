@@ -54,14 +54,13 @@ final class NetzachFlowEditEvent extends NetzachEvent {
   NetzachFlowEditEvent(super.context, this.flow);
 }
 
-final class NetzachSystemNotificationLoadEvent extends NetzachEvent {
-  final int page;
+final class NetzachAggregationLogFilterSetEvent extends NetzachEvent {
+  final List<LogLevel> levelFilter;
+  final List<String>? serverIDs;
 
-  NetzachSystemNotificationLoadEvent(super.context, this.page);
-}
-
-final class NetzachSystemNotificationFilterSetEvent extends NetzachEvent {
-  final SystemNotificationFilter filter;
-
-  NetzachSystemNotificationFilterSetEvent(super.context, this.filter);
+  NetzachAggregationLogFilterSetEvent(
+    super.context,
+    this.levelFilter, {
+    this.serverIDs,
+  });
 }

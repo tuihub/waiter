@@ -7,6 +7,7 @@ part 'log_database.g.dart';
 part 'log_database.mapper.dart';
 
 enum LogLevel {
+  ongoing,
   trace,
   debug,
   info,
@@ -18,7 +19,8 @@ enum LogLevel {
 class Log with LogMappable {
   final int id;
   final LogLevel level;
-  final String message;
+  final String title;
+  final String? message;
   final String? source;
   final String? stackTrace;
   final String? context;
@@ -28,7 +30,8 @@ class Log with LogMappable {
   Log({
     required this.id,
     required this.level,
-    required this.message,
+    required this.title,
+    this.message,
     this.source,
     this.stackTrace,
     this.context,
@@ -37,25 +40,61 @@ class Log with LogMappable {
   });
 }
 
+@MappableClass()
+class LogFilter with LogFilterMappable {
+  final List<LogLevel>? levels;
+  final List<String>? sources;
+  final DateTime? from;
+  final DateTime? to;
+  final int? limit;
+  final int? offset;
+  final String? keyword;
+
+  const LogFilter({
+    this.levels,
+    this.sources,
+    this.from,
+    this.to,
+    this.limit,
+    this.offset,
+    this.keyword,
+  });
+}
+
 @UseRowClass(Log)
 class LogTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get level => textEnum<LogLevel>()();
-  TextColumn get message => text()();
+  TextColumn get title => text()();
+  TextColumn get message => text().nullable()();
   TextColumn get source => text().nullable()();
+  TextColumn get stackTrace => text().nullable()();
+  TextColumn get context => text().nullable()();
+  DateTimeColumn get occurTime => dateTime().nullable()();
+  DateTimeColumn get logTime => dateTime()();
+}
+
+@UseRowClass(Log)
+class CacheServerLogTable extends Table {
+  IntColumn get id => integer()();
+  TextColumn get level => textEnum<LogLevel>()();
+  TextColumn get title => text()();
+  TextColumn get message => text().nullable()();
+  TextColumn get source => text()(); // Use ServerID as source
   TextColumn get stackTrace => text().nullable()();
   TextColumn get context => text().nullable()();
   DateTimeColumn get occurTime => dateTime().nullable()();
   DateTimeColumn get logTime => dateTime()();
 
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {id, source};
 }
 
 // AppDatabase is the holder of the database instance in singleton pattern.
 @DriftDatabase(
   tables: [
     LogTable,
+    CacheServerLogTable,
   ],
 )
 class LogDatabase extends _$LogDatabase {
@@ -67,7 +106,8 @@ class LogDatabase extends _$LogDatabase {
 
   Future<void> log(
     LogLevel level,
-    String message, {
+    String title,
+    String? message, {
     String? source,
     String? stackTrace,
     String? context,
@@ -76,6 +116,7 @@ class LogDatabase extends _$LogDatabase {
     final logTime = DateTime.now();
     await into(logTable).insert(LogTableCompanion(
       level: Value(level),
+      title: Value(title),
       message: Value(message),
       source: Value(source),
       stackTrace: Value(stackTrace),
@@ -85,36 +126,73 @@ class LogDatabase extends _$LogDatabase {
     ));
   }
 
-  Future<List<Log>> queryLogs({
-    List<LogLevel>? levels,
-    List<String>? sources,
-    DateTime? from,
-    DateTime? to,
-    int? limit,
-    int? offset,
-    String? keyword,
+  Future<void> cacheServerLogs(
+    String serverID,
+    List<Log> logs,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(
+        cacheServerLogTable,
+        logs
+            .map((log) => CacheServerLogTableCompanion(
+                  id: Value(log.id),
+                  level: Value(log.level),
+                  title: Value(log.title),
+                  message: Value(log.message),
+                  source: Value(serverID),
+                  stackTrace: Value(log.stackTrace),
+                  context: Value(log.context),
+                  occurTime: Value(log.occurTime),
+                  logTime: Value(log.logTime),
+                ))
+            .toList(),
+      );
+    });
+  }
+
+  Future<List<Log>> queryLogs(
+    LogFilter filter, {
+    List<String>? serverIDs,
   }) async {
     final query = select(logTable);
-    if (levels != null) {
-      query.where((tbl) => tbl.level.isInValues(levels));
+    if (serverIDs != null) {
+      if (serverIDs.isEmpty) {
+        query.join([
+          crossJoin(
+            cacheServerLogTable,
+          ),
+        ]);
+      } else {
+        query.join([
+          leftOuterJoin(
+            cacheServerLogTable,
+            cacheServerLogTable.source.isIn(serverIDs),
+          ),
+        ]);
+      }
     }
-    if (sources != null) {
-      query.where((tbl) => tbl.source.isIn(sources));
+    if (filter.levels != null) {
+      query.where((tbl) => tbl.level.isInValues(filter.levels!));
     }
-    if (from != null) {
-      query.where((tbl) => tbl.logTime.isBiggerOrEqualValue(from));
+    if (filter.sources != null) {
+      query
+          .where((tbl) => tbl.source.isIn(filter.sources! + (serverIDs ?? [])));
     }
-    if (to != null) {
-      query.where((tbl) => tbl.logTime.isSmallerOrEqualValue(to));
+    if (filter.from != null) {
+      query.where((tbl) => tbl.logTime.isBiggerOrEqualValue(filter.from!));
     }
-    if (limit != null) {
-      query.limit(limit, offset: offset);
+    if (filter.to != null) {
+      query.where((tbl) => tbl.logTime.isSmallerOrEqualValue(filter.to!));
     }
-    if (keyword != null) {
+    if (filter.limit != null) {
+      query.limit(filter.limit!, offset: filter.offset);
+    }
+    if (filter.keyword != null) {
       query.where((tbl) =>
-          tbl.message.like('%$keyword%') |
-          tbl.stackTrace.like('%$keyword%') |
-          tbl.context.like('%$keyword%'));
+          tbl.title.like('%${filter.keyword}%') |
+          tbl.message.like('%${filter.keyword}%') |
+          tbl.stackTrace.like('%${filter.keyword}%') |
+          tbl.context.like('%${filter.keyword}%'));
     }
     query.orderBy([
       (tbl) => OrderingTerm(expression: tbl.logTime, mode: OrderingMode.desc)
@@ -125,6 +203,11 @@ class LogDatabase extends _$LogDatabase {
   Future<void> clearLogs(int dayAgo, List<LogLevel> levels) async {
     final from = DateTime.now().subtract(Duration(days: dayAgo));
     await (delete(logTable)
+          ..where((tbl) =>
+              tbl.logTime.isSmallerOrEqualValue(from) &
+              tbl.level.isInValues(levels)))
+        .go();
+    await (delete(cacheServerLogTable)
           ..where((tbl) =>
               tbl.logTime.isSmallerOrEqualValue(from) &
               tbl.level.isInValues(levels)))

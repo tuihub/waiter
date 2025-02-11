@@ -50,6 +50,7 @@ class UniversalUI {
   BorderRadius get defaultBorderRadius => BorderRadius.circular(
         design == UIDesign.material ? 8 : 4,
       );
+  double get defaultPadding => design == UIDesign.material ? 16 : 8;
   RoundedRectangleBorder get defaultShape => RoundedRectangleBorder(
         borderRadius: defaultBorderRadius,
       );

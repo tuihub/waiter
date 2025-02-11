@@ -8,7 +8,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/common_model.dart';
-import '../../model/netzach_model.dart';
+import '../../repo/netzach_repo.dart';
 import '../../service/di_service.dart';
 import '../../service/librarian_service.dart';
 
@@ -18,23 +18,24 @@ part 'netzach_state.dart';
 
 class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
   final DIProvider<LibrarianService> _api;
+  final NetzachRepo _repo;
 
-  static Future<NetzachBloc> init(
-      Stream<ServerID> serverID, DIProvider<LibrarianService> api) async {
+  static Future<NetzachBloc> init(NetzachRepo repo, Stream<ServerID> serverID,
+      DIProvider<LibrarianService> api) async {
     try {
       final initialState = NetzachState();
-      final instance = NetzachBloc._(initialState, api);
+      final instance = NetzachBloc._(initialState, repo, api);
       serverID.listen((event) {
         instance.add(_NetzachSwitchServerEvent(event));
       });
       return instance;
     } catch (e) {
       debugPrint(e.toString());
-      return NetzachBloc._(NetzachState(), api);
+      return NetzachBloc._(NetzachState(), repo, api);
     }
   }
 
-  NetzachBloc._(super.initialState, this._api) {
+  NetzachBloc._(super.initialState, this._repo, this._api) {
     on<_NetzachSwitchServerEvent>((event, emit) async {
       emit(NetzachState());
     });
@@ -228,33 +229,27 @@ class NetzachBloc extends Bloc<NetzachEvent, NetzachState> {
       ));
     });
 
-    on<NetzachSystemNotificationLoadEvent>((event, emit) async {
-      emit(NetzachSystemNotificationLoadState(state, EventStatus.processing));
-      final resp = await _api.get(DIService.instance.currentServer).doRequest(
-          (client) => client.listSystemNotifications,
-          ListSystemNotificationsRequest(
-            paging: PagingRequest(
-              pageSize: Int64(100),
-              pageNum: Int64(event.page),
-            ),
-            typeFilter: state.systemNotificationFilter?.typeFilter,
-            levelFilter: state.systemNotificationFilter?.levelFilter,
-          ));
-      switch (resp) {
-        case Ok():
-          emit(NetzachSystemNotificationLoadState(
-            state.copyWith(systemNotifications: resp.v.notifications),
-            EventStatus.success,
-          ));
-        case Err():
-          emit(NetzachSystemNotificationLoadState(state, EventStatus.failed,
-              msg: resp.error));
-      }
+    on<NetzachAggregationLogFilterSetEvent>((event, emit) async {
+      emit(NetzachAggregationLogFilterSetState(
+          state.copyWith(logLevelFilter: event.levelFilter),
+          EventStatus.success));
     });
+  }
 
-    on<NetzachSystemNotificationFilterSetEvent>((event, emit) async {
-      emit(state.copyWith(systemNotificationFilter: event.filter));
-      add(NetzachSystemNotificationLoadEvent(event.context, 1));
-    });
+  Future<List<Log>> loadAggregationLog(
+      EventContext? context, int pageNum) async {
+    return _repo.loadAggregationLog(
+      context ?? EventContext(DIService.instance.currentServer),
+      pageNum,
+      state.logLevelFilter.isNotEmpty
+          ? state.logLevelFilter
+          : [
+              LogLevel.info,
+              LogLevel.warning,
+              LogLevel.error,
+              LogLevel.ongoing,
+            ],
+      true,
+    );
   }
 }

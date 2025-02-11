@@ -57,7 +57,8 @@ class Logger {
 
   void _log(
     LogLevel level,
-    String message, {
+    String title,
+    String? message, {
     String? source,
     String? context,
     String? stackTrace,
@@ -71,6 +72,7 @@ class Logger {
         _db
             .log(
           level,
+          title,
           message,
           source: source,
           context: context,
@@ -89,13 +91,15 @@ class Logger {
   }
 
   static void trace(
-    String message, [
+    String title, {
+    String? message,
     String? source,
     String? context,
     DateTime? occurTime,
-  ]) {
+  }) {
     _instance._log(
       LogLevel.trace,
+      title,
       message,
       source: source,
       context: context,
@@ -104,13 +108,15 @@ class Logger {
   }
 
   static void debug(
-    String message, [
+    String title, {
+    String? message,
     String? source,
     String? context,
     DateTime? occurTime,
-  ]) {
+  }) {
     _instance._log(
       LogLevel.debug,
+      title,
       message,
       source: source,
       context: context,
@@ -119,13 +125,15 @@ class Logger {
   }
 
   static void info(
-    String message, [
+    String title, {
+    String? message,
     String? source,
     String? context,
     DateTime? occurTime,
-  ]) {
+  }) {
     _instance._log(
       LogLevel.info,
+      title,
       message,
       source: source,
       context: context,
@@ -134,13 +142,15 @@ class Logger {
   }
 
   static void warning(
-    String message, [
+    String title, {
+    String? message,
     String? source,
     String? context,
     DateTime? occurTime,
-  ]) {
+  }) {
     _instance._log(
       LogLevel.warning,
+      title,
       message,
       source: source,
       context: context,
@@ -149,14 +159,16 @@ class Logger {
   }
 
   static void error(
-    String message,
-    String stackTrace, [
+    String title, {
+    required String stackTrace,
+    String? message,
     String? source,
     String? context,
     DateTime? occurTime,
-  ]) {
+  }) {
     _instance._log(
       LogLevel.error,
+      title,
       message,
       stackTrace: stackTrace,
       source: source,
@@ -165,22 +177,13 @@ class Logger {
     );
   }
 
-  static Future<List<Log>> queryLogs({
-    List<LogLevel>? level,
-    DateTime? from,
-    DateTime? to,
-    int? limit,
-    int? offset,
-    String? keyword,
-  }) {
-    return _instance._db.queryLogs(
-      levels: level,
-      from: from,
-      to: to,
-      limit: limit,
-      offset: offset,
-      keyword: keyword,
-    );
+  static Future<void> cacheServerLogs(ServerID serverID, List<Log> logs) {
+    return _instance._db.cacheServerLogs(serverID.toString(), logs);
+  }
+
+  static Future<List<Log>> queryLogs(LogFilter filter,
+      {List<String>? serverIDs}) {
+    return _instance._db.queryLogs(filter, serverIDs: serverIDs);
   }
 }
 
@@ -190,21 +193,21 @@ class LoggerBlocObserver extends SimpleBlocObserver {
     super.onChange(bloc, change);
     Logger.trace(
       '[BLOC] ${bloc.runtimeType} current: ${change.currentState}, next: ${change.nextState}',
-      'bloc',
+      source: 'bloc',
     );
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    Logger.trace('[BLOC] ${bloc.runtimeType} $transition', 'bloc');
+    Logger.trace('[BLOC] ${bloc.runtimeType} $transition', source: 'bloc');
   }
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     super.onError(bloc, error, stackTrace);
-    Logger.error(
-        '[BLOC] ${bloc.runtimeType} $error', stackTrace.toString(), 'bloc');
+    Logger.error('[BLOC] ${bloc.runtimeType} $error',
+        stackTrace: stackTrace.toString(), source: 'bloc');
   }
 }
 
@@ -212,43 +215,43 @@ class LoggerRouterObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
-    Logger.trace('[ROUTER] didPush $route', 'router');
+    Logger.trace('[ROUTER] didPush $route', source: 'router');
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    Logger.trace('[ROUTER] didPop $route', 'router');
+    Logger.trace('[ROUTER] didPop $route', source: 'router');
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didRemove(route, previousRoute);
-    Logger.trace('[ROUTER] didRemove $route', 'router');
+    Logger.trace('[ROUTER] didRemove $route', source: 'router');
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    Logger.trace('[ROUTER] didReplace $newRoute', 'router');
+    Logger.trace('[ROUTER] didReplace $newRoute', source: 'router');
   }
 
   @override
   void didChangeTop(Route<dynamic> topRoute, Route<dynamic>? previousTopRoute) {
     super.didChangeTop(topRoute, previousTopRoute);
-    Logger.trace('[ROUTER] didChangeTop $topRoute', 'router');
+    Logger.trace('[ROUTER] didChangeTop $topRoute', source: 'router');
   }
 
   @override
   void didStartUserGesture(
       Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didStartUserGesture(route, previousRoute);
-    Logger.trace('[ROUTER] didStartUserGesture $route', 'router');
+    Logger.trace('[ROUTER] didStartUserGesture $route', source: 'router');
   }
 
   @override
   void didStopUserGesture() {
     super.didStopUserGesture();
-    Logger.trace('[ROUTER] didStopUserGesture', 'router');
+    Logger.trace('[ROUTER] didStopUserGesture', source: 'router');
   }
 }

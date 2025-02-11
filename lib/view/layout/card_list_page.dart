@@ -14,7 +14,6 @@ class ListManagePage extends StatefulWidget {
     this.onRefresh,
     this.onAdd,
     this.onBack,
-    this.floatingActionButton,
     this.popupMenuItems,
   });
 
@@ -25,7 +24,6 @@ class ListManagePage extends StatefulWidget {
   final void Function()? onRefresh;
   final void Function()? onAdd;
   final void Function()? onBack;
-  final FloatingActionButton? floatingActionButton;
   final List<UniversalToolBarItem>? popupMenuItems;
 
   @override
@@ -112,7 +110,6 @@ class ListManagePageState extends State<ListManagePage> {
               ),
           ]),
         ),
-        floatingActionButton: widget.floatingActionButton,
       );
     });
   }

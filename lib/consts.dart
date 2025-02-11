@@ -53,6 +53,7 @@ final moduleMap = Map.fromEntries(modules.map((e) => MapEntry(e.name, e)));
 final offlineAllowedModules = [
   ModuleName.tiphereth,
   ModuleName.gebura,
+  ModuleName.notification,
   ModuleName.settings,
 ];
 

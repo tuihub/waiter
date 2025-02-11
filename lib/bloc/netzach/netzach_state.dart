@@ -7,23 +7,23 @@ class NetzachState with NetzachStateMappable {
 
   late int? notifyFlowEditIndex;
 
-  late List<SystemNotification>? systemNotifications;
-  late SystemNotificationFilter? systemNotificationFilter;
+  List<LogLevel> logLevelFilter;
+  List<String> serverLogFilter;
 
   NetzachState({
     this.notifyTargets,
     this.notifyFlows,
     this.notifyFlowEditIndex,
-    this.systemNotifications,
-    this.systemNotificationFilter,
+    this.logLevelFilter = const [],
+    this.serverLogFilter = const [],
   });
 
   NetzachState.clone(NetzachState other)
       : notifyTargets = other.notifyTargets,
         notifyFlows = other.notifyFlows,
         notifyFlowEditIndex = other.notifyFlowEditIndex,
-        systemNotifications = other.systemNotifications,
-        systemNotificationFilter = other.systemNotificationFilter;
+        logLevelFilter = other.logLevelFilter,
+        serverLogFilter = other.serverLogFilter;
 }
 
 class NetzachEventState extends NetzachState with EventStatusMixin {
@@ -66,7 +66,8 @@ class NetzachFlowEditState extends NetzachEventState {
       : super.clone();
 }
 
-class NetzachSystemNotificationLoadState extends NetzachEventState {
-  NetzachSystemNotificationLoadState(super.state, super.statusCode, {super.msg})
+class NetzachAggregationLogFilterSetState extends NetzachEventState {
+  NetzachAggregationLogFilterSetState(super.state, super.statusCode,
+      {super.msg})
       : super.clone();
 }

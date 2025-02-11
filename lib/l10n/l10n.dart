@@ -290,6 +290,46 @@ class S {
     );
   }
 
+  /// `加载中`
+  String get loading {
+    return Intl.message(
+      '加载中',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `加载失败`
+  String get loadingFailed {
+    return Intl.message(
+      '加载失败',
+      name: 'loadingFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `无内容`
+  String get emptyContent {
+    return Intl.message(
+      '无内容',
+      name: 'emptyContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `没有更多内容`
+  String get noMoreContent {
+    return Intl.message(
+      '没有更多内容',
+      name: 'noMoreContent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

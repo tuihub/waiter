@@ -540,9 +540,6 @@ class NotificationRootRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    context
-        .read<NetzachBloc>()
-        .add(NetzachSystemNotificationLoadEvent(null, 1));
     return const NoTransitionPage(
       child: ModuleFramePage(
         leftPart: NotificationPage(),

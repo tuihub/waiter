@@ -29,24 +29,20 @@ class NetzachStateMapper extends ClassMapperBase<NetzachState> {
   static int? _$notifyFlowEditIndex(NetzachState v) => v.notifyFlowEditIndex;
   static const Field<NetzachState, int> _f$notifyFlowEditIndex =
       Field('notifyFlowEditIndex', _$notifyFlowEditIndex, opt: true);
-  static List<SystemNotification>? _$systemNotifications(NetzachState v) =>
-      v.systemNotifications;
-  static const Field<NetzachState, List<SystemNotification>>
-      _f$systemNotifications =
-      Field('systemNotifications', _$systemNotifications, opt: true);
-  static SystemNotificationFilter? _$systemNotificationFilter(NetzachState v) =>
-      v.systemNotificationFilter;
-  static const Field<NetzachState, SystemNotificationFilter>
-      _f$systemNotificationFilter =
-      Field('systemNotificationFilter', _$systemNotificationFilter, opt: true);
+  static List<LogLevel> _$logLevelFilter(NetzachState v) => v.logLevelFilter;
+  static const Field<NetzachState, List<LogLevel>> _f$logLevelFilter =
+      Field('logLevelFilter', _$logLevelFilter, opt: true, def: const []);
+  static List<String> _$serverLogFilter(NetzachState v) => v.serverLogFilter;
+  static const Field<NetzachState, List<String>> _f$serverLogFilter =
+      Field('serverLogFilter', _$serverLogFilter, opt: true, def: const []);
 
   @override
   final MappableFields<NetzachState> fields = const {
     #notifyTargets: _f$notifyTargets,
     #notifyFlows: _f$notifyFlows,
     #notifyFlowEditIndex: _f$notifyFlowEditIndex,
-    #systemNotifications: _f$systemNotifications,
-    #systemNotificationFilter: _f$systemNotificationFilter,
+    #logLevelFilter: _f$logLevelFilter,
+    #serverLogFilter: _f$serverLogFilter,
   };
 
   static NetzachState _instantiate(DecodingData data) {
@@ -54,8 +50,8 @@ class NetzachStateMapper extends ClassMapperBase<NetzachState> {
         notifyTargets: data.dec(_f$notifyTargets),
         notifyFlows: data.dec(_f$notifyFlows),
         notifyFlowEditIndex: data.dec(_f$notifyFlowEditIndex),
-        systemNotifications: data.dec(_f$systemNotifications),
-        systemNotificationFilter: data.dec(_f$systemNotificationFilter));
+        logLevelFilter: data.dec(_f$logLevelFilter),
+        serverLogFilter: data.dec(_f$serverLogFilter));
   }
 
   @override
@@ -79,15 +75,16 @@ abstract class NetzachStateCopyWith<$R, $In extends NetzachState, $Out>
       ObjectCopyWith<$R, NotifyTarget, NotifyTarget>>? get notifyTargets;
   ListCopyWith<$R, NotifyFlow, ObjectCopyWith<$R, NotifyFlow, NotifyFlow>>?
       get notifyFlows;
-  ListCopyWith<$R, SystemNotification,
-          ObjectCopyWith<$R, SystemNotification, SystemNotification>>?
-      get systemNotifications;
+  ListCopyWith<$R, LogLevel, ObjectCopyWith<$R, LogLevel, LogLevel>>
+      get logLevelFilter;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>
+      get serverLogFilter;
   $R call(
       {List<NotifyTarget>? notifyTargets,
       List<NotifyFlow>? notifyFlows,
       int? notifyFlowEditIndex,
-      List<SystemNotification>? systemNotifications,
-      SystemNotificationFilter? systemNotificationFilter});
+      List<LogLevel>? logLevelFilter,
+      List<String>? serverLogFilter});
   NetzachStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -117,30 +114,31 @@ class _NetzachStateCopyWithImpl<$R, $Out>
               (v) => call(notifyFlows: v))
           : null;
   @override
-  ListCopyWith<$R, SystemNotification,
-          ObjectCopyWith<$R, SystemNotification, SystemNotification>>?
-      get systemNotifications => $value.systemNotifications != null
-          ? ListCopyWith(
-              $value.systemNotifications!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(systemNotifications: v))
-          : null;
+  ListCopyWith<$R, LogLevel, ObjectCopyWith<$R, LogLevel, LogLevel>>
+      get logLevelFilter => ListCopyWith(
+          $value.logLevelFilter,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(logLevelFilter: v));
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>
+      get serverLogFilter => ListCopyWith(
+          $value.serverLogFilter,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(serverLogFilter: v));
   @override
   $R call(
           {Object? notifyTargets = $none,
           Object? notifyFlows = $none,
           Object? notifyFlowEditIndex = $none,
-          Object? systemNotifications = $none,
-          Object? systemNotificationFilter = $none}) =>
+          List<LogLevel>? logLevelFilter,
+          List<String>? serverLogFilter}) =>
       $apply(FieldCopyWithData({
         if (notifyTargets != $none) #notifyTargets: notifyTargets,
         if (notifyFlows != $none) #notifyFlows: notifyFlows,
         if (notifyFlowEditIndex != $none)
           #notifyFlowEditIndex: notifyFlowEditIndex,
-        if (systemNotifications != $none)
-          #systemNotifications: systemNotifications,
-        if (systemNotificationFilter != $none)
-          #systemNotificationFilter: systemNotificationFilter
+        if (logLevelFilter != null) #logLevelFilter: logLevelFilter,
+        if (serverLogFilter != null) #serverLogFilter: serverLogFilter
       }));
   @override
   NetzachState $make(CopyWithData data) => NetzachState(
@@ -148,10 +146,8 @@ class _NetzachStateCopyWithImpl<$R, $Out>
       notifyFlows: data.get(#notifyFlows, or: $value.notifyFlows),
       notifyFlowEditIndex:
           data.get(#notifyFlowEditIndex, or: $value.notifyFlowEditIndex),
-      systemNotifications:
-          data.get(#systemNotifications, or: $value.systemNotifications),
-      systemNotificationFilter: data.get(#systemNotificationFilter,
-          or: $value.systemNotificationFilter));
+      logLevelFilter: data.get(#logLevelFilter, or: $value.logLevelFilter),
+      serverLogFilter: data.get(#serverLogFilter, or: $value.serverLogFilter));
 
   @override
   NetzachStateCopyWith<$R2, NetzachState, $Out2> $chain<$R2, $Out2>(

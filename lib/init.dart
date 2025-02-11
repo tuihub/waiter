@@ -6,9 +6,9 @@ Future<MyApp> init() async {
   final packageInfo = await PackageInfo.fromPlatform();
 
   // https://github.com/hivedb/hive/issues/1044
-  late String? dataPath;
+  late String dataPath;
   if (PlatformHelper.isWeb()) {
-    dataPath = null;
+    dataPath = '';
   } else if (PlatformHelper.isWindowsApp() && !kDebugMode) {
     dataPath =
         path.join(path.dirname(Platform.resolvedExecutable), 'data', 'run');
@@ -17,12 +17,13 @@ Future<MyApp> init() async {
   }
 
   // logger
-  Logger.init(dataPath ?? '');
+  Logger.init(dataPath);
   FlutterError.onError = (FlutterErrorDetails details) {
     Logger.error(
-      details.exceptionAsString(),
-      details.stack.toString(),
-      details.context.toString(),
+      'FlutterError',
+      stackTrace: details.stack.toString(),
+      message: details.exceptionAsString(),
+      context: details.context.toString(),
     );
     FlutterError.presentError(details);
   };

@@ -76,13 +76,3 @@ class NotifyFilterModel {
     );
   }
 }
-
-class SystemNotificationFilter {
-  SystemNotificationFilter({
-    this.levelFilter = const [],
-    this.typeFilter = const [],
-  });
-
-  List<SystemNotificationLevel> levelFilter;
-  List<SystemNotificationType> typeFilter;
-}

@@ -24,6 +24,10 @@
   "add": "添加",
   "requiredField": "必填",
   "skipLoading": "跳过加载",
+  "loading": "加载中",
+  "loadingFailed": "加载失败",
+  "emptyContent": "无内容",
+  "noMoreContent": "没有更多内容",
 
   "durationJustNow": "刚刚",
   "durationSeconds": "{number} 秒前",

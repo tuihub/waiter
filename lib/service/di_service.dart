@@ -14,6 +14,7 @@ import '../bloc/yesod/yesod_bloc.dart';
 import '../model/common_model.dart';
 import '../repo/gebura_repo.dart';
 import '../repo/main_repo.dart';
+import '../repo/netzach_repo.dart';
 import '../repo/tiphereth_repo.dart';
 import '../repo/yesod_repo.dart';
 import 'librarian_service.dart';
@@ -47,7 +48,7 @@ class DIService {
   // Public
   static DIService get instance => _instance;
   static Future<DIService> init({
-    String? dataPath,
+    required String dataPath,
     required PackageInfo packageInfo,
   }) async {
     if (!_instance._initialized) {
@@ -62,10 +63,10 @@ class DIService {
   }
 
   Future<void> _init({
-    String? dataPath,
+    required String dataPath,
     required PackageInfo packageInfo,
   }) async {
-    _dataPath = dataPath ?? '';
+    _dataPath = dataPath;
     _packageInfo = packageInfo;
     _apiProvider =
         DIProvider<LibrarianService>((_) => LibrarianService.local());
@@ -88,6 +89,7 @@ class DIService {
     );
 
     _netzachBloc = await NetzachBloc.init(
+      NetzachRepo(_apiProvider, kvDao),
       _currentServerController.stream,
       _apiProvider,
     );
