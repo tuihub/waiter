@@ -7,7 +7,6 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../components/toast.dart';
 
 class AppPackageAssignDialog extends StatelessWidget {
   const AppPackageAssignDialog(
@@ -24,7 +23,7 @@ class AppPackageAssignDialog extends StatelessWidget {
 
     return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
       if (state is GeburaAssignAppPackageState && state.success) {
-        const Toast(title: '', message: '绑定成功').show(context);
+        UniversalToast.show(context, message: '绑定成功');
         callback();
         Navigator.of(context).pop();
       }

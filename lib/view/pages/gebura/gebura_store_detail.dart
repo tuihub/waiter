@@ -7,7 +7,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../components/toast.dart';
+
 import '../../layout/bootstrap_container.dart';
 
 class GeburaStoreDetail extends StatelessWidget {
@@ -190,7 +190,7 @@ class PurchaseAppDialog extends StatelessWidget {
       listener: (context, state) {
         if (state is GeburaPurchaseState) {
           if (state.success) {
-            const Toast(title: '', message: '添加成功').show(context);
+            UniversalToast.show(context, message: '添加成功');
             Navigator.of(context).pop();
           } else {
             msg = state.msg ?? msg;

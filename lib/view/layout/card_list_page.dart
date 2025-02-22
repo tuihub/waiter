@@ -52,7 +52,7 @@ class ListManagePageState extends State<ListManagePage> {
                 primaryItems: [
                   if (widget.onAdd != null)
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.add,
+                      icon: UniversalIcon(context).add,
                       onPressed: widget.onAdd,
                       label: Text(S.of(context).add),
                     ),
@@ -60,13 +60,13 @@ class ListManagePageState extends State<ListManagePage> {
                 secondaryItems: [
                   if (widget.onAdd != null)
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.add,
+                      icon: UniversalIcon(context).add,
                       onPressed: widget.onAdd,
                       label: Text(S.of(context).add),
                     ),
                   if (widget.popupMenuItems != null) ...widget.popupMenuItems!,
                   UniversalToolBarItem(
-                    icon: UniversalUI.of(context).icons.refresh,
+                    icon: UniversalIcon(context).refresh,
                     onPressed: widget.onRefresh,
                     label: Text(S.of(context).refresh),
                   ),
@@ -90,7 +90,7 @@ class ListManagePageState extends State<ListManagePage> {
               Center(
                 child: UniversalFilledButton.icon(
                   onPressed: widget.onAdd,
-                  icon: Icon(UniversalUI.of(context).icons.add),
+                  icon: Icon(UniversalIcon(context).add),
                   label: Text(S.of(context).add),
                 ),
               )

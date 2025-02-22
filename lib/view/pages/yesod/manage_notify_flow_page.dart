@@ -13,7 +13,7 @@ import '../../../l10n/librarian.dart';
 import '../../../model/netzach_model.dart';
 import '../../../route.dart';
 import '../../components/chips_input.dart';
-import '../../components/toast.dart';
+
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
@@ -59,7 +59,7 @@ class NotifyFlowPage extends StatelessWidget {
                     .go(context);
                 ModuleFramePage.of(context)?.openDrawer();
               },
-              trailing: Icon(UniversalUI.of(context).icons.edit),
+              trailing: Icon(UniversalIcon(context).edit),
             ),
         ],
       );
@@ -91,7 +91,7 @@ class _NotifyFlowAddPanelState extends State<NotifyFlowAddPanel> {
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
         if (state is NetzachFlowAddState && state.success) {
-          const Toast(title: '', message: '添加成功').show(context);
+          UniversalToast.show(context, message: '添加成功');
           close(context);
         }
       },
@@ -591,7 +591,7 @@ class _NotifyFlowAddPageState extends State<NotifyFlowEditPanel> {
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
         if (state is NetzachFlowEditState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },

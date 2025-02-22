@@ -11,7 +11,7 @@ import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../l10n/librarian.dart';
 import '../../../route.dart';
-import '../../components/toast.dart';
+
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
@@ -54,7 +54,7 @@ class NotifyTargetPage extends StatelessWidget {
                     .go(context);
                 ModuleFramePage.of(context)?.openDrawer();
               },
-              trailing: Icon(UniversalUI.of(context).icons.edit),
+              trailing: Icon(UniversalIcon(context).edit),
             ),
         ],
       );
@@ -86,7 +86,7 @@ class NotifyTargetAddPanel extends StatelessWidget {
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
         if (state is NetzachTargetAddState && state.success) {
-          const Toast(title: '', message: '添加成功').show(context);
+          UniversalToast.show(context, message: '添加成功');
           close(context);
         }
       },
@@ -187,7 +187,7 @@ class NotifyTargetEditPanel extends StatelessWidget {
     return BlocConsumer<NetzachBloc, NetzachState>(
       listener: (context, state) {
         if (state is NetzachTargetEditState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },

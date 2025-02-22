@@ -8,7 +8,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../l10n/librarian.dart';
 import '../../../../route.dart';
-import '../../../components/toast.dart';
+
 import '../../../layout/card_list_page.dart';
 import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
@@ -73,7 +73,7 @@ class PorterManagePage extends StatelessWidget {
                   },
                 ),
                 UniversalIconButton(
-                  icon: Icon(UniversalUI.of(context).icons.edit),
+                  icon: Icon(UniversalIcon(context).edit),
                   onPressed: () {
                     openEditPanel(porter);
                   },
@@ -130,7 +130,7 @@ class PorterEditPanel extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is TipherethEditPorterState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },

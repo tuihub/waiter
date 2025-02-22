@@ -143,7 +143,7 @@ class MyAccountsCard extends StatelessWidget {
                           .read<TipherethBloc>()
                           .add(TipherethGetAccountsEvent(null));
                     },
-                    icon: Icon(UniversalUI.of(context).icons.refresh),
+                    icon: Icon(UniversalIcon(context).refresh),
                   ),
                 ],
               ),

@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/chesed/chesed_bloc.dart';
-import '../../components/toast.dart';
+
 import 'chesed_image_view.dart';
 import 'chesed_upload.dart';
 
@@ -164,10 +164,10 @@ class ChesedHome extends StatelessWidget {
                       value: context.read<ChesedBloc>(),
                       child: ChesedUpload(
                         callback: () {
-                          const Toast(
-                            title: '',
+                          UniversalToast.show(
+                            context,
                             message: '上传成功',
-                          ).show(context);
+                          );
                         },
                       ),
                     );

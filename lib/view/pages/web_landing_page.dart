@@ -10,7 +10,7 @@ import '../../bloc/main_bloc.dart';
 import '../../consts.dart';
 import '../../l10n/l10n.dart';
 import '../../route.dart';
-import '../components/toast.dart';
+
 import '../layout/bootstrap_container.dart';
 
 class WebLandingPage extends StatelessWidget {
@@ -35,7 +35,10 @@ class WebLandingPage extends StatelessWidget {
         listener: (context, state) {
           if (state.currentUser != null) {
             const TipherethRootRoute().go(context);
-            Toast(title: '', message: S.of(context).welcome).show(context);
+            UniversalToast.show(
+              context,
+              message: S.of(context).welcome,
+            );
           }
         },
         builder: (context, state) {

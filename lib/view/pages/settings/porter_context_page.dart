@@ -11,7 +11,7 @@ import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../route.dart';
 import '../../../l10n/librarian.dart';
-import '../../components/toast.dart';
+
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
@@ -94,7 +94,7 @@ class PorterContextManagePage extends StatelessWidget {
                   },
                 ),
                 UniversalIconButton(
-                  icon: Icon(UniversalUI.of(context).icons.edit),
+                  icon: Icon(UniversalIcon(context).edit),
                   onPressed: () {
                     openEditPanel(ctx);
                   },
@@ -161,7 +161,7 @@ class PorterContextAddPanel extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is TipherethAddPorterContextState && state.success) {
-          const Toast(title: '', message: '已添加环境').show(context);
+          UniversalToast.show(context, message: '已添加环境');
           close(context);
         }
       },
@@ -256,7 +256,7 @@ class PorterContextEditPanel extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is TipherethEditPorterContextState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },

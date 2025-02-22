@@ -17,32 +17,32 @@ class Module {
 
 final modules = [
   Module(ModuleName.tiphereth, (context) {
-    return UniversalUI.of(context).icons.tiphereth;
+    return UniversalIcon(context).tiphereth;
   }, (context) {
     const TipherethRootRoute().go(context);
   }),
   Module(ModuleName.yesod, (context) {
-    return UniversalUI.of(context).icons.yesod;
+    return UniversalIcon(context).yesod;
   }, (context) {
     const YesodRootRoute().go(context);
   }),
   Module(ModuleName.gebura, (context) {
-    return UniversalUI.of(context).icons.gebura;
+    return UniversalIcon(context).gebura;
   }, (context) {
     const GeburaRootRoute().go(context);
   }),
   // Module(ModuleName.chesed, (context) {
-  //   return UniversalUI.of(context).icons.chesed;
+  //   return UniversalIcon(context).chesed;
   // }, (context) {
   //   const ChesedRootRoute().go(context);
   // }),
   Module(ModuleName.notification, (context) {
-    return UniversalUI.of(context).icons.notification;
+    return UniversalIcon(context).notification;
   }, (context) {
     const NotificationRootRoute().go(context);
   }),
   Module(ModuleName.settings, (context) {
-    return UniversalUI.of(context).icons.settings;
+    return UniversalIcon(context).settings;
   }, (context) {
     const SettingsRootRoute().go(context);
   }),

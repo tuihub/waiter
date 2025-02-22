@@ -25,7 +25,7 @@ import '../../../l10n/l10n.dart';
 import '../../../l10n/librarian.dart';
 import '../../../route.dart';
 import '../../components/input_formatters.dart';
-import '../../components/toast.dart';
+
 import '../../helper/duration_format.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
@@ -136,7 +136,7 @@ class YesodFeedManageAddPanel extends StatelessWidget {
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodFeedConfigAddState && state.success) {
-          const Toast(title: '', message: '添加成功').show(context);
+          UniversalToast.show(context, message: '添加成功');
           close(context);
         }
       },
@@ -283,7 +283,7 @@ class YesodFeedManageEditPanel extends StatelessWidget {
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodFeedConfigEditState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },
@@ -483,7 +483,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
               ? () async {
                   final data = _opml!.toOPMLString();
                   await Clipboard.setData(ClipboardData(text: data));
-                  const Toast(title: '', message: '已复制到剪贴板').show(context);
+                  UniversalToast.show(context, message: '已复制到剪贴板');
                   Navigator.of(context).pop();
                 }
               : null,
@@ -498,7 +498,7 @@ class _ExportOPMLDialogState extends State<_ExportOPMLDialog> {
                     bytes: utf8.encode(data),
                   );
                   if (file != null) {
-                    Toast(title: '', message: '已保存到 $file').show(context);
+                    UniversalToast.show(context, message: '已保存到 $file');
                     Navigator.of(context).pop();
                   }
                 }

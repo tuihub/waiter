@@ -125,7 +125,7 @@ class SessionManagePage extends StatelessWidget {
                     leading: _systemIcon(item.deviceInfo.systemType),
                     trailing: UniversalIconButton(
                       onPressed: openEditPage,
-                      icon: Icon(UniversalUI.of(context).icons.edit),
+                      icon: Icon(UniversalIcon(context).edit),
                     ),
                     onTap: openEditPage,
                   );

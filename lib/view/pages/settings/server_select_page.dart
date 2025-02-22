@@ -9,7 +9,7 @@ import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/main_bloc.dart';
 import '../../../l10n/l10n.dart';
-import '../../components/toast.dart';
+
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/connectivity.dart';
@@ -43,12 +43,12 @@ class ServerSelectPage extends StatelessWidget {
                   primaryItems: [
                     if (server.serverID == state.currentServer)
                       UniversalToolBarItem(
-                        icon: UniversalUI.of(context).icons.check,
+                        icon: UniversalIcon(context).check,
                         label: const Text('当前'),
                       )
                     else
                       UniversalToolBarItem(
-                        icon: UniversalUI.of(context).icons.arrowRight,
+                        icon: UniversalIcon(context).arrowRight,
                         label: const Text('切换'),
                         onPressed: () async {
                           context
@@ -59,7 +59,7 @@ class ServerSelectPage extends StatelessWidget {
                   ],
                   secondaryItems: [
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.edit,
+                      icon: UniversalIcon(context).edit,
                       label: const Text('编辑'),
                       onPressed: () async {
                         await showDialog(
@@ -235,7 +235,7 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
         shape: UniversalUI.of(context).defaultShape,
         backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
         leading: IconButton(
-          icon: Icon(UniversalUI.of(context).icons.arrowBack),
+          icon: Icon(UniversalIcon(context).arrowBack),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -354,14 +354,8 @@ class _LoginFormState extends State<_LoginForm> {
       listener: (context, state) {
         if (state is MainLoginState) {
           if (state.failed) {
-            Toast(
-              title: '',
-              message: S.of(context).loginFailed(state.msg ?? ''),
-              action: SnackBarAction(
-                label: S.of(context).retry,
-                onPressed: login,
-              ),
-            ).show(context);
+            UniversalToast.show(context,
+                message: S.of(context).loginFailed(state.msg ?? ''));
           }
           if (state.success) {
             Navigator.of(context).pop();
@@ -489,10 +483,7 @@ class _RegisterFormState extends State<_RegisterForm> {
     final captchaAns = _captchaAnsController.text.trim();
 
     if (password != repeatPassword) {
-      Toast(
-        title: '',
-        message: S.of(context).passwordInconsistent,
-      ).show(context);
+      UniversalToast.show(context, message: S.of(context).passwordInconsistent);
       return;
     }
 
@@ -520,10 +511,8 @@ class _RegisterFormState extends State<_RegisterForm> {
     return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {
         if (state is MainRegisterState && state.failed) {
-          Toast(
-            title: '',
-            message: S.of(context).loginFailed(state.msg ?? ''),
-          ).show(context);
+          UniversalToast.show(context,
+              message: S.of(context).loginFailed(state.msg ?? ''));
           if (state.captchaID != null && state.captchaImage != null) {
             setState(() {
               _captchaID = state.captchaID;
@@ -532,10 +521,7 @@ class _RegisterFormState extends State<_RegisterForm> {
           }
         }
         if (state is MainRegisterState && state.success) {
-          Toast(
-            title: '',
-            message: S.of(context).registerSuccess,
-          ).show(context);
+          UniversalToast.show(context, message: S.of(context).registerSuccess);
           setState(() {
             _captchaID = null;
             _captchaImage = null;

@@ -57,6 +57,4 @@ class UniversalUI {
   Color? get appBarBackgroundColor => design == UIDesign.material
       ? materialTheme.appBarTheme.backgroundColor
       : material.Colors.transparent;
-
-  UniversalIcon get icons => UniversalIcon(design);
 }

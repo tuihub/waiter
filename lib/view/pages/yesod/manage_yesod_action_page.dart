@@ -13,7 +13,7 @@ import '../../../bloc/yesod/yesod_bloc.dart';
 import '../../../l10n/l10n.dart';
 import '../../../route.dart';
 import '../../components/pop_alert.dart';
-import '../../components/toast.dart';
+
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
 import '../../specialized/right_panel_form.dart';
@@ -93,7 +93,7 @@ class _YesodActionManageAddPanelState extends State<YesodActionManageAddPanel> {
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodFeedActionSetAddState && state.success) {
-          const Toast(title: '', message: '添加成功').show(context);
+          UniversalToast.show(context, message: '添加成功');
           close(context);
         }
       },
@@ -210,7 +210,7 @@ class _YesodActionManageEditPanelState
     return BlocConsumer<YesodBloc, YesodState>(
       listener: (context, state) {
         if (state is YesodFeedActionSetEditState && state.success) {
-          const Toast(title: '', message: '已应用更改').show(context);
+          UniversalToast.show(context, message: '已应用更改');
           close(context);
         }
       },
@@ -329,7 +329,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
     return PopAlert(
       onConfirm: () {
         widget.onSave(widget.actions);
-        const Toast(title: '', message: '已保存更改').show(context);
+        UniversalToast.show(context, message: '', title: '已保存更改');
       },
       builder: (context, triggerPop) {
         return Scaffold(
@@ -338,7 +338,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
             shape: UniversalUI.of(context).defaultShape,
             backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
             leading: IconButton(
-              icon: Icon(UniversalUI.of(context).icons.arrowBack),
+              icon: Icon(UniversalIcon(context).arrowBack),
               onPressed: triggerPop,
             ),
             actions: [
@@ -346,7 +346,7 @@ class _YesodActionConfigurePageState extends State<_YesodActionConfigurePage>
                 icon: const Icon(Icons.check),
                 onPressed: () {
                   widget.onSave(widget.actions);
-                  const Toast(title: '', message: '已保存更改').show(context);
+                  UniversalToast.show(context, message: '已保存更改');
                   Navigator.of(context).pop();
                 },
               ),

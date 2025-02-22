@@ -4,7 +4,7 @@ import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
-import '../../components/toast.dart';
+
 import '../../specialized/right_panel_form.dart';
 import '../frame_page.dart';
 
@@ -49,7 +49,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
           });
         }
         if (state is GeburaAssignAppInfoState && state.success) {
-          const Toast(title: '', message: '设置成功').show(context);
+          UniversalToast.show(context, message: '设置成功');
           close(context);
         }
       },
@@ -118,7 +118,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                           border: const OutlineInputBorder(),
                           label: const Text('搜索'),
                           suffixIcon: UniversalIconButton(
-                            icon: Icon(UniversalUI.of(context).icons.search),
+                            icon: Icon(UniversalIcon(context).search),
                             onPressed: () {
                               context
                                   .read<GeburaBloc>()
@@ -196,7 +196,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
               ? null
               : () {
                   if (selectedAppInfo == null) {
-                    const Toast(title: '', message: '未选择应用信息').show(context);
+                    UniversalToast.show(context, message: '未选择应用信息');
                   } else {
                     context
                         .read<GeburaBloc>()

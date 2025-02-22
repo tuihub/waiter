@@ -9,7 +9,7 @@ class AdminAreaWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return UniversalListTile(
-      leading: Icon(UniversalUI.of(context).icons.warning),
+      leading: Icon(UniversalIcon(context).warning),
       title: Text(S.of(context).adminAreaWarning('')),
     );
   }

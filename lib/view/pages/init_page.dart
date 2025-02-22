@@ -8,7 +8,7 @@ import '../../common/platform.dart';
 import '../../consts.dart';
 import '../../l10n/l10n.dart';
 import '../../route.dart';
-import '../components/toast.dart';
+
 import '../layout/bootstrap_container.dart';
 
 class InitPage extends StatefulWidget {
@@ -36,7 +36,7 @@ class _InitPageState extends State<InitPage> {
         listener: (context, state) {
           if (state is MainInitState && state.success) {
             const TipherethRootRoute().go(context);
-            Toast(title: '', message: S.of(context).welcomeBack).show(context);
+            UniversalToast.show(context, message: S.of(context).welcomeBack);
           } else if (state is MainInitState && state.failed) {
             if (PlatformHelper.isWeb() &&
                 (DotEnvValue.andClientDownloadUrl.isNotEmpty ||
@@ -45,7 +45,7 @@ class _InitPageState extends State<InitPage> {
             } else {
               const TipherethRootRoute().go(context);
               if (state.msg != null) {
-                Toast(title: '', message: state.msg!).show(context);
+                UniversalToast.show(context, message: state.msg!);
               }
             }
           }

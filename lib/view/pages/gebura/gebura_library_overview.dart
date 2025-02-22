@@ -35,7 +35,7 @@ class GeburaLibraryOverview extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     primaryItems: [
                       UniversalToolBarItem(
-                        icon: UniversalUI.of(context).icons.refresh,
+                        icon: UniversalIcon(context).refresh,
                         label: Text(S.of(context).refresh),
                         onPressed: () {
                           context

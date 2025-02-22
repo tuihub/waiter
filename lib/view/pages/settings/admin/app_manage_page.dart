@@ -48,7 +48,7 @@ class _AppManagePageState extends State<AppManagePage> {
                 child: MultiSelectDialogField(
                   title: const Text('按数据来源筛选'),
                   buttonText: const Text('数据来源'),
-                  buttonIcon: Icon(UniversalUI.of(context).icons.filter),
+                  buttonIcon: Icon(UniversalIcon(context).filter),
                   items: [
                     for (final source in appSources)
                       MultiSelectItem(source, appSourceString(source.id)),
@@ -71,7 +71,7 @@ class _AppManagePageState extends State<AppManagePage> {
                       .go(context);
                   ModuleFramePage.of(context)?.openDrawer();
                 },
-                icon: Icon(UniversalUI.of(context).icons.refresh),
+                icon: Icon(UniversalIcon(context).refresh),
                 label: const Text('新增'),
               ),
             ],

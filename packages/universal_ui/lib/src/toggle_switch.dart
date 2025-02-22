@@ -2,7 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'common.dart';
+import 'base.dart';
 
 class UniversalToggleSwitch<T> extends StatelessWidget {
   const UniversalToggleSwitch({

@@ -89,12 +89,12 @@ class _InfiniteListPageState<T> extends State<InfiniteListPage<T>> {
                 primaryItems: [
                   if (widget.doAdd != null)
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.add,
+                      icon: UniversalIcon(context).add,
                       onPressed: widget.doAdd,
                       label: Text(S.of(context).add),
                     ),
                   UniversalToolBarItem(
-                    icon: UniversalUI.of(context).icons.refresh,
+                    icon: UniversalIcon(context).refresh,
                     onPressed: _pagingController.refresh,
                     label: Text(S.of(context).refresh),
                   ),
@@ -102,7 +102,7 @@ class _InfiniteListPageState<T> extends State<InfiniteListPage<T>> {
                 secondaryItems: [
                   if (widget.doAdd != null)
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.add,
+                      icon: UniversalIcon(context).add,
                       onPressed: widget.doAdd,
                       label: Text(S.of(context).add),
                     ),

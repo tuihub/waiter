@@ -8,7 +8,7 @@ class ChoreSetting extends StatelessWidget {
     final basePath = DIService.instance.dataPath;
     return BlocBuilder<MainBloc, MainState>(builder: (context, state) {
       return UniversalExpansionTile(
-        leading: Icon(UniversalUI.of(context).icons.warning),
+        leading: Icon(UniversalIcon(context).warning),
         title: const Text('高级'),
         subtitle: const Text('使用前确保你知道你在做什么'),
         children: [

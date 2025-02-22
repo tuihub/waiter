@@ -40,7 +40,7 @@ class GeburaNav extends StatelessWidget {
             children: [
               if (mainState.isNotLocal)
                 UniversalListTile(
-                  leading: Icon(UniversalUI.of(context).icons.shoppingCart),
+                  leading: Icon(UniversalIcon(context).shoppingCart),
                   onTap: () {
                     const GeburaStoreRoute().go(context);
                     OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -49,7 +49,7 @@ class GeburaNav extends StatelessWidget {
                   selected: function == GeburaFunctions.store,
                 ),
               UniversalListTile(
-                leading: Icon(UniversalUI.of(context).icons.apps),
+                leading: Icon(UniversalIcon(context).apps),
                 onTap: () {
                   const GeburaLibraryRoute().go(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);
@@ -92,20 +92,20 @@ class GeburaNav extends StatelessWidget {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(UniversalUI.of(context).icons.filter),
-                      suffixIcon: state
-                                  .librarySettings?.filter?.query?.isNotEmpty ??
-                              false
-                          ? UniversalIconButton(
-                              icon: Icon(UniversalUI.of(context).icons.clear),
-                              onPressed: () {
-                                context.read<GeburaBloc>().add(
-                                    GeburaApplyLibraryFilterEvent(null,
-                                        query: ''));
-                                searchController.clear();
-                              },
-                            )
-                          : null,
+                      prefixIcon: Icon(UniversalIcon(context).filter),
+                      suffixIcon:
+                          state.librarySettings?.filter?.query?.isNotEmpty ??
+                                  false
+                              ? UniversalIconButton(
+                                  icon: Icon(UniversalIcon(context).clear),
+                                  onPressed: () {
+                                    context.read<GeburaBloc>().add(
+                                        GeburaApplyLibraryFilterEvent(null,
+                                            query: ''));
+                                    searchController.clear();
+                                  },
+                                )
+                              : null,
                       contentPadding: EdgeInsets.zero,
                       enabledBorder: OutlineInputBorder(
                         borderRadius:
@@ -177,7 +177,7 @@ class GeburaNav extends StatelessWidget {
                 ),
               ),
               UniversalListTile(
-                leading: Icon(UniversalUI.of(context).icons.libraryAdd),
+                leading: Icon(UniversalIcon(context).libraryAdd),
                 onTap: () {
                   const GeburaLibrarySettingsRoute().go(context);
                   OverlappingPanels.of(context)?.reveal(RevealSide.main);

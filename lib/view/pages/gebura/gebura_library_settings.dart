@@ -25,7 +25,7 @@ import '../../../model/gebura_model.dart';
 import '../../../route.dart';
 import '../../components/form_field.dart';
 import '../../components/pop_alert.dart';
-import '../../components/toast.dart';
+
 import '../../helper/app_bar.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../layout/card_list_page.dart';
@@ -59,7 +59,7 @@ class GeburaLibrarySettingsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         primaryItems: [
           UniversalToolBarItem(
-            icon: UniversalUI.of(context).icons.openInFull,
+            icon: UniversalIcon(context).openInFull,
             label: const Text('详情'),
             onPressed: () {
               GeburaLibrarySettingsRoute(
@@ -73,14 +73,14 @@ class GeburaLibrarySettingsPage extends StatelessWidget {
         secondaryItems: [
           if (item.type == LocalLibraryScanResultType.common)
             UniversalToolBarItem(
-              icon: UniversalUI.of(context).icons.edit,
+              icon: UniversalIcon(context).edit,
               label: const Text('编辑扫描设置'),
               onPressed: () async {
                 final setting = await context
                     .read<GeburaBloc>()
                     .getLocalCommonAppLibraryFolder(item.uuid);
                 if (setting == null) {
-                  const Toast(title: '', message: '未找到设置').show(context);
+                  UniversalToast.show(context, message: '未找到设置');
                 }
                 await Navigator.of(context).push(
                   UniversalPageRoute(builder: (context) {
@@ -92,14 +92,14 @@ class GeburaLibrarySettingsPage extends StatelessWidget {
               },
             ),
           UniversalToolBarItem(
-            icon: UniversalUI.of(context).icons.folderOpen,
+            icon: UniversalIcon(context).folderOpen,
             label: const Text('使用资源管理器打开'),
             onPressed: () async {
               await OpenFile.open(item.path);
             },
           ),
           UniversalToolBarItem(
-            icon: UniversalUI.of(context).icons.delete,
+            icon: UniversalIcon(context).delete,
             label: const Text('删除'),
           )
         ],
@@ -239,13 +239,13 @@ class GeburaAppScanResultPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
       if (state is GeburaTrackCommonAppsState && state.msg != null) {
-        Toast(title: '', message: state.msg!).show(context);
+        UniversalToast.show(context, message: state.msg!);
       }
       if (state is GeburaTrackSteamAppsState && state.msg != null) {
-        Toast(title: '', message: state.msg!).show(context);
+        UniversalToast.show(context, message: state.msg!);
       }
       if (state is GeburaScanLocalLibraryState && state.msg != null) {
-        Toast(title: '', message: state.msg!).show(context);
+        UniversalToast.show(context, message: state.msg!);
       }
     }, builder: (context, state) {
       final data = state.localLibraryScanResults[uuid] ??
@@ -270,7 +270,7 @@ class GeburaAppScanResultPanel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 primaryItems: [
                   UniversalToolBarItem(
-                    icon: UniversalUI.of(context).icons.refresh,
+                    icon: UniversalIcon(context).refresh,
                     label: const Text('刷新'),
                     onPressed: () {
                       switch (data.type) {
@@ -396,7 +396,7 @@ class _GeburaAppScanResultListState extends State<_GeburaAppScanResultList> {
                 onPressed: () async {
                   await OpenFile.open(app.path);
                 },
-                icon: Icon(UniversalUI.of(context).icons.folder, size: 16),
+                icon: Icon(UniversalIcon(context).folder, size: 16),
                 label: const Text('查看'),
               )),
         ),

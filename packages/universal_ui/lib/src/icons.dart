@@ -1,7 +1,9 @@
-part of 'common.dart';
+part of 'base.dart';
 
 class UniversalIcon {
-  UniversalIcon(this.design);
+  UniversalIcon(BuildContext context) : design = UIDesignProvider.of(context);
+
+  UniversalIcon.design(this.design);
 
   final UIDesign design;
 

@@ -35,7 +35,7 @@ class _GeburaAppLauncherSettingTestPageState
             shape: UniversalUI.of(context).defaultShape,
             backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
             leading: IconButton(
-              icon: Icon(UniversalUI.of(context).icons.arrowBack),
+              icon: Icon(UniversalIcon(context).arrowBack),
               onPressed: triggerPop,
             ),
           ),
@@ -65,8 +65,10 @@ class _GeburaAppLauncherSettingTestPageState
                         if (newSetting != null) {
                           _saveSetting();
                         } else {
-                          const Toast(title: '', message: '没有需要保存的更改')
-                              .show(context);
+                          UniversalToast.show(
+                            context,
+                            message: '没有需要保存的更改',
+                          );
                         }
                       },
                       child: const Text('保存'),
@@ -80,7 +82,10 @@ class _GeburaAppLauncherSettingTestPageState
                   listener: (context, state) {
                     if (state is GeburaSaveLocalAppInstLaunchSettingState &&
                         state.success) {
-                      const Toast(title: '', message: '保存成功').show(context);
+                      UniversalToast.show(
+                        context,
+                        message: '保存成功',
+                      );
                       setState(() {
                         currentStep = 1;
                       });

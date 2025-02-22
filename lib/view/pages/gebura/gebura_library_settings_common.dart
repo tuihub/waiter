@@ -52,7 +52,7 @@ class _CommonAppFolderScanSettingPageState
       if (msg == null) {
         Navigator.of(context).pop();
       } else {
-        Toast(title: '', message: '保存失败 $msg').show(context);
+        UniversalToast.show(context, message: '保存失败 $msg');
       }
     }
   }
@@ -192,11 +192,11 @@ class _CommonAppFolderScanSettingPageState
       BuildContext context, CommonAppFolderScanEntryType type) {
     switch (type) {
       case CommonAppFolderScanEntryType.file:
-        return UniversalUI.of(context).icons.fileCopy;
+        return UniversalIcon(context).fileCopy;
       case CommonAppFolderScanEntryType.directory:
-        return UniversalUI.of(context).icons.folder;
+        return UniversalIcon(context).folder;
       case CommonAppFolderScanEntryType.unknown:
-        return UniversalUI.of(context).icons.help;
+        return UniversalIcon(context).help;
     }
   }
 
@@ -225,13 +225,13 @@ class _CommonAppFolderScanSettingPageState
           shape: UniversalUI.of(context).defaultShape,
           backgroundColor: UniversalUI.of(context).appBarBackgroundColor,
           leading: IconButton(
-            icon: Icon(UniversalUI.of(context).icons.arrowBack),
+            icon: Icon(UniversalIcon(context).arrowBack),
             onPressed: triggerPop,
           ),
           actions: [
             UniversalTextButton.icon(
               label: const Text('保存并退出'),
-              icon: Icon(UniversalUI.of(context).icons.check),
+              icon: Icon(UniversalIcon(context).check),
               onPressed: () {
                 _saveAndExit(context);
               },
@@ -614,7 +614,7 @@ class _CommonAppFolderScanSettingPageState
                             }
                           },
                     label: const Text('测试'),
-                    icon: Icon(UniversalUI.of(context).icons.play),
+                    icon: Icon(UniversalIcon(context).play),
                   ),
                   UniversalFilledButton.icon(
                     onPressed: () async {
@@ -624,7 +624,7 @@ class _CommonAppFolderScanSettingPageState
                       await _saveAndExit(context);
                     },
                     label: const Text('提交'),
-                    icon: Icon(UniversalUI.of(context).icons.check),
+                    icon: Icon(UniversalIcon(context).check),
                   ),
                 ],
               ),

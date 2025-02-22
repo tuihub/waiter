@@ -47,7 +47,7 @@ class _AppPackageManagePageState extends State<AppPackageManagePage> {
                       .go(context);
                   ModuleFramePage.of(context)?.openDrawer();
                 },
-                icon: Icon(UniversalUI.of(context).icons.add),
+                icon: Icon(UniversalIcon(context).add),
                 label: const Text('新增'),
               ),
             ],

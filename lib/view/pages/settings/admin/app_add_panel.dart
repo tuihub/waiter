@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../components/toast.dart';
+
 import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
 
@@ -25,7 +26,7 @@ class AppAddPanel extends StatelessWidget {
 
     return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
       if (state is GeburaAddAppState && state.success) {
-        const Toast(title: '', message: '添加成功').show(context);
+        UniversalToast.show(context, message: '添加成功');
         close(context);
       }
     }, builder: (context, state) {

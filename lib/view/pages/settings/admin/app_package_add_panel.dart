@@ -4,7 +4,7 @@ import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/gebura/gebura_bloc.dart';
-import '../../../components/toast.dart';
+
 import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
 
@@ -22,7 +22,7 @@ class AppPackageAddPanel extends StatelessWidget {
 
     return BlocConsumer<GeburaBloc, GeburaState>(listener: (context, state) {
       if (state is GeburaAddAppPackageState && state.success) {
-        const Toast(title: '', message: '添加成功').show(context);
+        UniversalToast.show(context, message: '添加成功');
         close(context);
       }
     }, builder: (context, state) {
@@ -32,7 +32,7 @@ class AppPackageAddPanel extends StatelessWidget {
           TextFormField(
             onSaved: (newValue) => name = newValue!,
             decoration: InputDecoration(
-              icon: Icon(UniversalUI.of(context).icons.person),
+              icon: Icon(UniversalIcon(context).person),
               border: const OutlineInputBorder(),
               labelText: '名称',
             ),
@@ -46,7 +46,7 @@ class AppPackageAddPanel extends StatelessWidget {
           TextFormField(
             onSaved: (newValue) => description = newValue!,
             decoration: InputDecoration(
-              icon: Icon(UniversalUI.of(context).icons.person),
+              icon: Icon(UniversalIcon(context).person),
               border: const OutlineInputBorder(),
               labelText: '描述',
             ),

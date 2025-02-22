@@ -5,7 +5,7 @@ import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../components/toast.dart';
+
 import '../../../specialized/right_panel_form.dart';
 import '../../frame_page.dart';
 
@@ -23,7 +23,7 @@ class SessionEditPanel extends StatelessWidget {
     return BlocConsumer<TipherethBloc, TipherethState>(
       listener: (context, state) {
         if (state is TipherethEditSessionState && state.success) {
-          Toast(title: '', message: S.of(context).applySuccess).show(context);
+          UniversalToast.show(context, message: S.of(context).applySuccess);
           close(context);
         }
       },

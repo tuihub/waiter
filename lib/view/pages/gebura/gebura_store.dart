@@ -72,13 +72,13 @@ class GeburaStorePage extends StatelessWidget {
                           icon: Padding(
                               padding: const EdgeInsets.only(left: 10, top: 4),
                               child: Icon(
-                                UniversalUI.of(context).icons.search,
+                                UniversalIcon(context).search,
                                 size: 18,
                                 color: Theme.of(context).primaryColor,
                               )),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              UniversalUI.of(context).icons.close,
+                              UniversalIcon(context).close,
                               size: 18,
                             ),
                             onPressed: () {

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
-import 'common.dart';
+import 'base.dart';
 
 class UniversalCircularProgressIndicator extends StatelessWidget {
   const UniversalCircularProgressIndicator({
@@ -65,7 +65,7 @@ class UniversalLinearProgressIndicator extends StatelessWidget {
         );
       case UIDesign.fluent:
         return fluent.ProgressBar(
-          value: value,
+          value: value != null ? value! * 100 : null,
           backgroundColor: backgroundColor,
           activeColor: color,
         );

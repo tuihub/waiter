@@ -12,7 +12,6 @@ import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../l10n/l10n.dart';
-import '../components/toast.dart';
 import '../helper/app_bar.dart';
 
 class RightPanelForm extends StatefulWidget {
@@ -213,7 +212,7 @@ class TextFormErrorMessage extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: UniversalListTile(
-        leading: Icon(UniversalUI.of(context).icons.error, color: Colors.red),
+        leading: Icon(UniversalIcon(context).error, color: Colors.red),
         title: Text(
           message,
           style: TextStyle(
@@ -242,15 +241,15 @@ class TextReadOnlyFormField extends StatelessWidget {
       readOnly: true,
       labelText: label,
       prefixIcon: UniversalIconButton(
-          icon: Icon(UniversalUI.of(context).icons.lock),
+          icon: Icon(UniversalIcon(context).lock),
           onPressed: () {
-            const Toast(title: '', message: '该项目无法修改').show(context);
+            UniversalToast.show(context, message: '该项目无法修改');
           }),
       suffixIcon: UniversalIconButton(
-        icon: Icon(UniversalUI.of(context).icons.copy),
+        icon: Icon(UniversalIcon(context).copy),
         onPressed: () async {
           await Clipboard.setData(ClipboardData(text: value)).then((value) {
-            const Toast(title: '', message: '已复制').show(context);
+            UniversalToast.show(context, message: '已复制');
           });
         },
       ),

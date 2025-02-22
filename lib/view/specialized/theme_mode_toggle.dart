@@ -27,10 +27,10 @@ class ThemeModeToggle extends StatelessWidget {
           icon: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: state.themeMode == ThemeMode.system
-                ? Icon(UniversalUI.of(context).icons.brightness)
+                ? Icon(UniversalIcon(context).brightness)
                 : state.themeMode == ThemeMode.light
-                    ? Icon(UniversalUI.of(context).icons.brightnessLight)
-                    : Icon(UniversalUI.of(context).icons.brightnessDark),
+                    ? Icon(UniversalIcon(context).brightnessLight)
+                    : Icon(UniversalIcon(context).brightnessDark),
           ),
           iconSize: 14,
         );

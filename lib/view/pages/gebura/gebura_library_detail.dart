@@ -21,7 +21,7 @@ import '../../../common/platform.dart';
 import '../../../route.dart';
 import '../../components/input_formatters.dart';
 import '../../components/pop_alert.dart';
-import '../../components/toast.dart';
+
 import '../../layout/bootstrap_breakpoints.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
@@ -67,12 +67,12 @@ class GeburaLibraryDetailPage extends StatelessWidget {
     return BlocConsumer<GeburaBloc, GeburaState>(
       listener: (context, state) {
         if (state is GeburaLaunchLocalAppInstState && state.msg != null) {
-          Toast(title: '', message: state.msg!).show(context);
+          UniversalToast.show(context, message: state.msg!);
         }
       },
       builder: (context, state) {
         if (!state.libraryApps.containsKey(uuid)) {
-          const Toast(title: '', message: '应用不存在').show(context);
+          UniversalToast.show(context, message: '应用不存在');
           const GeburaLibraryRoute().go(context);
         }
         final item = state.libraryApps[uuid]!;
@@ -202,7 +202,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               icon: Icon(
                                 launcherType == LocalAppInstLauncherType.steam
                                     ? FontAwesomeIcons.steam
-                                    : UniversalUI.of(context).icons.play,
+                                    : UniversalIcon(context).play,
                                 size: Theme.of(context)
                                         .textTheme
                                         .titleLarge
@@ -246,8 +246,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                                   runTimeStr = '错误';
                                   WidgetsBinding.instance
                                       .addPostFrameCallback((_) {
-                                    Toast(title: '', message: msg)
-                                        .show(context);
+                                    UniversalToast.show(context, message: msg);
                                   });
                                 } else {
                                   runTimeStr = '错误';
@@ -255,7 +254,7 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               }
                               return digestItem(
                                 context,
-                                UniversalUI.of(context).icons.timer,
+                                UniversalIcon(context).timer,
                                 '运行时间',
                                 runTimeStr,
                                 null,
@@ -350,8 +349,8 @@ class _GeburaLibraryDetailInstListState
         children: [
           UniversalIconButton(
             icon: Icon(launcher.favorite ?? false
-                ? UniversalUI.of(context).icons.favorite
-                : UniversalUI.of(context).icons.favoriteBorder),
+                ? UniversalIcon(context).favorite
+                : UniversalIcon(context).favoriteBorder),
             onPressed: () async {
               final msg = await context
                   .read<GeburaBloc>()
@@ -359,7 +358,7 @@ class _GeburaLibraryDetailInstListState
                     favorite: !(launcher.favorite ?? false),
                   ));
               if (msg != null) {
-                Toast(title: '', message: msg).show(context);
+                UniversalToast.show(context, message: msg);
               }
             },
           ),
@@ -416,8 +415,8 @@ class _GeburaLibraryDetailInstListState
         children: [
           UniversalIconButton(
             icon: Icon(launcher.favorite ?? false
-                ? UniversalUI.of(context).icons.favorite
-                : UniversalUI.of(context).icons.favoriteBorder),
+                ? UniversalIcon(context).favorite
+                : UniversalIcon(context).favoriteBorder),
             onPressed: () async {
               final msg = await context
                   .read<GeburaBloc>()
@@ -425,7 +424,7 @@ class _GeburaLibraryDetailInstListState
                     favorite: !(launcher.favorite ?? false),
                   ));
               if (msg != null) {
-                Toast(title: '', message: msg).show(context);
+                UniversalToast.show(context, message: msg);
               }
             },
           ),
@@ -438,7 +437,7 @@ class _GeburaLibraryDetailInstListState
               ).go(context);
               ModuleFramePage.of(context)?.openDrawer();
             },
-            icon: Icon(UniversalUI.of(context).icons.settings, size: 16),
+            icon: Icon(UniversalIcon(context).settings, size: 16),
             label: const Text('设置'),
           ),
         ],
@@ -483,7 +482,7 @@ class _GeburaLibraryDetailInstListState
           trailing: Wrap(
             children: [
               UniversalIconButton(
-                icon: Icon(UniversalUI.of(context).icons.add),
+                icon: Icon(UniversalIcon(context).add),
                 onPressed: () {
                   GeburaLibraryDetailRoute(
                     widget.item.uuid,
@@ -494,7 +493,7 @@ class _GeburaLibraryDetailInstListState
                 },
               ),
               UniversalIconButton(
-                icon: Icon(UniversalUI.of(context).icons.settings),
+                icon: Icon(UniversalIcon(context).settings),
                 onPressed: () {
                   GeburaLibraryDetailRoute(
                     widget.item.uuid,
@@ -548,7 +547,7 @@ class _GeburaLibraryDetailInstListState
             subtitle: Text(_onlyShowFavorites
                 ? '${favoriteTiles.length} 个收藏'
                 : '${appInsts.length} 个安装位置'),
-            leading: Icon(UniversalUI.of(context).icons.folder),
+            leading: Icon(UniversalIcon(context).folder),
             trailing: Wrap(
               spacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -563,7 +562,7 @@ class _GeburaLibraryDetailInstListState
                   },
                 ),
                 UniversalIconButton(
-                  icon: Icon(UniversalUI.of(context).icons.add),
+                  icon: Icon(UniversalIcon(context).add),
                   onPressed: () {
                     GeburaLibraryDetailRoute(
                       widget.item.uuid,
@@ -631,7 +630,7 @@ class _GeburaLibraryDetailAppSettingsState
         if (state.success) {
           msg = '刷新应用信息成功';
         }
-        Toast(title: '', message: msg).show(context);
+        UniversalToast.show(context, message: msg);
       }
     }, builder: (context, state) {
       return UniversalToolBar(
@@ -640,7 +639,7 @@ class _GeburaLibraryDetailAppSettingsState
         secondaryItems: [
           UniversalToolBarItem(
             label: const Text('编辑应用信息'),
-            icon: UniversalUI.of(context).icons.edit,
+            icon: UniversalIcon(context).edit,
             onPressed: () {
               GeburaLibraryDetailRoute(
                 widget.item.uuid,
@@ -651,7 +650,7 @@ class _GeburaLibraryDetailAppSettingsState
           ),
           UniversalToolBarItem(
             label: const Text('自动获取应用信息'),
-            icon: UniversalUI.of(context).icons.automated,
+            icon: UniversalIcon(context).automated,
             onPressed: () {
               context
                   .read<GeburaBloc>()
@@ -808,7 +807,7 @@ class _GeburaLibraryDetailRunRecordChartState
       children: [
         UniversalListTile(
           title: const Text('运行记录'),
-          leading: Icon(UniversalUI.of(context).icons.timer),
+          leading: Icon(UniversalIcon(context).timer),
           trailing:
               UniversalToggleSwitch<_GeburaLibraryDetailRunRecordChartType>(
             current: current,
@@ -816,7 +815,7 @@ class _GeburaLibraryDetailRunRecordChartState
             iconBuilder: (i) {
               switch (i) {
                 case _GeburaLibraryDetailRunRecordChartType.closed:
-                  return Icon(UniversalUI.of(context).icons.hide);
+                  return Icon(UniversalIcon(context).hide);
                 case _GeburaLibraryDetailRunRecordChartType.day:
                   return const Text('日');
                 case _GeburaLibraryDetailRunRecordChartType.week:
@@ -851,20 +850,20 @@ class _GeburaLibraryDetailRunRecordChartState
                     ),
                     UniversalToolBarItem(
                       label: const Text('今天'),
-                      icon: UniversalUI.of(context).icons.refresh,
+                      icon: UniversalIcon(context).refresh,
                       onPressed: () async {
                         _startDate = DateTime.now();
                         _updateChartType(current);
                       },
                     ),
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.arrowLeft,
+                      icon: UniversalIcon(context).arrowLeft,
                       onPressed: () async {
                         _prevPeriod();
                       },
                     ),
                     UniversalToolBarItem(
-                      icon: UniversalUI.of(context).icons.arrowRight,
+                      icon: UniversalIcon(context).arrowRight,
                       onPressed: () async {
                         _nextPeriod();
                       },
@@ -873,7 +872,7 @@ class _GeburaLibraryDetailRunRecordChartState
                   secondaryItems: [
                     UniversalToolBarItem(
                       label: const Text('清除缓存'),
-                      icon: UniversalUI.of(context).icons.clear,
+                      icon: UniversalIcon(context).clear,
                       onPressed: () async {
                         setState(_runTime.clear);
                         unawaited(_loadRunTime());
