@@ -92,7 +92,6 @@ dependencies:
   extended_image: ^9.0.3
   font_awesome_flutter: ^10.7.0
   buttons_tabbar: ^1.3.10
-  local_hero: ^0.3.0
   auto_size_text: ^3.0.0
   flip_card: ^0.7.0
   flutter_multi_select_items: ^0.4.3

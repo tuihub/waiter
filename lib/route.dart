@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_hero/local_hero.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
 import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
@@ -366,13 +365,6 @@ class GeburaRoute extends StatefulShellBranchData {
   const GeburaRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _geburaNavigateKey;
-
-  static Widget rootWidget({required Widget child}) {
-    return LocalHeroScope(
-      curve: Curves.easeInOut,
-      child: child,
-    );
-  }
 }
 
 class GeburaRootRoute extends GoRouteData {
@@ -389,14 +381,12 @@ class GeburaStoreRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(
-      child: GeburaRoute.rootWidget(
-        child: const ModuleFramePage(
-          leftPart: GeburaNav(
-            function: GeburaFunctions.store,
-          ),
-          middlePart: GeburaStorePage(),
+    return const NoTransitionPage(
+      child: ModuleFramePage(
+        leftPart: GeburaNav(
+          function: GeburaFunctions.store,
         ),
+        middlePart: GeburaStorePage(),
       ),
     );
   }
@@ -407,14 +397,12 @@ class GeburaLibraryRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(
-      child: GeburaRoute.rootWidget(
-        child: const ModuleFramePage(
-          leftPart: GeburaNav(
-            function: GeburaFunctions.library,
-          ),
-          middlePart: GeburaLibraryOverview(),
+    return const NoTransitionPage(
+      child: ModuleFramePage(
+        leftPart: GeburaNav(
+          function: GeburaFunctions.library,
         ),
+        middlePart: GeburaLibraryOverview(),
       ),
     );
   }
@@ -438,14 +426,12 @@ class GeburaLibrarySettingsRoute extends GoRouteData {
       ),
     };
     return NoTransitionPage(
-      child: GeburaRoute.rootWidget(
-        child: ModuleFramePage(
-          leftPart: const GeburaNav(
-            function: GeburaFunctions.librarySettings,
-          ),
-          middlePart: const GeburaLibrarySettingsPage(),
-          rightPart: actions[action] ?? Container(),
+      child: ModuleFramePage(
+        leftPart: const GeburaNav(
+          function: GeburaFunctions.librarySettings,
         ),
+        middlePart: const GeburaLibrarySettingsPage(),
+        rightPart: actions[action] ?? Container(),
       ),
     );
   }
@@ -493,17 +479,19 @@ class GeburaLibraryDetailRoute extends GoRouteData {
             : null,
       ),
     };
-    return NoTransitionPage(
-      child: GeburaRoute.rootWidget(
-        child: ModuleFramePage(
-          leftPart: GeburaNav(
-            function: GeburaFunctions.library,
-            selectedItem: uuid,
-          ),
-          middlePart: GeburaLibraryDetailPage(uuid: uuid),
-          rightPart: actions[action] ?? Container(),
+    return CustomTransitionPage(
+      child: ModuleFramePage(
+        leftPart: GeburaNav(
+          function: GeburaFunctions.library,
+          selectedItem: uuid,
         ),
+        middlePart: GeburaLibraryDetailPage(uuid: uuid),
+        rightPart: actions[action] ?? Container(),
       ),
+      transitionsBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        return child;
+      },
     );
   }
 }

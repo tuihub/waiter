@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_io/io.dart';
 import 'package:universal_ui/universal_ui.dart';
@@ -164,12 +163,10 @@ class GeburaLibraryDetailPage extends StatelessWidget {
                               md: 3,
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                child: LocalHero(
-                                  key: ValueKey(item.uuid),
+                                child: Hero(
                                   tag: item.uuid,
                                   child: GeburaAppCoverImage(
                                     path: item.coverImagePath,
-                                    url: item.coverImageUrl,
                                   ),
                                 ),
                               ),

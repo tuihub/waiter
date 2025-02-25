@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:local_hero/local_hero.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:universal_ui/universal_ui.dart';
 
@@ -177,7 +176,7 @@ class _GeburaLibraryOverviewItemState
               ),
             ),
             Center(
-              child: LocalHero(
+              child: Hero(
                 tag: widget.item.uuid,
                 child: GeburaAppCoverImage(path: widget.item.coverImagePath),
               ),

@@ -15,7 +15,6 @@ class UniversalPageRoute<T> extends PageRoute<T> {
     assert(opaque);
   }
 
-  /// Builds the primary contents of the route.
   final WidgetBuilder builder;
 
   @override
@@ -30,17 +29,24 @@ class UniversalPageRoute<T> extends PageRoute<T> {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
+    return builder(context);
+  }
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
     final design = UniversalUI.of(context).design;
+
     switch (design) {
       case UIDesign.material:
         final material.PageTransitionsTheme theme =
             material.Theme.of(context).pageTransitionsTheme;
         return theme.buildTransitions<T>(
-            this, context, animation, secondaryAnimation, builder(context));
+            this, context, animation, secondaryAnimation, child);
       case UIDesign.fluent:
         return fluent.DrillInPageTransition(
           animation: animation,
-          child: builder(context),
+          child: child,
         );
     }
   }
