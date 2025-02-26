@@ -12,6 +12,12 @@ class MainInitEvent extends MainEvent {
   MainInitEvent(super.context);
 }
 
+class MainGetServerInfoEvent extends MainEvent {
+  final ServerConfig server;
+
+  MainGetServerInfoEvent(super.context, {required this.server});
+}
+
 class MainLoginEvent extends MainEvent {
   final ServerConfig? serverConfig;
   final String? password;

@@ -393,4 +393,13 @@ class UniversalIcon {
         return FluentIcons.arrow_right_24_regular;
     }
   }
+
+  IconData get swap {
+    switch (design) {
+      case UIDesign.material:
+        return material.Icons.swap_horiz;
+      case UIDesign.fluent:
+        return FluentIcons.arrow_swap_24_regular;
+    }
+  }
 }

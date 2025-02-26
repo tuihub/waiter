@@ -55,6 +55,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m12(server) => "注册到 ${server}";
 
+  static String m16(reason) => "服务器连接失败 ${reason}";
+
+  static String m17(delay) => "服务器连接成功 ↑↓ ${delay}ms";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "ACCOUNT_PLATFORM": MessageLookupByLibrary.simpleMessage("平台"),
@@ -164,6 +168,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "clientSetting": MessageLookupByLibrary.simpleMessage("客户端设置"),
         "close": MessageLookupByLibrary.simpleMessage("关闭"),
         "confirm": MessageLookupByLibrary.simpleMessage("确认"),
+        "connect": MessageLookupByLibrary.simpleMessage("连接"),
         "connectInClient": MessageLookupByLibrary.simpleMessage("使用客户端登录"),
         "continueInCurrentServer": MessageLookupByLibrary.simpleMessage("继续使用"),
         "continueInWebVersion": MessageLookupByLibrary.simpleMessage("继续使用网页版"),
@@ -252,6 +257,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "safari": MessageLookupByLibrary.simpleMessage("Safari"),
         "samsung": MessageLookupByLibrary.simpleMessage("三星"),
         "scanningLocalFiles": MessageLookupByLibrary.simpleMessage("正在扫描本地文件"),
+        "serverConnectTestFailed": m16,
+        "serverConnectTestSuccess": m17,
         "serverSetup": MessageLookupByLibrary.simpleMessage("服务器设置"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "showServerConfig": MessageLookupByLibrary.simpleMessage("查看服务器信息"),

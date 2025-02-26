@@ -330,6 +330,36 @@ class S {
     );
   }
 
+  /// `连接`
+  String get connect {
+    return Intl.message(
+      '连接',
+      name: 'connect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器连接成功 ↑↓ {delay}ms`
+  String serverConnectTestSuccess(Object delay) {
+    return Intl.message(
+      '服务器连接成功 ↑↓ ${delay}ms',
+      name: 'serverConnectTestSuccess',
+      desc: '',
+      args: [delay],
+    );
+  }
+
+  /// `服务器连接失败 {reason}`
+  String serverConnectTestFailed(Object reason) {
+    return Intl.message(
+      '服务器连接失败 $reason',
+      name: 'serverConnectTestFailed',
+      desc: '',
+      args: [reason],
+    );
+  }
+
   /// `刚刚`
   String get durationJustNow {
     return Intl.message(

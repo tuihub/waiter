@@ -72,6 +72,22 @@ class MainInitState extends MainEventState {
   MainInitState(super.state, super.statusCode, {super.msg}) : super.clone();
 }
 
+class MainGetServerInfoState extends MainEventState {
+  MainGetServerInfoState(
+    super.state,
+    super.statusCode, {
+    super.msg,
+    this.delay,
+  }) : super.clone();
+
+  final int? delay;
+}
+
+class MainRefreshServerInfoState extends MainEventState {
+  MainRefreshServerInfoState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
+
 class MainLoginState extends MainEventState {
   MainLoginState(super.state, super.statusCode, {super.msg}) : super.clone();
 }

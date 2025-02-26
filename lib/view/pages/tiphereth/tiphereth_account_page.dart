@@ -13,10 +13,10 @@ import '../../../bloc/main_bloc.dart';
 import '../../../bloc/tiphereth/tiphereth_bloc.dart';
 import '../../../consts.dart';
 import '../../../l10n/librarian.dart';
-import '../../../route.dart';
 import '../../helper/duration_format.dart';
 import '../../layout/bootstrap_container.dart';
 import '../../specialized/backdrop_blur.dart';
+import '../settings/server_select/server_select_page.dart';
 
 class TipherethAccountPage extends StatelessWidget {
   const TipherethAccountPage({super.key});
@@ -35,9 +35,14 @@ class TipherethAccountPage extends StatelessWidget {
                 child: Center(
                   child: UniversalFilledButton(
                       child: const Text('添加服务器'),
-                      onPressed: () {
-                        const SettingsFunctionRoute(SettingsFunctions.server)
-                            .go(context);
+                      onPressed: () async {
+                        final navigator = Navigator.of(context);
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ServerManualAddDialog(navigator);
+                          },
+                        );
                       }),
                 ),
               ),

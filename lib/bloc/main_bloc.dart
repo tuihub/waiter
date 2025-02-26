@@ -102,6 +102,49 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     }, transformer: droppable());
 
+    on<MainGetServerInfoEvent>((event, emit) async {
+      emit(MainGetServerInfoState(state, EventStatus.processing));
+      try {
+        var newState = state;
+        final startTime = DateTime.now();
+        final resp = await _repo.anonymousGetServerInfo(event.server);
+        final delay = DateTime.now().difference(startTime).inMilliseconds;
+        if (resp case Ok()) {
+          final info = resp.v;
+          final knownServerInfos = {
+            event.server.serverID: ServerInformation(
+              sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
+              buildVersion: info.serverBinarySummary.buildVersion,
+              buildDate: info.serverBinarySummary.buildDate,
+              protocolVersion: info.protocolSummary.version,
+            ),
+            ...state.knownServerInfos,
+          };
+          final knownServerFeatureSummaries = {
+            event.server.serverID: info.featureSummary,
+            ...state.knownServerFeatureSummaries,
+          };
+          final knownServerInstanceSummaries = {
+            event.server.serverID: info.serverInstanceSummary,
+            ...state.knownServerInstanceSummaries,
+          };
+          newState = newState.copyWith(
+            knownServerInfos: knownServerInfos,
+            knownServerFeatureSummaries: knownServerFeatureSummaries,
+            knownServerInstanceSummaries: knownServerInstanceSummaries,
+          );
+          emit(MainGetServerInfoState(newState, EventStatus.success,
+              delay: delay));
+        } else if (resp case Err()) {
+          emit(MainGetServerInfoState(state, EventStatus.failed, msg: resp.e));
+        }
+      } catch (e) {
+        debugPrint(e.toString());
+        emit(MainGetServerInfoState(state, EventStatus.failed,
+            msg: e.toString()));
+      }
+    }, transformer: restartable());
+
     on<MainLoginEvent>((event, emit) async {
       emit(MainLoginState(state, EventStatus.processing));
       try {
@@ -137,6 +180,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (event.server == null && state.currentServer == null) {
         return;
       }
+      emit(MainRefreshServerInfoState(state, EventStatus.processing));
       try {
         final currentServer = event.server ?? state.currentServer!;
         var newState = state;
@@ -175,9 +219,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           final user = resp2.v;
           newState = newState.copyWith(currentUser: user.user);
         }
-        emit(newState);
+        emit(MainRefreshServerInfoState(newState, EventStatus.success));
       } catch (e) {
         debugPrint(e.toString());
+        emit(MainRefreshServerInfoState(state, EventStatus.failed));
       }
     }, transformer: restartable());
 

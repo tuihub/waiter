@@ -1,208 +1,4 @@
-import 'package:dao/dao.dart';
-import 'package:extended_image/extended_image.dart';
-import 'package:flip_card/flip_card.dart';
-import 'package:flip_card/flip_card_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universal_ui/universal_ui.dart';
-
-import '../../../bloc/main_bloc.dart';
-import '../../../l10n/l10n.dart';
-
-import '../../layout/bootstrap_container.dart';
-import '../../layout/card_list_page.dart';
-import '../../specialized/connectivity.dart';
-
-class ServerSelectPage extends StatelessWidget {
-  const ServerSelectPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MainBloc, MainState>(
-      builder: (context, state) {
-        return ListManagePage(
-          title: '服务端选择',
-          processing: false,
-          onAdd: () async {
-            final navigator = Navigator.of(context);
-            await showDialog(
-              context: context,
-              builder: (context) {
-                return _TipherethServerAddDialog(navigator);
-              },
-            );
-          },
-          children: [
-            for (final server in state.knownServers.values)
-              UniversalListTile(
-                title: Text('${server.host}:${server.port}'),
-                subtitle: Text(server.username),
-                trailing: UniversalToolBar(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  primaryItems: [
-                    if (server.serverID == state.currentServer)
-                      UniversalToolBarItem(
-                        icon: UniversalIcon(context).check,
-                        label: const Text('当前'),
-                      )
-                    else
-                      UniversalToolBarItem(
-                        icon: UniversalIcon(context).arrowRight,
-                        label: const Text('切换'),
-                        onPressed: () async {
-                          context
-                              .read<MainBloc>()
-                              .add(MainLoginEvent(null, serverConfig: server));
-                        },
-                      ),
-                  ],
-                  secondaryItems: [
-                    UniversalToolBarItem(
-                      icon: UniversalIcon(context).edit,
-                      label: const Text('编辑'),
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return _TipherethServerEditDialog(server: server);
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _TipherethServerEditDialog extends StatelessWidget {
-  const _TipherethServerEditDialog({required this.server});
-
-  final ServerConfig server;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('服务器信息'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('${server.host}:${server.port}'),
-          Text(server.username),
-        ],
-      ),
-    );
-  }
-}
-
-class _TipherethServerAddDialog extends StatefulWidget {
-  const _TipherethServerAddDialog(this.navigator);
-
-  final NavigatorState navigator;
-
-  @override
-  State<_TipherethServerAddDialog> createState() =>
-      _TipherethServerAddDialogState();
-}
-
-class _TipherethServerAddDialogState extends State<_TipherethServerAddDialog> {
-  final _formKey = GlobalKey<FormState>();
-
-  String host = '';
-  int port = 0;
-  bool tls = false;
-  ServerConfig server = const ServerConfig(host: '', port: 0, enableTLS: true);
-
-  Widget _buildForm(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: SpacingHelper.listSpacing(height: 8, children: [
-          UniversalTextFormField(
-            onSaved: (newValue) => host = newValue!,
-            labelText: S.of(context).address,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return S.of(context).pleaseInputServerAddress;
-              }
-              return null;
-            },
-          ),
-          UniversalTextFormField(
-            onSaved: (newValue) => port = int.parse(newValue!),
-            labelText: S.of(context).port,
-            validator: (value) {
-              final p = int.tryParse(value!) ?? 0;
-              if (p <= 0) {
-                return S.of(context).pleaseInputServerPort;
-              }
-              return null;
-            },
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-          UniversalSwitchFormField(
-            onSaved: (newValue) => tls = newValue!,
-            title: Text(S.of(context).tls),
-            initialValue: tls,
-          ),
-          ServerConnectivityWidget(config: server, callback: () {}),
-        ]),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('添加服务器'),
-      content: _buildForm(context),
-      actions: [
-        UniversalOutlinedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(S.of(context).cancel),
-        ),
-        UniversalOutlinedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              setState(() {
-                server = ServerConfig(host: host, port: port, enableTLS: tls);
-              });
-            }
-          },
-          child: Text(S.of(context).check),
-        ),
-        UniversalFilledButton(
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              setState(() {
-                server = ServerConfig(host: host, port: port, enableTLS: tls);
-              });
-              Navigator.of(context).pop();
-              await widget.navigator.push(
-                UniversalPageRoute(builder: (context) {
-                  return _TipherethServerLoginPage(server: server);
-                }),
-              );
-            }
-          },
-          child: Text(S.of(context).submit),
-        ),
-      ],
-    );
-  }
-}
+part of 'server_select_page.dart';
 
 class _TipherethServerLoginPage extends StatefulWidget {
   const _TipherethServerLoginPage({required this.server});
@@ -216,6 +12,7 @@ class _TipherethServerLoginPage extends StatefulWidget {
 
 class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
   bool flipCardIsFront = true;
+  bool flipping = false;
   final flipCardController = FlipCardController();
 
   Future<void> toggleCard() async {
@@ -270,9 +67,10 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4),
-                        child: UniversalFilledButton(
+                        child: UniversalFilledButton.icon(
                           onPressed: toggleCard,
-                          child: Text(
+                          icon: Icon(UniversalIcon(context).swap),
+                          label: Text(
                             flipCardIsFront
                                 ? S.of(context).register
                                 : S.of(context).login,
@@ -283,17 +81,31 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
                     FlipCard(
                       controller: flipCardController,
                       flipOnTouch: false,
+                      onFlip: () {
+                        setState(() {
+                          flipping = true;
+                        });
+                      },
+                      onFlipDone: (isFront) {
+                        setState(() {
+                          flipping = false;
+                        });
+                      },
                       front: UniversalCard(
-                          child: _LoginForm(
-                        readOnly: !flipCardIsFront,
-                        server: widget.server,
-                      )),
+                          child: flipCardIsFront || flipping
+                              ? _LoginForm(
+                                  readOnly: false,
+                                  server: widget.server,
+                                )
+                              : const SizedBox(height: 100)),
                       back: UniversalCard(
-                        child: _RegisterForm(
-                          readOnly: flipCardIsFront,
-                          onRegistered: toggleCard,
-                          server: widget.server,
-                        ),
+                        child: !flipCardIsFront || flipping
+                            ? _RegisterForm(
+                                readOnly: false,
+                                onRegistered: toggleCard,
+                                server: widget.server,
+                              )
+                            : const SizedBox(height: 100),
                       ),
                     ),
                   ]),
@@ -308,7 +120,7 @@ class _TipherethServerLoginPageState extends State<_TipherethServerLoginPage> {
 }
 
 class _LoginForm extends StatefulWidget {
-  const _LoginForm({this.readOnly = false, required this.server});
+  const _LoginForm({required this.server, required this.readOnly});
 
   final bool readOnly;
   final ServerConfig server;
@@ -437,9 +249,9 @@ class _LoginFormState extends State<_LoginForm> {
 
 class _RegisterForm extends StatefulWidget {
   const _RegisterForm({
-    this.readOnly = false,
     this.onRegistered,
     required this.server,
+    required this.readOnly,
   });
 
   final bool readOnly;

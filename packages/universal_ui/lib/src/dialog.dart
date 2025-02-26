@@ -69,7 +69,7 @@ class UniversalDialog extends StatelessWidget {
       case UIDesign.fluent:
         return fluent.ContentDialog(
           title: title,
-          content: content,
+          content: material.Material(child: content),
           actions: [
             Row(
               mainAxisSize: MainAxisSize.min,

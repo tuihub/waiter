@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import 'bloc/deeplink_bloc.dart';
 import 'common/platform.dart';
+import 'view/pages/settings/server_select/server_select_page.dart';
 import 'view/specialized/theme_mode_toggle.dart';
 import 'view/specialized/title_bar.dart';
 
@@ -78,9 +79,15 @@ class _DeepLinkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DeepLinkBloc, DeepLinkState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is DeepLinkConnectState) {
-          // TODO: Implement deep link handling
+          final navigator = Navigator.of(context);
+          await showDialog(
+            context: context,
+            builder: (context) {
+              return ServerLinkAddDialog(navigator, server: state.serverConfig);
+            },
+          );
         }
       },
       builder: (context, state) {

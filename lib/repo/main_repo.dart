@@ -98,6 +98,14 @@ class MainRepo {
     return id;
   }
 
+  Future<Result<GetServerInformationResponse, String>> anonymousGetServerInfo(
+      ServerConfig config) async {
+    final client = await LibrarianService.grpc(ServerConfig(
+        host: config.host, port: config.port, enableTLS: config.enableTLS));
+    return client.doRequest(
+        (client) => client.getServerInformation, GetServerInformationRequest());
+  }
+
   Future<Result<GetServerInformationResponse, String>> getServerInfo(
       EventContext context) async {
     return _api.get(context.sid).doRequest(

@@ -40,7 +40,7 @@ import 'view/pages/settings/admin/user_edit_panel.dart';
 import 'view/pages/settings/admin/user_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
 import 'view/pages/settings/porter_context_page.dart';
-import 'view/pages/settings/server_select_page.dart';
+import 'view/pages/settings/server_select/server_select_page.dart';
 import 'view/pages/settings/session/session_edit_panel.dart';
 import 'view/pages/settings/session/session_manage_page.dart';
 import 'view/pages/settings/settings_nav.dart';
