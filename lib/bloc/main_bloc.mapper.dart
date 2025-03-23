@@ -48,9 +48,9 @@ class MainStateMapper extends ClassMapperBase<MainState> {
       v.knownServers;
   static const Field<MainState, Map<ServerID, ServerConfig>> _f$knownServers =
       Field('knownServers', _$knownServers, opt: true, def: const {});
-  static Map<ServerID, ServerInformation> _$knownServerInfos(MainState v) =>
+  static Map<ServerID, ServerBinarySummary> _$knownServerInfos(MainState v) =>
       v.knownServerInfos;
-  static const Field<MainState, Map<ServerID, ServerInformation>>
+  static const Field<MainState, Map<ServerID, ServerBinarySummary>>
       _f$knownServerInfos =
       Field('knownServerInfos', _$knownServerInfos, opt: true, def: const {});
   static Map<ServerID, FeatureSummary> _$knownServerFeatureSummaries(
@@ -118,8 +118,8 @@ abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
   ServerIDCopyWith<$R, ServerID, ServerID>? get currentServer;
   MapCopyWith<$R, ServerID, ServerConfig,
       ServerConfigCopyWith<$R, ServerConfig, ServerConfig>> get knownServers;
-  MapCopyWith<$R, ServerID, ServerInformation,
-          ObjectCopyWith<$R, ServerInformation, ServerInformation>>
+  MapCopyWith<$R, ServerID, ServerBinarySummary,
+          ObjectCopyWith<$R, ServerBinarySummary, ServerBinarySummary>>
       get knownServerInfos;
   MapCopyWith<$R, ServerID, FeatureSummary,
           ObjectCopyWith<$R, FeatureSummary, FeatureSummary>>
@@ -136,7 +136,7 @@ abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
       ConnectionStatus? currentConnectionStatus,
       User? currentUser,
       Map<ServerID, ServerConfig>? knownServers,
-      Map<ServerID, ServerInformation>? knownServerInfos,
+      Map<ServerID, ServerBinarySummary>? knownServerInfos,
       Map<ServerID, FeatureSummary>? knownServerFeatureSummaries,
       Map<ServerID, ServerInstanceSummary>? knownServerInstanceSummaries});
   MainStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -159,8 +159,8 @@ class _MainStateCopyWithImpl<$R, $Out>
       get knownServers => MapCopyWith($value.knownServers,
           (v, t) => v.copyWith.$chain(t), (v) => call(knownServers: v));
   @override
-  MapCopyWith<$R, ServerID, ServerInformation,
-          ObjectCopyWith<$R, ServerInformation, ServerInformation>>
+  MapCopyWith<$R, ServerID, ServerBinarySummary,
+          ObjectCopyWith<$R, ServerBinarySummary, ServerBinarySummary>>
       get knownServerInfos => MapCopyWith(
           $value.knownServerInfos,
           (v, t) => ObjectCopyWith(v, $identity, t),
@@ -189,7 +189,7 @@ class _MainStateCopyWithImpl<$R, $Out>
           Object? currentConnectionStatus = $none,
           Object? currentUser = $none,
           Map<ServerID, ServerConfig>? knownServers,
-          Map<ServerID, ServerInformation>? knownServerInfos,
+          Map<ServerID, ServerBinarySummary>? knownServerInfos,
           Map<ServerID, FeatureSummary>? knownServerFeatureSummaries,
           Map<ServerID, ServerInstanceSummary>?
               knownServerInstanceSummaries}) =>

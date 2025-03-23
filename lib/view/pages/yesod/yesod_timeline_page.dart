@@ -3,7 +3,7 @@
 // import 'package:animations/animations.dart';
 // import 'package:common_utils/common_utils.dart';
 // import 'package:flutter/material.dart';
-// import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+// import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/yesod.pb.dart';
 // import 'package:tuihub_protos/librarian/v1/common.pb.dart';
 //
 // import '../../../repo/librarian_service/api_mixins.dart';

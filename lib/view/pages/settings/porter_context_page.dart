@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../../bloc/tiphereth/tiphereth_bloc.dart';
@@ -19,8 +19,8 @@ import '../frame_page.dart';
 class PorterContextManagePage extends StatelessWidget {
   const PorterContextManagePage({super.key});
 
-  Widget buildPorterGroup(
-      BuildContext context, PorterGroup group, List<PorterContext> contexts) {
+  Widget buildPorterDigest(
+      BuildContext context, PorterDigest group, List<PorterContext> contexts) {
     final activeCount = contexts
         .where((e) =>
             e.handleStatus ==
@@ -124,7 +124,7 @@ class PorterContextManagePage extends StatelessWidget {
           },
           children: [
             for (final group in porterGroups)
-              buildPorterGroup(
+              buildPorterDigest(
                 context,
                 group,
                 porterContexts
@@ -139,9 +139,9 @@ class PorterContextManagePage extends StatelessWidget {
 }
 
 class PorterContextAddPanel extends StatelessWidget {
-  const PorterContextAddPanel({super.key, required this.porterGroup});
+  const PorterContextAddPanel({super.key, required this.porterDigest});
 
-  final PorterGroup porterGroup;
+  final PorterDigest porterDigest;
 
   void close(BuildContext context) {
     ModuleFramePage.of(context)?.closeDrawer();
@@ -167,10 +167,10 @@ class PorterContextAddPanel extends StatelessWidget {
       },
       builder: (context, state) {
         return RightPanelForm(
-          title: Text('添加${porterGroup.binarySummary.name}环境'),
+          title: Text('添加${porterDigest.binarySummary.name}环境'),
           formFields: [
-            Text('插件名称: ${porterGroup.binarySummary.name}'),
-            Text('插件介绍: ${porterGroup.binarySummary.description}'),
+            Text('插件名称: ${porterDigest.binarySummary.name}'),
+            Text('插件介绍: ${porterDigest.binarySummary.description}'),
             UniversalTextFormField(
               labelText: '区域',
               onSaved: (newValue) => region = newValue!,
@@ -183,11 +183,11 @@ class PorterContextAddPanel extends StatelessWidget {
               labelText: '描述',
               onSaved: (newValue) => description = newValue!,
             ),
-            if (porterGroup.contextJsonSchema.isNotEmpty)
+            if (porterDigest.contextJsonSchema.isNotEmpty)
               JsonForm(
                 key: ValueKey(buildCounter++),
                 controller: jsonFormController,
-                jsonSchema: porterGroup.contextJsonSchema,
+                jsonSchema: porterDigest.contextJsonSchema,
                 jsonData: contextJson,
                 onFormDataSaved: (data) {
                   contextJson = jsonEncode(data);
@@ -215,7 +215,7 @@ class PorterContextAddPanel extends StatelessWidget {
               context.read<TipherethBloc>().add(TipherethAddPorterContextEvent(
                     null,
                     PorterContext(
-                      globalName: porterGroup.globalName,
+                      globalName: porterDigest.globalName,
                       region: region,
                       contextJson: contextJson,
                       name: name,
@@ -263,7 +263,7 @@ class PorterContextEditPanel extends StatelessWidget {
       builder: (context, state) {
         final porterGroup = state.porterGroups?.firstWhere(
                 (element) => element.globalName == porterContext.globalName) ??
-            PorterGroup();
+            PorterDigest();
         return RightPanelForm(
           title: const Text('编辑环境'),
           formFields: [
@@ -312,7 +312,7 @@ class PorterContextEditPanel extends StatelessWidget {
               title: const Text('启用'),
             ),
           ],
-          errorMsg: state is TipherethEditPorterState && state.failed
+          errorMsg: state is TipherethEditPorterContextState && state.failed
               ? state.msg
               : null,
           onSubmit: () {
@@ -330,7 +330,8 @@ class PorterContextEditPanel extends StatelessWidget {
                   )));
             }
           },
-          submitting: state is TipherethEditPorterState && state.processing,
+          submitting:
+              state is TipherethEditPorterContextState && state.processing,
           close: () => close(context),
         );
       },

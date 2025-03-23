@@ -1,14 +1,11 @@
-import 'package:animations/animations.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/gebura.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
 import '../../layout/bootstrap_container.dart';
-import 'gebura_store_detail.dart';
 
 class GeburaStorePage extends StatelessWidget {
   const GeburaStorePage({super.key});
@@ -16,7 +13,7 @@ class GeburaStorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
-    List<AppInfoMixed>? apps;
+    List<AppInfo>? apps;
     String msg = '';
     return BlocBuilder<GeburaBloc, GeburaState>(builder: (context, state) {
       if (state is GeburaSearchAppInfosState) {
@@ -112,7 +109,7 @@ class StoreList extends StatelessWidget {
     super.key,
     required this.apps,
   });
-  final List<AppInfoMixed> apps;
+  final List<AppInfo> apps;
 
   @override
   Widget build(BuildContext context) {
@@ -121,115 +118,115 @@ class StoreList extends StatelessWidget {
       return CustomScrollView(
         controller: controller,
         physics: physics,
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: apps.length,
-              (context, index) {
-                final app = apps.elementAt(index);
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: OpenContainer(
-                    openBuilder: (_, closedContainer) {
-                      context
-                          .read<GeburaBloc>()
-                          .add(GeburaFetchBoundAppInfosEvent(null, app.id));
-                      return BlocProvider.value(
-                        value: context.read<GeburaBloc>(),
-                        child: ColoredBox(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          child: GeburaStoreDetail(appID: app.id),
-                        ),
-                      );
-                    },
-                    openColor: theme.colorScheme.primary,
-                    closedShape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    closedColor: theme.scaffoldBackgroundColor,
-                    closedElevation: 0,
-                    closedBuilder: (context, openContainer) {
-                      return SizedBox(
-                        height: 128,
-                        child: UniversalCard(
-                          child: InkWell(
-                            borderRadius:
-                                UniversalUI.of(context).defaultBorderRadius,
-                            onTap: () {
-                              openContainer();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: UniversalUI.of(context)
-                                          .defaultBorderRadius,
-                                      image: DecorationImage(
-                                          image: ExtendedNetworkImageProvider(
-                                            app.coverImageUrl,
-                                          ),
-                                          fit: BoxFit.scaleDown),
-                                    ),
-                                    width: 150,
-                                    height: 200,
-                                  ),
-                                  const SizedBox(
-                                    width: 16,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          app.id.id.toHexString(),
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              fontSize: 10,
-                                              color: Theme.of(context)
-                                                  .disabledColor),
-                                          maxLines: 2,
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          app.name,
-                                          style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 2,
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          app.shortDescription,
-                                          style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 10,
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
+        slivers: const [
+          // SliverList(
+          //   delegate: SliverChildBuilderDelegate(
+          //     childCount: apps.length,
+          //     (context, index) {
+          //       final app = apps.elementAt(index);
+          //       return Padding(
+          //         padding: const EdgeInsets.only(top: 8),
+          //         child: OpenContainer(
+          //           openBuilder: (_, closedContainer) {
+          //             context
+          //                 .read<GeburaBloc>()
+          //                 .add(GeburaFetchBoundAppInfosEvent(null, app.id));
+          //             return BlocProvider.value(
+          //               value: context.read<GeburaBloc>(),
+          //               child: ColoredBox(
+          //                 color: Theme.of(context).scaffoldBackgroundColor,
+          //                 child: GeburaStoreDetail(appID: app.id),
+          //               ),
+          //             );
+          //           },
+          //           openColor: theme.colorScheme.primary,
+          //           closedShape: const RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.all(Radius.circular(12)),
+          //           ),
+          //           closedColor: theme.scaffoldBackgroundColor,
+          //           closedElevation: 0,
+          //           closedBuilder: (context, openContainer) {
+          //             return SizedBox(
+          //               height: 128,
+          //               child: UniversalCard(
+          //                 child: InkWell(
+          //                   borderRadius:
+          //                       UniversalUI.of(context).defaultBorderRadius,
+          //                   onTap: () {
+          //                     openContainer();
+          //                   },
+          //                   child: Padding(
+          //                     padding: const EdgeInsets.all(8),
+          //                     child: Row(
+          //                       children: [
+          //                         Container(
+          //                           decoration: BoxDecoration(
+          //                             borderRadius: UniversalUI.of(context)
+          //                                 .defaultBorderRadius,
+          //                             image: DecorationImage(
+          //                                 image: ExtendedNetworkImageProvider(
+          //                                   app.coverImageUrl,
+          //                                 ),
+          //                                 fit: BoxFit.scaleDown),
+          //                           ),
+          //                           width: 150,
+          //                           height: 200,
+          //                         ),
+          //                         const SizedBox(
+          //                           width: 16,
+          //                         ),
+          //                         Expanded(
+          //                           child: Column(
+          //                             crossAxisAlignment:
+          //                                 CrossAxisAlignment.start,
+          //                             children: [
+          //                               Text(
+          //                                 app.id.id.toHexString(),
+          //                                 style: TextStyle(
+          //                                     overflow: TextOverflow.ellipsis,
+          //                                     fontSize: 10,
+          //                                     color: Theme.of(context)
+          //                                         .disabledColor),
+          //                                 maxLines: 2,
+          //                               ),
+          //                               const SizedBox(
+          //                                 height: 4,
+          //                               ),
+          //                               Text(
+          //                                 app.name,
+          //                                 style: const TextStyle(
+          //                                   overflow: TextOverflow.ellipsis,
+          //                                   fontSize: 16,
+          //                                   fontWeight: FontWeight.bold,
+          //                                 ),
+          //                                 maxLines: 2,
+          //                               ),
+          //                               const SizedBox(
+          //                                 height: 4,
+          //                               ),
+          //                               Text(
+          //                                 app.description,
+          //                                 style: const TextStyle(
+          //                                   overflow: TextOverflow.ellipsis,
+          //                                   fontSize: 10,
+          //                                 ),
+          //                                 maxLines: 3,
+          //                               ),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             );
+          //           },
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       );
     });

@@ -1,6 +1,7 @@
 import 'package:dao/dao.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../model/common_model.dart';
 import '../model/yesod_model.dart';

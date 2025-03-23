@@ -1,5 +1,5 @@
 import 'package:grpc/grpc_web.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/sephirah_service.pbgrpc.dart';
 
 Future<LibrarianSephirahServiceClient> newGrpc({
   required String host,

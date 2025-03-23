@@ -470,10 +470,6 @@ const _$SettingsFunctionsEnumMap = {
   SettingsFunctions.server: 'server',
   SettingsFunctions.session: 'session',
   SettingsFunctions.porterContext: 'porter-context',
-  SettingsFunctions.porter: 'porter',
-  SettingsFunctions.user: 'user',
-  SettingsFunctions.app: 'app',
-  SettingsFunctions.appPackage: 'app-package',
   SettingsFunctions.about: 'about',
 };
 
@@ -481,13 +477,6 @@ const _$SettingsActionsEnumMap = {
   SettingsActions.sessionEdit: 'session-edit',
   SettingsActions.porterContextAdd: 'porter-context-add',
   SettingsActions.porterContextEdit: 'porter-context-edit',
-  SettingsActions.porterEdit: 'porter-edit',
-  SettingsActions.userEdit: 'user-edit',
-  SettingsActions.userAdd: 'user-add',
-  SettingsActions.appEdit: 'app-edit',
-  SettingsActions.appAdd: 'app-add',
-  SettingsActions.appPackageEdit: 'app-package-edit',
-  SettingsActions.appPackageAdd: 'app-package-add',
 };
 
 T? _$convertMapValue<T>(

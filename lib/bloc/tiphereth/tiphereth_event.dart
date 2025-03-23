@@ -13,12 +13,6 @@ final class _TipherethSwitchServerEvent extends TipherethEvent {
       : super(EventContext(serverID));
 }
 
-final class TipherethAddUserEvent extends TipherethEvent {
-  final User user;
-
-  TipherethAddUserEvent(super.context, this.user);
-}
-
 final class TipherethEditUserEvent extends TipherethEvent {
   final User user;
   final String? password;
@@ -44,17 +38,6 @@ final class TipherethUnLinkAccountEvent extends TipherethEvent {
 
   TipherethUnLinkAccountEvent(
       super.context, this.platform, this.platformAccountID);
-}
-
-final class TipherethLoadPortersEvent extends TipherethEvent {
-  TipherethLoadPortersEvent(super.context);
-}
-
-final class TipherethEditPorterEvent extends TipherethEvent {
-  final InternalID porterID;
-  final UserStatus status;
-
-  TipherethEditPorterEvent(super.context, this.porterID, this.status);
 }
 
 final class TipherethAddPorterContextEvent extends TipherethEvent {

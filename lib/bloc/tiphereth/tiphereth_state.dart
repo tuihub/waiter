@@ -3,14 +3,12 @@ part of 'tiphereth_bloc.dart';
 @MappableClass(generateMethods: GenerateMethods.copy)
 class TipherethState with TipherethStateMappable {
   late List<Account>? accounts;
-  late List<Porter>? porters;
-  late List<PorterGroup>? porterGroups;
+  late List<PorterDigest>? porterGroups;
   late List<PorterContext>? porterContexts;
   late List<UserSession>? sessions;
 
   TipherethState({
     this.accounts,
-    this.porters,
     this.porterGroups,
     this.porterContexts,
     this.sessions,
@@ -18,12 +16,11 @@ class TipherethState with TipherethStateMappable {
 
   TipherethState.clone(TipherethState other)
       : accounts = other.accounts,
-        porters = other.porters,
         porterGroups = other.porterGroups,
         porterContexts = other.porterContexts,
         sessions = other.sessions;
 
-  PorterGroup? getNotifyDestinationProvider(String id) {
+  PorterDigest? getNotifyDestinationProvider(String id) {
     try {
       return porterGroups?.firstWhere((element) =>
           element.featureSummary.notifyDestinations.any((e) => e.id == id));
@@ -59,11 +56,6 @@ class TipherethEventState extends TipherethState with EventStatusMixin {
   final String? msg;
 }
 
-class TipherethAddUserState extends TipherethEventState {
-  TipherethAddUserState(super.state, super.statusCode, {super.msg})
-      : super.clone();
-}
-
 class TipherethEditUserState extends TipherethEventState {
   TipherethEditUserState(super.state, super.statusCode, {super.msg})
       : super.clone();
@@ -81,16 +73,6 @@ class TipherethLinkAccountState extends TipherethEventState {
 
 class TipherethUnLinkAccountState extends TipherethEventState {
   TipherethUnLinkAccountState(super.state, super.statusCode, {super.msg})
-      : super.clone();
-}
-
-class TipherethLoadPortersState extends TipherethEventState {
-  TipherethLoadPortersState(super.state, super.statusCode, {super.msg})
-      : super.clone();
-}
-
-class TipherethEditPorterState extends TipherethEventState {
-  TipherethEditPorterState(super.state, super.statusCode, {super.msg})
       : super.clone();
 }
 

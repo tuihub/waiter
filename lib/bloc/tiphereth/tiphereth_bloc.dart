@@ -4,8 +4,8 @@ import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/common_model.dart';
@@ -40,19 +40,6 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
     on<_TipherethSwitchServerEvent>((event, emit) async {
       emit(TipherethState());
     });
-
-    on<TipherethAddUserEvent>((event, emit) async {
-      emit(TipherethAddUserState(state, EventStatus.processing));
-      final resp = await _api.get(event.context.serverID).doRequest(
-            (client) => client.createUser,
-            CreateUserRequest(user: event.user),
-          );
-      if (resp case Err()) {
-        emit(TipherethAddUserState(state, EventStatus.failed, msg: resp.error));
-        return;
-      }
-      emit(TipherethAddUserState(state, EventStatus.success));
-    }, transformer: droppable());
 
     on<TipherethEditUserEvent>((event, emit) async {
       emit(TipherethEditUserState(state, EventStatus.processing));
@@ -91,10 +78,8 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       final resp = await _api.get(event.context.serverID).doRequest(
             (client) => client.linkAccount,
             LinkAccountRequest(
-              accountId: AccountID(
-                platform: event.platform,
-                platformAccountId: event.platformAccountID,
-              ),
+              platform: event.platform,
+              platformAccountId: event.platformAccountID,
             ),
           );
       if (resp case Err()) {
@@ -114,10 +99,8 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       final resp = await _api.get(event.context.serverID).doRequest(
             (client) => client.unLinkAccount,
             UnLinkAccountRequest(
-              accountId: AccountID(
-                platform: event.platform,
-                platformAccountId: event.platformAccountID,
-              ),
+              platform: event.platform,
+              platformAccountId: event.platformAccountID,
             ),
           );
       if (resp case Err()) {
@@ -127,50 +110,6 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
       }
       add(TipherethGetAccountsEvent(event.context));
       emit(TipherethUnLinkAccountState(
-        state,
-        EventStatus.success,
-      ));
-    }, transformer: droppable());
-
-    on<TipherethLoadPortersEvent>((event, emit) async {
-      emit(TipherethLoadPortersState(state, EventStatus.processing));
-      final resp = await _api.get(event.context.serverID).doRequest(
-            (client) => client.listPorters,
-            ListPortersRequest(
-              paging: PagingRequest(
-                pageSize: Int64(100),
-                pageNum: Int64(1),
-              ),
-            ),
-          );
-      switch (resp) {
-        case Err():
-          emit(TipherethLoadPortersState(state, EventStatus.failed,
-              msg: resp.error));
-        case Ok():
-          emit(TipherethLoadPortersState(
-            state.copyWith(porters: resp.v.porters),
-            EventStatus.success,
-          ));
-      }
-    }, transformer: droppable());
-
-    on<TipherethEditPorterEvent>((event, emit) async {
-      emit(TipherethEditPorterState(state, EventStatus.processing));
-      final resp = await _api.get(event.context.serverID).doRequest(
-            (client) => client.updatePorterStatus,
-            UpdatePorterStatusRequest(
-              porterId: event.porterID,
-              status: event.status,
-            ),
-          );
-      if (resp case Err()) {
-        emit(TipherethEditPorterState(state, EventStatus.failed,
-            msg: resp.error));
-        return;
-      }
-      add(TipherethLoadPortersEvent(event.context));
-      emit(TipherethEditPorterState(
         state,
         EventStatus.success,
       ));
@@ -229,8 +168,8 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         return;
       }
       final resp2 = await _api.get(event.context.serverID).doRequest(
-            (client) => client.listPorterGroups,
-            ListPorterGroupsRequest(
+            (client) => client.listPorterDigests,
+            ListPorterDigestsRequest(
               paging: PagingRequest(
                 pageSize: Int64(1000),
                 pageNum: Int64(1),
@@ -288,23 +227,5 @@ class TipherethBloc extends Bloc<TipherethEvent, TipherethState> {
         EventStatus.success,
       ));
     }, transformer: droppable());
-  }
-
-  Future<ListUsersResponse> listUsers(
-    int pageSize,
-    int pageNum,
-    List<UserType> typeFilter,
-    List<UserStatus> statusFilter,
-  ) async {
-    final resp = await _api.get(DIService.instance.currentServer).doRequest(
-          (client) => client.listUsers,
-          ListUsersRequest(
-            paging: PagingRequest(
-                pageSize: Int64(pageSize), pageNum: Int64(pageNum)),
-            typeFilter: typeFilter,
-            statusFilter: statusFilter,
-          ),
-        );
-    return resp.unwrap(); // TODO: handle error
   }
 }

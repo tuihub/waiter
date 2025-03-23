@@ -13,7 +13,7 @@ class MainState with MainStateMappable {
   ConnectionStatus? currentConnectionStatus;
   User? currentUser;
   Map<ServerID, ServerConfig> knownServers;
-  Map<ServerID, ServerInformation> knownServerInfos;
+  Map<ServerID, ServerBinarySummary> knownServerInfos;
   Map<ServerID, FeatureSummary> knownServerFeatureSummaries;
   Map<ServerID, ServerInstanceSummary> knownServerInstanceSummaries;
 
@@ -21,7 +21,7 @@ class MainState with MainStateMappable {
   bool get isNotLocal => !isLocal;
   ServerConfig? get serverConfig =>
       currentServer != null ? knownServers[currentServer!] : null;
-  ServerInformation? get serverInfo =>
+  ServerBinarySummary? get serverInfo =>
       currentServer != null ? knownServerInfos[currentServer!] : null;
   FeatureSummary? get serverFeatureSummary => currentServer != null
       ? knownServerFeatureSummaries[currentServer!]

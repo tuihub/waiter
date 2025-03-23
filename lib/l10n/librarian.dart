@@ -1,7 +1,7 @@
-import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pbenum.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pbenum.dart';
+import 'package:tuihub_protos/librarian/porter/v1/gebura.pbenum.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/netzach.pbenum.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/yesod.pb.dart';
 
 import 'l10n.dart';
 
@@ -153,18 +153,6 @@ String systemNotificationLevelString(SystemNotificationLevel level) {
       return S.current.SYSTEM_NOTIFICATION_LEVEL_INFO;
     case SystemNotificationLevel.SYSTEM_NOTIFICATION_LEVEL_ONGOING:
       return S.current.SYSTEM_NOTIFICATION_LEVEL_ONGOING;
-  }
-  return '';
-}
-
-String systemNotificationTypeString(SystemNotificationType type) {
-  switch (type) {
-    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED:
-      return S.current.SYSTEM_NOTIFICATION_TYPE_UNSPECIFIED;
-    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_SYSTEM:
-      return S.current.SYSTEM_NOTIFICATION_TYPE_SYSTEM;
-    case SystemNotificationType.SYSTEM_NOTIFICATION_TYPE_USER:
-      return S.current.SYSTEM_NOTIFICATION_TYPE_USER;
   }
   return '';
 }

@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
@@ -272,7 +271,7 @@ class FeatureRequestFormField extends StatefulWidget {
   final List<FeatureFlag> featureFlags;
   final JsonFormController jsonFormController;
   final void Function(FeatureRequest) onChanged;
-  final PorterGroup? Function(String) getFeatureProvider;
+  final PorterDigest? Function(String) getFeatureProvider;
   final FeatureRequest? initialValue;
   final bool flagReadOnly;
   final double spacing;
@@ -289,7 +288,7 @@ class _FeatureRequestFormFieldState extends State<FeatureRequestFormField> {
   String config = '{}';
   String? region;
   InternalID? contextId;
-  PorterGroup? porterGroup;
+  PorterDigest? porterGroup;
   int buildCounter = 0;
 
   @override

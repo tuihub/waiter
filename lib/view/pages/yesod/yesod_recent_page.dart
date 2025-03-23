@@ -8,7 +8,7 @@ import 'package:keframe/keframe.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/yesod.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/yesod/yesod_bloc.dart';

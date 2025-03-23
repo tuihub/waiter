@@ -1,6 +1,6 @@
 import 'package:dao/dao.dart';
 import 'package:grpc/grpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/sephirah_service.pbgrpc.dart';
 
 import 'unsupported.dart'
     if (dart.library.ffi) '_grpc.dart'

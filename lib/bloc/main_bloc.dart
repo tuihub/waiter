@@ -6,8 +6,8 @@ import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/base.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
@@ -16,7 +16,6 @@ import '../common/platform.dart';
 import '../consts.dart';
 import '../l10n/l10n.dart';
 import '../model/common_model.dart';
-import '../model/tiphereth_model.dart';
 import '../repo/main_repo.dart';
 import '../service/di_service.dart';
 import '../service/librarian_service.dart';
@@ -112,20 +111,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         if (resp case Ok()) {
           final info = resp.v;
           final knownServerInfos = {
-            event.server.serverID: ServerInformation(
-              sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
-              buildVersion: info.serverBinarySummary.buildVersion,
-              buildDate: info.serverBinarySummary.buildDate,
-              protocolVersion: info.protocolSummary.version,
-            ),
+            event.server.serverID: info.serverInformation.serverBinarySummary,
             ...state.knownServerInfos,
           };
           final knownServerFeatureSummaries = {
-            event.server.serverID: info.featureSummary,
+            event.server.serverID: info.serverInformation.featureSummary,
             ...state.knownServerFeatureSummaries,
           };
           final knownServerInstanceSummaries = {
-            event.server.serverID: info.serverInstanceSummary,
+            event.server.serverID: info.serverInformation.serverInstanceSummary,
             ...state.knownServerInstanceSummaries,
           };
           newState = newState.copyWith(
@@ -192,20 +186,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         if (resp case Ok()) {
           final info = resp.v;
           final knownServerInfos = {
-            currentServer: ServerInformation(
-              sourceCodeAddress: info.serverBinarySummary.sourceCodeAddress,
-              buildVersion: info.serverBinarySummary.buildVersion,
-              buildDate: info.serverBinarySummary.buildDate,
-              protocolVersion: info.protocolSummary.version,
-            ),
+            currentServer: info.serverInformation.serverBinarySummary,
             ...state.knownServerInfos,
           };
           final knownServerFeatureSummaries = {
-            currentServer: info.featureSummary,
+            currentServer: info.serverInformation.featureSummary,
             ...state.knownServerFeatureSummaries,
           };
           final knownServerInstanceSummaries = {
-            currentServer: info.serverInstanceSummary,
+            currentServer: info.serverInformation.serverInstanceSummary,
             ...state.knownServerInstanceSummaries,
           };
           newState = newState.copyWith(

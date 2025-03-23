@@ -23,11 +23,8 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
   static List<Account>? _$accounts(TipherethState v) => v.accounts;
   static const Field<TipherethState, List<Account>> _f$accounts =
       Field('accounts', _$accounts, opt: true);
-  static List<Porter>? _$porters(TipherethState v) => v.porters;
-  static const Field<TipherethState, List<Porter>> _f$porters =
-      Field('porters', _$porters, opt: true);
-  static List<PorterGroup>? _$porterGroups(TipherethState v) => v.porterGroups;
-  static const Field<TipherethState, List<PorterGroup>> _f$porterGroups =
+  static List<PorterDigest>? _$porterGroups(TipherethState v) => v.porterGroups;
+  static const Field<TipherethState, List<PorterDigest>> _f$porterGroups =
       Field('porterGroups', _$porterGroups, opt: true);
   static List<PorterContext>? _$porterContexts(TipherethState v) =>
       v.porterContexts;
@@ -40,7 +37,6 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
   @override
   final MappableFields<TipherethState> fields = const {
     #accounts: _f$accounts,
-    #porters: _f$porters,
     #porterGroups: _f$porterGroups,
     #porterContexts: _f$porterContexts,
     #sessions: _f$sessions,
@@ -49,7 +45,6 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
   static TipherethState _instantiate(DecodingData data) {
     return TipherethState(
         accounts: data.dec(_f$accounts),
-        porters: data.dec(_f$porters),
         porterGroups: data.dec(_f$porterGroups),
         porterContexts: data.dec(_f$porterContexts),
         sessions: data.dec(_f$sessions));
@@ -74,17 +69,15 @@ extension TipherethStateValueCopy<$R, $Out>
 abstract class TipherethStateCopyWith<$R, $In extends TipherethState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, Account, ObjectCopyWith<$R, Account, Account>>? get accounts;
-  ListCopyWith<$R, Porter, ObjectCopyWith<$R, Porter, Porter>>? get porters;
-  ListCopyWith<$R, PorterGroup, ObjectCopyWith<$R, PorterGroup, PorterGroup>>?
-      get porterGroups;
+  ListCopyWith<$R, PorterDigest,
+      ObjectCopyWith<$R, PorterDigest, PorterDigest>>? get porterGroups;
   ListCopyWith<$R, PorterContext,
       ObjectCopyWith<$R, PorterContext, PorterContext>>? get porterContexts;
   ListCopyWith<$R, UserSession, ObjectCopyWith<$R, UserSession, UserSession>>?
       get sessions;
   $R call(
       {List<Account>? accounts,
-      List<Porter>? porters,
-      List<PorterGroup>? porterGroups,
+      List<PorterDigest>? porterGroups,
       List<PorterContext>? porterContexts,
       List<UserSession>? sessions});
   TipherethStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -108,15 +101,8 @@ class _TipherethStateCopyWithImpl<$R, $Out>
               (v) => call(accounts: v))
           : null;
   @override
-  ListCopyWith<$R, Porter, ObjectCopyWith<$R, Porter, Porter>>? get porters =>
-      $value.porters != null
-          ? ListCopyWith(
-              $value.porters!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(porters: v))
-          : null;
-  @override
-  ListCopyWith<$R, PorterGroup, ObjectCopyWith<$R, PorterGroup, PorterGroup>>?
+  ListCopyWith<$R, PorterDigest,
+          ObjectCopyWith<$R, PorterDigest, PorterDigest>>?
       get porterGroups => $value.porterGroups != null
           ? ListCopyWith(
               $value.porterGroups!,
@@ -143,13 +129,11 @@ class _TipherethStateCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? accounts = $none,
-          Object? porters = $none,
           Object? porterGroups = $none,
           Object? porterContexts = $none,
           Object? sessions = $none}) =>
       $apply(FieldCopyWithData({
         if (accounts != $none) #accounts: accounts,
-        if (porters != $none) #porters: porters,
         if (porterGroups != $none) #porterGroups: porterGroups,
         if (porterContexts != $none) #porterContexts: porterContexts,
         if (sessions != $none) #sessions: sessions
@@ -157,7 +141,6 @@ class _TipherethStateCopyWithImpl<$R, $Out>
   @override
   TipherethState $make(CopyWithData data) => TipherethState(
       accounts: data.get(#accounts, or: $value.accounts),
-      porters: data.get(#porters, or: $value.porters),
       porterGroups: data.get(#porterGroups, or: $value.porterGroups),
       porterContexts: data.get(#porterContexts, or: $value.porterContexts),
       sessions: data.get(#sessions, or: $value.sessions));

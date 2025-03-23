@@ -1,7 +1,7 @@
 import 'package:dao/dao.dart';
 import 'package:fixnum/fixnum.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../model/common_model.dart';
 import '../service/di_service.dart';

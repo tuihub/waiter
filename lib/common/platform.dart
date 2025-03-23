@@ -1,6 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 import 'package:universal_io/io.dart' as io;
 
 import '../l10n/l10n.dart';

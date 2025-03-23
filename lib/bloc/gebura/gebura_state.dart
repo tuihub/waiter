@@ -53,7 +53,7 @@ class GeburaSearchAppInfosState extends GeburaEventState {
       {super.msg, this.apps})
       : super.clone();
 
-  final List<AppInfoMixed>? apps;
+  final List<AppInfo>? apps;
 }
 
 class GeburaPurchaseState extends GeburaEventState {

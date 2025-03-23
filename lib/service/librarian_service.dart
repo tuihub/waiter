@@ -8,9 +8,9 @@ import 'package:option_result/result.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tuihub_protos/google/protobuf/duration.pb.dart' as duration_pb;
 import 'package:tuihub_protos/google/protobuf/timestamp.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pbgrpc.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/sephirah_service.pbgrpc.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../common/platform.dart';
 import '../consts.dart';

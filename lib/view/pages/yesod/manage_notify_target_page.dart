@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_jsonschema_builder/flutter_jsonschema_builder.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/netzach.pb.dart';
 import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 

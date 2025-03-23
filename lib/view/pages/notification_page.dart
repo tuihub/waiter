@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/netzach.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../bloc/netzach/netzach_bloc.dart';

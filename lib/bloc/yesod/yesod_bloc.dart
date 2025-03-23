@@ -4,8 +4,9 @@ import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/yesod.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/yesod.pb.dart';
 import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 import '../../common/bloc_event_status_mixin.dart';
 import '../../model/common_model.dart';

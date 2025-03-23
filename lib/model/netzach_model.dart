@@ -1,5 +1,5 @@
-import 'package:tuihub_protos/librarian/sephirah/v1/netzach.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/netzach.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 
 class NotifyFlowSourceModel {
   NotifyFlowSourceModel({

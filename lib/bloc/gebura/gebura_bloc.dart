@@ -4,8 +4,8 @@ import 'package:dao/dao.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/gebura.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:uuid/uuid.dart';
 

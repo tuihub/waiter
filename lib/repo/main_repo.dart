@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dao/dao.dart';
 import 'package:flutter/material.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/sephirah.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/sephirah_service.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 import 'package:uuid/uuid.dart';
 

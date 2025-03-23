@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/gebura.pb.dart';
+import 'package:tuihub_protos/librarian/v1/wellknown.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -26,7 +27,7 @@ class GeburaStoreDetail extends StatelessWidget {
       // final apps =
       //     state.appInfoMap != null ? state.appInfoMap![appID.id] : null;
       // final app = apps != null ? mixAppInfo(apps) : null;
-      const AppInfoMixed? app = null;
+      const AppInfo? app = null;
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(children: [
@@ -138,9 +139,9 @@ class GeburaStoreDetail extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('开发商：${app.details.developer}'),
-                                      Text('发行商：${app.details.publisher}'),
-                                      Text('发行日期：${app.details.releaseDate}'),
+                                      Text('开发商：${app.developer}'),
+                                      Text('发行商：${app.publisher}'),
+                                      // Text('发行日期：${app.releaseDate}'),
                                     ],
                                   ),
                                 ],
@@ -157,7 +158,7 @@ class GeburaStoreDetail extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),
                                   child: HtmlWidget(
-                                    app.details.description,
+                                    app.description,
                                     buildAsync: false,
                                     renderMode: RenderMode.column,
                                     onErrorBuilder: (context, element, error) =>
@@ -207,11 +208,11 @@ class PurchaseAppDialog extends StatelessWidget {
           ),
           actions: [
             UniversalDialogAction(
-              onPressed: () {
-                context
-                    .read<GeburaBloc>()
-                    .add(GeburaPurchaseEvent(null, app.id));
-              },
+              // onPressed: () {
+              //   context
+              //       .read<GeburaBloc>()
+              //       .add(GeburaPurchaseEvent(null, app.id));
+              // },
               isPrimary: true,
               child: state is GeburaPurchaseState && state.processing
                   ? const CircularProgressIndicator()

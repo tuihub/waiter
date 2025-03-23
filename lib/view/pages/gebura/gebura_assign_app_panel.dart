@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/gebura.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/gebura/gebura_bloc.dart';
@@ -60,7 +60,7 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
         //             element.id.id.toInt() == state.selectedLibraryItem!)
         //         : null;
         // TODO: Implement this
-        final app = AppInfoMixed();
+        final app = AppInfo();
         return RightPanelForm(
           title: const Text('设置应用信息'),
           formFields: [
@@ -198,14 +198,14 @@ class _GeburaAssignAppPanelState extends State<GeburaAssignAppPanel> {
                   if (selectedAppInfo == null) {
                     UniversalToast.show(context, message: '未选择应用信息');
                   } else {
-                    context
-                        .read<GeburaBloc>()
-                        .add(GeburaAssignAppWithNewInfoEvent(
-                          null,
-                          app.id,
-                          selectedAppInfo!.source,
-                          selectedAppInfo!.sourceAppId,
-                        ));
+                    // context
+                    //     .read<GeburaBloc>()
+                    //     .add(GeburaAssignAppWithNewInfoEvent(
+                    //       null,
+                    //       app.id,
+                    //       selectedAppInfo!.source,
+                    //       selectedAppInfo!.sourceAppId,
+                    //     ));
                   }
                 },
           submitting: state is GeburaAssignAppInfoState && state.processing,

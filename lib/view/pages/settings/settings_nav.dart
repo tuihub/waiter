@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
 import 'package:universal_ui/universal_ui.dart';
 
 import '../../../bloc/main_bloc.dart';
@@ -75,65 +74,6 @@ class SettingsNav extends StatelessWidget {
                             selected:
                                 function == SettingsFunctions.porterContext,
                           ),
-                        if (state.isNotLocal)
-                          if (state.currentUser?.type ==
-                              UserType.USER_TYPE_ADMIN)
-                            UniversalExpansionTile(
-                              title: const Text(
-                                '服务端管理',
-                              ),
-                              childrenPadding: const EdgeInsets.only(left: 12),
-                              children: [
-                                UniversalListTile(
-                                  title: Text(S.of(context).pluginManage),
-                                  onTap: () {
-                                    const SettingsFunctionRoute(
-                                            SettingsFunctions.porter)
-                                        .go(context);
-                                    OverlappingPanels.of(context)
-                                        ?.reveal(RevealSide.main);
-                                  },
-                                  selected:
-                                      function == SettingsFunctions.porter,
-                                ),
-                                UniversalListTile(
-                                  title: const Text('用户管理'),
-                                  onTap: () {
-                                    const SettingsFunctionRoute(
-                                            SettingsFunctions.user)
-                                        .go(context);
-                                    OverlappingPanels.of(context)
-                                        ?.reveal(RevealSide.main);
-                                  },
-                                  selected: function == SettingsFunctions.user,
-                                ),
-                                UniversalListTile(
-                                  title: const Text('应用管理'),
-                                  onTap: () {
-                                    const SettingsFunctionRoute(
-                                            SettingsFunctions.app)
-                                        .go(context);
-                                    OverlappingPanels.of(context)
-                                        ?.reveal(RevealSide.main);
-                                  },
-                                  selected: function == SettingsFunctions.app,
-                                ),
-                                UniversalListTile(
-                                  title: const Text('应用包管理'),
-                                  onTap: () {
-                                    const SettingsFunctionRoute(
-                                            SettingsFunctions.appPackage)
-                                        .go(context);
-                                    OverlappingPanels.of(context)
-                                        ?.reveal(RevealSide.main);
-                                  },
-                                  selected:
-                                      function == SettingsFunctions.appPackage,
-                                ),
-                              ],
-                            )
-                          else
-                            const SizedBox(),
                       ],
                     ),
                   );

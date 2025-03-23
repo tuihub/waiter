@@ -5,9 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/gebura.pb.dart';
-import 'package:tuihub_protos/librarian/sephirah/v1/tiphereth.pb.dart';
-import 'package:tuihub_protos/librarian/v1/common.pb.dart';
+import 'package:tuihub_protos/librarian/sephirah/v1/sephirah/tiphereth.pb.dart';
 
 import 'bloc/chesed/chesed_bloc.dart';
 import 'bloc/main_bloc.dart';
@@ -28,16 +26,6 @@ import 'view/pages/image_viewer.dart';
 import 'view/pages/init_page.dart';
 import 'view/pages/notification_page.dart';
 import 'view/pages/settings/about_page.dart';
-import 'view/pages/settings/admin/app_add_panel.dart';
-import 'view/pages/settings/admin/app_edit_panel.dart';
-import 'view/pages/settings/admin/app_manage_page.dart';
-import 'view/pages/settings/admin/app_package_add_panel.dart';
-import 'view/pages/settings/admin/app_package_edit_panel.dart';
-import 'view/pages/settings/admin/app_package_manage_page.dart';
-import 'view/pages/settings/admin/porter_manage_page.dart';
-import 'view/pages/settings/admin/user_add_panel.dart';
-import 'view/pages/settings/admin/user_edit_panel.dart';
-import 'view/pages/settings/admin/user_manage_page.dart';
 import 'view/pages/settings/client/client_setting_page.dart';
 import 'view/pages/settings/porter_context_page.dart';
 import 'view/pages/settings/server_select/server_select_page.dart';
@@ -105,30 +93,9 @@ enum GeburaFunctions {
   librarySettings,
 }
 
-enum SettingsFunctions {
-  client,
-  server,
-  session,
-  porterContext,
-  porter,
-  user,
-  app,
-  appPackage,
-  about
-}
+enum SettingsFunctions { client, server, session, porterContext, about }
 
-enum SettingsActions {
-  sessionEdit,
-  porterContextAdd,
-  porterContextEdit,
-  porterEdit,
-  userEdit,
-  userAdd,
-  appEdit,
-  appAdd,
-  appPackageEdit,
-  appPackageAdd
-}
+enum SettingsActions { sessionEdit, porterContextAdd, porterContextEdit }
 
 final GlobalKey<NavigatorState> _tipherethNavigateKey =
     GlobalKey<NavigatorState>();
@@ -565,10 +532,6 @@ class SettingsFunctionRoute extends GoRouteData {
       SettingsFunctions.server: const ServerSelectPage(),
       SettingsFunctions.session: const SessionManagePage(),
       SettingsFunctions.porterContext: const PorterContextManagePage(),
-      SettingsFunctions.porter: const PorterManagePage(),
-      SettingsFunctions.user: const UserManagePage(),
-      SettingsFunctions.app: const AppManagePage(),
-      SettingsFunctions.appPackage: const AppPackageManagePage(),
       SettingsFunctions.about: const AboutPage(),
     };
     final settingsActions = {
@@ -577,8 +540,8 @@ class SettingsFunctionRoute extends GoRouteData {
       ),
       SettingsActions.porterContextAdd: PorterContextAddPanel(
         key: ValueKey($extra),
-        porterGroup:
-            $extra is PorterGroup ? $extra! as PorterGroup : PorterGroup(),
+        porterDigest:
+            $extra is PorterDigest ? $extra! as PorterDigest : PorterDigest(),
       ),
       SettingsActions.porterContextEdit: PorterContextEditPanel(
         key: ValueKey($extra),
@@ -586,31 +549,11 @@ class SettingsFunctionRoute extends GoRouteData {
             ? $extra! as PorterContext
             : PorterContext(),
       ),
-      SettingsActions.porterEdit: PorterEditPanel(
-        porter: $extra is Porter ? $extra! as Porter : Porter(),
-      ),
-      SettingsActions.userAdd: const UserAddPanel(),
-      SettingsActions.userEdit: UserEditPanel(
-        key: ValueKey($extra),
-        user: $extra is User ? $extra! as User : User(),
-      ),
-      SettingsActions.appAdd: const AppAddPanel(),
-      SettingsActions.appEdit: AppEditPanel(
-        key: ValueKey($extra),
-        app: $extra is AppInfo ? $extra! as AppInfo : AppInfo(),
-      ),
-      SettingsActions.appPackageAdd: const AppPackageAddPanel(),
-      SettingsActions.appPackageEdit: AppPackageEditPanel(
-        key: ValueKey($extra),
-        appPackage: $extra is App ? $extra! as App : App(),
-      ),
     };
     if (action == null) {
       switch (function) {
         case SettingsFunctions.session:
           context.read<TipherethBloc>().add(TipherethLoadSessionsEvent(null));
-        case SettingsFunctions.porter:
-          context.read<TipherethBloc>().add(TipherethLoadPortersEvent(null));
         case SettingsFunctions.porterContext:
           context
               .read<TipherethBloc>()
