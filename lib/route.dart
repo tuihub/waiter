@@ -474,7 +474,7 @@ class ChesedRootRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    context.read<ChesedBloc>().add(ChesedSearchImagesEvent(''));
+    context.read<ChesedBloc>().add(ChesedSearchImagesEvent(null, ''));
     return const NoTransitionPage(
       child: ModuleFramePage(
         leftPart: ChesedHome(),

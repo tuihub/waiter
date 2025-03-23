@@ -34,9 +34,8 @@ class ChesedUploadState extends State<ChesedUpload> {
         actions: [
           UniversalDialogAction(
             onPressed: () {
-              context
-                  .read<ChesedBloc>()
-                  .add(ChesedUploadImageEvent(ChesedUploadImageType.pick));
+              context.read<ChesedBloc>().add(
+                  ChesedUploadImageEvent(null, ChesedUploadImageType.pick));
             },
             child: state is ChesedUploadImageState && state.processing
                 ? const CircularProgressIndicator()
@@ -45,9 +44,8 @@ class ChesedUploadState extends State<ChesedUpload> {
           if (PlatformHelper.isWindowsApp())
             UniversalDialogAction(
               onPressed: () {
-                context
-                    .read<ChesedBloc>()
-                    .add(ChesedUploadImageEvent(ChesedUploadImageType.capture));
+                context.read<ChesedBloc>().add(ChesedUploadImageEvent(
+                    null, ChesedUploadImageType.capture));
               },
               child: state is ChesedUploadImageState && state.processing
                   ? const CircularProgressIndicator()

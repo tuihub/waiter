@@ -70,9 +70,8 @@ class ChesedHome extends StatelessWidget {
                               splashColor: Theme.of(context).primaryColor,
                             )),
                         onEditingComplete: () {
-                          context
-                              .read<ChesedBloc>()
-                              .add(ChesedSearchImagesEvent(controller.text));
+                          context.read<ChesedBloc>().add(
+                              ChesedSearchImagesEvent(null, controller.text));
                         }),
                   );
                 }),
@@ -119,7 +118,7 @@ class ChesedHome extends StatelessWidget {
                                         ChesedImageViewWidget(imageUrl: item)),
                               ));
                             },
-                            child: Ink(
+                            child: Container(
                               decoration: BoxDecoration(
                                 borderRadius:
                                     UniversalUI.of(context).defaultBorderRadius,
@@ -132,7 +131,7 @@ class ChesedHome extends StatelessWidget {
                               ),
                             ));
                       }
-                      return Ink(
+                      return Container(
                         decoration: BoxDecoration(
                           borderRadius:
                               UniversalUI.of(context).defaultBorderRadius,

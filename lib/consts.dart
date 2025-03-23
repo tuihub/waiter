@@ -31,11 +31,11 @@ final modules = [
   }, (context) {
     const GeburaRootRoute().go(context);
   }),
-  // Module(ModuleName.chesed, (context) {
-  //   return UniversalIcon(context).chesed;
-  // }, (context) {
-  //   const ChesedRootRoute().go(context);
-  // }),
+  Module(ModuleName.chesed, (context) {
+    return UniversalIcon(context).chesed;
+  }, (context) {
+    const ChesedRootRoute().go(context);
+  }),
   Module(ModuleName.notification, (context) {
     return UniversalIcon(context).notification;
   }, (context) {

@@ -1,30 +1,19 @@
 part of 'chesed_bloc.dart';
 
-class ChesedState {
-  List<String>? imageUrls;
+@MappableClass(generateMethods: GenerateMethods.copy)
+class ChesedState with ChesedStateMappable {
+  late List<String>? imageUrls;
 
   ChesedState({
     this.imageUrls,
   });
 
-  ChesedState copyWith({
-    List<String>? imageUrls,
-  }) {
-    return ChesedState(
-      imageUrls: imageUrls ?? this.imageUrls,
-    );
-  }
-
-  void _from(ChesedState other) {
-    imageUrls = other.imageUrls;
-  }
+  ChesedState.clone(ChesedState other) : imageUrls = other.imageUrls;
 }
 
-class ChesedSearchImagesState extends ChesedState with EventStatusMixin {
-  ChesedSearchImagesState(ChesedState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class ChesedEventState extends ChesedState with EventStatusMixin {
+  ChesedEventState.clone(super.state, this.statusCode, {this.msg})
+      : super.clone();
 
   @override
   final EventStatus? statusCode;
@@ -32,14 +21,12 @@ class ChesedSearchImagesState extends ChesedState with EventStatusMixin {
   final String? msg;
 }
 
-class ChesedUploadImageState extends ChesedState with EventStatusMixin {
-  ChesedUploadImageState(ChesedState state, this.statusCode, {this.msg})
-      : super() {
-    _from(state);
-  }
+class ChesedSearchImagesState extends ChesedEventState {
+  ChesedSearchImagesState(super.state, super.statusCode, {super.msg})
+      : super.clone();
+}
 
-  @override
-  final EventStatus? statusCode;
-  @override
-  final String? msg;
+class ChesedUploadImageState extends ChesedEventState {
+  ChesedUploadImageState(super.state, super.statusCode, {super.msg})
+      : super.clone();
 }
