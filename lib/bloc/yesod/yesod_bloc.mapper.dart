@@ -65,13 +65,14 @@ class YesodStateMapper extends ClassMapperBase<YesodState> {
 
 mixin YesodStateMappable {
   YesodStateCopyWith<YesodState, YesodState, YesodState> get copyWith =>
-      _YesodStateCopyWithImpl(this as YesodState, $identity, $identity);
+      _YesodStateCopyWithImpl<YesodState, YesodState>(
+          this as YesodState, $identity, $identity);
 }
 
 extension YesodStateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, YesodState, $Out> {
   YesodStateCopyWith<$R, YesodState, $Out> get $asYesodState =>
-      $base.as((v, t, t2) => _YesodStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _YesodStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class YesodStateCopyWith<$R, $In extends YesodState, $Out>
@@ -174,5 +175,5 @@ class _YesodStateCopyWithImpl<$R, $Out>
   @override
   YesodStateCopyWith<$R2, YesodState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _YesodStateCopyWithImpl($value, $cast, t);
+      _YesodStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

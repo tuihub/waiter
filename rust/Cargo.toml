@@ -9,7 +9,7 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 anyhow = "1.0"
 chrono = "0.4.39"
-flutter_rust_bridge = "=2.7.0"
+flutter_rust_bridge = "=2.10.0"
 glob = "0.3.1"
 image = "0.25.5"
 itertools = "0.12.1"

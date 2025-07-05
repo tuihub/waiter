@@ -91,7 +91,8 @@ mixin YesodFeedItemListConfigMappable {
 
   YesodFeedItemListConfigCopyWith<YesodFeedItemListConfig,
           YesodFeedItemListConfig, YesodFeedItemListConfig>
-      get copyWith => _YesodFeedItemListConfigCopyWithImpl(
+      get copyWith => _YesodFeedItemListConfigCopyWithImpl<
+              YesodFeedItemListConfig, YesodFeedItemListConfig>(
           this as YesodFeedItemListConfig, $identity, $identity);
   @override
   String toString() {
@@ -115,8 +116,8 @@ mixin YesodFeedItemListConfigMappable {
 extension YesodFeedItemListConfigValueCopy<$R, $Out>
     on ObjectCopyWith<$R, YesodFeedItemListConfig, $Out> {
   YesodFeedItemListConfigCopyWith<$R, YesodFeedItemListConfig, $Out>
-      get $asYesodFeedItemListConfig => $base
-          .as((v, t, t2) => _YesodFeedItemListConfigCopyWithImpl(v, t, t2));
+      get $asYesodFeedItemListConfig => $base.as((v, t, t2) =>
+          _YesodFeedItemListConfigCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class YesodFeedItemListConfigCopyWith<
@@ -173,5 +174,5 @@ class _YesodFeedItemListConfigCopyWithImpl<$R, $Out>
   @override
   YesodFeedItemListConfigCopyWith<$R2, YesodFeedItemListConfig, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _YesodFeedItemListConfigCopyWithImpl($value, $cast, t);
+          _YesodFeedItemListConfigCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

@@ -129,7 +129,7 @@ mixin CommonAppScanMappable {
   }
 
   CommonAppScanCopyWith<CommonAppScan, CommonAppScan, CommonAppScan>
-      get copyWith => _CommonAppScanCopyWithImpl(
+      get copyWith => _CommonAppScanCopyWithImpl<CommonAppScan, CommonAppScan>(
           this as CommonAppScan, $identity, $identity);
   @override
   String toString() {
@@ -153,7 +153,7 @@ mixin CommonAppScanMappable {
 extension CommonAppScanValueCopy<$R, $Out>
     on ObjectCopyWith<$R, CommonAppScan, $Out> {
   CommonAppScanCopyWith<$R, CommonAppScan, $Out> get $asCommonAppScan =>
-      $base.as((v, t, t2) => _CommonAppScanCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _CommonAppScanCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CommonAppScanCopyWith<$R, $In extends CommonAppScan, $Out>
@@ -279,7 +279,7 @@ class _CommonAppScanCopyWithImpl<$R, $Out>
   @override
   CommonAppScanCopyWith<$R2, CommonAppScan, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _CommonAppScanCopyWithImpl($value, $cast, t);
+      _CommonAppScanCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CommonAppFolderScanResultMapper
@@ -362,7 +362,8 @@ mixin CommonAppFolderScanResultMappable {
 
   CommonAppFolderScanResultCopyWith<CommonAppFolderScanResult,
           CommonAppFolderScanResult, CommonAppFolderScanResult>
-      get copyWith => _CommonAppFolderScanResultCopyWithImpl(
+      get copyWith => _CommonAppFolderScanResultCopyWithImpl<
+              CommonAppFolderScanResult, CommonAppFolderScanResult>(
           this as CommonAppFolderScanResult, $identity, $identity);
   @override
   String toString() {
@@ -386,8 +387,8 @@ mixin CommonAppFolderScanResultMappable {
 extension CommonAppFolderScanResultValueCopy<$R, $Out>
     on ObjectCopyWith<$R, CommonAppFolderScanResult, $Out> {
   CommonAppFolderScanResultCopyWith<$R, CommonAppFolderScanResult, $Out>
-      get $asCommonAppFolderScanResult => $base
-          .as((v, t, t2) => _CommonAppFolderScanResultCopyWithImpl(v, t, t2));
+      get $asCommonAppFolderScanResult => $base.as((v, t, t2) =>
+          _CommonAppFolderScanResultCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CommonAppFolderScanResultCopyWith<
@@ -465,7 +466,7 @@ class _CommonAppFolderScanResultCopyWithImpl<$R, $Out>
   @override
   CommonAppFolderScanResultCopyWith<$R2, CommonAppFolderScanResult, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _CommonAppFolderScanResultCopyWithImpl($value, $cast, t);
+          _CommonAppFolderScanResultCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class InstalledCommonAppsMapper extends ClassMapperBase<InstalledCommonApps> {
@@ -535,9 +536,9 @@ mixin InstalledCommonAppsMappable {
   }
 
   InstalledCommonAppsCopyWith<InstalledCommonApps, InstalledCommonApps,
-          InstalledCommonApps>
-      get copyWith => _InstalledCommonAppsCopyWithImpl(
-          this as InstalledCommonApps, $identity, $identity);
+      InstalledCommonApps> get copyWith => _InstalledCommonAppsCopyWithImpl<
+          InstalledCommonApps, InstalledCommonApps>(
+      this as InstalledCommonApps, $identity, $identity);
   @override
   String toString() {
     return InstalledCommonAppsMapper.ensureInitialized()
@@ -560,8 +561,8 @@ mixin InstalledCommonAppsMappable {
 extension InstalledCommonAppsValueCopy<$R, $Out>
     on ObjectCopyWith<$R, InstalledCommonApps, $Out> {
   InstalledCommonAppsCopyWith<$R, InstalledCommonApps, $Out>
-      get $asInstalledCommonApps =>
-          $base.as((v, t, t2) => _InstalledCommonAppsCopyWithImpl(v, t, t2));
+      get $asInstalledCommonApps => $base.as(
+          (v, t, t2) => _InstalledCommonAppsCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class InstalledCommonAppsCopyWith<$R, $In extends InstalledCommonApps,
@@ -613,7 +614,7 @@ class _InstalledCommonAppsCopyWithImpl<$R, $Out>
   @override
   InstalledCommonAppsCopyWith<$R2, InstalledCommonApps, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _InstalledCommonAppsCopyWithImpl($value, $cast, t);
+          _InstalledCommonAppsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class CommonAppFolderScanResultDetailMapper
@@ -696,7 +697,8 @@ mixin CommonAppFolderScanResultDetailMappable {
 
   CommonAppFolderScanResultDetailCopyWith<CommonAppFolderScanResultDetail,
           CommonAppFolderScanResultDetail, CommonAppFolderScanResultDetail>
-      get copyWith => _CommonAppFolderScanResultDetailCopyWithImpl(
+      get copyWith => _CommonAppFolderScanResultDetailCopyWithImpl<
+              CommonAppFolderScanResultDetail, CommonAppFolderScanResultDetail>(
           this as CommonAppFolderScanResultDetail, $identity, $identity);
   @override
   String toString() {
@@ -721,8 +723,8 @@ extension CommonAppFolderScanResultDetailValueCopy<$R, $Out>
     on ObjectCopyWith<$R, CommonAppFolderScanResultDetail, $Out> {
   CommonAppFolderScanResultDetailCopyWith<$R, CommonAppFolderScanResultDetail,
           $Out>
-      get $asCommonAppFolderScanResultDetail => $base.as(
-          (v, t, t2) => _CommonAppFolderScanResultDetailCopyWithImpl(v, t, t2));
+      get $asCommonAppFolderScanResultDetail => $base.as((v, t, t2) =>
+          _CommonAppFolderScanResultDetailCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class CommonAppFolderScanResultDetailCopyWith<
@@ -787,5 +789,6 @@ class _CommonAppFolderScanResultDetailCopyWithImpl<$R, $Out>
   CommonAppFolderScanResultDetailCopyWith<$R2, CommonAppFolderScanResultDetail,
       $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _CommonAppFolderScanResultDetailCopyWithImpl($value, $cast, t);
+      _CommonAppFolderScanResultDetailCopyWithImpl<$R2, $Out2>(
+          $value, $cast, t);
 }

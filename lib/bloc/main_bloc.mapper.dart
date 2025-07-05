@@ -105,12 +105,13 @@ class MainStateMapper extends ClassMapperBase<MainState> {
 
 mixin MainStateMappable {
   MainStateCopyWith<MainState, MainState, MainState> get copyWith =>
-      _MainStateCopyWithImpl(this as MainState, $identity, $identity);
+      _MainStateCopyWithImpl<MainState, MainState>(
+          this as MainState, $identity, $identity);
 }
 
 extension MainStateValueCopy<$R, $Out> on ObjectCopyWith<$R, MainState, $Out> {
   MainStateCopyWith<$R, MainState, $Out> get $asMainState =>
-      $base.as((v, t, t2) => _MainStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _MainStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class MainStateCopyWith<$R, $In extends MainState, $Out>
@@ -230,5 +231,5 @@ class _MainStateCopyWithImpl<$R, $Out>
   @override
   MainStateCopyWith<$R2, MainState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _MainStateCopyWithImpl($value, $cast, t);
+      _MainStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

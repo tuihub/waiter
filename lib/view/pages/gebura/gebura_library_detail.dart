@@ -912,7 +912,7 @@ class _GeburaLibraryDetailRunRecordChartState
     }
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: text,
     );
   }

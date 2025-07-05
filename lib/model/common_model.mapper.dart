@@ -62,8 +62,9 @@ mixin ClientDeviceInfoMappable {
   }
 
   ClientDeviceInfoCopyWith<ClientDeviceInfo, ClientDeviceInfo, ClientDeviceInfo>
-      get copyWith => _ClientDeviceInfoCopyWithImpl(
-          this as ClientDeviceInfo, $identity, $identity);
+      get copyWith =>
+          _ClientDeviceInfoCopyWithImpl<ClientDeviceInfo, ClientDeviceInfo>(
+              this as ClientDeviceInfo, $identity, $identity);
   @override
   String toString() {
     return ClientDeviceInfoMapper.ensureInitialized()
@@ -86,8 +87,8 @@ mixin ClientDeviceInfoMappable {
 extension ClientDeviceInfoValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ClientDeviceInfo, $Out> {
   ClientDeviceInfoCopyWith<$R, ClientDeviceInfo, $Out>
-      get $asClientDeviceInfo =>
-          $base.as((v, t, t2) => _ClientDeviceInfoCopyWithImpl(v, t, t2));
+      get $asClientDeviceInfo => $base
+          .as((v, t, t2) => _ClientDeviceInfoCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ClientDeviceInfoCopyWith<$R, $In extends ClientDeviceInfo, $Out>
@@ -119,5 +120,5 @@ class _ClientDeviceInfoCopyWithImpl<$R, $Out>
   @override
   ClientDeviceInfoCopyWith<$R2, ClientDeviceInfo, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ClientDeviceInfoCopyWithImpl($value, $cast, t);
+      _ClientDeviceInfoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

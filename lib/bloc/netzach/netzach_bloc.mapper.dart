@@ -60,13 +60,14 @@ class NetzachStateMapper extends ClassMapperBase<NetzachState> {
 
 mixin NetzachStateMappable {
   NetzachStateCopyWith<NetzachState, NetzachState, NetzachState> get copyWith =>
-      _NetzachStateCopyWithImpl(this as NetzachState, $identity, $identity);
+      _NetzachStateCopyWithImpl<NetzachState, NetzachState>(
+          this as NetzachState, $identity, $identity);
 }
 
 extension NetzachStateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, NetzachState, $Out> {
   NetzachStateCopyWith<$R, NetzachState, $Out> get $asNetzachState =>
-      $base.as((v, t, t2) => _NetzachStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _NetzachStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class NetzachStateCopyWith<$R, $In extends NetzachState, $Out>
@@ -152,5 +153,5 @@ class _NetzachStateCopyWithImpl<$R, $Out>
   @override
   NetzachStateCopyWith<$R2, NetzachState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _NetzachStateCopyWithImpl($value, $cast, t);
+      _NetzachStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

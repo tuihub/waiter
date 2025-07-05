@@ -58,8 +58,9 @@ mixin LibrarySettingsMappable {
   }
 
   LibrarySettingsCopyWith<LibrarySettings, LibrarySettings, LibrarySettings>
-      get copyWith => _LibrarySettingsCopyWithImpl(
-          this as LibrarySettings, $identity, $identity);
+      get copyWith =>
+          _LibrarySettingsCopyWithImpl<LibrarySettings, LibrarySettings>(
+              this as LibrarySettings, $identity, $identity);
   @override
   String toString() {
     return LibrarySettingsMapper.ensureInitialized()
@@ -82,7 +83,7 @@ mixin LibrarySettingsMappable {
 extension LibrarySettingsValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LibrarySettings, $Out> {
   LibrarySettingsCopyWith<$R, LibrarySettings, $Out> get $asLibrarySettings =>
-      $base.as((v, t, t2) => _LibrarySettingsCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _LibrarySettingsCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LibrarySettingsCopyWith<$R, $In extends LibrarySettings, $Out>
@@ -114,7 +115,7 @@ class _LibrarySettingsCopyWithImpl<$R, $Out>
   @override
   LibrarySettingsCopyWith<$R2, LibrarySettings, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _LibrarySettingsCopyWithImpl($value, $cast, t);
+      _LibrarySettingsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class LibraryFilterMapper extends ClassMapperBase<LibraryFilter> {
@@ -168,7 +169,7 @@ mixin LibraryFilterMappable {
   }
 
   LibraryFilterCopyWith<LibraryFilter, LibraryFilter, LibraryFilter>
-      get copyWith => _LibraryFilterCopyWithImpl(
+      get copyWith => _LibraryFilterCopyWithImpl<LibraryFilter, LibraryFilter>(
           this as LibraryFilter, $identity, $identity);
   @override
   String toString() {
@@ -192,7 +193,7 @@ mixin LibraryFilterMappable {
 extension LibraryFilterValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LibraryFilter, $Out> {
   LibraryFilterCopyWith<$R, LibraryFilter, $Out> get $asLibraryFilter =>
-      $base.as((v, t, t2) => _LibraryFilterCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _LibraryFilterCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LibraryFilterCopyWith<$R, $In extends LibraryFilter, $Out>
@@ -219,7 +220,7 @@ class _LibraryFilterCopyWithImpl<$R, $Out>
   @override
   LibraryFilterCopyWith<$R2, LibraryFilter, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _LibraryFilterCopyWithImpl($value, $cast, t);
+      _LibraryFilterCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class LibraryListItemMapper extends ClassMapperBase<LibraryListItem> {
@@ -298,8 +299,9 @@ mixin LibraryListItemMappable {
   }
 
   LibraryListItemCopyWith<LibraryListItem, LibraryListItem, LibraryListItem>
-      get copyWith => _LibraryListItemCopyWithImpl(
-          this as LibraryListItem, $identity, $identity);
+      get copyWith =>
+          _LibraryListItemCopyWithImpl<LibraryListItem, LibraryListItem>(
+              this as LibraryListItem, $identity, $identity);
   @override
   String toString() {
     return LibraryListItemMapper.ensureInitialized()
@@ -322,7 +324,7 @@ mixin LibraryListItemMappable {
 extension LibraryListItemValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LibraryListItem, $Out> {
   LibraryListItemCopyWith<$R, LibraryListItem, $Out> get $asLibraryListItem =>
-      $base.as((v, t, t2) => _LibraryListItemCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _LibraryListItemCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LibraryListItemCopyWith<$R, $In extends LibraryListItem, $Out>
@@ -376,7 +378,7 @@ class _LibraryListItemCopyWithImpl<$R, $Out>
   @override
   LibraryListItemCopyWith<$R2, LibraryListItem, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _LibraryListItemCopyWithImpl($value, $cast, t);
+      _LibraryListItemCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class LocalLibraryScanResultMapper
@@ -461,7 +463,8 @@ mixin LocalLibraryScanResultMappable {
 
   LocalLibraryScanResultCopyWith<LocalLibraryScanResult, LocalLibraryScanResult,
           LocalLibraryScanResult>
-      get copyWith => _LocalLibraryScanResultCopyWithImpl(
+      get copyWith => _LocalLibraryScanResultCopyWithImpl<
+              LocalLibraryScanResult, LocalLibraryScanResult>(
           this as LocalLibraryScanResult, $identity, $identity);
   @override
   String toString() {
@@ -485,8 +488,8 @@ mixin LocalLibraryScanResultMappable {
 extension LocalLibraryScanResultValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LocalLibraryScanResult, $Out> {
   LocalLibraryScanResultCopyWith<$R, LocalLibraryScanResult, $Out>
-      get $asLocalLibraryScanResult =>
-          $base.as((v, t, t2) => _LocalLibraryScanResultCopyWithImpl(v, t, t2));
+      get $asLocalLibraryScanResult => $base.as((v, t, t2) =>
+          _LocalLibraryScanResultCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LocalLibraryScanResultCopyWith<
@@ -555,7 +558,7 @@ class _LocalLibraryScanResultCopyWithImpl<$R, $Out>
   @override
   LocalLibraryScanResultCopyWith<$R2, LocalLibraryScanResult, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _LocalLibraryScanResultCopyWithImpl($value, $cast, t);
+          _LocalLibraryScanResultCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class LocalLibraryScanResultDetailMapper
@@ -636,7 +639,8 @@ mixin LocalLibraryScanResultDetailMappable {
 
   LocalLibraryScanResultDetailCopyWith<LocalLibraryScanResultDetail,
           LocalLibraryScanResultDetail, LocalLibraryScanResultDetail>
-      get copyWith => _LocalLibraryScanResultDetailCopyWithImpl(
+      get copyWith => _LocalLibraryScanResultDetailCopyWithImpl<
+              LocalLibraryScanResultDetail, LocalLibraryScanResultDetail>(
           this as LocalLibraryScanResultDetail, $identity, $identity);
   @override
   String toString() {
@@ -660,8 +664,8 @@ mixin LocalLibraryScanResultDetailMappable {
 extension LocalLibraryScanResultDetailValueCopy<$R, $Out>
     on ObjectCopyWith<$R, LocalLibraryScanResultDetail, $Out> {
   LocalLibraryScanResultDetailCopyWith<$R, LocalLibraryScanResultDetail, $Out>
-      get $asLocalLibraryScanResultDetail => $base.as(
-          (v, t, t2) => _LocalLibraryScanResultDetailCopyWithImpl(v, t, t2));
+      get $asLocalLibraryScanResultDetail => $base.as((v, t, t2) =>
+          _LocalLibraryScanResultDetailCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class LocalLibraryScanResultDetailCopyWith<
@@ -715,5 +719,6 @@ class _LocalLibraryScanResultDetailCopyWithImpl<$R, $Out>
   @override
   LocalLibraryScanResultDetailCopyWith<$R2, LocalLibraryScanResultDetail, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _LocalLibraryScanResultDetailCopyWithImpl($value, $cast, t);
+          _LocalLibraryScanResultDetailCopyWithImpl<$R2, $Out2>(
+              $value, $cast, t);
 }

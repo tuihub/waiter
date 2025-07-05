@@ -39,13 +39,14 @@ class ChesedStateMapper extends ClassMapperBase<ChesedState> {
 
 mixin ChesedStateMappable {
   ChesedStateCopyWith<ChesedState, ChesedState, ChesedState> get copyWith =>
-      _ChesedStateCopyWithImpl(this as ChesedState, $identity, $identity);
+      _ChesedStateCopyWithImpl<ChesedState, ChesedState>(
+          this as ChesedState, $identity, $identity);
 }
 
 extension ChesedStateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, ChesedState, $Out> {
   ChesedStateCopyWith<$R, ChesedState, $Out> get $asChesedState =>
-      $base.as((v, t, t2) => _ChesedStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _ChesedStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class ChesedStateCopyWith<$R, $In extends ChesedState, $Out>
@@ -81,5 +82,5 @@ class _ChesedStateCopyWithImpl<$R, $Out>
   @override
   ChesedStateCopyWith<$R2, ChesedState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ChesedStateCopyWithImpl($value, $cast, t);
+      _ChesedStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

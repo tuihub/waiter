@@ -96,13 +96,14 @@ class GeburaStateMapper extends ClassMapperBase<GeburaState> {
 
 mixin GeburaStateMappable {
   GeburaStateCopyWith<GeburaState, GeburaState, GeburaState> get copyWith =>
-      _GeburaStateCopyWithImpl(this as GeburaState, $identity, $identity);
+      _GeburaStateCopyWithImpl<GeburaState, GeburaState>(
+          this as GeburaState, $identity, $identity);
 }
 
 extension GeburaStateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, GeburaState, $Out> {
   GeburaStateCopyWith<$R, GeburaState, $Out> get $asGeburaState =>
-      $base.as((v, t, t2) => _GeburaStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _GeburaStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class GeburaStateCopyWith<$R, $In extends GeburaState, $Out>
@@ -237,5 +238,5 @@ class _GeburaStateCopyWithImpl<$R, $Out>
   @override
   GeburaStateCopyWith<$R2, GeburaState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _GeburaStateCopyWithImpl($value, $cast, t);
+      _GeburaStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }

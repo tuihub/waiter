@@ -15,74 +15,91 @@ List<RouteBase> get $appRoutes => [
 
 RouteBase get $initRoute => GoRouteData.$route(
       path: '/init',
-      factory: $InitRouteExtension._fromState,
+      factory: _$InitRoute._fromState,
     );
 
-extension $InitRouteExtension on InitRoute {
+mixin _$InitRoute on GoRouteData {
   static InitRoute _fromState(GoRouterState state) => const InitRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/init',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $webLandingRoute => GoRouteData.$route(
       path: '/webLanding',
-      factory: $WebLandingRouteExtension._fromState,
+      factory: _$WebLandingRoute._fromState,
     );
 
-extension $WebLandingRouteExtension on WebLandingRoute {
+mixin _$WebLandingRoute on GoRouteData {
   static WebLandingRoute _fromState(GoRouterState state) =>
       const WebLandingRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/webLanding',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $imageViewerRoute => GoRouteData.$route(
       path: '/imageViewer/:index',
-      factory: $ImageViewerRouteExtension._fromState,
+      factory: _$ImageViewerRoute._fromState,
     );
 
-extension $ImageViewerRouteExtension on ImageViewerRoute {
+mixin _$ImageViewerRoute on GoRouteData {
   static ImageViewerRoute _fromState(GoRouterState state) => ImageViewerRoute(
-        int.parse(state.pathParameters['index']!),
+        int.parse(state.pathParameters['index']!)!,
         state.extra as List<PicSwiperItem>?,
       );
 
+  ImageViewerRoute get _self => this as ImageViewerRoute;
+
+  @override
   String get location => GoRouteData.$location(
-        '/imageViewer/${Uri.encodeComponent(index.toString())}',
+        '/imageViewer/${Uri.encodeComponent(_self.index.toString())}',
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $moduleRoute => StatefulShellRouteData.$route(
@@ -93,7 +110,7 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Tiphereth',
-              factory: $TipherethRootRouteExtension._fromState,
+              factory: _$TipherethRootRoute._fromState,
             ),
           ],
         ),
@@ -102,11 +119,11 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Yesod',
-              factory: $YesodRootRouteExtension._fromState,
+              factory: _$YesodRootRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Yesod/:function',
-              factory: $YesodFunctionRouteExtension._fromState,
+              factory: _$YesodFunctionRoute._fromState,
             ),
           ],
         ),
@@ -115,23 +132,23 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Gebura',
-              factory: $GeburaRootRouteExtension._fromState,
+              factory: _$GeburaRootRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Gebura/store',
-              factory: $GeburaStoreRouteExtension._fromState,
+              factory: _$GeburaStoreRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Gebura/library',
-              factory: $GeburaLibraryRouteExtension._fromState,
+              factory: _$GeburaLibraryRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Gebura/librarySettings',
-              factory: $GeburaLibrarySettingsRouteExtension._fromState,
+              factory: _$GeburaLibrarySettingsRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Gebura/library/:uuid',
-              factory: $GeburaLibraryDetailRouteExtension._fromState,
+              factory: _$GeburaLibraryDetailRoute._fromState,
             ),
           ],
         ),
@@ -140,7 +157,7 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Chesed',
-              factory: $ChesedRootRouteExtension._fromState,
+              factory: _$ChesedRootRoute._fromState,
             ),
           ],
         ),
@@ -149,7 +166,7 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Notification',
-              factory: $NotificationRootRouteExtension._fromState,
+              factory: _$NotificationRootRoute._fromState,
             ),
           ],
         ),
@@ -158,11 +175,11 @@ RouteBase get $moduleRoute => StatefulShellRouteData.$route(
           routes: [
             GoRouteData.$route(
               path: '/module/Settings',
-              factory: $SettingsRootRouteExtension._fromState,
+              factory: _$SettingsRootRoute._fromState,
             ),
             GoRouteData.$route(
               path: '/module/Settings/:function',
-              factory: $SettingsFunctionRouteExtension._fromState,
+              factory: _$SettingsFunctionRoute._fromState,
             ),
           ],
         ),
@@ -173,68 +190,86 @@ extension $ModuleRouteExtension on ModuleRoute {
   static ModuleRoute _fromState(GoRouterState state) => const ModuleRoute();
 }
 
-extension $TipherethRootRouteExtension on TipherethRootRoute {
+mixin _$TipherethRootRoute on GoRouteData {
   static TipherethRootRoute _fromState(GoRouterState state) =>
       const TipherethRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Tiphereth',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $YesodRootRouteExtension on YesodRootRoute {
+mixin _$YesodRootRoute on GoRouteData {
   static YesodRootRoute _fromState(GoRouterState state) =>
       const YesodRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Yesod',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $YesodFunctionRouteExtension on YesodFunctionRoute {
+mixin _$YesodFunctionRoute on GoRouteData {
   static YesodFunctionRoute _fromState(GoRouterState state) =>
       YesodFunctionRoute(
-        _$YesodFunctionsEnumMap._$fromName(state.pathParameters['function']!),
+        _$YesodFunctionsEnumMap._$fromName(state.pathParameters['function']!)!,
         action: _$convertMapValue('action', state.uri.queryParameters,
             _$YesodActionsEnumMap._$fromName),
         $extra: state.extra as dynamic,
       );
 
+  YesodFunctionRoute get _self => this as YesodFunctionRoute;
+
+  @override
   String get location => GoRouteData.$location(
-        '/module/Yesod/${Uri.encodeComponent(_$YesodFunctionsEnumMap[function]!)}',
+        '/module/Yesod/${Uri.encodeComponent(_$YesodFunctionsEnumMap[_self.function]!)}',
         queryParams: {
-          if (action != null) 'action': _$YesodActionsEnumMap[action!],
+          if (_self.action != null)
+            'action': _$YesodActionsEnumMap[_self.action!],
         },
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
 const _$YesodFunctionsEnumMap = {
@@ -258,61 +293,76 @@ const _$YesodActionsEnumMap = {
   YesodActions.notifyFlowAdd: 'notify-flow-add',
 };
 
-extension $GeburaRootRouteExtension on GeburaRootRoute {
+mixin _$GeburaRootRoute on GoRouteData {
   static GeburaRootRoute _fromState(GoRouterState state) =>
       const GeburaRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Gebura',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $GeburaStoreRouteExtension on GeburaStoreRoute {
+mixin _$GeburaStoreRoute on GoRouteData {
   static GeburaStoreRoute _fromState(GoRouterState state) =>
       const GeburaStoreRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Gebura/store',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $GeburaLibraryRouteExtension on GeburaLibraryRoute {
+mixin _$GeburaLibraryRoute on GoRouteData {
   static GeburaLibraryRoute _fromState(GoRouterState state) =>
       const GeburaLibraryRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Gebura/library',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $GeburaLibrarySettingsRouteExtension on GeburaLibrarySettingsRoute {
+mixin _$GeburaLibrarySettingsRoute on GoRouteData {
   static GeburaLibrarySettingsRoute _fromState(GoRouterState state) =>
       GeburaLibrarySettingsRoute(
         action: _$convertMapValue('action', state.uri.queryParameters,
@@ -320,31 +370,38 @@ extension $GeburaLibrarySettingsRouteExtension on GeburaLibrarySettingsRoute {
         $extra: state.extra as dynamic,
       );
 
+  GeburaLibrarySettingsRoute get _self => this as GeburaLibrarySettingsRoute;
+
+  @override
   String get location => GoRouteData.$location(
         '/module/Gebura/librarySettings',
         queryParams: {
-          if (action != null)
-            'action': _$GeburaLibrarySettingsActionsEnumMap[action!],
+          if (_self.action != null)
+            'action': _$GeburaLibrarySettingsActionsEnumMap[_self.action!],
         },
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
 const _$GeburaLibrarySettingsActionsEnumMap = {
   GeburaLibrarySettingsActions.appScanResult: 'app-scan-result',
 };
 
-extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
+mixin _$GeburaLibraryDetailRoute on GoRouteData {
   static GeburaLibraryDetailRoute _fromState(GoRouterState state) =>
       GeburaLibraryDetailRoute(
         state.pathParameters['uuid']!,
@@ -353,24 +410,31 @@ extension $GeburaLibraryDetailRouteExtension on GeburaLibraryDetailRoute {
         $extra: state.extra as dynamic,
       );
 
+  GeburaLibraryDetailRoute get _self => this as GeburaLibraryDetailRoute;
+
+  @override
   String get location => GoRouteData.$location(
-        '/module/Gebura/library/${Uri.encodeComponent(uuid)}',
+        '/module/Gebura/library/${Uri.encodeComponent(_self.uuid)}',
         queryParams: {
-          if (action != null)
-            'action': _$GeburaLibraryDetailActionsEnumMap[action!],
+          if (_self.action != null)
+            'action': _$GeburaLibraryDetailActionsEnumMap[_self.action!],
         },
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
 const _$GeburaLibraryDetailActionsEnumMap = {
@@ -382,87 +446,110 @@ const _$GeburaLibraryDetailActionsEnumMap = {
   GeburaLibraryDetailActions.appInstLauncherEdit: 'app-inst-launcher-edit',
 };
 
-extension $ChesedRootRouteExtension on ChesedRootRoute {
+mixin _$ChesedRootRoute on GoRouteData {
   static ChesedRootRoute _fromState(GoRouterState state) =>
       const ChesedRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Chesed',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $NotificationRootRouteExtension on NotificationRootRoute {
+mixin _$NotificationRootRoute on GoRouteData {
   static NotificationRootRoute _fromState(GoRouterState state) =>
       const NotificationRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Notification',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $SettingsRootRouteExtension on SettingsRootRoute {
+mixin _$SettingsRootRoute on GoRouteData {
   static SettingsRootRoute _fromState(GoRouterState state) =>
       const SettingsRootRoute();
 
+  @override
   String get location => GoRouteData.$location(
         '/module/Settings',
       );
 
+  @override
   void go(BuildContext context) => context.go(location);
 
+  @override
   Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
+  @override
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
 
+  @override
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $SettingsFunctionRouteExtension on SettingsFunctionRoute {
+mixin _$SettingsFunctionRoute on GoRouteData {
   static SettingsFunctionRoute _fromState(GoRouterState state) =>
       SettingsFunctionRoute(
         _$SettingsFunctionsEnumMap
-            ._$fromName(state.pathParameters['function']!),
+            ._$fromName(state.pathParameters['function']!)!,
         action: _$convertMapValue('action', state.uri.queryParameters,
             _$SettingsActionsEnumMap._$fromName),
         $extra: state.extra as dynamic,
       );
 
+  SettingsFunctionRoute get _self => this as SettingsFunctionRoute;
+
+  @override
   String get location => GoRouteData.$location(
-        '/module/Settings/${Uri.encodeComponent(_$SettingsFunctionsEnumMap[function]!)}',
+        '/module/Settings/${Uri.encodeComponent(_$SettingsFunctionsEnumMap[_self.function]!)}',
         queryParams: {
-          if (action != null) 'action': _$SettingsActionsEnumMap[action!],
+          if (_self.action != null)
+            'action': _$SettingsActionsEnumMap[_self.action!],
         },
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  @override
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
+  @override
   Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+      context.push<T>(location, extra: _self.$extra);
 
+  @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location, extra: _self.$extra);
 
+  @override
   void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+      context.replace(location, extra: _self.$extra);
 }
 
 const _$SettingsFunctionsEnumMap = {
@@ -482,13 +569,13 @@ const _$SettingsActionsEnumMap = {
 T? _$convertMapValue<T>(
   String key,
   Map<String, String> map,
-  T Function(String) converter,
+  T? Function(String) converter,
 ) {
   final value = map[key];
   return value == null ? null : converter(value);
 }
 
 extension<T extends Enum> on Map<T, String> {
-  T _$fromName(String value) =>
-      entries.singleWhere((element) => element.value == value).key;
+  T? _$fromName(String? value) =>
+      entries.where((element) => element.value == value).firstOrNull?.key;
 }

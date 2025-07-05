@@ -112,7 +112,7 @@ final mainWindowKey = GlobalKey();
 final appFrameKey = GlobalKey();
 
 @TypedGoRoute<InitRoute>(path: '/init')
-class InitRoute extends GoRouteData {
+class InitRoute extends GoRouteData with _$InitRoute {
   const InitRoute();
 
   @override
@@ -126,7 +126,7 @@ class InitRoute extends GoRouteData {
 }
 
 @TypedGoRoute<WebLandingRoute>(path: '/webLanding')
-class WebLandingRoute extends GoRouteData {
+class WebLandingRoute extends GoRouteData with _$WebLandingRoute {
   const WebLandingRoute();
 
   @override
@@ -140,7 +140,7 @@ class WebLandingRoute extends GoRouteData {
 }
 
 @TypedGoRoute<ImageViewerRoute>(path: '/imageViewer/:index')
-class ImageViewerRoute extends GoRouteData {
+class ImageViewerRoute extends GoRouteData with _$ImageViewerRoute {
   const ImageViewerRoute(this.index, this.$extra);
 
   final int index;
@@ -200,7 +200,7 @@ class ImageViewerRoute extends GoRouteData {
     ),
   ],
 )
-class ModuleRoute extends StatefulShellRouteData {
+class ModuleRoute extends StatefulShellRouteData  {
   const ModuleRoute();
 
   @override
@@ -224,13 +224,13 @@ class ModuleRoute extends StatefulShellRouteData {
   }
 }
 
-class TipherethRoute extends StatefulShellBranchData {
+class TipherethRoute extends StatefulShellBranchData  {
   const TipherethRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _tipherethNavigateKey;
 }
 
-class TipherethRootRoute extends GoRouteData {
+class TipherethRootRoute extends GoRouteData with _$TipherethRootRoute {
   const TipherethRootRoute();
 
   @override
@@ -243,13 +243,13 @@ class TipherethRootRoute extends GoRouteData {
   }
 }
 
-class YesodRoute extends StatefulShellBranchData {
+class YesodRoute extends StatefulShellBranchData  {
   const YesodRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _yesodNavigateKey;
 }
 
-class YesodRootRoute extends GoRouteData {
+class YesodRootRoute extends GoRouteData with _$YesodRootRoute {
   const YesodRootRoute();
 
   @override
@@ -258,7 +258,7 @@ class YesodRootRoute extends GoRouteData {
   }
 }
 
-class YesodFunctionRoute extends GoRouteData {
+class YesodFunctionRoute extends GoRouteData with _$YesodFunctionRoute {
   const YesodFunctionRoute(this.function, {this.action, this.$extra});
 
   final YesodFunctions function;
@@ -328,13 +328,13 @@ class YesodFunctionRoute extends GoRouteData {
   }
 }
 
-class GeburaRoute extends StatefulShellBranchData {
+class GeburaRoute extends StatefulShellBranchData  {
   const GeburaRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _geburaNavigateKey;
 }
 
-class GeburaRootRoute extends GoRouteData {
+class GeburaRootRoute extends GoRouteData with _$GeburaRootRoute {
   const GeburaRootRoute();
 
   @override
@@ -343,7 +343,7 @@ class GeburaRootRoute extends GoRouteData {
   }
 }
 
-class GeburaStoreRoute extends GoRouteData {
+class GeburaStoreRoute extends GoRouteData with _$GeburaStoreRoute {
   const GeburaStoreRoute();
 
   @override
@@ -359,7 +359,7 @@ class GeburaStoreRoute extends GoRouteData {
   }
 }
 
-class GeburaLibraryRoute extends GoRouteData {
+class GeburaLibraryRoute extends GoRouteData with _$GeburaLibraryRoute {
   const GeburaLibraryRoute();
 
   @override
@@ -379,7 +379,7 @@ enum GeburaLibrarySettingsActions {
   appScanResult,
 }
 
-class GeburaLibrarySettingsRoute extends GoRouteData {
+class GeburaLibrarySettingsRoute extends GoRouteData with _$GeburaLibrarySettingsRoute {
   const GeburaLibrarySettingsRoute({this.action, this.$extra});
 
   final GeburaLibrarySettingsActions? action;
@@ -413,7 +413,7 @@ enum GeburaLibraryDetailActions {
   appInstLauncherEdit,
 }
 
-class GeburaLibraryDetailRoute extends GoRouteData {
+class GeburaLibraryDetailRoute extends GoRouteData with _$GeburaLibraryDetailRoute {
   const GeburaLibraryDetailRoute(this.uuid, {this.action, this.$extra});
 
   final GeburaLibraryDetailActions? action;
@@ -463,13 +463,13 @@ class GeburaLibraryDetailRoute extends GoRouteData {
   }
 }
 
-class ChesedRoute extends StatefulShellBranchData {
+class ChesedRoute extends StatefulShellBranchData  {
   const ChesedRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _chesedNavigateKey;
 }
 
-class ChesedRootRoute extends GoRouteData {
+class ChesedRootRoute extends GoRouteData with _$ChesedRootRoute {
   const ChesedRootRoute();
 
   @override
@@ -483,14 +483,14 @@ class ChesedRootRoute extends GoRouteData {
   }
 }
 
-class NotificationRoute extends StatefulShellBranchData {
+class NotificationRoute extends StatefulShellBranchData  {
   const NotificationRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey =
       _notificationNavigateKey;
 }
 
-class NotificationRootRoute extends GoRouteData {
+class NotificationRootRoute extends GoRouteData with _$NotificationRootRoute {
   const NotificationRootRoute();
 
   @override
@@ -503,13 +503,13 @@ class NotificationRootRoute extends GoRouteData {
   }
 }
 
-class SettingsRoute extends StatefulShellBranchData {
+class SettingsRoute extends StatefulShellBranchData  {
   const SettingsRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _settingsNavigateKey;
 }
 
-class SettingsRootRoute extends GoRouteData {
+class SettingsRootRoute extends GoRouteData with _$SettingsRootRoute {
   const SettingsRootRoute();
 
   @override
@@ -518,7 +518,7 @@ class SettingsRootRoute extends GoRouteData {
   }
 }
 
-class SettingsFunctionRoute extends GoRouteData {
+class SettingsFunctionRoute extends GoRouteData with _$SettingsFunctionRoute {
   const SettingsFunctionRoute(this.function, {this.action, this.$extra});
 
   final SettingsFunctions function;

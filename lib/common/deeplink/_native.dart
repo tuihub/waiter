@@ -10,15 +10,13 @@ Future<void> registerProtocol(String scheme) async {
   final String appPath = Platform.resolvedExecutable;
 
   final String protocolRegKey = 'Software\\Classes\\$scheme';
-  const RegistryValue protocolRegValue = RegistryValue(
+  const RegistryValue protocolRegValue = RegistryValue.string(
     'URL Protocol',
-    RegistryValueType.string,
     '',
   );
   const String protocolCmdRegKey = r'shell\open\command';
-  final RegistryValue protocolCmdRegValue = RegistryValue(
+  final RegistryValue protocolCmdRegValue = RegistryValue.string(
     '',
-    RegistryValueType.string,
     '"$appPath" "%1"',
   );
 

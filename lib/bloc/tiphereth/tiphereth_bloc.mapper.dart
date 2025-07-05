@@ -56,14 +56,15 @@ class TipherethStateMapper extends ClassMapperBase<TipherethState> {
 
 mixin TipherethStateMappable {
   TipherethStateCopyWith<TipherethState, TipherethState, TipherethState>
-      get copyWith => _TipherethStateCopyWithImpl(
-          this as TipherethState, $identity, $identity);
+      get copyWith =>
+          _TipherethStateCopyWithImpl<TipherethState, TipherethState>(
+              this as TipherethState, $identity, $identity);
 }
 
 extension TipherethStateValueCopy<$R, $Out>
     on ObjectCopyWith<$R, TipherethState, $Out> {
   TipherethStateCopyWith<$R, TipherethState, $Out> get $asTipherethState =>
-      $base.as((v, t, t2) => _TipherethStateCopyWithImpl(v, t, t2));
+      $base.as((v, t, t2) => _TipherethStateCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
 abstract class TipherethStateCopyWith<$R, $In extends TipherethState, $Out>
@@ -148,5 +149,5 @@ class _TipherethStateCopyWithImpl<$R, $Out>
   @override
   TipherethStateCopyWith<$R2, TipherethState, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _TipherethStateCopyWithImpl($value, $cast, t);
+      _TipherethStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
