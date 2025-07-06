@@ -200,7 +200,7 @@ class ImageViewerRoute extends GoRouteData with _$ImageViewerRoute {
     ),
   ],
 )
-class ModuleRoute extends StatefulShellRouteData  {
+class ModuleRoute extends StatefulShellRouteData {
   const ModuleRoute();
 
   @override
@@ -224,7 +224,7 @@ class ModuleRoute extends StatefulShellRouteData  {
   }
 }
 
-class TipherethRoute extends StatefulShellBranchData  {
+class TipherethRoute extends StatefulShellBranchData {
   const TipherethRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _tipherethNavigateKey;
@@ -243,7 +243,7 @@ class TipherethRootRoute extends GoRouteData with _$TipherethRootRoute {
   }
 }
 
-class YesodRoute extends StatefulShellBranchData  {
+class YesodRoute extends StatefulShellBranchData {
   const YesodRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _yesodNavigateKey;
@@ -328,7 +328,7 @@ class YesodFunctionRoute extends GoRouteData with _$YesodFunctionRoute {
   }
 }
 
-class GeburaRoute extends StatefulShellBranchData  {
+class GeburaRoute extends StatefulShellBranchData {
   const GeburaRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _geburaNavigateKey;
@@ -379,7 +379,8 @@ enum GeburaLibrarySettingsActions {
   appScanResult,
 }
 
-class GeburaLibrarySettingsRoute extends GoRouteData with _$GeburaLibrarySettingsRoute {
+class GeburaLibrarySettingsRoute extends GoRouteData
+    with _$GeburaLibrarySettingsRoute {
   const GeburaLibrarySettingsRoute({this.action, this.$extra});
 
   final GeburaLibrarySettingsActions? action;
@@ -413,7 +414,8 @@ enum GeburaLibraryDetailActions {
   appInstLauncherEdit,
 }
 
-class GeburaLibraryDetailRoute extends GoRouteData with _$GeburaLibraryDetailRoute {
+class GeburaLibraryDetailRoute extends GoRouteData
+    with _$GeburaLibraryDetailRoute {
   const GeburaLibraryDetailRoute(this.uuid, {this.action, this.$extra});
 
   final GeburaLibraryDetailActions? action;
@@ -463,7 +465,7 @@ class GeburaLibraryDetailRoute extends GoRouteData with _$GeburaLibraryDetailRou
   }
 }
 
-class ChesedRoute extends StatefulShellBranchData  {
+class ChesedRoute extends StatefulShellBranchData {
   const ChesedRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _chesedNavigateKey;
@@ -483,7 +485,7 @@ class ChesedRootRoute extends GoRouteData with _$ChesedRootRoute {
   }
 }
 
-class NotificationRoute extends StatefulShellBranchData  {
+class NotificationRoute extends StatefulShellBranchData {
   const NotificationRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey =
@@ -503,7 +505,7 @@ class NotificationRootRoute extends GoRouteData with _$NotificationRootRoute {
   }
 }
 
-class SettingsRoute extends StatefulShellBranchData  {
+class SettingsRoute extends StatefulShellBranchData {
   const SettingsRoute();
 
   static final GlobalKey<NavigatorState> $navigatorKey = _settingsNavigateKey;

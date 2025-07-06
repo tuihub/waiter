@@ -37,6 +37,18 @@ final class PlatformHelper {
     return io.Platform.isWindows;
   }
 
+  static bool isMacOSApp() {
+    return !kIsWeb && io.Platform.isMacOS;
+  }
+
+  static bool isMacOSWeb() {
+    return kIsWeb && io.Platform.isMacOS;
+  }
+
+  static bool isMacOS() {
+    return io.Platform.isMacOS;
+  }
+
   static bool isWeb() {
     return kIsWeb;
   }
@@ -46,6 +58,8 @@ final class PlatformHelper {
       return SystemType.SYSTEM_TYPE_ANDROID;
     } else if (isWindows()) {
       return SystemType.SYSTEM_TYPE_WINDOWS;
+    } else if (isMacOS()) {
+      return SystemType.SYSTEM_TYPE_MACOS;
     } else if (isWeb()) {
       return SystemType.SYSTEM_TYPE_WEB;
     } else {
